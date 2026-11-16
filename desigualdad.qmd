@@ -3,7 +3,7 @@ title: "Desigualdad y condiciones de vida"
 subtitle: "Desigualdad de la renta, pobreza y exclusión social"
 ---
 
-La desigualdad y la pobreza son retos estratégicos de la Agenda 2030 (ODS 10 y ODS 1). Los indicadores proceden de la Encuesta de Condiciones de Vida armonizada (EU-SILC). Más abajo se enlaza el **observatorio de desigualdad del proyecto THEILUMINA**, con índices de Theil, datos del Banco Mundial y del INE.
+La desigualdad y la pobreza son retos estratégicos de la Agenda 2030 (ODS 10 y ODS 1). Los indicadores proceden de la Encuesta de Condiciones de Vida armonizada (EU-SILC).
 
 Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre las líneas para ver los valores y descarga los datos en CSV para usarlos en clase o en tu investigación.
 
@@ -254,17 +254,13 @@ datos.ok ? html`<div class="descargas">
 <p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de CCEEscopio, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
 ```
 
-## Observatorio de desigualdad de THEILUMINA
-
-El proyecto de investigación **THEILUMINA** (Facultad de Ciencias Económicas y Empresariales, UGR) mantiene un observatorio de desigualdad con **índices de Theil**, que permiten descomponer la desigualdad entre grupos y dentro de ellos, a partir de datos de Eurostat, del Banco Mundial (más de 170 países) y del INE (comunidades autónomas).
-
-[Abrir el observatorio de THEILUMINA](https://jfmunozrosas.github.io/theilumina/observatory.html){.btn .btn-primary target="_blank"} [Guía práctica: índices de Theil en R](https://jfmunozrosas.github.io/theilumina/guides/indices-theil-r-es.html){.btn .btn-outline-primary target="_blank"}
-
-<iframe class="embed" src="https://jfmunozrosas.github.io/theilumina/observatory.html" title="Observatorio de desigualdad de THEILUMINA" loading="lazy"></iframe>
+::: {.callout-tip appearance="simple"}
+**Más datos de desigualdad.** El Banco Mundial publica el índice de Gini y la desviación logarítmica media (índice de Theil T₀) de más de 170 países en su [Poverty and Inequality Platform](https://pip.worldbank.org/), y el INE publica la Encuesta de Condiciones de Vida con detalle por comunidades autónomas ([INEbase](https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176807&menu=ultiDatos&idp=1254735976608)).
+:::
 
 ## Ideas para la docencia y la investigación
 
-- Economía aplicada: medición de la desigualdad (Gini, S80/S20, Theil) y su descomposición.
+- Economía aplicada: medición de la desigualdad (Gini, S80/S20, índices de Theil) y su descomposición.
 - Estadística: estimación a partir de encuestas y margen de error de los indicadores.
 - TFG/TFM: pobreza y exclusión en las comunidades autónomas.
 

@@ -91,8 +91,8 @@ CATS = {
 "desigualdad": dict(
   titulo="Desigualdad y condiciones de vida",
   subtitulo="Desigualdad de la renta, pobreza y exclusión social",
-  intro="La desigualdad y la pobreza son retos estratégicos de la Agenda 2030 (ODS 10 y ODS 1). Los indicadores proceden de la Encuesta de Condiciones de Vida armonizada (EU-SILC). Más abajo se enlaza el **observatorio de desigualdad del proyecto THEILUMINA**, con índices de Theil, datos del Banco Mundial y del INE.",
-  docencia=["Economía aplicada: medición de la desigualdad (Gini, S80/S20, Theil) y su descomposición.", "Estadística: estimación a partir de encuestas y margen de error de los indicadores.", "TFG/TFM: pobreza y exclusión en las comunidades autónomas."],
+  intro="La desigualdad y la pobreza son retos estratégicos de la Agenda 2030 (ODS 10 y ODS 1). Los indicadores proceden de la Encuesta de Condiciones de Vida armonizada (EU-SILC).",
+  docencia=["Economía aplicada: medición de la desigualdad (Gini, S80/S20, índices de Theil) y su descomposición.", "Estadística: estimación a partir de encuestas y margen de error de los indicadores.", "TFG/TFM: pobreza y exclusión en las comunidades autónomas."],
   ind=[
     I("Índice de Gini", "ilc_di12", "", "Coeficiente (0-100)", "Anual", "Coeficiente de Gini de la renta disponible equivalente (0 = igualdad perfecta; 100 = máxima desigualdad).", desde=2005),
     I("Ratio S80/S20", "ilc_di11", "", "Ratio", "Anual", "Renta del 20 % más rico dividida entre la del 20 % más pobre.", desde=2005),
@@ -125,13 +125,9 @@ CATS = {
 
 EXTRA = {
 "desigualdad": """
-## Observatorio de desigualdad de THEILUMINA
-
-El proyecto de investigación **THEILUMINA** (Facultad de Ciencias Económicas y Empresariales, UGR) mantiene un observatorio de desigualdad con **índices de Theil**, que permiten descomponer la desigualdad entre grupos y dentro de ellos, a partir de datos de Eurostat, del Banco Mundial (más de 170 países) y del INE (comunidades autónomas).
-
-[Abrir el observatorio de THEILUMINA](https://jfmunozrosas.github.io/theilumina/observatory.html){.btn .btn-primary target="_blank"} [Guía práctica: índices de Theil en R](https://jfmunozrosas.github.io/theilumina/guides/indices-theil-r-es.html){.btn .btn-outline-primary target="_blank"}
-
-<iframe class="embed" src="https://jfmunozrosas.github.io/theilumina/observatory.html" title="Observatorio de desigualdad de THEILUMINA" loading="lazy"></iframe>
+::: {.callout-tip appearance="simple"}
+**Más datos de desigualdad.** El Banco Mundial publica el índice de Gini y la desviación logarítmica media (índice de Theil T₀) de más de 170 países en su [Poverty and Inequality Platform](https://pip.worldbank.org/), y el INE publica la Encuesta de Condiciones de Vida con detalle por comunidades autónomas ([INEbase](https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176807&menu=ultiDatos&idp=1254735976608)).
+:::
 """,
 "turismo": """
 ::: {.callout-tip appearance="simple"}

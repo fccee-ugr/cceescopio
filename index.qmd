@@ -38,7 +38,7 @@ page-layout: full
 
 [<span class="icon">🏛️</span><h3>Sector público y mercados</h3><p>Deuda y déficit públicos, bono a 10 años y tipo de cambio euro/dólar.</p>](publico.qmd){.card-ccee}
 
-[<span class="icon">⚖️</span><h3>Desigualdad</h3><p>Gini, S80/S20, pobreza y exclusión social, y el observatorio de THEILUMINA.</p>](desigualdad.qmd){.card-ccee}
+[<span class="icon">⚖️</span><h3>Desigualdad</h3><p>Gini, S80/S20 y riesgo de pobreza o exclusión social, también por comunidades.</p>](desigualdad.qmd){.card-ccee}
 
 [<span class="icon">🌱</span><h3>Energía y sostenibilidad</h3><p>Energías renovables, precio de la electricidad y emisiones.</p>](sostenibilidad.qmd){.card-ccee}
 

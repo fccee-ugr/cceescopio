@@ -35,7 +35,7 @@ Los filtros de cada tabla se pueden consultar en el navegador de datos de Eurost
 
 ## Publicar
 
-Igual que THEILUMINA: `quarto render` genera la web en `docs/`; en GitHub, *Settings → Pages → Deploy from branch → main /docs*. Cambia `site-url` en `_quarto.yml` por la dirección definitiva.
+`quarto render` genera la web en `docs/`; en GitHub, *Settings → Pages → Deploy from branch → main /docs*. Cambia `site-url` en `_quarto.yml` por la dirección definitiva.
 
 No necesita R: todos los datos se descargan en el navegador desde la API de Eurostat.
 

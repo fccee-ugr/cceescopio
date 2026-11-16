@@ -59,7 +59,6 @@ El código de cada tabla aparece bajo el nombre del indicador, con un enlace al 
 | Banco Central Europeo | Política monetaria, tipos de interés, tipos de cambio | [data.ecb.europa.eu](https://data.ecb.europa.eu/) |
 | Banco Mundial | Indicadores de desarrollo y de desigualdad de todos los países | [data.worldbank.org](https://data.worldbank.org/) |
 | OCDE | Indicadores económicos de los países de la OCDE | [data-explorer.oecd.org](https://data-explorer.oecd.org/) |
-| Observatorio de THEILUMINA | Desigualdad e índices de Theil (Eurostat, Banco Mundial, INE) | [jfmunozrosas.github.io/theilumina](https://jfmunozrosas.github.io/theilumina/observatory.html) |
 
 ## Microdatos para la investigación
 

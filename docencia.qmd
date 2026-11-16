@@ -16,7 +16,7 @@ CCEEscopio está pensado como una **herramienta común para el profesorado, el e
 | Dirección y Organización de Empresas | Digitalización y adopción de la inteligencia artificial; confianza empresarial; comercio electrónico. |
 | Finanzas y Contabilidad | Rentabilidad de la deuda pública y prima de riesgo; tipo de cambio euro/dólar; precios de la vivienda. |
 | Turismo | Estacionalidad de la demanda hotelera; turismo internacional; comparación entre comunidades. |
-| Economía pública y desigualdad | Gini, S80/S20, pobreza y exclusión social; índices de Theil (observatorio de THEILUMINA). |
+| Economía pública y desigualdad | Gini, S80/S20, pobreza y exclusión social; comparación entre países y comunidades autónomas. |
 | Economía de la energía y del medio ambiente | Energías renovables, precios de la electricidad y emisiones. |
 
 ### Ideas de actividades
@@ -31,7 +31,7 @@ CCEEscopio está pensado como una **herramienta común para el profesorado, el e
 - **Datos descargables y citables.** Cada gráfico permite descargar los datos en CSV, con el código de la tabla de Eurostat para citar la fuente y reproducir la descarga ([Datos y fuentes](datos.qmd)).
 - **Exploración rápida.** Antes de un análisis, CCEEscopio permite ver de un vistazo la evolución y la comparación entre países y regiones de las principales variables.
 - **Investigación reproducible.** Las páginas de datos incluyen ejemplos de código para descargar las mismas series desde R o Python.
-- **Proyectos de la Facultad.** CCEEscopio enlaza con observatorios de proyectos de investigación de la Facultad, como el [observatorio de desigualdad de THEILUMINA](desigualdad.qmd).
+- **Proyectos de la Facultad.** CCEEscopio podrá incorporar los observatorios y datos de los proyectos y grupos de investigación de la Facultad.
 
 ## Propón tus indicadores
 
