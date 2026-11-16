@@ -1,0 +1,27 @@
+<!--
+  Contador de visitas (GoatCounter, gratuito y sin cookies).
+  1. Crea una cuenta en https://www.goatcounter.com con el código cceescopio.
+  2. En Settings, activa "Allow adding visitor counts on your website".
+  Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+-->
+<script data-goatcounter="https://cceescopio.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+(function () {
+  const GC_CODE = "cceescopio";
+  function show(n) {
+    const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
+    if (!box || document.getElementById("visit-counter")) return;
+    const s = document.createElement("span");
+    s.id = "visit-counter";
+    s.className = "visit-counter";
+    s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
+    box.appendChild(s);
+  }
+  // No se cuenta la vista previa local (quarto preview)
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") return;
+  fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && d.count) show(String(d.count).replace(/\s/g, ".")); })
+    .catch(() => {});
+})();
+</script>

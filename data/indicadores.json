@@ -1,0 +1,60 @@
+{
+ "precios": [
+  "IPCA: inflación general (tasa anual)",
+  "IPCA: alimentos y bebidas no alcohólicas (tasa anual)",
+  "IPCA: energía (tasa anual)",
+  "IPCA: servicios (tasa anual)",
+  "Precio de la vivienda (tasa anual)"
+ ],
+ "empleo": [
+  "Tasa de paro",
+  "Tasa de paro juvenil (menores de 25 años)",
+  "Tasa de paro de las mujeres",
+  "Tasa de empleo (20-64 años)",
+  "Tasa de paro por regiones"
+ ],
+ "actividad": [
+  "PIB: crecimiento interanual (trimestral)",
+  "PIB per cápita en paridad de poder de compra",
+  "Índice de producción industrial",
+  "Índice de comercio minorista",
+  "Indicador de sentimiento económico"
+ ],
+ "empresa": [
+  "Gasto en I+D (% del PIB)",
+  "Gasto en I+D por regiones (% del PIB)",
+  "Empresas que usan inteligencia artificial",
+  "Personas que compran por internet",
+  "Confianza de la industria"
+ ],
+ "turismo": [
+  "Pernoctaciones en hoteles",
+  "Pernoctaciones de no residentes en hoteles",
+  "Llegadas de viajeros a hoteles",
+  "Pernoctaciones por regiones"
+ ],
+ "publico": [
+  "Deuda pública (% del PIB)",
+  "Déficit (−) o superávit (+) público (% del PIB)",
+  "Rentabilidad del bono a 10 años",
+  "Tipo de cambio euro / dólar"
+ ],
+ "desigualdad": [
+  "Índice de Gini",
+  "Ratio S80/S20",
+  "Riesgo de pobreza o exclusión social (AROPE)",
+  "Riesgo de pobreza o exclusión social por regiones"
+ ],
+ "sostenibilidad": [
+  "Cuota de energías renovables",
+  "Precio de la electricidad para hogares",
+  "Emisiones netas de gases de efecto invernadero"
+ ],
+ "andalucia": [
+  "PIB per cápita en paridad de poder de compra",
+  "Tasa de paro",
+  "Gasto en I+D (% del PIB)",
+  "Pernoctaciones turísticas",
+  "Riesgo de pobreza o exclusión social (AROPE)"
+ ]
+}

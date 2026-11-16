@@ -1,0 +1,86 @@
+/*-- scss:defaults --*/
+// Colores de la Facultad de Ciencias Económicas y Empresariales (UGR)
+$ccee-magenta: #B5175F;
+$ccee-orange:  #F29200;
+$ccee-dark:    #3C3C3B;
+$ccee-cream:   #FBF7F3;
+
+$primary: $ccee-magenta;
+$link-color: $ccee-magenta;
+$navbar-bg: #ffffff;
+$navbar-fg: $ccee-dark;
+$navbar-hl: $ccee-magenta;
+$footer-bg: $ccee-cream;
+$font-family-sans-serif: "Source Sans 3", "Segoe UI", Roboto, sans-serif;
+$headings-color: $ccee-dark;
+
+/*-- scss:rules --*/
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap');
+
+.navbar { border-bottom: 3px solid $ccee-orange; }
+.navbar-brand img { max-height: 44px; }
+
+h1, h2 { font-weight: 700; }
+h1.title { color: $ccee-magenta; }
+h2 { border-bottom: 2px solid rgba($ccee-orange, .4); padding-bottom: .25rem; }
+
+.nav-footer { font-size: .85rem; }
+.nav-footer img { max-height: 38px; }
+
+/* Portada */
+.hero {
+  background: $ccee-cream;
+  border-left: 6px solid $ccee-magenta;
+  border-radius: 10px;
+  padding: 1.5rem 1.75rem;
+  margin: .5rem 0 2rem;
+  img.hero-logo { max-width: 560px; width: 100%; display: block; margin-bottom: .75rem; }
+  .tagline { font-size: 1.25rem; color: $ccee-dark; margin: .25rem 0 0; }
+}
+
+.video-wrap { margin: .5rem 0 1.5rem; }
+.video-wrap video { width: 100%; border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,.15); background: #1E1E2A; }
+
+/* Tarjetas de categorías */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin: 1rem 0 1.5rem; }
+.card-ccee {
+  display: block; text-decoration: none; color: $ccee-dark;
+  border: 1px solid rgba($ccee-dark, .15); border-top: 5px solid $ccee-magenta; border-radius: 10px;
+  padding: .9rem 1rem; background: #fff; transition: transform .15s, box-shadow .15s;
+  &:nth-child(even) { border-top-color: $ccee-orange; }
+  &:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.10); color: $ccee-dark; }
+  .icon { font-size: 1.6rem; }
+  h3 { font-size: 1.1rem; margin: .3rem 0 .3rem; color: $ccee-magenta; border: 0; }
+  p { font-size: .92rem; margin: 0; }
+}
+
+.pill {
+  display: inline-block; background: rgba($ccee-orange, .14); color: darken($ccee-orange, 22%);
+  border-radius: 999px; padding: .1rem .6rem; font-size: .85rem; margin: 0 .25rem .25rem 0;
+}
+.pill-m { background: rgba($ccee-magenta, .10); color: $ccee-magenta; }
+
+.uses { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+.use-box {
+  background: $ccee-cream; border-radius: 10px; padding: 1rem 1.2rem; border-left: 5px solid $ccee-orange;
+  h3 { margin-top: 0; font-size: 1.15rem; border: 0; }
+}
+
+/* Paneles de indicadores */
+.ind-desc { background: $ccee-cream; border-left: 4px solid $ccee-orange; padding: .6rem .9rem; border-radius: 6px; }
+.ind-meta { display: block; font-size: .85rem; color: #666; margin-top: .3rem; }
+.descargas { display: flex; flex-wrap: wrap; gap: .75rem; margin: .5rem 0 1rem; }
+.descargas a {
+  background: $ccee-magenta; color: #fff !important; padding: .35rem .8rem; border-radius: 6px;
+  text-decoration: none; font-weight: 600; font-size: .9rem;
+}
+.descargas a:nth-child(2) { background: $ccee-orange; }
+.source { font-size: .85rem; color: #666; }
+.pending { color: #888; font-style: italic; }
+
+.logos-inst { display: flex; flex-wrap: wrap; align-items: center; gap: 2rem; margin: 1rem 0; img { max-height: 70px; } }
+
+.rank-band { font-weight: 700; color: $ccee-magenta; }
+.contact-box { background: $ccee-cream; border-radius: 10px; padding: 1.25rem 1.5rem; border-left: 6px solid $ccee-magenta; }
+iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2); border-radius: 8px; }
+.visit-counter .vc-num { font-weight: 700; color: $ccee-magenta; }

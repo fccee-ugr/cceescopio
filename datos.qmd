@@ -1,0 +1,74 @@
+---
+title: "Datos y fuentes"
+subtitle: "Cómo descargar los datos de CCEEscopio y dónde encontrar más información"
+---
+
+## Descargar los datos
+
+Cada gráfico de CCEEscopio incluye dos botones:
+
+- **Descargar selección (CSV):** los territorios que se muestran en el gráfico.
+- **Descargar todos los territorios (CSV):** todos los países o regiones disponibles para ese indicador.
+
+Los ficheros CSV usan la coma como separador y codificación UTF-8, y se abren directamente en Excel, R, Python, Stata o SPSS. Cada fila contiene el indicador, el territorio y su código, el periodo, el valor, la unidad y la fuente:
+
+```csv
+indicador,codigo_territorio,territorio,periodo,valor,unidad,fuente
+Tasa de paro,ES,España,2026-09,…,% de la población activa,Eurostat (une_rt_m)
+Tasa de paro por regiones,ES61,Andalucía,2025,…,% de la población activa,Eurostat (lfst_r_lfu3rt)
+```
+
+
+## Cómo citar
+
+> Eurostat (código de la tabla), a través de CCEEscopio, observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Consultado el [fecha].
+
+Los datos de Eurostat pueden reutilizarse libremente, incluso con fines comerciales, citando la fuente ([política de reutilización de Eurostat](https://ec.europa.eu/eurostat/about-us/policies/copyright)).
+
+## Acceder a los datos desde R o Python
+
+Para la investigación es recomendable descargar los datos directamente de la fuente desde el código, de modo que el análisis sea **reproducible**. Por ejemplo, en R con el paquete `eurostat`:
+
+```r
+library(eurostat)
+paro <- get_eurostat("une_rt_m",
+                     filters = list(geo = c("ES", "EU27_2020"), age = "TOTAL",
+                                    sex = "T", unit = "PC_ACT", s_adj = "SA"))
+head(paro)
+```
+
+En Python, con el paquete `eurostat`:
+
+```python
+import eurostat
+paro = eurostat.get_data_df("une_rt_m",
+                            filter_pars={"geo": ["ES", "EU27_2020"], "age": "TOTAL",
+                                         "sex": "T", "unit": "PC_ACT", "s_adj": "SA"})
+```
+
+El código de cada tabla aparece bajo el nombre del indicador, con un enlace al navegador de datos de Eurostat.
+
+## Fuentes de datos
+
+| Fuente | Qué ofrece | Enlace |
+|---|---|---|
+| Eurostat | Estadísticas oficiales de la UE (fuente de los gráficos de CCEEscopio) | [ec.europa.eu/eurostat](https://ec.europa.eu/eurostat/data/database) |
+| INE | IPC, EPA, Contabilidad Nacional, Coyuntura Turística, Encuesta de Condiciones de Vida, con detalle provincial | [ine.es](https://www.ine.es/) |
+| IECA | Instituto de Estadística y Cartografía de Andalucía | [juntadeandalucia.es/institutodeestadisticaycartografia](https://www.juntadeandalucia.es/institutodeestadisticaycartografia) |
+| Banco de España | Tipos de interés, crédito, balanza de pagos, indicadores económicos | [bde.es](https://www.bde.es/wbe/es/estadisticas/) |
+| Banco Central Europeo | Política monetaria, tipos de interés, tipos de cambio | [data.ecb.europa.eu](https://data.ecb.europa.eu/) |
+| Banco Mundial | Indicadores de desarrollo y de desigualdad de todos los países | [data.worldbank.org](https://data.worldbank.org/) |
+| OCDE | Indicadores económicos de los países de la OCDE | [data-explorer.oecd.org](https://data-explorer.oecd.org/) |
+| Observatorio de THEILUMINA | Desigualdad e índices de Theil (Eurostat, Banco Mundial, INE) | [jfmunozrosas.github.io/theilumina](https://jfmunozrosas.github.io/theilumina/observatory.html) |
+
+## Microdatos para la investigación
+
+Muchos trabajos de investigación requieren **microdatos** (datos individuales de personas, hogares o empresas). Las principales fuentes son:
+
+- **INE:** microdatos de la EPA, la Encuesta de Condiciones de Vida, la Encuesta de Presupuestos Familiares y otras, de acceso libre en su web.
+- **Eurostat:** microdatos de EU-SILC y de la Encuesta de Población Activa europea, con solicitud previa por parte de la universidad.
+- **Banco de España:** Encuesta Financiera de las Familias.
+
+::: {.callout-tip appearance="simple"}
+¿Necesitas ayuda para localizar o tratar datos para tu investigación? Escribe a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).
+:::

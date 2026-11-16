@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Turismo – CCEEscopio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/brand/cceescopio_icono.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-dcf498795f4c9d58e4673dac85fdd0a4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Turismo – CCEEscopio">
+<meta property="og:description" content="Viajeros y pernoctaciones en alojamientos turísticos">
+<meta property="og:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta property="og:site_name" content="CCEEscopio">
+<meta property="og:image:height" content="480">
+<meta property="og:image:width" content="1960">
+<meta name="twitter:title" content="Turismo – CCEEscopio">
+<meta name="twitter:description" content="Viajeros y pernoctaciones en alojamientos turísticos">
+<meta name="twitter:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta name="twitter:image-height" content="480">
+<meta name="twitter:image-width" content="1960">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/brand/cceescopio_navbar.png" alt="Logo de CCEEscopio" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="./precios.html">
+ <span class="dropdown-text">Precios e inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empleo.html">
+ <span class="dropdown-text">Mercado laboral</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./actividad.html">
+ <span class="dropdown-text">Actividad económica y coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresa.html">
+ <span class="dropdown-text">Empresa, innovación y digitalización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./turismo.html">
+ <span class="dropdown-text">Turismo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./publico.html">
+ <span class="dropdown-text">Sector público y mercados financieros</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad.html">
+ <span class="dropdown-text">Desigualdad y condiciones de vida</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sostenibilidad.html">
+ <span class="dropdown-text">Energía y sostenibilidad</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./andalucia.html">
+ <span class="dropdown-text">Andalucía y las regiones españolas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./rankings.html"> 
+<span class="menu-text">Rankings</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./datos.html"> 
+<span class="menu-text">Datos y fuentes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./docencia.html"> 
+<span class="menu-text">Docencia e investigación</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./contacto.html"> 
+<span class="menu-text">Contacto</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul class="collapse">
+  <li><a href="#ideas-para-la-docencia-y-la-investigación" id="toc-ideas-para-la-docencia-y-la-investigación" class="nav-link active" data-scroll-target="#ideas-para-la-docencia-y-la-investigación">Ideas para la docencia y la investigación</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Turismo</h1>
+<p class="subtitle lead">Viajeros y pernoctaciones en alojamientos turísticos</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de modificación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">16 de noviembre de 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>El turismo es uno de los sectores clave de la economía española y andaluza. Se muestran las <strong>pernoctaciones</strong> (noches que pasan los viajeros en un alojamiento) y las <strong>llegadas de viajeros</strong> a hoteles, para residentes y no residentes, con detalle regional.</p>
+<p>Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre las líneas para ver los valores y descarga los datos en CSV para usarlos en clase o en tu investigación.</p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="11" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 10;"><span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>indicadores <span class="op">=</span> [</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nombre"</span><span class="op">:</span> <span class="st">"Pernoctaciones en hoteles"</span><span class="op">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"code"</span><span class="op">:</span> <span class="st">"tour_occ_nim"</span><span class="op">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"query"</span><span class="op">:</span> <span class="st">"&amp;c_resid=TOTAL&amp;unit=NR&amp;nace_r2=I551"</span><span class="op">,</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"unidad"</span><span class="op">:</span> <span class="st">"Número de pernoctaciones"</span><span class="op">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"frecuencia"</span><span class="op">:</span> <span class="st">"Mensual"</span><span class="op">,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"descripcion"</span><span class="op">:</span> <span class="st">"Noches pasadas por residentes y no residentes en hoteles y alojamientos similares."</span><span class="op">,</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"desde"</span><span class="op">:</span> <span class="dv">2008</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nombre"</span><span class="op">:</span> <span class="st">"Pernoctaciones de no residentes en hoteles"</span><span class="op">,</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"code"</span><span class="op">:</span> <span class="st">"tour_occ_nim"</span><span class="op">,</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"query"</span><span class="op">:</span> <span class="st">"&amp;c_resid=FOR&amp;unit=NR&amp;nace_r2=I551"</span><span class="op">,</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"unidad"</span><span class="op">:</span> <span class="st">"Número de pernoctaciones"</span><span class="op">,</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"frecuencia"</span><span class="op">:</span> <span class="st">"Mensual"</span><span class="op">,</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"descripcion"</span><span class="op">:</span> <span class="st">"Noches pasadas por viajeros residentes en el extranjero."</span><span class="op">,</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"desde"</span><span class="op">:</span> <span class="dv">2008</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nombre"</span><span class="op">:</span> <span class="st">"Llegadas de viajeros a hoteles"</span><span class="op">,</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"code"</span><span class="op">:</span> <span class="st">"tour_occ_arm"</span><span class="op">,</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"query"</span><span class="op">:</span> <span class="st">"&amp;c_resid=TOTAL&amp;unit=NR&amp;nace_r2=I551"</span><span class="op">,</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"unidad"</span><span class="op">:</span> <span class="st">"Número de viajeros"</span><span class="op">,</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"frecuencia"</span><span class="op">:</span> <span class="st">"Mensual"</span><span class="op">,</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"descripcion"</span><span class="op">:</span> <span class="st">"Viajeros que se alojan en hoteles y alojamientos similares."</span><span class="op">,</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"desde"</span><span class="op">:</span> <span class="dv">2008</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nombre"</span><span class="op">:</span> <span class="st">"Pernoctaciones por regiones"</span><span class="op">,</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"code"</span><span class="op">:</span> <span class="st">"tour_occ_nin2"</span><span class="op">,</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"query"</span><span class="op">:</span> <span class="st">"&amp;c_resid=TOTAL&amp;unit=NR&amp;nace_r2=I551-I553"</span><span class="op">,</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"unidad"</span><span class="op">:</span> <span class="st">"Número de pernoctaciones"</span><span class="op">,</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"frecuencia"</span><span class="op">:</span> <span class="st">"Anual"</span><span class="op">,</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"descripcion"</span><span class="op">:</span> <span class="st">"Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas."</span><span class="op">,</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"regional"</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"desde"</span><span class="op">:</span> <span class="dv">2008</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="59" data-source-offset="-233"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 58;"><span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>nombresGeo <span class="op">=</span> ({</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ES</span><span class="op">:</span> <span class="st">"España"</span><span class="op">,</span> <span class="dt">EU27_2020</span><span class="op">:</span> <span class="st">"UE-27"</span><span class="op">,</span> <span class="dt">EA20</span><span class="op">:</span> <span class="st">"Zona euro"</span><span class="op">,</span> <span class="dt">EA</span><span class="op">:</span> <span class="st">"Zona euro"</span><span class="op">,</span> <span class="dt">EA19</span><span class="op">:</span> <span class="st">"Zona euro (19)"</span><span class="op">,</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="dt">DE</span><span class="op">:</span> <span class="st">"Alemania"</span><span class="op">,</span> <span class="dt">FR</span><span class="op">:</span> <span class="st">"Francia"</span><span class="op">,</span> <span class="dt">IT</span><span class="op">:</span> <span class="st">"Italia"</span><span class="op">,</span> <span class="dt">PT</span><span class="op">:</span> <span class="st">"Portugal"</span><span class="op">,</span> <span class="dt">NL</span><span class="op">:</span> <span class="st">"Países Bajos"</span><span class="op">,</span> <span class="dt">BE</span><span class="op">:</span> <span class="st">"Bélgica"</span><span class="op">,</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  <span class="dt">AT</span><span class="op">:</span> <span class="st">"Austria"</span><span class="op">,</span> <span class="dt">IE</span><span class="op">:</span> <span class="st">"Irlanda"</span><span class="op">,</span> <span class="dt">EL</span><span class="op">:</span> <span class="st">"Grecia"</span><span class="op">,</span> <span class="dt">FI</span><span class="op">:</span> <span class="st">"Finlandia"</span><span class="op">,</span> <span class="dt">SE</span><span class="op">:</span> <span class="st">"Suecia"</span><span class="op">,</span> <span class="dt">DK</span><span class="op">:</span> <span class="st">"Dinamarca"</span><span class="op">,</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  <span class="dt">PL</span><span class="op">:</span> <span class="st">"Polonia"</span><span class="op">,</span> <span class="dt">CZ</span><span class="op">:</span> <span class="st">"Chequia"</span><span class="op">,</span> <span class="dt">HU</span><span class="op">:</span> <span class="st">"Hungría"</span><span class="op">,</span> <span class="dt">RO</span><span class="op">:</span> <span class="st">"Rumanía"</span><span class="op">,</span> <span class="dt">BG</span><span class="op">:</span> <span class="st">"Bulgaria"</span><span class="op">,</span> <span class="dt">HR</span><span class="op">:</span> <span class="st">"Croacia"</span><span class="op">,</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  <span class="dt">SI</span><span class="op">:</span> <span class="st">"Eslovenia"</span><span class="op">,</span> <span class="dt">SK</span><span class="op">:</span> <span class="st">"Eslovaquia"</span><span class="op">,</span> <span class="dt">LT</span><span class="op">:</span> <span class="st">"Lituania"</span><span class="op">,</span> <span class="dt">LV</span><span class="op">:</span> <span class="st">"Letonia"</span><span class="op">,</span> <span class="dt">EE</span><span class="op">:</span> <span class="st">"Estonia"</span><span class="op">,</span> <span class="dt">LU</span><span class="op">:</span> <span class="st">"Luxemburgo"</span><span class="op">,</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="dt">MT</span><span class="op">:</span> <span class="st">"Malta"</span><span class="op">,</span> <span class="dt">CY</span><span class="op">:</span> <span class="st">"Chipre"</span><span class="op">,</span> <span class="dt">NO</span><span class="op">:</span> <span class="st">"Noruega"</span><span class="op">,</span> <span class="dt">CH</span><span class="op">:</span> <span class="st">"Suiza"</span><span class="op">,</span> <span class="dt">IS</span><span class="op">:</span> <span class="st">"Islandia"</span><span class="op">,</span> <span class="dt">UK</span><span class="op">:</span> <span class="st">"Reino Unido"</span><span class="op">,</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  <span class="dt">US</span><span class="op">:</span> <span class="st">"Estados Unidos"</span><span class="op">,</span> <span class="dt">JP</span><span class="op">:</span> <span class="st">"Japón"</span><span class="op">,</span> <span class="dt">TR</span><span class="op">:</span> <span class="st">"Turquía"</span><span class="op">,</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ES11</span><span class="op">:</span> <span class="st">"Galicia"</span><span class="op">,</span> <span class="dt">ES12</span><span class="op">:</span> <span class="st">"Asturias"</span><span class="op">,</span> <span class="dt">ES13</span><span class="op">:</span> <span class="st">"Cantabria"</span><span class="op">,</span> <span class="dt">ES21</span><span class="op">:</span> <span class="st">"País Vasco"</span><span class="op">,</span> <span class="dt">ES22</span><span class="op">:</span> <span class="st">"Navarra"</span><span class="op">,</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ES23</span><span class="op">:</span> <span class="st">"La Rioja"</span><span class="op">,</span> <span class="dt">ES24</span><span class="op">:</span> <span class="st">"Aragón"</span><span class="op">,</span> <span class="dt">ES30</span><span class="op">:</span> <span class="st">"Madrid"</span><span class="op">,</span> <span class="dt">ES41</span><span class="op">:</span> <span class="st">"Castilla y León"</span><span class="op">,</span> <span class="dt">ES42</span><span class="op">:</span> <span class="st">"Castilla-La Mancha"</span><span class="op">,</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ES43</span><span class="op">:</span> <span class="st">"Extremadura"</span><span class="op">,</span> <span class="dt">ES51</span><span class="op">:</span> <span class="st">"Cataluña"</span><span class="op">,</span> <span class="dt">ES52</span><span class="op">:</span> <span class="st">"C. Valenciana"</span><span class="op">,</span> <span class="dt">ES53</span><span class="op">:</span> <span class="st">"Illes Balears"</span><span class="op">,</span> <span class="dt">ES61</span><span class="op">:</span> <span class="st">"Andalucía"</span><span class="op">,</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ES62</span><span class="op">:</span> <span class="st">"Región de Murcia"</span><span class="op">,</span> <span class="dt">ES63</span><span class="op">:</span> <span class="st">"Ceuta"</span><span class="op">,</span> <span class="dt">ES64</span><span class="op">:</span> <span class="st">"Melilla"</span><span class="op">,</span> <span class="dt">ES70</span><span class="op">:</span> <span class="st">"Canarias"</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>geosPaises <span class="op">=</span> [<span class="st">"ES"</span><span class="op">,</span> <span class="st">"EU27_2020"</span><span class="op">,</span> <span class="st">"EA20"</span><span class="op">,</span> <span class="st">"DE"</span><span class="op">,</span> <span class="st">"FR"</span><span class="op">,</span> <span class="st">"IT"</span><span class="op">,</span> <span class="st">"PT"</span><span class="op">,</span> <span class="st">"NL"</span><span class="op">,</span> <span class="st">"BE"</span><span class="op">,</span> <span class="st">"AT"</span><span class="op">,</span> <span class="st">"IE"</span><span class="op">,</span> <span class="st">"EL"</span><span class="op">,</span> <span class="st">"FI"</span><span class="op">,</span> <span class="st">"SE"</span><span class="op">,</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>              <span class="st">"DK"</span><span class="op">,</span> <span class="st">"PL"</span><span class="op">,</span> <span class="st">"CZ"</span><span class="op">,</span> <span class="st">"HU"</span><span class="op">,</span> <span class="st">"RO"</span><span class="op">,</span> <span class="st">"BG"</span><span class="op">,</span> <span class="st">"HR"</span><span class="op">,</span> <span class="st">"SI"</span><span class="op">,</span> <span class="st">"SK"</span><span class="op">,</span> <span class="st">"LT"</span><span class="op">,</span> <span class="st">"LV"</span><span class="op">,</span> <span class="st">"EE"</span><span class="op">,</span> <span class="st">"LU"</span><span class="op">,</span> <span class="st">"MT"</span><span class="op">,</span> <span class="st">"CY"</span>]</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>geosRegiones <span class="op">=</span> [<span class="st">"ES"</span><span class="op">,</span> <span class="st">"EU27_2020"</span><span class="op">,</span> <span class="st">"ES11"</span><span class="op">,</span> <span class="st">"ES12"</span><span class="op">,</span> <span class="st">"ES13"</span><span class="op">,</span> <span class="st">"ES21"</span><span class="op">,</span> <span class="st">"ES22"</span><span class="op">,</span> <span class="st">"ES23"</span><span class="op">,</span> <span class="st">"ES24"</span><span class="op">,</span> <span class="st">"ES30"</span><span class="op">,</span> <span class="st">"ES41"</span><span class="op">,</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>                <span class="st">"ES42"</span><span class="op">,</span> <span class="st">"ES43"</span><span class="op">,</span> <span class="st">"ES51"</span><span class="op">,</span> <span class="st">"ES52"</span><span class="op">,</span> <span class="st">"ES53"</span><span class="op">,</span> <span class="st">"ES61"</span><span class="op">,</span> <span class="st">"ES62"</span><span class="op">,</span> <span class="st">"ES63"</span><span class="op">,</span> <span class="st">"ES64"</span><span class="op">,</span> <span class="st">"ES70"</span>]</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>defPaises <span class="op">=</span> [<span class="st">"ES"</span><span class="op">,</span> <span class="st">"EU27_2020"</span><span class="op">,</span> <span class="st">"DE"</span><span class="op">,</span> <span class="st">"FR"</span><span class="op">,</span> <span class="st">"IT"</span><span class="op">,</span> <span class="st">"PT"</span>]</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>defRegiones <span class="op">=</span> [<span class="st">"ES61"</span><span class="op">,</span> <span class="st">"ES"</span><span class="op">,</span> <span class="st">"ES30"</span><span class="op">,</span> <span class="st">"ES51"</span><span class="op">,</span> <span class="st">"ES52"</span>]</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>locES <span class="op">=</span> d3<span class="op">.</span><span class="fu">formatLocale</span>({<span class="dt">decimal</span><span class="op">:</span> <span class="st">","</span><span class="op">,</span> <span class="dt">thousands</span><span class="op">:</span> <span class="st">"."</span><span class="op">,</span> <span class="dt">grouping</span><span class="op">:</span> [<span class="dv">3</span>]<span class="op">,</span> <span class="dt">currency</span><span class="op">:</span> [<span class="st">""</span><span class="op">,</span> <span class="st">" €"</span>]})</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>fmt <span class="op">=</span> (v) <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(v) <span class="op">&gt;=</span> <span class="dv">1000</span> <span class="op">?</span> locES<span class="op">.</span><span class="fu">format</span>(<span class="st">",.0f"</span>)(v) <span class="op">:</span> locES<span class="op">.</span><span class="fu">format</span>(<span class="st">",.2~f"</span>)(v)</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">jsonstat</span>(js) {</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> ids <span class="op">=</span> js<span class="op">.</span><span class="at">id</span><span class="op">,</span> size <span class="op">=</span> js<span class="op">.</span><span class="at">size</span><span class="op">,</span> dims <span class="op">=</span> js<span class="op">.</span><span class="at">dimension</span><span class="op">;</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> codes <span class="op">=</span> ids<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> {</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> idx <span class="op">=</span> dims[d]<span class="op">.</span><span class="at">category</span><span class="op">.</span><span class="at">index</span><span class="op">;</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(idx) <span class="op">?</span> idx <span class="op">:</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">keys</span>(idx)<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> idx[a] <span class="op">-</span> idx[b])<span class="op">;</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> labels <span class="op">=</span> ids<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> dims[d]<span class="op">.</span><span class="at">category</span><span class="op">.</span><span class="at">label</span> <span class="op">||</span> {})<span class="op">;</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> vals <span class="op">=</span> js<span class="op">.</span><span class="at">value</span><span class="op">,</span> out <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> keys <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(vals) <span class="op">?</span> vals<span class="op">.</span><span class="fu">map</span>((v<span class="op">,</span> i) <span class="kw">=&gt;</span> i)<span class="op">.</span><span class="fu">filter</span>(i <span class="kw">=&gt;</span> vals[i] <span class="op">!=</span> <span class="kw">null</span>) <span class="op">:</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">keys</span>(vals)<span class="op">.</span><span class="fu">map</span>(<span class="bu">Number</span>)<span class="op">;</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> i <span class="kw">of</span> keys) {</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rem <span class="op">=</span> i<span class="op">;</span> <span class="kw">const</span> rec <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> d <span class="op">=</span> ids<span class="op">.</span><span class="at">length</span> <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> d <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">;</span> d<span class="op">--</span>) {</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> c <span class="op">=</span> codes[d][rem <span class="op">%</span> size[d]]<span class="op">;</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>      rec[ids[d]] <span class="op">=</span> c<span class="op">;</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (ids[d] <span class="op">===</span> <span class="st">"geo"</span>) rec<span class="op">.</span><span class="at">geoLabel</span> <span class="op">=</span> labels[d][c] <span class="op">||</span> c<span class="op">;</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>      rem <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(rem <span class="op">/</span> size[d])<span class="op">;</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    rec<span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="op">+</span>vals[i]<span class="op">;</span></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    out<span class="op">.</span><span class="fu">push</span>(rec)<span class="op">;</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> out<span class="op">;</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>preferidas <span class="op">=</span> [<span class="st">"TOTAL"</span><span class="op">,</span> <span class="st">"T"</span><span class="op">,</span> <span class="st">"TOT"</span><span class="op">,</span> <span class="st">"CP00"</span><span class="op">,</span> <span class="st">"PC"</span><span class="op">,</span> <span class="st">"EUR"</span><span class="op">,</span> <span class="st">"NR"</span><span class="op">,</span> <span class="st">"SA"</span><span class="op">,</span> <span class="st">"SCA"</span><span class="op">,</span> <span class="st">"RCH_A"</span><span class="op">,</span> <span class="st">"I90"</span><span class="op">,</span> <span class="st">"A"</span><span class="op">,</span> <span class="st">"Y15-74"</span>]</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">unaCategoria</span>(recs) {</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Para cada dimensión distinta de geo y time, conserva una sola categoría</span></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>recs<span class="op">.</span><span class="at">length</span>) <span class="cf">return</span> recs<span class="op">;</span></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> dimsAll <span class="op">=</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">keys</span>(recs[<span class="dv">0</span>])<span class="op">.</span><span class="fu">filter</span>(k <span class="kw">=&gt;</span> <span class="op">!</span>[<span class="st">"geo"</span><span class="op">,</span> <span class="st">"time"</span><span class="op">,</span> <span class="st">"value"</span><span class="op">,</span> <span class="st">"geoLabel"</span>]<span class="op">.</span><span class="fu">includes</span>(k))<span class="op">;</span></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> r <span class="op">=</span> recs<span class="op">;</span></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> d <span class="kw">of</span> dimsAll) {</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> cats <span class="op">=</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>(r<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> x[d]))]<span class="op">;</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (cats<span class="op">.</span><span class="at">length</span> <span class="op">&lt;</span> <span class="dv">2</span>) <span class="cf">continue</span><span class="op">;</span></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> elegida <span class="op">=</span> preferidas<span class="op">.</span><span class="fu">find</span>(p <span class="kw">=&gt;</span> cats<span class="op">.</span><span class="fu">includes</span>(p)) <span class="op">??</span> cats[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> r<span class="op">.</span><span class="fu">filter</span>(x <span class="kw">=&gt;</span> x[d] <span class="op">===</span> elegida)<span class="op">;</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> r<span class="op">;</span></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">eurostat</span>(code<span class="op">,</span> query <span class="op">=</span> <span class="st">""</span>) {</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> url <span class="op">=</span> <span class="vs">`https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/</span><span class="sc">${</span>code<span class="sc">}</span><span class="vs">?format=JSON&amp;lang=EN</span><span class="sc">${</span>query<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> res <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(url)<span class="op">;</span></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>res<span class="op">.</span><span class="at">ok</span>) {</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> msg <span class="op">=</span> <span class="vs">`HTTP </span><span class="sc">${</span>res<span class="op">.</span><span class="at">status</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> { <span class="kw">const</span> js <span class="op">=</span> <span class="cf">await</span> res<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span> <span class="kw">const</span> err <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">isArray</span>(js<span class="op">.</span><span class="at">error</span>) <span class="op">?</span> js<span class="op">.</span><span class="at">error</span>[<span class="dv">0</span>] <span class="op">:</span> js<span class="op">.</span><span class="at">error</span><span class="op">;</span> <span class="cf">if</span> (err <span class="op">&amp;&amp;</span> err<span class="op">.</span><span class="at">label</span>) msg <span class="op">+=</span> <span class="vs">` – </span><span class="sc">${</span>err<span class="op">.</span><span class="at">label</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span> } <span class="cf">catch</span> (e) {}</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="kw">new</span> <span class="bu">Error</span>(<span class="vs">`Eurostat </span><span class="sc">${</span>code<span class="sc">}</span><span class="vs">: </span><span class="sc">${</span>msg<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">jsonstat</span>(<span class="cf">await</span> res<span class="op">.</span><span class="fu">json</span>())<span class="op">;</span></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">fecha</span>(t) {</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> m<span class="op">;</span></span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((m <span class="op">=</span> <span class="ss">/</span><span class="sc">^(\d{4})</span><span class="ss">-</span><span class="sc">(\d{2})$</span><span class="ss">/</span><span class="op">.</span><span class="fu">exec</span>(t))) <span class="cf">return</span> <span class="kw">new</span> <span class="bu">Date</span>(<span class="op">+</span>m[<span class="dv">1</span>]<span class="op">,</span> <span class="op">+</span>m[<span class="dv">2</span>] <span class="op">-</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((m <span class="op">=</span> <span class="ss">/</span><span class="sc">^(\d{4})</span><span class="ss">M</span><span class="sc">(\d{2})$</span><span class="ss">/</span><span class="op">.</span><span class="fu">exec</span>(t))) <span class="cf">return</span> <span class="kw">new</span> <span class="bu">Date</span>(<span class="op">+</span>m[<span class="dv">1</span>]<span class="op">,</span> <span class="op">+</span>m[<span class="dv">2</span>] <span class="op">-</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((m <span class="op">=</span> <span class="ss">/</span><span class="sc">^(\d{4})</span><span class="ss">-</span><span class="sc">?</span><span class="ss">Q</span><span class="sc">(\d)$</span><span class="ss">/</span><span class="op">.</span><span class="fu">exec</span>(t))) <span class="cf">return</span> <span class="kw">new</span> <span class="bu">Date</span>(<span class="op">+</span>m[<span class="dv">1</span>]<span class="op">,</span> (<span class="op">+</span>m[<span class="dv">2</span>] <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((m <span class="op">=</span> <span class="ss">/</span><span class="sc">^(\d{4})</span><span class="ss">-</span><span class="sc">?</span><span class="ss">S</span><span class="sc">(\d)$</span><span class="ss">/</span><span class="op">.</span><span class="fu">exec</span>(t))) <span class="cf">return</span> <span class="kw">new</span> <span class="bu">Date</span>(<span class="op">+</span>m[<span class="dv">1</span>]<span class="op">,</span> (<span class="op">+</span>m[<span class="dv">2</span>] <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((m <span class="op">=</span> <span class="ss">/</span><span class="sc">^(\d{4})$</span><span class="ss">/</span><span class="op">.</span><span class="fu">exec</span>(t))) <span class="cf">return</span> <span class="kw">new</span> <span class="bu">Date</span>(<span class="op">+</span>m[<span class="dv">1</span>]<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">consultar</span>(code<span class="op">,</span> query<span class="op">,</span> geos<span class="op">,</span> desde) {</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cf">await</span> <span class="fu">eurostat</span>(code<span class="op">,</span> query <span class="op">+</span> (geos <span class="op">?</span> geos<span class="op">.</span><span class="fu">map</span>(g <span class="kw">=&gt;</span> <span class="vs">`&amp;geo=</span><span class="sc">${</span>g<span class="sc">}</span><span class="vs">`</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>) <span class="op">:</span> <span class="st">""</span>) <span class="op">+</span> desde)<span class="op">;</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (e1) {</span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios</span></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">eurostat</span>(code<span class="op">,</span> query <span class="op">+</span> desde)<span class="op">;</span></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> geos <span class="op">?</span> r<span class="op">.</span><span class="fu">filter</span>(x <span class="kw">=&gt;</span> geos<span class="op">.</span><span class="fu">includes</span>(x<span class="op">.</span><span class="at">geo</span>)) <span class="op">:</span> r<span class="op">;</span></span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">cargar</span>(spec) {</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> desde <span class="op">=</span> <span class="vs">`&amp;sinceTimePeriod=</span><span class="sc">${</span>spec<span class="op">.</span><span class="at">desde</span> <span class="op">??</span> <span class="dv">2008</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> geos <span class="op">=</span> spec<span class="op">.</span><span class="at">regional</span> <span class="op">?</span> geosRegiones <span class="op">:</span> (spec<span class="op">.</span><span class="at">sinGeo</span> <span class="op">?</span> <span class="kw">null</span> <span class="op">:</span> geosPaises)<span class="op">;</span></span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)</span></span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>  <span class="co">// y, por último, la tabla sin filtros adicionales</span></span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> intentos <span class="op">=</span> [{<span class="dt">code</span><span class="op">:</span> spec<span class="op">.</span><span class="at">code</span><span class="op">,</span> <span class="dt">query</span><span class="op">:</span> spec<span class="op">.</span><span class="at">query</span>}<span class="op">,</span> <span class="op">...</span>(spec<span class="op">.</span><span class="at">alt</span> <span class="op">??</span> [])<span class="op">,</span> {<span class="dt">code</span><span class="op">:</span> spec<span class="op">.</span><span class="at">code</span><span class="op">,</span> <span class="dt">query</span><span class="op">:</span> <span class="st">""</span>}]<span class="op">;</span></span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> recs <span class="op">=</span> <span class="kw">null</span><span class="op">,</span> usado <span class="op">=</span> <span class="kw">null</span><span class="op">,</span> error <span class="op">=</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> t <span class="kw">of</span> intentos) {</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> { recs <span class="op">=</span> <span class="cf">await</span> <span class="fu">consultar</span>(t<span class="op">.</span><span class="at">code</span><span class="op">,</span> t<span class="op">.</span><span class="at">query</span><span class="op">,</span> geos<span class="op">,</span> desde)<span class="op">;</span> <span class="cf">if</span> (recs<span class="op">.</span><span class="at">length</span>) { usado <span class="op">=</span> t<span class="op">;</span> <span class="cf">break</span><span class="op">;</span> } }</span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>    <span class="cf">catch</span> (e) { error <span class="op">=</span> e<span class="op">.</span><span class="at">message</span><span class="op">;</span> }</span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>recs <span class="op">||</span> <span class="op">!</span>recs<span class="op">.</span><span class="at">length</span>) <span class="cf">return</span> {<span class="dt">ok</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">error</span><span class="op">:</span> error <span class="op">||</span> <span class="st">"la consulta no devolvió datos"</span><span class="op">,</span> <span class="dt">rows</span><span class="op">:</span> []}<span class="op">;</span></span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>  recs <span class="op">=</span> <span class="fu">unaCategoria</span>(recs)<span class="op">;</span></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> rows <span class="op">=</span> recs<span class="op">.</span><span class="fu">map</span>(r <span class="kw">=&gt;</span> ({</span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>    <span class="dt">indicador</span><span class="op">:</span> spec<span class="op">.</span><span class="at">nombre</span><span class="op">,</span></span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>    <span class="dt">codigo_territorio</span><span class="op">:</span> r<span class="op">.</span><span class="at">geo</span> <span class="op">??</span> <span class="st">""</span><span class="op">,</span></span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>    <span class="dt">territorio</span><span class="op">:</span> r<span class="op">.</span><span class="at">geo</span> <span class="op">?</span> (nombresGeo[r<span class="op">.</span><span class="at">geo</span>] <span class="op">??</span> r<span class="op">.</span><span class="at">geoLabel</span>) <span class="op">:</span> (spec<span class="op">.</span><span class="at">serie</span> <span class="op">??</span> spec<span class="op">.</span><span class="at">nombre</span>)<span class="op">,</span></span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>    <span class="dt">periodo</span><span class="op">:</span> r<span class="op">.</span><span class="at">time</span><span class="op">,</span></span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fecha</span><span class="op">:</span> <span class="fu">fecha</span>(r<span class="op">.</span><span class="at">time</span>)<span class="op">,</span></span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>    <span class="dt">valor</span><span class="op">:</span> r<span class="op">.</span><span class="at">value</span><span class="op">,</span></span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unidad</span><span class="op">:</span> spec<span class="op">.</span><span class="at">unidad</span><span class="op">,</span></span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fuente</span><span class="op">:</span> <span class="vs">`Eurostat (</span><span class="sc">${</span>usado<span class="op">.</span><span class="at">code</span><span class="sc">}</span><span class="vs">)`</span></span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>  }))<span class="op">.</span><span class="fu">filter</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">fecha</span> <span class="op">&amp;&amp;</span> <span class="bu">Number</span><span class="op">.</span><span class="fu">isFinite</span>(r<span class="op">.</span><span class="at">valor</span>))<span class="op">;</span></span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {<span class="dt">ok</span><span class="op">:</span> rows<span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">,</span> rows<span class="op">,</span> <span class="dt">code</span><span class="op">:</span> usado<span class="op">.</span><span class="at">code</span><span class="op">,</span> <span class="dt">error</span><span class="op">:</span> rows<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="st">""</span> <span class="op">:</span> <span class="st">"la consulta no devolvió datos"</span>}<span class="op">;</span></span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">colores</span>(terrs) {</span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> fijos <span class="op">=</span> {<span class="st">"España"</span><span class="op">:</span> <span class="st">"#B5175F"</span><span class="op">,</span> <span class="st">"Andalucía"</span><span class="op">:</span> <span class="st">"#F29200"</span><span class="op">,</span> <span class="st">"UE-27"</span><span class="op">:</span> <span class="st">"#3C3C3B"</span><span class="op">,</span> <span class="st">"Zona euro"</span><span class="op">:</span> <span class="st">"#7A7A7A"</span>}<span class="op">;</span></span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> paleta <span class="op">=</span> [<span class="st">"#1F77B4"</span><span class="op">,</span> <span class="st">"#2CA02C"</span><span class="op">,</span> <span class="st">"#9467BD"</span><span class="op">,</span> <span class="st">"#8C564B"</span><span class="op">,</span> <span class="st">"#17BECF"</span><span class="op">,</span> <span class="st">"#BCBD22"</span><span class="op">,</span> <span class="st">"#E377C2"</span><span class="op">,</span> <span class="st">"#D62728"</span><span class="op">,</span> <span class="st">"#7F7F7F"</span>]<span class="op">;</span></span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> terrs<span class="op">.</span><span class="fu">map</span>(t <span class="kw">=&gt;</span> fijos[t] <span class="op">??</span> paleta[k<span class="op">++</span> <span class="op">%</span> paleta<span class="op">.</span><span class="at">length</span>])<span class="op">;</span></span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">csv</span>(rows) {</span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="kw">new</span> <span class="bu">Blob</span>([<span class="st">"﻿"</span> <span class="op">+</span> d3<span class="op">.</span><span class="fu">csvFormat</span>(rows<span class="op">.</span><span class="fu">map</span>(({fecha<span class="op">,</span> <span class="op">...</span>r}) <span class="kw">=&gt;</span> r))]<span class="op">,</span> {<span class="dt">type</span><span class="op">:</span> <span class="st">"text/csv;charset=utf-8"</span>})<span class="op">;</span></span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-8" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-9" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-10" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-11" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-12" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-13" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-14" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-15" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-16" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="190" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 189;"><span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a>viewof ind <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(indicadores<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Indicador"</span><span class="op">,</span> <span class="dt">format</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">nombre</span>})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="195" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 194;"><span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;p class="ind-desc"&gt;</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">descripcion</span><span class="sc">}</span><span class="vs">&lt;span class="ind-meta"&gt;Unidad: </span><span class="sc">${</span>ind<span class="op">.</span><span class="at">unidad</span><span class="sc">}</span><span class="vs"> · Frecuencia: </span><span class="sc">${</span>ind<span class="op">.</span><span class="at">frecuencia</span><span class="sc">}</span><span class="vs"> · Fuente: &lt;a href="https://ec.europa.eu/eurostat/databrowser/view/</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">code</span><span class="sc">}</span><span class="vs">/default/table" target="_blank" rel="noopener"&gt;Eurostat, </span><span class="sc">${</span>ind<span class="op">.</span><span class="at">code</span><span class="sc">}</span><span class="vs">&lt;/a&gt;</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">regional</span> <span class="op">?</span> <span class="st">" · Datos regionales (NUTS 2)"</span> <span class="op">:</span> <span class="st">""</span><span class="sc">}</span><span class="vs">&lt;/span&gt;&lt;/p&gt;`</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="201" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 200;"><span id="cb5-201"><a href="#cb5-201" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> <span class="fu">cargar</span>(ind)</span>
+<span id="cb5-202"><a href="#cb5-202" aria-hidden="true" tabindex="-1"></a>territorios <span class="op">=</span> datos<span class="op">.</span><span class="at">ok</span> <span class="op">?</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>(datos<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="fu">map</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">territorio</span>))]<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> a<span class="op">.</span><span class="fu">localeCompare</span>(b<span class="op">,</span> <span class="st">"es"</span>)) <span class="op">:</span> []</span>
+<span id="cb5-203"><a href="#cb5-203" aria-hidden="true" tabindex="-1"></a>defecto <span class="op">=</span> {</span>
+<span id="cb5-204"><a href="#cb5-204" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> d <span class="op">=</span> (ind<span class="op">.</span><span class="at">regional</span> <span class="op">?</span> defRegiones <span class="op">:</span> defPaises)<span class="op">.</span><span class="fu">map</span>(g <span class="kw">=&gt;</span> nombresGeo[g])<span class="op">;</span></span>
+<span id="cb5-205"><a href="#cb5-205" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> v <span class="op">=</span> territorios<span class="op">.</span><span class="fu">filter</span>(t <span class="kw">=&gt;</span> d<span class="op">.</span><span class="fu">includes</span>(t))<span class="op">;</span></span>
+<span id="cb5-206"><a href="#cb5-206" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> v<span class="op">.</span><span class="at">length</span> <span class="op">?</span> v <span class="op">:</span> territorios<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">5</span>)<span class="op">;</span></span>
+<span id="cb5-207"><a href="#cb5-207" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-208"><a href="#cb5-208" aria-hidden="true" tabindex="-1"></a>viewof terr <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(territorios<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Territorios (Ctrl/Cmd para elegir varios)"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> defecto<span class="op">,</span> <span class="dt">size</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">8</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">2</span><span class="op">,</span> territorios<span class="op">.</span><span class="at">length</span>))})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-5-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-5-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-5-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-5-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="213" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 212;"><span id="cb6-213"><a href="#cb6-213" aria-hidden="true" tabindex="-1"></a>sel <span class="op">=</span> datos<span class="op">.</span><span class="at">ok</span> <span class="op">?</span> datos<span class="op">.</span><span class="at">rows</span><span class="op">.</span><span class="fu">filter</span>(r <span class="kw">=&gt;</span> terr<span class="op">.</span><span class="fu">includes</span>(r<span class="op">.</span><span class="at">territorio</span>)) <span class="op">:</span> []</span>
+<span id="cb6-214"><a href="#cb6-214" aria-hidden="true" tabindex="-1"></a>datos<span class="op">.</span><span class="at">ok</span> <span class="op">?</span> (terr<span class="op">.</span><span class="at">length</span> <span class="op">?</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb6-215"><a href="#cb6-215" aria-hidden="true" tabindex="-1"></a>  <span class="dt">height</span><span class="op">:</span> <span class="dv">430</span><span class="op">,</span> <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">60</span><span class="op">,</span> <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">130</span><span class="op">,</span></span>
+<span id="cb6-216"><a href="#cb6-216" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="kw">null</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"time"</span>}<span class="op">,</span></span>
+<span id="cb6-217"><a href="#cb6-217" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> ind<span class="op">.</span><span class="at">unidad</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">zero</span><span class="op">:</span> ind<span class="op">.</span><span class="at">cero</span> <span class="op">??</span> <span class="kw">false</span><span class="op">,</span> tickFormat<span class="op">:</span> v <span class="kw">=&gt;</span> <span class="fu">fmt</span>(v)}<span class="op">,</span></span>
+<span id="cb6-218"><a href="#cb6-218" aria-hidden="true" tabindex="-1"></a>  <span class="dt">color</span><span class="op">:</span> {<span class="dt">domain</span><span class="op">:</span> terr<span class="op">,</span> <span class="dt">range</span><span class="op">:</span> <span class="fu">colores</span>(terr)}<span class="op">,</span></span>
+<span id="cb6-219"><a href="#cb6-219" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb6-220"><a href="#cb6-220" aria-hidden="true" tabindex="-1"></a>    ind<span class="op">.</span><span class="at">cero</span> <span class="op">?</span> Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> {<span class="dt">stroke</span><span class="op">:</span> <span class="st">"#999"</span>}) <span class="op">:</span> <span class="kw">null</span><span class="op">,</span></span>
+<span id="cb6-221"><a href="#cb6-221" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(sel<span class="op">,</span> {<span class="dt">x</span><span class="op">:</span> <span class="st">"fecha"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"valor"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"territorio"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.2</span><span class="op">,</span> <span class="dt">sort</span><span class="op">:</span> <span class="st">"fecha"</span>})<span class="op">,</span></span>
+<span id="cb6-222"><a href="#cb6-222" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">text</span>(sel<span class="op">,</span> Plot<span class="op">.</span><span class="fu">selectLast</span>({<span class="dt">x</span><span class="op">:</span> <span class="st">"fecha"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"valor"</span><span class="op">,</span> <span class="dt">z</span><span class="op">:</span> <span class="st">"territorio"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> <span class="st">"territorio"</span><span class="op">,</span> <span class="dt">textAnchor</span><span class="op">:</span> <span class="st">"start"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"territorio"</span>}))<span class="op">,</span></span>
+<span id="cb6-223"><a href="#cb6-223" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">tip</span>(sel<span class="op">,</span> Plot<span class="op">.</span><span class="fu">pointer</span>({<span class="dt">x</span><span class="op">:</span> <span class="st">"fecha"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"valor"</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="vs">`</span><span class="sc">${</span>d<span class="op">.</span><span class="at">territorio</span><span class="sc">}</span><span class="vs"> · </span><span class="sc">${</span>d<span class="op">.</span><span class="at">periodo</span><span class="sc">}\n${</span><span class="fu">fmt</span>(d<span class="op">.</span><span class="at">valor</span>)<span class="sc">}</span><span class="vs"> (</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">unidad</span><span class="sc">}</span><span class="vs">)`</span>}))</span>
+<span id="cb6-224"><a href="#cb6-224" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb6-225"><a href="#cb6-225" aria-hidden="true" tabindex="-1"></a>}) <span class="op">:</span> <span class="fu">html</span><span class="vs">`&lt;p class="pending"&gt;Elige al menos un territorio.&lt;/p&gt;`</span>)</span>
+<span id="cb6-226"><a href="#cb6-226" aria-hidden="true" tabindex="-1"></a><span class="op">:</span> <span class="fu">html</span><span class="vs">`&lt;div class="callout callout-warning"&gt;&lt;p&gt;&lt;b&gt;No se han podido cargar los datos de Eurostat&lt;/b&gt; (</span><span class="sc">${</span>datos<span class="op">.</span><span class="at">error</span><span class="sc">}</span><span class="vs">). Inténtalo de nuevo más tarde o consulta la tabla directamente en &lt;a href="https://ec.europa.eu/eurostat/databrowser/view/</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">code</span><span class="sc">}</span><span class="vs">/default/table" target="_blank"&gt;Eurostat&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;`</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="231" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 230;"><span id="cb7-231"><a href="#cb7-231" aria-hidden="true" tabindex="-1"></a>ultimos <span class="op">=</span> {</span>
+<span id="cb7-232"><a href="#cb7-232" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>datos<span class="op">.</span><span class="at">ok</span>) <span class="cf">return</span> []<span class="op">;</span></span>
+<span id="cb7-233"><a href="#cb7-233" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> last <span class="op">=</span> d3<span class="op">.</span><span class="fu">rollup</span>(datos<span class="op">.</span><span class="at">rows</span><span class="op">,</span> v <span class="kw">=&gt;</span> v<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> b<span class="op">.</span><span class="at">fecha</span> <span class="op">-</span> a<span class="op">.</span><span class="at">fecha</span>)[<span class="dv">0</span>]<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">territorio</span>)<span class="op">;</span></span>
+<span id="cb7-234"><a href="#cb7-234" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> [<span class="op">...</span>last<span class="op">.</span><span class="fu">values</span>()]<span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> b<span class="op">.</span><span class="at">valor</span> <span class="op">-</span> a<span class="op">.</span><span class="at">valor</span>)<span class="op">;</span></span>
+<span id="cb7-235"><a href="#cb7-235" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-236"><a href="#cb7-236" aria-hidden="true" tabindex="-1"></a>datos<span class="op">.</span><span class="at">ok</span> <span class="op">?</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb7-237"><a href="#cb7-237" aria-hidden="true" tabindex="-1"></a>  <span class="dt">height</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">260</span><span class="op">,</span> <span class="dv">17</span> <span class="op">*</span> ultimos<span class="op">.</span><span class="at">length</span>)<span class="op">,</span> <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">150</span><span class="op">,</span> <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">60</span><span class="op">,</span></span>
+<span id="cb7-238"><a href="#cb7-238" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="vs">`</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">unidad</span><span class="sc">}</span><span class="vs"> (último dato disponible)`</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">tickFormat</span><span class="op">:</span> v <span class="kw">=&gt;</span> <span class="fu">fmt</span>(v)}<span class="op">,</span></span>
+<span id="cb7-239"><a href="#cb7-239" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> {<span class="dt">label</span><span class="op">:</span> <span class="kw">null</span>}<span class="op">,</span></span>
+<span id="cb7-240"><a href="#cb7-240" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb7-241"><a href="#cb7-241" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">barX</span>(ultimos<span class="op">,</span> {<span class="dt">y</span><span class="op">:</span> <span class="st">"territorio"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"valor"</span><span class="op">,</span> <span class="dt">sort</span><span class="op">:</span> {<span class="dt">y</span><span class="op">:</span> <span class="st">"-x"</span>}<span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">territorio</span> <span class="op">===</span> <span class="st">"España"</span> <span class="op">?</span> <span class="st">"#B5175F"</span> <span class="op">:</span> (d<span class="op">.</span><span class="at">territorio</span> <span class="op">===</span> <span class="st">"Andalucía"</span> <span class="op">?</span> <span class="st">"#F29200"</span> <span class="op">:</span> (d<span class="op">.</span><span class="at">territorio</span> <span class="op">===</span> <span class="st">"UE-27"</span> <span class="op">?</span> <span class="st">"#3C3C3B"</span> <span class="op">:</span> <span class="st">"#D9C2CC"</span>))<span class="op">,</span> <span class="dt">tip</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">title</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="vs">`</span><span class="sc">${</span>d<span class="op">.</span><span class="at">territorio</span><span class="sc">}</span><span class="vs"> (</span><span class="sc">${</span>d<span class="op">.</span><span class="at">periodo</span><span class="sc">}</span><span class="vs">): </span><span class="sc">${</span><span class="fu">fmt</span>(d<span class="op">.</span><span class="at">valor</span>)<span class="sc">}</span><span class="vs">`</span>})<span class="op">,</span></span>
+<span id="cb7-242"><a href="#cb7-242" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">text</span>(ultimos<span class="op">,</span> {<span class="dt">y</span><span class="op">:</span> <span class="st">"territorio"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"valor"</span><span class="op">,</span> <span class="dt">text</span><span class="op">:</span> d <span class="kw">=&gt;</span> <span class="fu">fmt</span>(d<span class="op">.</span><span class="at">valor</span>)<span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">textAnchor</span><span class="op">:</span> <span class="st">"start"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">10</span>})<span class="op">,</span></span>
+<span id="cb7-243"><a href="#cb7-243" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleX</span>([<span class="dv">0</span>])</span>
+<span id="cb7-244"><a href="#cb7-244" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb7-245"><a href="#cb7-245" aria-hidden="true" tabindex="-1"></a>}) <span class="op">:</span> <span class="fu">html</span><span class="vs">``</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-7-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-7-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="249" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 248;"><span id="cb8-249"><a href="#cb8-249" aria-hidden="true" tabindex="-1"></a>datos<span class="op">.</span><span class="at">ok</span> <span class="op">?</span> <span class="fu">html</span><span class="vs">`&lt;div class="descargas"&gt;</span></span>
+<span id="cb8-250"><a href="#cb8-250" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>DOM<span class="op">.</span><span class="fu">download</span>(() <span class="kw">=&gt;</span> <span class="fu">csv</span>(sel)<span class="op">,</span> <span class="vs">`cceescopio_</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">code</span><span class="sc">}</span><span class="vs">_seleccion.csv`</span><span class="op">,</span> <span class="st">"⬇ Descargar selección (CSV)"</span>)<span class="sc">}</span></span>
+<span id="cb8-251"><a href="#cb8-251" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>DOM<span class="op">.</span><span class="fu">download</span>(() <span class="kw">=&gt;</span> <span class="fu">csv</span>(datos<span class="op">.</span><span class="at">rows</span>)<span class="op">,</span> <span class="vs">`cceescopio_</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">code</span><span class="sc">}</span><span class="vs">_completo.csv`</span><span class="op">,</span> <span class="st">"⬇ Descargar todos los territorios (CSV)"</span>)<span class="sc">}</span></span>
+<span id="cb8-252"><a href="#cb8-252" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb8-253"><a href="#cb8-253" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;p class="source"&gt;Datos descargados en directo de Eurostat al abrir la página (último periodo: </span><span class="sc">${</span>d3<span class="op">.</span><span class="fu">max</span>(datos<span class="op">.</span><span class="at">rows</span><span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">periodo</span>)<span class="sc">}</span><span class="vs">). Reutilización libre citando la fuente: Eurostat (</span><span class="sc">${</span>ind<span class="op">.</span><span class="at">code</span><span class="sc">}</span><span class="vs">), a través de CCEEscopio, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.&lt;/p&gt;`</span> <span class="op">:</span> <span class="fu">html</span><span class="vs">``</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-8" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Más datos de turismo.</strong> El INE publica la <em>Coyuntura Turística Hotelera</em> con detalle provincial (incluida Granada), y Frontur y Egatur sobre la llegada y el gasto de los turistas internacionales: <a href="https://www.ine.es/dyngs/INEbase/es/categoria.htm?c=Estadistica_P&amp;cid=1254735576863">ine.es</a>. La Junta de Andalucía ofrece estadísticas de turismo andaluz en el <a href="https://www.juntadeandalucia.es/institutodeestadisticaycartografia">IECA</a>.</p>
+</div>
+</div>
+</div>
+<section id="ideas-para-la-docencia-y-la-investigación" class="level2">
+<h2 class="anchored" data-anchor-id="ideas-para-la-docencia-y-la-investigación">Ideas para la docencia y la investigación</h2>
+<ul>
+<li>Economía del turismo: estacionalidad de la demanda hotelera y efecto de la COVID-19.</li>
+<li>Estadística: descomposición de series en tendencia y estacionalidad.</li>
+<li>TFG/TFM: peso del turismo internacional en Andalucía frente a otras comunidades.</li>
+</ul>
+<p class="source">
+¿Echas en falta algún indicador? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.
+</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<!--
+  Contador de visitas (GoatCounter, gratuito y sin cookies).
+  1. Crea una cuenta en https://www.goatcounter.com con el código cceescopio.
+  2. En Settings, activa "Allow adding visitor counts on your website".
+  Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+-->
+<script data-goatcounter="https://cceescopio.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<script>
+(function () {
+  const GC_CODE = "cceescopio";
+  function show(n) {
+    const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
+    if (!box || document.getElementById("visit-counter")) return;
+    const s = document.createElement("span");
+    s.id = "visit-counter";
+    s.className = "visit-counter";
+    s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
+    box.appendChild(s);
+  }
+  // No se cuenta la vista previa local (quarto preview)
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") return;
+  fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && d.count) show(String(d.count).replace(/\s/g, ".")); })
+    .catch(() => {});
+})();
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImluZGljYWRvcmVzID0gW1xuICB7XG4gICAgXCJub21icmVcIjogXCJQZXJub2N0YWNpb25lcyBlbiBob3RlbGVzXCIsXG4gICAgXCJjb2RlXCI6IFwidG91cl9vY2NfbmltXCIsXG4gICAgXCJxdWVyeVwiOiBcIiZjX3Jlc2lkPVRPVEFMJnVuaXQ9TlImbmFjZV9yMj1JNTUxXCIsXG4gICAgXCJ1bmlkYWRcIjogXCJOw7ptZXJvIGRlIHBlcm5vY3RhY2lvbmVzXCIsXG4gICAgXCJmcmVjdWVuY2lhXCI6IFwiTWVuc3VhbFwiLFxuICAgIFwiZGVzY3JpcGNpb25cIjogXCJOb2NoZXMgcGFzYWRhcyBwb3IgcmVzaWRlbnRlcyB5IG5vIHJlc2lkZW50ZXMgZW4gaG90ZWxlcyB5IGFsb2phbWllbnRvcyBzaW1pbGFyZXMuXCIsXG4gICAgXCJkZXNkZVwiOiAyMDA4XG4gIH0sXG4gIHtcbiAgICBcIm5vbWJyZVwiOiBcIlBlcm5vY3RhY2lvbmVzIGRlIG5vIHJlc2lkZW50ZXMgZW4gaG90ZWxlc1wiLFxuICAgIFwiY29kZVwiOiBcInRvdXJfb2NjX25pbVwiLFxuICAgIFwicXVlcnlcIjogXCImY19yZXNpZD1GT1ImdW5pdD1OUiZuYWNlX3IyPUk1NTFcIixcbiAgICBcInVuaWRhZFwiOiBcIk7Dum1lcm8gZGUgcGVybm9jdGFjaW9uZXNcIixcbiAgICBcImZyZWN1ZW5jaWFcIjogXCJNZW5zdWFsXCIsXG4gICAgXCJkZXNjcmlwY2lvblwiOiBcIk5vY2hlcyBwYXNhZGFzIHBvciB2aWFqZXJvcyByZXNpZGVudGVzIGVuIGVsIGV4dHJhbmplcm8uXCIsXG4gICAgXCJkZXNkZVwiOiAyMDA4XG4gIH0sXG4gIHtcbiAgICBcIm5vbWJyZVwiOiBcIkxsZWdhZGFzIGRlIHZpYWplcm9zIGEgaG90ZWxlc1wiLFxuICAgIFwiY29kZVwiOiBcInRvdXJfb2NjX2FybVwiLFxuICAgIFwicXVlcnlcIjogXCImY19yZXNpZD1UT1RBTCZ1bml0PU5SJm5hY2VfcjI9STU1MVwiLFxuICAgIFwidW5pZGFkXCI6IFwiTsO6bWVybyBkZSB2aWFqZXJvc1wiLFxuICAgIFwiZnJlY3VlbmNpYVwiOiBcIk1lbnN1YWxcIixcbiAgICBcImRlc2NyaXBjaW9uXCI6IFwiVmlhamVyb3MgcXVlIHNlIGFsb2phbiBlbiBob3RlbGVzIHkgYWxvamFtaWVudG9zIHNpbWlsYXJlcy5cIixcbiAgICBcImRlc2RlXCI6IDIwMDhcbiAgfSxcbiAge1xuICAgIFwibm9tYnJlXCI6IFwiUGVybm9jdGFjaW9uZXMgcG9yIHJlZ2lvbmVzXCIsXG4gICAgXCJjb2RlXCI6IFwidG91cl9vY2NfbmluMlwiLFxuICAgIFwicXVlcnlcIjogXCImY19yZXNpZD1UT1RBTCZ1bml0PU5SJm5hY2VfcjI9STU1MS1JNTUzXCIsXG4gICAgXCJ1bmlkYWRcIjogXCJOw7ptZXJvIGRlIHBlcm5vY3RhY2lvbmVzXCIsXG4gICAgXCJmcmVjdWVuY2lhXCI6IFwiQW51YWxcIixcbiAgICBcImRlc2NyaXBjaW9uXCI6IFwiUGVybm9jdGFjaW9uZXMgZW4gaG90ZWxlcywgYWxvamFtaWVudG9zIGRlIGNvcnRhIGVzdGFuY2lhIHkgY2FtcGluZ3MgZGUgbGFzIGNvbXVuaWRhZGVzIGF1dMOzbm9tYXMuXCIsXG4gICAgXCJyZWdpb25hbFwiOiB0cnVlLFxuICAgIFwiZGVzZGVcIjogMjAwOFxuICB9XG5dXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiIvLyA9PT09PT09PT09PT09PT09PSBGdW5jaW9uZXMgY29tdW5lcyBkZSBDQ0VFc2NvcGlvID09PT09PT09PT09PT09PT09XG4vLyBEZXNjYXJnYSBkYXRvcyBkZSBsYSBBUEkgZGUgRXVyb3N0YXQgKEpTT04tc3RhdCAyLjApIGVuIGVsIG5hdmVnYWRvciBkZWwgdXN1YXJpbyxcbi8vIGRlIG1vZG8gcXVlIGxvcyBncsOhZmljb3MgbXVlc3RyYW4gc2llbXByZSBsYSDDumx0aW1hIHB1YmxpY2FjacOzbiBvZmljaWFsLlxuXG5ub21icmVzR2VvID0gKHtcbiAgRVM6IFwiRXNwYcOxYVwiLCBFVTI3XzIwMjA6IFwiVUUtMjdcIiwgRUEyMDogXCJab25hIGV1cm9cIiwgRUE6IFwiWm9uYSBldXJvXCIsIEVBMTk6IFwiWm9uYSBldXJvICgxOSlcIixcbiAgREU6IFwiQWxlbWFuaWFcIiwgRlI6IFwiRnJhbmNpYVwiLCBJVDogXCJJdGFsaWFcIiwgUFQ6IFwiUG9ydHVnYWxcIiwgTkw6IFwiUGHDrXNlcyBCYWpvc1wiLCBCRTogXCJCw6lsZ2ljYVwiLFxuICBBVDogXCJBdXN0cmlhXCIsIElFOiBcIklybGFuZGFcIiwgRUw6IFwiR3JlY2lhXCIsIEZJOiBcIkZpbmxhbmRpYVwiLCBTRTogXCJTdWVjaWFcIiwgREs6IFwiRGluYW1hcmNhXCIsXG4gIFBMOiBcIlBvbG9uaWFcIiwgQ1o6IFwiQ2hlcXVpYVwiLCBIVTogXCJIdW5ncsOtYVwiLCBSTzogXCJSdW1hbsOtYVwiLCBCRzogXCJCdWxnYXJpYVwiLCBIUjogXCJDcm9hY2lhXCIsXG4gIFNJOiBcIkVzbG92ZW5pYVwiLCBTSzogXCJFc2xvdmFxdWlhXCIsIExUOiBcIkxpdHVhbmlhXCIsIExWOiBcIkxldG9uaWFcIiwgRUU6IFwiRXN0b25pYVwiLCBMVTogXCJMdXhlbWJ1cmdvXCIsXG4gIE1UOiBcIk1hbHRhXCIsIENZOiBcIkNoaXByZVwiLCBOTzogXCJOb3J1ZWdhXCIsIENIOiBcIlN1aXphXCIsIElTOiBcIklzbGFuZGlhXCIsIFVLOiBcIlJlaW5vIFVuaWRvXCIsXG4gIFVTOiBcIkVzdGFkb3MgVW5pZG9zXCIsIEpQOiBcIkphcMOzblwiLCBUUjogXCJUdXJxdcOtYVwiLFxuICBFUzExOiBcIkdhbGljaWFcIiwgRVMxMjogXCJBc3R1cmlhc1wiLCBFUzEzOiBcIkNhbnRhYnJpYVwiLCBFUzIxOiBcIlBhw61zIFZhc2NvXCIsIEVTMjI6IFwiTmF2YXJyYVwiLFxuICBFUzIzOiBcIkxhIFJpb2phXCIsIEVTMjQ6IFwiQXJhZ8OzblwiLCBFUzMwOiBcIk1hZHJpZFwiLCBFUzQxOiBcIkNhc3RpbGxhIHkgTGXDs25cIiwgRVM0MjogXCJDYXN0aWxsYS1MYSBNYW5jaGFcIixcbiAgRVM0MzogXCJFeHRyZW1hZHVyYVwiLCBFUzUxOiBcIkNhdGFsdcOxYVwiLCBFUzUyOiBcIkMuIFZhbGVuY2lhbmFcIiwgRVM1MzogXCJJbGxlcyBCYWxlYXJzXCIsIEVTNjE6IFwiQW5kYWx1Y8OtYVwiLFxuICBFUzYyOiBcIlJlZ2nDs24gZGUgTXVyY2lhXCIsIEVTNjM6IFwiQ2V1dGFcIiwgRVM2NDogXCJNZWxpbGxhXCIsIEVTNzA6IFwiQ2FuYXJpYXNcIlxufSlcbmdlb3NQYWlzZXMgPSBbXCJFU1wiLCBcIkVVMjdfMjAyMFwiLCBcIkVBMjBcIiwgXCJERVwiLCBcIkZSXCIsIFwiSVRcIiwgXCJQVFwiLCBcIk5MXCIsIFwiQkVcIiwgXCJBVFwiLCBcIklFXCIsIFwiRUxcIiwgXCJGSVwiLCBcIlNFXCIsXG4gICAgICAgICAgICAgIFwiREtcIiwgXCJQTFwiLCBcIkNaXCIsIFwiSFVcIiwgXCJST1wiLCBcIkJHXCIsIFwiSFJcIiwgXCJTSVwiLCBcIlNLXCIsIFwiTFRcIiwgXCJMVlwiLCBcIkVFXCIsIFwiTFVcIiwgXCJNVFwiLCBcIkNZXCJdXG5nZW9zUmVnaW9uZXMgPSBbXCJFU1wiLCBcIkVVMjdfMjAyMFwiLCBcIkVTMTFcIiwgXCJFUzEyXCIsIFwiRVMxM1wiLCBcIkVTMjFcIiwgXCJFUzIyXCIsIFwiRVMyM1wiLCBcIkVTMjRcIiwgXCJFUzMwXCIsIFwiRVM0MVwiLFxuICAgICAgICAgICAgICAgIFwiRVM0MlwiLCBcIkVTNDNcIiwgXCJFUzUxXCIsIFwiRVM1MlwiLCBcIkVTNTNcIiwgXCJFUzYxXCIsIFwiRVM2MlwiLCBcIkVTNjNcIiwgXCJFUzY0XCIsIFwiRVM3MFwiXVxuZGVmUGFpc2VzID0gW1wiRVNcIiwgXCJFVTI3XzIwMjBcIiwgXCJERVwiLCBcIkZSXCIsIFwiSVRcIiwgXCJQVFwiXVxuZGVmUmVnaW9uZXMgPSBbXCJFUzYxXCIsIFwiRVNcIiwgXCJFUzMwXCIsIFwiRVM1MVwiLCBcIkVTNTJcIl1cblxubG9jRVMgPSBkMy5mb3JtYXRMb2NhbGUoe2RlY2ltYWw6IFwiLFwiLCB0aG91c2FuZHM6IFwiLlwiLCBncm91cGluZzogWzNdLCBjdXJyZW5jeTogW1wiXCIsIFwiIOKCrFwiXX0pXG5mbXQgPSAodikgPT4gTWF0aC5hYnModikgPj0gMTAwMCA/IGxvY0VTLmZvcm1hdChcIiwuMGZcIikodikgOiBsb2NFUy5mb3JtYXQoXCIsLjJ+ZlwiKSh2KVxuXG5mdW5jdGlvbiBqc29uc3RhdChqcykge1xuICBjb25zdCBpZHMgPSBqcy5pZCwgc2l6ZSA9IGpzLnNpemUsIGRpbXMgPSBqcy5kaW1lbnNpb247XG4gIGNvbnN0IGNvZGVzID0gaWRzLm1hcChkID0+IHtcbiAgICBjb25zdCBpZHggPSBkaW1zW2RdLmNhdGVnb3J5LmluZGV4O1xuICAgIHJldHVybiBBcnJheS5pc0FycmF5KGlkeCkgPyBpZHggOiBPYmplY3Qua2V5cyhpZHgpLnNvcnQoKGEsIGIpID0+IGlkeFthXSAtIGlkeFtiXSk7XG4gIH0pO1xuICBjb25zdCBsYWJlbHMgPSBpZHMubWFwKGQgPT4gZGltc1tkXS5jYXRlZ29yeS5sYWJlbCB8fCB7fSk7XG4gIGNvbnN0IHZhbHMgPSBqcy52YWx1ZSwgb3V0ID0gW107XG4gIGNvbnN0IGtleXMgPSBBcnJheS5pc0FycmF5KHZhbHMpID8gdmFscy5tYXAoKHYsIGkpID0+IGkpLmZpbHRlcihpID0+IHZhbHNbaV0gIT0gbnVsbCkgOiBPYmplY3Qua2V5cyh2YWxzKS5tYXAoTnVtYmVyKTtcbiAgZm9yIChjb25zdCBpIG9mIGtleXMpIHtcbiAgICBsZXQgcmVtID0gaTsgY29uc3QgcmVjID0ge307XG4gICAgZm9yIChsZXQgZCA9IGlkcy5sZW5ndGggLSAxOyBkID49IDA7IGQtLSkge1xuICAgICAgY29uc3QgYyA9IGNvZGVzW2RdW3JlbSAlIHNpemVbZF1dO1xuICAgICAgcmVjW2lkc1tkXV0gPSBjO1xuICAgICAgaWYgKGlkc1tkXSA9PT0gXCJnZW9cIikgcmVjLmdlb0xhYmVsID0gbGFiZWxzW2RdW2NdIHx8IGM7XG4gICAgICByZW0gPSBNYXRoLmZsb29yKHJlbSAvIHNpemVbZF0pO1xuICAgIH1cbiAgICByZWMudmFsdWUgPSArdmFsc1tpXTtcbiAgICBvdXQucHVzaChyZWMpO1xuICB9XG4gIHJldHVybiBvdXQ7XG59XG5cbnByZWZlcmlkYXMgPSBbXCJUT1RBTFwiLCBcIlRcIiwgXCJUT1RcIiwgXCJDUDAwXCIsIFwiUENcIiwgXCJFVVJcIiwgXCJOUlwiLCBcIlNBXCIsIFwiU0NBXCIsIFwiUkNIX0FcIiwgXCJJOTBcIiwgXCJBXCIsIFwiWTE1LTc0XCJdXG5mdW5jdGlvbiB1bmFDYXRlZ29yaWEocmVjcykge1xuICAvLyBQYXJhIGNhZGEgZGltZW5zacOzbiBkaXN0aW50YSBkZSBnZW8geSB0aW1lLCBjb25zZXJ2YSB1bmEgc29sYSBjYXRlZ29yw61hXG4gIGlmICghcmVjcy5sZW5ndGgpIHJldHVybiByZWNzO1xuICBjb25zdCBkaW1zQWxsID0gT2JqZWN0LmtleXMocmVjc1swXSkuZmlsdGVyKGsgPT4gIVtcImdlb1wiLCBcInRpbWVcIiwgXCJ2YWx1ZVwiLCBcImdlb0xhYmVsXCJdLmluY2x1ZGVzKGspKTtcbiAgbGV0IHIgPSByZWNzO1xuICBmb3IgKGNvbnN0IGQgb2YgZGltc0FsbCkge1xuICAgIGNvbnN0IGNhdHMgPSBbLi4ubmV3IFNldChyLm1hcCh4ID0+IHhbZF0pKV07XG4gICAgaWYgKGNhdHMubGVuZ3RoIDwgMikgY29udGludWU7XG4gICAgY29uc3QgZWxlZ2lkYSA9IHByZWZlcmlkYXMuZmluZChwID0+IGNhdHMuaW5jbHVkZXMocCkpID8/IGNhdHNbMF07XG4gICAgciA9IHIuZmlsdGVyKHggPT4geFtkXSA9PT0gZWxlZ2lkYSk7XG4gIH1cbiAgcmV0dXJuIHI7XG59XG5cbmFzeW5jIGZ1bmN0aW9uIGV1cm9zdGF0KGNvZGUsIHF1ZXJ5ID0gXCJcIikge1xuICBjb25zdCB1cmwgPSBgaHR0cHM6Ly9lYy5ldXJvcGEuZXUvZXVyb3N0YXQvYXBpL2Rpc3NlbWluYXRpb24vc3RhdGlzdGljcy8xLjAvZGF0YS8ke2NvZGV9P2Zvcm1hdD1KU09OJmxhbmc9RU4ke3F1ZXJ5fWA7XG4gIGNvbnN0IHJlcyA9IGF3YWl0IGZldGNoKHVybCk7XG4gIGlmICghcmVzLm9rKSB7XG4gICAgbGV0IG1zZyA9IGBIVFRQICR7cmVzLnN0YXR1c31gO1xuICAgIHRyeSB7IGNvbnN0IGpzID0gYXdhaXQgcmVzLmpzb24oKTsgY29uc3QgZXJyID0gQXJyYXkuaXNBcnJheShqcy5lcnJvcikgPyBqcy5lcnJvclswXSA6IGpzLmVycm9yOyBpZiAoZXJyICYmIGVyci5sYWJlbCkgbXNnICs9IGAg4oCTICR7ZXJyLmxhYmVsfWA7IH0gY2F0Y2ggKGUpIHt9XG4gICAgdGhyb3cgbmV3IEVycm9yKGBFdXJvc3RhdCAke2NvZGV9OiAke21zZ31gKTtcbiAgfVxuICByZXR1cm4ganNvbnN0YXQoYXdhaXQgcmVzLmpzb24oKSk7XG59XG5cbmZ1bmN0aW9uIGZlY2hhKHQpIHtcbiAgbGV0IG07XG4gIGlmICgobSA9IC9eKFxcZHs0fSktKFxcZHsyfSkkLy5leGVjKHQpKSkgcmV0dXJuIG5ldyBEYXRlKCttWzFdLCArbVsyXSAtIDEsIDEpO1xuICBpZiAoKG0gPSAvXihcXGR7NH0pTShcXGR7Mn0pJC8uZXhlYyh0KSkpIHJldHVybiBuZXcgRGF0ZSgrbVsxXSwgK21bMl0gLSAxLCAxKTtcbiAgaWYgKChtID0gL14oXFxkezR9KS0/UShcXGQpJC8uZXhlYyh0KSkpIHJldHVybiBuZXcgRGF0ZSgrbVsxXSwgKCttWzJdIC0gMSkgKiAzLCAxKTtcbiAgaWYgKChtID0gL14oXFxkezR9KS0/UyhcXGQpJC8uZXhlYyh0KSkpIHJldHVybiBuZXcgRGF0ZSgrbVsxXSwgKCttWzJdIC0gMSkgKiA2LCAxKTtcbiAgaWYgKChtID0gL14oXFxkezR9KSQvLmV4ZWModCkpKSByZXR1cm4gbmV3IERhdGUoK21bMV0sIDAsIDEpO1xuICByZXR1cm4gbnVsbDtcbn1cblxuYXN5bmMgZnVuY3Rpb24gY29uc3VsdGFyKGNvZGUsIHF1ZXJ5LCBnZW9zLCBkZXNkZSkge1xuICB0cnkge1xuICAgIHJldHVybiBhd2FpdCBldXJvc3RhdChjb2RlLCBxdWVyeSArIChnZW9zID8gZ2Vvcy5tYXAoZyA9PiBgJmdlbz0ke2d9YCkuam9pbihcIlwiKSA6IFwiXCIpICsgZGVzZGUpO1xuICB9IGNhdGNoIChlMSkge1xuICAgIC8vIFNpIGFsZ8O6biB0ZXJyaXRvcmlvIG5vIGV4aXN0ZSBlbiBsYSB0YWJsYSwgc2UgcmVwaXRlIGxhIGNvbnN1bHRhIHNpbiBmaWx0cmFyIHRlcnJpdG9yaW9zXG4gICAgY29uc3QgciA9IGF3YWl0IGV1cm9zdGF0KGNvZGUsIHF1ZXJ5ICsgZGVzZGUpO1xuICAgIHJldHVybiBnZW9zID8gci5maWx0ZXIoeCA9PiBnZW9zLmluY2x1ZGVzKHguZ2VvKSkgOiByO1xuICB9XG59XG5cbmFzeW5jIGZ1bmN0aW9uIGNhcmdhcihzcGVjKSB7XG4gIGNvbnN0IGRlc2RlID0gYCZzaW5jZVRpbWVQZXJpb2Q9JHtzcGVjLmRlc2RlID8/IDIwMDh9YDtcbiAgY29uc3QgZ2VvcyA9IHNwZWMucmVnaW9uYWwgPyBnZW9zUmVnaW9uZXMgOiAoc3BlYy5zaW5HZW8gPyBudWxsIDogZ2Vvc1BhaXNlcyk7XG4gIC8vIEludGVudG9zOiBsYSBjb25zdWx0YSBwcmluY2lwYWwsIGxhcyBhbHRlcm5hdGl2YXMgKHAuIGVqLiwgdGFibGFzIHF1ZSBFdXJvc3RhdCBoYSByZW5vdmFkbylcbiAgLy8geSwgcG9yIMO6bHRpbW8sIGxhIHRhYmxhIHNpbiBmaWx0cm9zIGFkaWNpb25hbGVzXG4gIGNvbnN0IGludGVudG9zID0gW3tjb2RlOiBzcGVjLmNvZGUsIHF1ZXJ5OiBzcGVjLnF1ZXJ5fSwgLi4uKHNwZWMuYWx0ID8/IFtdKSwge2NvZGU6IHNwZWMuY29kZSwgcXVlcnk6IFwiXCJ9XTtcbiAgbGV0IHJlY3MgPSBudWxsLCB1c2FkbyA9IG51bGwsIGVycm9yID0gXCJcIjtcbiAgZm9yIChjb25zdCB0IG9mIGludGVudG9zKSB7XG4gICAgdHJ5IHsgcmVjcyA9IGF3YWl0IGNvbnN1bHRhcih0LmNvZGUsIHQucXVlcnksIGdlb3MsIGRlc2RlKTsgaWYgKHJlY3MubGVuZ3RoKSB7IHVzYWRvID0gdDsgYnJlYWs7IH0gfVxuICAgIGNhdGNoIChlKSB7IGVycm9yID0gZS5tZXNzYWdlOyB9XG4gIH1cbiAgaWYgKCFyZWNzIHx8ICFyZWNzLmxlbmd0aCkgcmV0dXJuIHtvazogZmFsc2UsIGVycm9yOiBlcnJvciB8fCBcImxhIGNvbnN1bHRhIG5vIGRldm9sdmnDsyBkYXRvc1wiLCByb3dzOiBbXX07XG4gIHJlY3MgPSB1bmFDYXRlZ29yaWEocmVjcyk7XG4gIGNvbnN0IHJvd3MgPSByZWNzLm1hcChyID0+ICh7XG4gICAgaW5kaWNhZG9yOiBzcGVjLm5vbWJyZSxcbiAgICBjb2RpZ29fdGVycml0b3Jpbzogci5nZW8gPz8gXCJcIixcbiAgICB0ZXJyaXRvcmlvOiByLmdlbyA/IChub21icmVzR2VvW3IuZ2VvXSA/PyByLmdlb0xhYmVsKSA6IChzcGVjLnNlcmllID8/IHNwZWMubm9tYnJlKSxcbiAgICBwZXJpb2RvOiByLnRpbWUsXG4gICAgZmVjaGE6IGZlY2hhKHIudGltZSksXG4gICAgdmFsb3I6IHIudmFsdWUsXG4gICAgdW5pZGFkOiBzcGVjLnVuaWRhZCxcbiAgICBmdWVudGU6IGBFdXJvc3RhdCAoJHt1c2Fkby5jb2RlfSlgXG4gIH0pKS5maWx0ZXIociA9PiByLmZlY2hhICYmIE51bWJlci5pc0Zpbml0ZShyLnZhbG9yKSk7XG4gIHJldHVybiB7b2s6IHJvd3MubGVuZ3RoID4gMCwgcm93cywgY29kZTogdXNhZG8uY29kZSwgZXJyb3I6IHJvd3MubGVuZ3RoID8gXCJcIiA6IFwibGEgY29uc3VsdGEgbm8gZGV2b2x2acOzIGRhdG9zXCJ9O1xufVxuXG5mdW5jdGlvbiBjb2xvcmVzKHRlcnJzKSB7XG4gIGNvbnN0IGZpam9zID0ge1wiRXNwYcOxYVwiOiBcIiNCNTE3NUZcIiwgXCJBbmRhbHVjw61hXCI6IFwiI0YyOTIwMFwiLCBcIlVFLTI3XCI6IFwiIzNDM0MzQlwiLCBcIlpvbmEgZXVyb1wiOiBcIiM3QTdBN0FcIn07XG4gIGNvbnN0IHBhbGV0YSA9IFtcIiMxRjc3QjRcIiwgXCIjMkNBMDJDXCIsIFwiIzk0NjdCRFwiLCBcIiM4QzU2NEJcIiwgXCIjMTdCRUNGXCIsIFwiI0JDQkQyMlwiLCBcIiNFMzc3QzJcIiwgXCIjRDYyNzI4XCIsIFwiIzdGN0Y3RlwiXTtcbiAgbGV0IGsgPSAwO1xuICByZXR1cm4gdGVycnMubWFwKHQgPT4gZmlqb3NbdF0gPz8gcGFsZXRhW2srKyAlIHBhbGV0YS5sZW5ndGhdKTtcbn1cblxuZnVuY3Rpb24gY3N2KHJvd3MpIHtcbiAgcmV0dXJuIG5ldyBCbG9iKFtcIu+7v1wiICsgZDMuY3N2Rm9ybWF0KHJvd3MubWFwKCh7ZmVjaGEsIC4uLnJ9KSA9PiByKSldLCB7dHlwZTogXCJ0ZXh0L2NzdjtjaGFyc2V0PXV0Zi04XCJ9KTtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBpbmQgPSBJbnB1dHMuc2VsZWN0KGluZGljYWRvcmVzLCB7bGFiZWw6IFwiSW5kaWNhZG9yXCIsIGZvcm1hdDogZCA9PiBkLm5vbWJyZX0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYDxwIGNsYXNzPVwiaW5kLWRlc2NcIj4ke2luZC5kZXNjcmlwY2lvbn08c3BhbiBjbGFzcz1cImluZC1tZXRhXCI+VW5pZGFkOiAke2luZC51bmlkYWR9IMK3IEZyZWN1ZW5jaWE6ICR7aW5kLmZyZWN1ZW5jaWF9IMK3IEZ1ZW50ZTogPGEgaHJlZj1cImh0dHBzOi8vZWMuZXVyb3BhLmV1L2V1cm9zdGF0L2RhdGFicm93c2VyL3ZpZXcvJHtpbmQuY29kZX0vZGVmYXVsdC90YWJsZVwiIHRhcmdldD1cIl9ibGFua1wiIHJlbD1cIm5vb3BlbmVyXCI+RXVyb3N0YXQsICR7aW5kLmNvZGV9PC9hPiR7aW5kLnJlZ2lvbmFsID8gXCIgwrcgRGF0b3MgcmVnaW9uYWxlcyAoTlVUUyAyKVwiIDogXCJcIn08L3NwYW4+PC9wPmBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImRhdG9zID0gY2FyZ2FyKGluZClcbnRlcnJpdG9yaW9zID0gZGF0b3Mub2sgPyBbLi4ubmV3IFNldChkYXRvcy5yb3dzLm1hcChyID0+IHIudGVycml0b3JpbykpXS5zb3J0KChhLCBiKSA9PiBhLmxvY2FsZUNvbXBhcmUoYiwgXCJlc1wiKSkgOiBbXVxuZGVmZWN0byA9IHtcbiAgY29uc3QgZCA9IChpbmQucmVnaW9uYWwgPyBkZWZSZWdpb25lcyA6IGRlZlBhaXNlcykubWFwKGcgPT4gbm9tYnJlc0dlb1tnXSk7XG4gIGNvbnN0IHYgPSB0ZXJyaXRvcmlvcy5maWx0ZXIodCA9PiBkLmluY2x1ZGVzKHQpKTtcbiAgcmV0dXJuIHYubGVuZ3RoID8gdiA6IHRlcnJpdG9yaW9zLnNsaWNlKDAsIDUpO1xufVxudmlld29mIHRlcnIgPSBJbnB1dHMuc2VsZWN0KHRlcnJpdG9yaW9zLCB7bGFiZWw6IFwiVGVycml0b3Jpb3MgKEN0cmwvQ21kIHBhcmEgZWxlZ2lyIHZhcmlvcylcIiwgbXVsdGlwbGU6IHRydWUsIHZhbHVlOiBkZWZlY3RvLCBzaXplOiBNYXRoLm1pbig4LCBNYXRoLm1heCgyLCB0ZXJyaXRvcmlvcy5sZW5ndGgpKX0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJzZWwgPSBkYXRvcy5vayA/IGRhdG9zLnJvd3MuZmlsdGVyKHIgPT4gdGVyci5pbmNsdWRlcyhyLnRlcnJpdG9yaW8pKSA6IFtdXG5kYXRvcy5vayA/ICh0ZXJyLmxlbmd0aCA/IFBsb3QucGxvdCh7XG4gIGhlaWdodDogNDMwLCBtYXJnaW5MZWZ0OiA2MCwgbWFyZ2luUmlnaHQ6IDEzMCxcbiAgeDoge2xhYmVsOiBudWxsLCB0eXBlOiBcInRpbWVcIn0sXG4gIHk6IHtsYWJlbDogaW5kLnVuaWRhZCwgZ3JpZDogdHJ1ZSwgemVybzogaW5kLmNlcm8gPz8gZmFsc2UsIHRpY2tGb3JtYXQ6IHYgPT4gZm10KHYpfSxcbiAgY29sb3I6IHtkb21haW46IHRlcnIsIHJhbmdlOiBjb2xvcmVzKHRlcnIpfSxcbiAgbWFya3M6IFtcbiAgICBpbmQuY2VybyA/IFBsb3QucnVsZVkoWzBdLCB7c3Ryb2tlOiBcIiM5OTlcIn0pIDogbnVsbCxcbiAgICBQbG90LmxpbmUoc2VsLCB7eDogXCJmZWNoYVwiLCB5OiBcInZhbG9yXCIsIHN0cm9rZTogXCJ0ZXJyaXRvcmlvXCIsIHN0cm9rZVdpZHRoOiAyLjIsIHNvcnQ6IFwiZmVjaGFcIn0pLFxuICAgIFBsb3QudGV4dChzZWwsIFBsb3Quc2VsZWN0TGFzdCh7eDogXCJmZWNoYVwiLCB5OiBcInZhbG9yXCIsIHo6IFwidGVycml0b3Jpb1wiLCB0ZXh0OiBcInRlcnJpdG9yaW9cIiwgdGV4dEFuY2hvcjogXCJzdGFydFwiLCBkeDogNiwgZmlsbDogXCJ0ZXJyaXRvcmlvXCJ9KSksXG4gICAgUGxvdC50aXAoc2VsLCBQbG90LnBvaW50ZXIoe3g6IFwiZmVjaGFcIiwgeTogXCJ2YWxvclwiLCB0aXRsZTogZCA9PiBgJHtkLnRlcnJpdG9yaW99IMK3ICR7ZC5wZXJpb2RvfVxcbiR7Zm10KGQudmFsb3IpfSAoJHtpbmQudW5pZGFkfSlgfSkpXG4gIF1cbn0pIDogaHRtbGA8cCBjbGFzcz1cInBlbmRpbmdcIj5FbGlnZSBhbCBtZW5vcyB1biB0ZXJyaXRvcmlvLjwvcD5gKVxuOiBodG1sYDxkaXYgY2xhc3M9XCJjYWxsb3V0IGNhbGxvdXQtd2FybmluZ1wiPjxwPjxiPk5vIHNlIGhhbiBwb2RpZG8gY2FyZ2FyIGxvcyBkYXRvcyBkZSBFdXJvc3RhdDwvYj4gKCR7ZGF0b3MuZXJyb3J9KS4gSW50w6ludGFsbyBkZSBudWV2byBtw6FzIHRhcmRlIG8gY29uc3VsdGEgbGEgdGFibGEgZGlyZWN0YW1lbnRlIGVuIDxhIGhyZWY9XCJodHRwczovL2VjLmV1cm9wYS5ldS9ldXJvc3RhdC9kYXRhYnJvd3Nlci92aWV3LyR7aW5kLmNvZGV9L2RlZmF1bHQvdGFibGVcIiB0YXJnZXQ9XCJfYmxhbmtcIj5FdXJvc3RhdDwvYT4uPC9wPjwvZGl2PmBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InVsdGltb3MgPSB7XG4gIGlmICghZGF0b3Mub2spIHJldHVybiBbXTtcbiAgY29uc3QgbGFzdCA9IGQzLnJvbGx1cChkYXRvcy5yb3dzLCB2ID0+IHYuc29ydCgoYSwgYikgPT4gYi5mZWNoYSAtIGEuZmVjaGEpWzBdLCBkID0+IGQudGVycml0b3Jpbyk7XG4gIHJldHVybiBbLi4ubGFzdC52YWx1ZXMoKV0uc29ydCgoYSwgYikgPT4gYi52YWxvciAtIGEudmFsb3IpO1xufVxuZGF0b3Mub2sgPyBQbG90LnBsb3Qoe1xuICBoZWlnaHQ6IE1hdGgubWF4KDI2MCwgMTcgKiB1bHRpbW9zLmxlbmd0aCksIG1hcmdpbkxlZnQ6IDE1MCwgbWFyZ2luUmlnaHQ6IDYwLFxuICB4OiB7bGFiZWw6IGAke2luZC51bmlkYWR9ICjDumx0aW1vIGRhdG8gZGlzcG9uaWJsZSlgLCBncmlkOiB0cnVlLCB0aWNrRm9ybWF0OiB2ID0+IGZtdCh2KX0sXG4gIHk6IHtsYWJlbDogbnVsbH0sXG4gIG1hcmtzOiBbXG4gICAgUGxvdC5iYXJYKHVsdGltb3MsIHt5OiBcInRlcnJpdG9yaW9cIiwgeDogXCJ2YWxvclwiLCBzb3J0OiB7eTogXCIteFwifSwgZmlsbDogZCA9PiBkLnRlcnJpdG9yaW8gPT09IFwiRXNwYcOxYVwiID8gXCIjQjUxNzVGXCIgOiAoZC50ZXJyaXRvcmlvID09PSBcIkFuZGFsdWPDrWFcIiA/IFwiI0YyOTIwMFwiIDogKGQudGVycml0b3JpbyA9PT0gXCJVRS0yN1wiID8gXCIjM0MzQzNCXCIgOiBcIiNEOUMyQ0NcIikpLCB0aXA6IHRydWUsIHRpdGxlOiBkID0+IGAke2QudGVycml0b3Jpb30gKCR7ZC5wZXJpb2RvfSk6ICR7Zm10KGQudmFsb3IpfWB9KSxcbiAgICBQbG90LnRleHQodWx0aW1vcywge3k6IFwidGVycml0b3Jpb1wiLCB4OiBcInZhbG9yXCIsIHRleHQ6IGQgPT4gZm10KGQudmFsb3IpLCBkeDogNCwgdGV4dEFuY2hvcjogXCJzdGFydFwiLCBmb250U2l6ZTogMTB9KSxcbiAgICBQbG90LnJ1bGVYKFswXSlcbiAgXVxufSkgOiBodG1sYGBcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtOCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImRhdG9zLm9rID8gaHRtbGA8ZGl2IGNsYXNzPVwiZGVzY2FyZ2FzXCI+XG4gICR7RE9NLmRvd25sb2FkKCgpID0+IGNzdihzZWwpLCBgY2NlZXNjb3Bpb18ke2luZC5jb2RlfV9zZWxlY2Npb24uY3N2YCwgXCLirIcgRGVzY2FyZ2FyIHNlbGVjY2nDs24gKENTVilcIil9XG4gICR7RE9NLmRvd25sb2FkKCgpID0+IGNzdihkYXRvcy5yb3dzKSwgYGNjZWVzY29waW9fJHtpbmQuY29kZX1fY29tcGxldG8uY3N2YCwgXCLirIcgRGVzY2FyZ2FyIHRvZG9zIGxvcyB0ZXJyaXRvcmlvcyAoQ1NWKVwiKX1cbjwvZGl2PlxuPHAgY2xhc3M9XCJzb3VyY2VcIj5EYXRvcyBkZXNjYXJnYWRvcyBlbiBkaXJlY3RvIGRlIEV1cm9zdGF0IGFsIGFicmlyIGxhIHDDoWdpbmEgKMO6bHRpbW8gcGVyaW9kbzogJHtkMy5tYXgoZGF0b3Mucm93cywgZCA9PiBkLnBlcmlvZG8pfSkuIFJldXRpbGl6YWNpw7NuIGxpYnJlIGNpdGFuZG8gbGEgZnVlbnRlOiBFdXJvc3RhdCAoJHtpbmQuY29kZX0pLCBhIHRyYXbDqXMgZGUgQ0NFRXNjb3BpbywgRmFjdWx0YWQgZGUgQ2llbmNpYXMgRWNvbsOzbWljYXMgeSBFbXByZXNhcmlhbGVzLCBVbml2ZXJzaWRhZCBkZSBHcmFuYWRhLjwvcD5gIDogaHRtbGBgXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2luZCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCd0ZXJyJykifV19
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jfmunozrosas\.github\.io\/cceescopio");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>CCEEscopio · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="images/logos_ugr_fccee.jpg" alt="Universidad de Granada y Facultad de Ciencias Económicas y Empresariales" height="38"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

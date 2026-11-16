@@ -1,0 +1,320 @@
+---
+title: "Precios e inflación"
+subtitle: "Inflación general y por componentes, y precios de la vivienda"
+---
+
+La inflación mide el ritmo al que suben los precios y es una variable central para la política monetaria del Banco Central Europeo, la negociación salarial y la evaluación del poder adquisitivo de los hogares. Se utiliza el **Índice de Precios de Consumo Armonizado (IPCA)**, comparable entre países de la UE; en España, el INE publica además el IPC nacional.
+
+Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre las líneas para ver los valores y descarga los datos en CSV para usarlos en clase o en tu investigación.
+
+```{ojs}
+//| echo: false
+indicadores = [
+  {
+    "nombre": "IPCA: inflación general (tasa anual)",
+    "code": "prc_hicp_minr",
+    "query": "&unit=RCH_A&coicop18=TOTAL",
+    "unidad": "%",
+    "frecuencia": "Mensual",
+    "descripcion": "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).",
+    "cero": true,
+    "desde": 2005,
+    "alt": [
+      {
+        "code": "prc_hicp_minr",
+        "query": "&unit=RCH_A&coicop18=CP00"
+      },
+      {
+        "code": "prc_hicp_manr",
+        "query": "&coicop=CP00"
+      }
+    ]
+  },
+  {
+    "nombre": "IPCA: alimentos y bebidas no alcohólicas (tasa anual)",
+    "code": "prc_hicp_minr",
+    "query": "&unit=RCH_A&coicop18=CP01",
+    "unidad": "%",
+    "frecuencia": "Mensual",
+    "descripcion": "Tasa de variación anual de los precios de los alimentos y bebidas no alcohólicas.",
+    "cero": true,
+    "desde": 2005,
+    "alt": [
+      {
+        "code": "prc_hicp_minr",
+        "query": "&unit=RCH_A&coicop18=CP01"
+      },
+      {
+        "code": "prc_hicp_manr",
+        "query": "&coicop=CP01"
+      }
+    ]
+  },
+  {
+    "nombre": "IPCA: energía (tasa anual)",
+    "code": "prc_hicp_minr",
+    "query": "&unit=RCH_A&coicop18=NRG",
+    "unidad": "%",
+    "frecuencia": "Mensual",
+    "descripcion": "Tasa de variación anual de los precios de la energía (electricidad, gas, combustibles).",
+    "cero": true,
+    "desde": 2005,
+    "alt": [
+      {
+        "code": "prc_hicp_minr",
+        "query": "&unit=RCH_A&coicop18=NRG"
+      },
+      {
+        "code": "prc_hicp_manr",
+        "query": "&coicop=NRG"
+      }
+    ]
+  },
+  {
+    "nombre": "IPCA: servicios (tasa anual)",
+    "code": "prc_hicp_minr",
+    "query": "&unit=RCH_A&coicop18=SERV",
+    "unidad": "%",
+    "frecuencia": "Mensual",
+    "descripcion": "Tasa de variación anual de los precios de los servicios.",
+    "cero": true,
+    "desde": 2005,
+    "alt": [
+      {
+        "code": "prc_hicp_minr",
+        "query": "&unit=RCH_A&coicop18=SERV"
+      },
+      {
+        "code": "prc_hicp_manr",
+        "query": "&coicop=SERV"
+      }
+    ]
+  },
+  {
+    "nombre": "Precio de la vivienda (tasa anual)",
+    "code": "prc_hpi_q",
+    "query": "&purchase=TOTAL&unit=RCH_A",
+    "unidad": "%",
+    "frecuencia": "Trimestral",
+    "descripcion": "Tasa de variación anual del índice de precios de la vivienda (nueva y de segunda mano).",
+    "cero": true,
+    "desde": 2008
+  }
+]
+```
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+```
+
+```{ojs}
+//| echo: false
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+```
+
+```{ojs}
+//| echo: false
+datos = cargar(ind)
+territorios = datos.ok ? [...new Set(datos.rows.map(r => r.territorio))].sort((a, b) => a.localeCompare(b, "es")) : []
+defecto = {
+  const d = (ind.regional ? defRegiones : defPaises).map(g => nombresGeo[g]);
+  const v = territorios.filter(t => d.includes(t));
+  return v.length ? v : territorios.slice(0, 5);
+}
+viewof terr = Inputs.select(territorios, {label: "Territorios (Ctrl/Cmd para elegir varios)", multiple: true, value: defecto, size: Math.min(8, Math.max(2, territorios.length))})
+```
+
+```{ojs}
+//| echo: false
+sel = datos.ok ? datos.rows.filter(r => terr.includes(r.territorio)) : []
+datos.ok ? (terr.length ? Plot.plot({
+  height: 430, marginLeft: 60, marginRight: 130,
+  x: {label: null, type: "time"},
+  y: {label: ind.unidad, grid: true, zero: ind.cero ?? false, tickFormat: v => fmt(v)},
+  color: {domain: terr, range: colores(terr)},
+  marks: [
+    ind.cero ? Plot.ruleY([0], {stroke: "#999"}) : null,
+    Plot.line(sel, {x: "fecha", y: "valor", stroke: "territorio", strokeWidth: 2.2, sort: "fecha"}),
+    Plot.text(sel, Plot.selectLast({x: "fecha", y: "valor", z: "territorio", text: "territorio", textAnchor: "start", dx: 6, fill: "territorio"})),
+    Plot.tip(sel, Plot.pointer({x: "fecha", y: "valor", title: d => `${d.territorio} · ${d.periodo}\n${fmt(d.valor)} (${ind.unidad})`}))
+  ]
+}) : html`<p class="pending">Elige al menos un territorio.</p>`)
+: html`<div class="callout callout-warning"><p><b>No se han podido cargar los datos de Eurostat</b> (${datos.error}). Inténtalo de nuevo más tarde o consulta la tabla directamente en <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank">Eurostat</a>.</p></div>`
+```
+
+```{ojs}
+//| echo: false
+ultimos = {
+  if (!datos.ok) return [];
+  const last = d3.rollup(datos.rows, v => v.sort((a, b) => b.fecha - a.fecha)[0], d => d.territorio);
+  return [...last.values()].sort((a, b) => b.valor - a.valor);
+}
+datos.ok ? Plot.plot({
+  height: Math.max(260, 17 * ultimos.length), marginLeft: 150, marginRight: 60,
+  x: {label: `${ind.unidad} (último dato disponible)`, grid: true, tickFormat: v => fmt(v)},
+  y: {label: null},
+  marks: [
+    Plot.barX(ultimos, {y: "territorio", x: "valor", sort: {y: "-x"}, fill: d => d.territorio === "España" ? "#B5175F" : (d.territorio === "Andalucía" ? "#F29200" : (d.territorio === "UE-27" ? "#3C3C3B" : "#D9C2CC")), tip: true, title: d => `${d.territorio} (${d.periodo}): ${fmt(d.valor)}`}),
+    Plot.text(ultimos, {y: "territorio", x: "valor", text: d => fmt(d.valor), dx: 4, textAnchor: "start", fontSize: 10}),
+    Plot.ruleX([0])
+  ]
+}) : html``
+```
+
+```{ojs}
+//| echo: false
+datos.ok ? html`<div class="descargas">
+  ${DOM.download(() => csv(sel), `cceescopio_${ind.code}_seleccion.csv`, "⬇ Descargar selección (CSV)")}
+  ${DOM.download(() => csv(datos.rows), `cceescopio_${ind.code}_completo.csv`, "⬇ Descargar todos los territorios (CSV)")}
+</div>
+<p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de CCEEscopio, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
+```
+
+::: {.callout-tip appearance="simple"}
+**IPC nacional y por comunidades autónomas.** El INE publica el IPC general y por grupos, con detalle por comunidades autónomas y provincias: [IPC en INEbase](https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176802&menu=ultiDatos&idp=1254735976607).
+:::
+
+## Ideas para la docencia y la investigación
+
+- Macroeconomía y política monetaria: relación entre inflación y tipos de interés (véase la rentabilidad del bono en *Sector público y mercados*).
+- Economía española: episodio inflacionista de 2021-2023 y papel de la energía y los alimentos.
+- Estadística: números índice, tasas de variación interanual y efecto escalón.
+
+<p class="source">¿Echas en falta algún indicador? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>

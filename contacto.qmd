@@ -1,0 +1,31 @@
+---
+title: "Contacto"
+toc: false
+---
+
+::: {.contact-box}
+**CCEEscopio** · Observatorio de indicadores económicos y empresariales
+
+**Vicedecanato de Investigación, Transferencia y Posgrado**\
+Facultad de Ciencias Económicas y Empresariales\
+Universidad de Granada\
+Campus Universitario de Cartuja, s/n · 18071 Granada
+
+**Correo electrónico:** [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es)\
+**Web de la Facultad:** [fccee.ugr.es](https://fccee.ugr.es/)
+:::
+
+## Escríbenos para
+
+- **Proponer nuevos indicadores** o fuentes de datos para la docencia y la investigación.
+- **Incorporar el observatorio** o los datos de tu proyecto o grupo de investigación.
+- **Comunicar un error** o un problema al cargar algún gráfico.
+- Solicitar **ayuda para localizar datos** para un TFG, TFM, tesis doctoral o proyecto.
+
+## Aviso sobre los datos
+
+Los datos proceden de fuentes estadísticas oficiales (principalmente Eurostat) y se descargan en directo desde ellas. CCEEscopio no modifica los valores publicados; las cifras pueden revisarse en las sucesivas publicaciones de cada fuente. Para usos oficiales, consulta siempre la fuente original, que se enlaza en cada indicador.
+
+::: {.logos-inst}
+![](images/logos_ugr_fccee.jpg){fig-alt="Universidad de Granada y Facultad de Ciencias Económicas y Empresariales"}
+:::

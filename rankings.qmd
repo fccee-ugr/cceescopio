@@ -1,0 +1,66 @@
+---
+title: "La Universidad de Granada en los rankings"
+subtitle: "Posición de la UGR en las áreas relacionadas con la Facultad de Ciencias Económicas y Empresariales"
+---
+
+Los rankings internacionales por disciplinas permiten situar la investigación y la docencia de la UGR en las áreas de la Facultad: **Economía, Empresa, Finanzas, Estadística y Turismo**. Esta página recoge las posiciones publicadas por la [Unidad de Analítica de la UGR](https://analitica.ugr.es/rankings/) en los tres rankings internacionales más citados (ARWU o Ranking de Shanghái, QS y THE).
+
+::: {.callout-note appearance="simple"}
+**Cómo leer las posiciones.** Los rankings publican **intervalos** de posiciones (por ejemplo, 151-200) a partir de cierta posición mundial. La columna *España* indica el puesto, o el intervalo de puestos, de la UGR entre las universidades españolas, y la columna *Andalucía*, entre las andaluzas.
+:::
+
+```{ojs}
+//| echo: false
+rk = FileAttachment("data/rankings_ugr_areas.csv").csv({typed: false})
+```
+
+## Lo más destacado
+
+```{ojs}
+//| echo: false
+html`<div class="cards">
+  <div class="card-ccee"><div class="icon">✈️</div><h3>Turismo</h3><p>Entre las <b>100 mejores del mundo</b> (76-100) en el Ranking de Shanghái 2025 y 1.ª de Andalucía.</p></div>
+  <div class="card-ccee"><div class="icon">📈</div><h3>Gestión (Management)</h3><p><b>151-200 del mundo</b> y <b>2.ª de España</b> en el Ranking de Shanghái 2025.</p></div>
+  <div class="card-ccee"><div class="icon">🏢</div><h3>Administración de Empresas</h3><p>201-300 del mundo en Shanghái 2025 (101-150 en 2024) y 1.ª de Andalucía.</p></div>
+  <div class="card-ccee"><div class="icon">📊</div><h3>Estadística</h3><p>201-300 del mundo en Shanghái 2025 y 251-275 en QS 2026.</p></div>
+</div>`
+```
+
+## Posiciones por ranking y área
+
+```{ojs}
+//| echo: false
+viewof rkSel = Inputs.form({
+  ranking: Inputs.select(["Todos", ...new Set(rk.map(d => d.ranking))], {label: "Ranking"}),
+  edicion: Inputs.select(["Todas", ...[...new Set(rk.map(d => d.edicion))].sort().reverse()], {label: "Edición"})
+})
+rkFilt = rk.filter(d => (rkSel.ranking === "Todos" || d.ranking === rkSel.ranking) && (rkSel.edicion === "Todas" || d.edicion === rkSel.edicion))
+Inputs.table(rkFilt, {
+  columns: ["ranking", "area", "edicion", "mundial", "espana", "andalucia"],
+  header: {ranking: "Ranking", area: "Área", edicion: "Edición", mundial: "Mundo", espana: "España", andalucia: "Andalucía"},
+  sort: "area", rows: 30, layout: "auto"
+})
+```
+
+```{ojs}
+//| echo: false
+html`<div class="descargas">${DOM.download(() => new Blob(["﻿" + d3.csvFormat(rkFilt)], {type: "text/csv;charset=utf-8"}), "cceescopio_rankings_ugr.csv", "⬇ Descargar tabla (CSV)")}</div>`
+```
+
+<p class="source">Fuente: Unidad de Analítica de la Universidad de Granada, [analitica.ugr.es/rankings](https://analitica.ugr.es/rankings/): [ARWU por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-de-shanghai/ranking-shanghai-subjects/), [QS por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-qs-world-university-rankings/ranking-qs-world-university-por-disciplinas/) y [THE por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-times-higher-education/ranking-times-higher-education-subjects/). Datos consultados en noviembre de 2026; consulta la fuente para las ediciones más recientes.</p>
+
+## Otros rankings por disciplinas
+
+La Unidad de Analítica publica también la posición de la UGR en otros rankings por disciplinas, que incluyen áreas de Economía y Empresa:
+
+- [URAP por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-university-ranking-by-academic-performance/university-ranking-by-academic-performance-field/) (University Ranking by Academic Performance)
+- [NTU por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-national-taiwan-university/ranking-national-taiwan-university-subjects/) (National Taiwan University Ranking)
+- [SCImago Institutions Rankings por disciplinas](https://analitica.ugr.es/rankings/ranking/scimago-institutions-rankings/scimago-institutions-rankings-subjects/)
+
+## Rankings generales de la UGR
+
+Rankings internacionales (ARWU, QS, THE, Leiden, CWUR, URAP, NTU, SCImago, Webometrics, Nature Index, UI GreenMetric, entre otros) y nacionales (U-Ranking, CYD, Observatorio IUNE, El Mundo, Forbes): [analitica.ugr.es/rankings](https://analitica.ugr.es/rankings/).
+
+::: {.callout-tip appearance="simple"}
+**Para la investigación.** Los rankings por disciplinas se basan sobre todo en la producción y el impacto de las publicaciones (artículos en revistas indexadas, citas, colaboración internacional). Publicar en revistas de calidad y con coautoría internacional mejora la posición de la UGR en las áreas de la Facultad.
+:::
