@@ -1,6 +1,6 @@
 ---
-title: "Desigualdad y condiciones de vida"
-subtitle: "Desigualdad de la renta, pobreza y exclusión social"
+title: "Desigualdad, pobreza y condiciones de vida"
+subtitle: "Desigualdad de la renta, pobreza, privación material y vivienda"
 ---
 
 La desigualdad y la pobreza son retos estratégicos de la Agenda 2030 (ODS 10 y ODS 1). Los indicadores proceden de la Encuesta de Condiciones de Vida armonizada (EU-SILC).
@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "indice-de-gini",
     "nombre": "Índice de Gini",
     "code": "ilc_di12",
     "query": "",
@@ -20,6 +21,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "ratio-s80-s20",
     "nombre": "Ratio S80/S20",
     "code": "ilc_di11",
     "query": "",
@@ -29,6 +31,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "riesgo-de-pobreza-o-exclusion-social-arope",
     "nombre": "Riesgo de pobreza o exclusión social (AROPE)",
     "code": "ilc_peps01n",
     "query": "&unit=PC&age=TOTAL&sex=T",
@@ -38,6 +41,7 @@ indicadores = [
     "desde": 2015
   },
   {
+    "id": "riesgo-de-pobreza-o-exclusion-social-por-regiones",
     "nombre": "Riesgo de pobreza o exclusión social por regiones",
     "code": "ilc_peps11n",
     "query": "&unit=PC",
@@ -46,6 +50,87 @@ indicadores = [
     "descripcion": "Tasa AROPE de las comunidades autónomas.",
     "regional": true,
     "desde": 2015
+  },
+  {
+    "id": "tasa-de-riesgo-de-pobreza-60-de-la-mediana",
+    "nombre": "Tasa de riesgo de pobreza (60 % de la mediana)",
+    "code": "ilc_li02",
+    "query": "&indic_il=LI_R_MD60&age=TOTAL&sex=T&unit=PC",
+    "unidad": "% de la población",
+    "frecuencia": "Anual",
+    "descripcion": "Personas con una renta disponible equivalente inferior al 60 % de la mediana nacional.",
+    "desde": 2005
+  },
+  {
+    "id": "umbral-de-pobreza-hogar-de-una-persona",
+    "nombre": "Umbral de pobreza (hogar de una persona)",
+    "code": "ilc_li01",
+    "query": "&hhtyp=A1&indic_il=LI_C_MD60&currency=EUR",
+    "unidad": "€ al año",
+    "frecuencia": "Anual",
+    "descripcion": "Renta anual por debajo de la cual una persona que vive sola se considera en riesgo de pobreza.",
+    "desde": 2005
+  },
+  {
+    "id": "riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos",
+    "nombre": "Riesgo de pobreza o exclusión social: menores de 18 años",
+    "code": "ilc_peps01n",
+    "query": "&unit=PC&age=Y_LT18&sex=T",
+    "unidad": "% de la población menor de 18 años",
+    "frecuencia": "Anual",
+    "descripcion": "Tasa AROPE infantil.",
+    "desde": 2015
+  },
+  {
+    "id": "carencia-material-y-social-severa",
+    "nombre": "Carencia material y social severa",
+    "code": "ilc_mdsd11",
+    "query": "&unit=PC&age=TOTAL&sex=T",
+    "unidad": "% de la población",
+    "frecuencia": "Anual",
+    "descripcion": "Personas que no pueden permitirse al menos 7 de 13 elementos básicos (pagar facturas, calefacción, imprevistos, etc.).",
+    "desde": 2015
+  },
+  {
+    "id": "pobreza-de-las-personas-que-trabajan",
+    "nombre": "Pobreza de las personas que trabajan",
+    "code": "ilc_iw01",
+    "query": "&wstatus=EMP&sex=T&age=Y18-64&unit=PC",
+    "unidad": "% de las personas ocupadas",
+    "frecuencia": "Anual",
+    "descripcion": "Personas ocupadas de 18 a 64 años en riesgo de pobreza (pobreza laboral).",
+    "desde": 2005
+  },
+  {
+    "id": "sobrecarga-del-coste-de-la-vivienda",
+    "nombre": "Sobrecarga del coste de la vivienda",
+    "code": "ilc_lvho07a",
+    "query": "&age=TOTAL&sex=T&incgrp=TOTAL&unit=PC",
+    "unidad": "% de la población",
+    "frecuencia": "Anual",
+    "descripcion": "Personas que destinan más del 40 % de su renta disponible a la vivienda.",
+    "desde": 2005
+  },
+  {
+    "id": "renta-mediana-equivalente",
+    "nombre": "Renta mediana equivalente",
+    "code": "ilc_di03",
+    "query": "&age=TOTAL&sex=T&indic_il=MED_E&unit=EUR",
+    "unidad": "€ al año",
+    "frecuencia": "Anual",
+    "descripcion": "Renta disponible equivalente mediana por persona.",
+    "desde": 2005
+  },
+  {
+    "id": "tasa-de-riesgo-de-pobreza-por-regiones",
+    "nombre": "Tasa de riesgo de pobreza por regiones",
+    "code": "ilc_li41",
+    "query": "&unit=PC",
+    "unidad": "% de la población",
+    "frecuencia": "Anual",
+    "descripcion": "Tasa de riesgo de pobreza de las comunidades autónomas.",
+    "regional": true,
+    "desde": 2008
   }
 ]
 ```
@@ -188,12 +273,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

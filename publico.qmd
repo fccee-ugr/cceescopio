@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "deuda-publica-del-pib",
     "nombre": "Deuda pública (% del PIB)",
     "code": "gov_10dd_edpt1",
     "query": "&unit=PC_GDP&sector=S13&na_item=GD",
@@ -20,6 +21,7 @@ indicadores = [
     "desde": 2000
   },
   {
+    "id": "deficit-o-superavit-publico-del-pib",
     "nombre": "Déficit (−) o superávit (+) público (% del PIB)",
     "code": "gov_10dd_edpt1",
     "query": "&unit=PC_GDP&sector=S13&na_item=B9",
@@ -30,6 +32,7 @@ indicadores = [
     "desde": 2000
   },
   {
+    "id": "rentabilidad-del-bono-a-10-anos",
     "nombre": "Rentabilidad del bono a 10 años",
     "code": "irt_lt_mcby_m",
     "query": "&int_rt=MCBY",
@@ -39,6 +42,7 @@ indicadores = [
     "desde": 2000
   },
   {
+    "id": "tipo-de-cambio-euro-dolar",
     "nombre": "Tipo de cambio euro / dólar",
     "code": "ert_bil_eur_m",
     "query": "&currency=USD&statinfo=AVG",
@@ -47,6 +51,69 @@ indicadores = [
     "descripcion": "Media mensual del tipo de cambio de referencia del euro frente al dólar estadounidense.",
     "sinGeo": true,
     "serie": "Euro / dólar",
+    "desde": 2000
+  },
+  {
+    "id": "ingresos-fiscales-del-pib",
+    "nombre": "Ingresos fiscales (% del PIB)",
+    "code": "gov_10a_taxag",
+    "query": "&unit=PC_GDP&sector=S13_S212&na_item=D2_D5_D91_D61_M_D995",
+    "unidad": "% del PIB",
+    "frecuencia": "Anual",
+    "descripcion": "Impuestos y cotizaciones sociales recaudados por las administraciones públicas y las instituciones de la UE (presión fiscal).",
+    "desde": 2000
+  },
+  {
+    "id": "gasto-publico-total-del-pib",
+    "nombre": "Gasto público total (% del PIB)",
+    "code": "gov_10a_exp",
+    "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=TOTAL",
+    "unidad": "% del PIB",
+    "frecuencia": "Anual",
+    "descripcion": "Gasto total de las administraciones públicas.",
+    "desde": 2000
+  },
+  {
+    "id": "gasto-publico-en-sanidad-del-pib",
+    "nombre": "Gasto público en sanidad (% del PIB)",
+    "code": "gov_10a_exp",
+    "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF07",
+    "unidad": "% del PIB",
+    "frecuencia": "Anual",
+    "descripcion": "Gasto de las administraciones públicas en sanidad (clasificación COFOG).",
+    "desde": 2000
+  },
+  {
+    "id": "gasto-publico-en-educacion-del-pib",
+    "nombre": "Gasto público en educación (% del PIB)",
+    "code": "gov_10a_exp",
+    "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF09",
+    "unidad": "% del PIB",
+    "frecuencia": "Anual",
+    "descripcion": "Gasto de las administraciones públicas en educación (clasificación COFOG).",
+    "desde": 2000
+  },
+  {
+    "id": "gasto-publico-en-proteccion-social-del-pib",
+    "nombre": "Gasto público en protección social (% del PIB)",
+    "code": "gov_10a_exp",
+    "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF10",
+    "unidad": "% del PIB",
+    "frecuencia": "Anual",
+    "descripcion": "Gasto en pensiones, desempleo, familia, vivienda y exclusión social (clasificación COFOG).",
+    "desde": 2000
+  },
+  {
+    "id": "euribor-a-3-meses",
+    "nombre": "Euríbor a 3 meses",
+    "code": "irt_st_m",
+    "query": "&int_rt=IRT_M3&geo=EA",
+    "unidad": "%",
+    "frecuencia": "Mensual",
+    "descripcion": "Tipo de interés del mercado interbancario de la zona euro a tres meses, referencia de muchos préstamos.",
+    "sinGeo": true,
+    "serie": "Euríbor a 3 meses",
+    "cero": true,
     "desde": 2000
   }
 ]
@@ -190,12 +257,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

@@ -1,0 +1,180 @@
+---
+title: "Departamento de Teoría e Historia Económica"
+subtitle: "Asignaturas de los grados de la Facultad e indicadores de CCEEscopio para usar en ellas"
+---
+
+Microeconomía, macroeconomía, historia económica e historia del pensamiento: CCEEscopio aporta los datos para ilustrar los modelos y contrastarlos con la evolución reciente de la economía.
+
+Web del departamento: <https://www.ugr.es/universidad/organizacion/entidades/departamento-teoria-historia-economica>.
+
+Cada indicador enlaza directamente con su gráfico interactivo, desde el que se pueden comparar países y regiones y descargar los datos en CSV.
+
+## Economía Política {#economia-politica}
+
+<p class="asig-grados">🎓 ADE, Economía, Finanzas y Contabilidad, Marketing (1.º)</p>
+
+**Indicadores recomendados**
+
+- [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [Tasa de paro](../empleo.html?i=tasa-de-paro) <span class="asig-cat">Mercado laboral</span>
+- [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) <span class="asig-cat">Sector público y mercados financieros</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Primer contacto con los grandes agregados: el alumnado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+## Principios de Economía I y II {#principios-de-economia-i-y-ii}
+
+<p class="asig-grados">🎓 Turismo (1.º)</p>
+
+**Indicadores recomendados**
+
+- [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [Tasa de paro](../empleo.html?i=tasa-de-paro) <span class="asig-cat">Mercado laboral</span>
+- [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) <span class="asig-cat">Turismo</span>
+- [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Explicar los conceptos básicos de la economía con el sector turístico como hilo conductor: peso del turismo, empleo y precios en España y Andalucía.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+## Microeconomía (I, II, III y IV) {#microeconomia-i-ii-iii-y-iv}
+
+<p class="asig-grados">🎓 Economía (1.º-3.º); Microeconomía en ADE, Finanzas y Contabilidad y Marketing (1.º)</p>
+
+**Indicadores recomendados**
+
+- [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) <span class="asig-cat">Energía y sostenibilidad</span>
+- [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) <span class="asig-cat">Energía y sostenibilidad</span>
+- [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) <span class="asig-cat">Mercado laboral</span>
+- [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora) <span class="asig-cat">Mercado laboral</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Elasticidades y estructura de mercado con precios reales: comparar la subida de la energía y de los alimentos con la inflación general, o el salario mínimo entre países para discutir sus efectos en el mercado de trabajo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+## Macroeconomía (I, II, III y IV) y Macroeconomía en ADE, Finanzas y Contabilidad y Marketing {#macroeconomia-i-ii-iii-y-iv-y-macroeconomia-en-ade}
+
+<p class="asig-grados">🎓 Economía (2.º-3.º); ADE, Finanzas y Contabilidad, Marketing (2.º)</p>
+
+**Indicadores recomendados**
+
+- [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Inversión (formación bruta de capital fijo): crecimiento interanual](../actividad.html?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) <span class="asig-cat">Precios e inflación</span>
+- [Tasa de paro](../empleo.html?i=tasa-de-paro) <span class="asig-cat">Mercado laboral</span>
+- [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Ciclo económico, curva de Phillips y ley de Okun con datos: relacionar el crecimiento del PIB con la variación del paro y la inflación con el paro de los países de la UE; seguir la política monetaria del BCE a través del euríbor.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+## Macroeconomía Internacional {#macroeconomia-internacional}
+
+<p class="asig-grados">🎓 Economía (4.º, optativa)</p>
+
+**Indicadores recomendados**
+
+- [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) <span class="asig-cat">Economía internacional y sector exterior</span>
+- [Posición de inversión internacional neta (% del PIB)](../internacional.html?i=posicion-de-inversion-internacional-neta-del-pib) <span class="asig-cat">Economía internacional y sector exterior</span>
+- [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) <span class="asig-cat">Precios e inflación</span>
+- [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) <span class="asig-cat">Economía internacional y sector exterior</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Desequilibrios exteriores en la zona euro: saldo por cuenta corriente y posición de inversión internacional de España, Alemania e Italia; tipo de cambio del euro y paridad del poder de compra.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+## Economía Monetaria y Bancaria {#economia-monetaria-y-bancaria}
+
+<p class="asig-grados">🎓 Economía (4.º, optativa)</p>
+
+**Indicadores recomendados**
+
+- [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) <span class="asig-cat">Sector público y mercados financieros</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) <span class="asig-cat">Precios e inflación</span>
+- [Precio de la vivienda (tasa anual)](../precios.html?i=precio-de-la-vivienda-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Transmisión de la política monetaria: del euríbor a los precios de la vivienda y a la inflación; la prima de riesgo como diferencia de rentabilidad entre el bono español y el alemán.
+:::
+
+## Historia del Desarrollo Económico Mundial Contemporáneo {#historia-del-desarrollo-economico-mundial-contempo}
+
+<p class="asig-grados">🎓 ADE, Economía, Finanzas y Contabilidad, Marketing (1.º)</p>
+
+**Indicadores recomendados**
+
+- [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) <span class="asig-cat">Economía internacional y sector exterior</span>
+- [Esperanza de vida al nacer](../poblacion.html?i=esperanza-de-vida-al-nacer) <span class="asig-cat">Población, educación y salud</span>
+- [Tasa de fecundidad](../poblacion.html?i=tasa-de-fecundidad) <span class="asig-cat">Población, educación y salud</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Divergencia y convergencia: comparar el PIB per cápita y la esperanza de vida de los países europeos para conectar la historia con la situación actual.
+:::
+
+## Historia Económica de España, Historia Económica de Andalucía e Historia del Pensamiento Económico {#historia-economica-de-espana-historia-economica-de}
+
+<p class="asig-grados">🎓 Economía (3.º-4.º)</p>
+
+**Indicadores recomendados**
+
+- [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones) <span class="asig-cat">Mercado laboral</span>
+- [Riesgo de pobreza o exclusión social por regiones](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-por-regiones) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Población por regiones](../poblacion.html?i=poblacion-por-regiones) <span class="asig-cat">Población, educación y salud</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** La herencia histórica de las diferencias regionales: renta, paro y pobreza de Andalucía frente a España y la UE en la actualidad.
+:::
+
+## Historia de la Empresa, Organización Industrial: Evidencias Históricas, Historia Económica y Social del Turismo e Historia de la Actividad Comercial y del Marketing {#historia-de-la-empresa-organizacion-industrial-evi}
+
+<p class="asig-grados">🎓 Finanzas y Contabilidad, ADE, Turismo y Marketing (optativas)</p>
+
+**Indicadores recomendados**
+
+- [Índice de producción industrial](../actividad.html?i=indice-de-produccion-industrial) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) <span class="asig-cat">Turismo</span>
+- [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Conectar la historia de la empresa, el comercio y el turismo con su evolución reciente: industria, creación de empresas, pernoctaciones y comercio minorista.
+:::
+
+## Economía Experimental {#economia-experimental}
+
+<p class="asig-grados">🎓 Economía (4.º, optativa)</p>
+
+**Indicadores recomendados**
+
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Expectativas y comportamiento: comparar las encuestas de confianza con los resultados de los experimentos en el aula.
+:::
+
+<p class="source">Asignaturas según los planes de estudio publicados en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. La asignación a departamentos sigue el área de conocimiento de cada materia; consulta la guía docente para confirmarla. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>

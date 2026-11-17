@@ -1,0 +1,111 @@
+---
+title: "Departamento de Métodos Cuantitativos para la Economía y la Empresa"
+subtitle: "Asignaturas de los grados de la Facultad e indicadores de CCEEscopio para usar en ellas"
+---
+
+Matemáticas, estadística y econometría: las series de CCEEscopio, descargables en CSV, son datos reales para practicar números índice, series temporales, regresión y datos de panel.
+
+Cada indicador enlaza directamente con su gráfico interactivo, desde el que se pueden comparar países y regiones y descargar los datos en CSV.
+
+## Matemáticas, Matemáticas para la Economía I y II y Matemáticas Empresariales {#matematicas-matematicas-para-la-economia-i-y-ii-y-}
+
+<p class="asig-grados">🎓 Todos los grados de Economía y Empresa (1.º-2.º)</p>
+
+**Indicadores recomendados**
+
+- [Población](../poblacion.html?i=poblacion) <span class="asig-cat">Población, educación y salud</span>
+- [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Funciones, tasas de crecimiento y logaritmos con series reales: crecimiento compuesto de la población o del nivel de precios.
+:::
+
+## Técnicas Cuantitativas I, II y III {#tecnicas-cuantitativas-i-ii-y-iii}
+
+<p class="asig-grados">🎓 ADE, Economía, Finanzas y Contabilidad, Marketing (2.º-3.º)</p>
+
+**Indicadores recomendados**
+
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [Índice de Gini](../desigualdad.html?i=indice-de-gini) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones) <span class="asig-cat">Mercado laboral</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+## Estadística Aplicada al Sector Turístico {#estadistica-aplicada-al-sector-turistico}
+
+<p class="asig-grados">🎓 Turismo (1.º)</p>
+
+**Indicadores recomendados**
+
+- [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) <span class="asig-cat">Turismo</span>
+- [Llegadas de viajeros a hoteles](../turismo.html?i=llegadas-de-viajeros-a-hoteles) <span class="asig-cat">Turismo</span>
+- [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) <span class="asig-cat">Turismo</span>
+- [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) <span class="asig-cat">Turismo</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Descripción de series turísticas: medias, estacionalidad, tasas de variación interanual y comparación entre comunidades autónomas.
+:::
+
+## Econometría (I, II y III) y Econometría en ADE, Finanzas y Contabilidad y Marketing {#econometria-i-ii-y-iii-y-econometria-en-ade-finanz}
+
+<p class="asig-grados">🎓 Economía (3.º-4.º); ADE, Finanzas y Contabilidad, Marketing (3.º)</p>
+
+**Indicadores recomendados**
+
+- [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Tasa de paro](../empleo.html?i=tasa-de-paro) <span class="asig-cat">Mercado laboral</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Regresión con datos reales: ley de Okun (PIB y paro), curva de Phillips, función de consumo, modelos de series temporales (estacionalidad, raíces unitarias) y datos de panel de países.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Datos y fuentes](../datos.qmd)
+
+## Métodos Cuantitativos y Métodos Cuantitativos para Finanzas y Contabilidad {#metodos-cuantitativos-y-metodos-cuantitativos-para}
+
+<p class="asig-grados">🎓 ADE (3.º), Finanzas y Contabilidad (3.º, optativa)</p>
+
+**Indicadores recomendados**
+
+- [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) <span class="asig-cat">Sector público y mercados financieros</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Modelización de series financieras: tipos de interés, tipo de cambio e inflación; volatilidad y correlación.
+:::
+
+## Técnicas Estadísticas Multivariantes y Análisis de Datos Cualitativos {#tecnicas-estadisticas-multivariantes-y-analisis-de}
+
+<p class="asig-grados">🎓 Marketing (4.º, optativas)</p>
+
+**Indicadores recomendados**
+
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis de conglomerados y componentes principales de los países de la UE con varios indicadores de digitalización y consumo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+<p class="source">Asignaturas según los planes de estudio publicados en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. La asignación a departamentos sigue el área de conocimiento de cada materia; consulta la guía docente para confirmarla. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>

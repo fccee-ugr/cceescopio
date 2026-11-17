@@ -1,0 +1,16 @@
+          - href: docencia/teoria-historia-economica.qmd
+            text: "Teoría e Historia Económica"
+          - href: docencia/economia-aplicada.qmd
+            text: "Economía Aplicada"
+          - href: docencia/economia-internacional-espana.qmd
+            text: "Economía Internacional y de España"
+          - href: docencia/metodos-cuantitativos.qmd
+            text: "Métodos Cuantitativos para la Economía y la Empresa"
+          - href: docencia/economia-financiera-contabilidad.qmd
+            text: "Economía Financiera y Contabilidad"
+          - href: docencia/comercializacion-investigacion-mercados.qmd
+            text: "Comercialización e Investigación de Mercados"
+          - href: docencia/organizacion-empresas.qmd
+            text: "Organización de Empresas I y II"
+          - href: docencia/otros-departamentos.qmd
+            text: "Otros departamentos con docencia en la Facultad"

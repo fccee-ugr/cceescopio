@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "gasto-en-i-d-del-pib",
     "nombre": "Gasto en I+D (% del PIB)",
     "code": "rd_e_gerdtot",
     "query": "&sectperf=TOTAL&unit=PC_GDP",
@@ -20,6 +21,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "gasto-en-i-d-por-regiones-del-pib",
     "nombre": "Gasto en I+D por regiones (% del PIB)",
     "code": "rd_e_gerdreg",
     "query": "&sectperf=TOTAL&unit=PC_GDP",
@@ -30,6 +32,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "empresas-que-usan-inteligencia-artificial",
     "nombre": "Empresas que usan inteligencia artificial",
     "code": "isoc_eb_ai",
     "query": "&indic_is=E_AI_TANY&size_emp=GE10&unit=PC_ENT",
@@ -39,6 +42,7 @@ indicadores = [
     "desde": 2021
   },
   {
+    "id": "personas-que-compran-por-internet",
     "nombre": "Personas que compran por internet",
     "code": "isoc_ec_ibuy",
     "query": "&indic_is=I_BUY3&ind_type=IND_TOTAL&unit=PC_IND",
@@ -48,6 +52,7 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "confianza-de-la-industria",
     "nombre": "Confianza de la industria",
     "code": "ei_bsin_m_r2",
     "query": "&indic=BS-ICI-BAL&s_adj=SA",
@@ -55,6 +60,69 @@ indicadores = [
     "frecuencia": "Mensual",
     "descripcion": "Indicador de confianza industrial: diferencia entre respuestas positivas y negativas sobre pedidos, existencias y producción esperada.",
     "cero": true,
+    "desde": 2008
+  },
+  {
+    "id": "declaraciones-de-quiebra-de-empresas-indice",
+    "nombre": "Declaraciones de quiebra de empresas (índice)",
+    "code": "sts_rb_q",
+    "query": "&indic_bt=BKRT&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21",
+    "unidad": "Índice (2021 = 100)",
+    "frecuencia": "Trimestral",
+    "descripcion": "Evolución del número de empresas declaradas en quiebra o concurso.",
+    "desde": 2015
+  },
+  {
+    "id": "registros-de-nuevas-empresas-indice",
+    "nombre": "Registros de nuevas empresas (índice)",
+    "code": "sts_rb_q",
+    "query": "&indic_bt=REG&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21",
+    "unidad": "Índice (2021 = 100)",
+    "frecuencia": "Trimestral",
+    "descripcion": "Evolución del número de empresas de nueva creación inscritas en los registros.",
+    "desde": 2015
+  },
+  {
+    "id": "confianza-en-los-servicios",
+    "nombre": "Confianza en los servicios",
+    "code": "ei_bsse_m_r2",
+    "query": "&indic=BS-SCI-BAL&s_adj=SA",
+    "unidad": "Saldo de respuestas (%)",
+    "frecuencia": "Mensual",
+    "descripcion": "Indicador de confianza de las empresas de servicios (Comisión Europea).",
+    "cero": true,
+    "desde": 2008
+  },
+  {
+    "id": "confianza-del-comercio-minorista",
+    "nombre": "Confianza del comercio minorista",
+    "code": "ei_bsrt_m_r2",
+    "query": "&indic=BS-RCI-BAL&s_adj=SA",
+    "unidad": "Saldo de respuestas (%)",
+    "frecuencia": "Mensual",
+    "descripcion": "Indicador de confianza del comercio minorista (Comisión Europea).",
+    "cero": true,
+    "desde": 2008
+  },
+  {
+    "id": "confianza-de-la-construccion",
+    "nombre": "Confianza de la construcción",
+    "code": "ei_bsbu_m_r2",
+    "query": "&indic=BS-CCI-BAL&s_adj=SA",
+    "unidad": "Saldo de respuestas (%)",
+    "frecuencia": "Mensual",
+    "descripcion": "Indicador de confianza de las empresas de construcción (Comisión Europea).",
+    "cero": true,
+    "desde": 2008
+  },
+  {
+    "id": "hogares-con-acceso-a-internet",
+    "nombre": "Hogares con acceso a internet",
+    "code": "isoc_ci_in_h",
+    "query": "&unit=PC_HH&hhtyp=TOTAL&indic_is=H_IACC",
+    "unidad": "% de hogares",
+    "frecuencia": "Anual",
+    "descripcion": "Porcentaje de hogares con acceso a internet en casa.",
     "desde": 2008
   }
 ]
@@ -198,12 +266,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

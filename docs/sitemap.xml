@@ -2,58 +2,114 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jfmunozrosas.github.io/cceescopio/turismo.html</loc>
-    <lastmod>2026-11-16T06:18:44.225Z</lastmod>
+    <lastmod>2026-11-17T19:36:48.388Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/rankings.html</loc>
-    <lastmod>2026-11-16T06:00:45.537Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/relaciona.html</loc>
+    <lastmod>2026-11-17T19:36:46.557Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/precios.html</loc>
-    <lastmod>2026-11-16T06:18:44.347Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/publico.html</loc>
+    <lastmod>2026-11-17T19:36:48.488Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/empresa.html</loc>
-    <lastmod>2026-11-16T06:18:44.335Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/poblacion.html</loc>
+    <lastmod>2026-11-17T19:36:46.533Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/docencia.html</loc>
-    <lastmod>2026-11-16T06:52:46.143Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/indicadores.html</loc>
+    <lastmod>2026-11-17T19:36:46.515Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/datos.html</loc>
-    <lastmod>2026-11-16T06:52:46.098Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/ficha.html</loc>
+    <lastmod>2026-11-17T19:36:46.498Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/andalucia.html</loc>
-    <lastmod>2026-11-16T06:18:44.298Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/empleo.html</loc>
+    <lastmod>2026-11-17T19:36:48.461Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/actividad.html</loc>
-    <lastmod>2026-11-16T06:18:44.275Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/teoria-historia-economica.html</loc>
+    <lastmod>2026-11-17T19:36:46.350Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/organizacion-empresas.html</loc>
+    <lastmod>2026-11-17T19:36:46.335Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/economia-internacional-espana.html</loc>
+    <lastmod>2026-11-17T19:36:46.357Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/economia-aplicada.html</loc>
+    <lastmod>2026-11-17T19:36:46.359Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/desigualdad.html</loc>
+    <lastmod>2026-11-17T19:36:48.446Z</lastmod>
   </url>
   <url>
     <loc>https://jfmunozrosas.github.io/cceescopio/contacto.html</loc>
     <lastmod>2026-11-16T06:00:45.334Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/desigualdad.html</loc>
-    <lastmod>2026-11-16T06:52:46.121Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/andalucia.html</loc>
+    <lastmod>2026-11-17T19:36:48.439Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/empleo.html</loc>
-    <lastmod>2026-11-16T06:18:44.323Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/actividad.html</loc>
+    <lastmod>2026-11-17T19:36:48.431Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/calculadora.html</loc>
+    <lastmod>2026-11-17T19:36:46.456Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/datos.html</loc>
+    <lastmod>2026-11-16T06:52:46.098Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/comercializacion-investigacion-mercados.html</loc>
+    <lastmod>2026-11-17T19:36:46.344Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/economia-financiera-contabilidad.html</loc>
+    <lastmod>2026-11-17T19:36:46.329Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/metodos-cuantitativos.html</loc>
+    <lastmod>2026-11-17T19:36:46.366Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia/otros-departamentos.html</loc>
+    <lastmod>2026-11-17T19:36:46.339Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/docencia.html</loc>
+    <lastmod>2026-11-17T19:36:48.457Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/empresa.html</loc>
+    <lastmod>2026-11-17T19:36:48.471Z</lastmod>
   </url>
   <url>
     <loc>https://jfmunozrosas.github.io/cceescopio/index.html</loc>
-    <lastmod>2026-11-16T06:52:46.162Z</lastmod>
+    <lastmod>2026-11-17T19:36:48.479Z</lastmod>
   </url>
   <url>
-    <loc>https://jfmunozrosas.github.io/cceescopio/publico.html</loc>
-    <lastmod>2026-11-16T06:18:44.363Z</lastmod>
+    <loc>https://jfmunozrosas.github.io/cceescopio/internacional.html</loc>
+    <lastmod>2026-11-17T19:36:46.527Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/precios.html</loc>
+    <lastmod>2026-11-17T19:36:48.485Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jfmunozrosas.github.io/cceescopio/rankings.html</loc>
+    <lastmod>2026-11-16T06:00:45.537Z</lastmod>
   </url>
   <url>
     <loc>https://jfmunozrosas.github.io/cceescopio/sostenibilidad.html</loc>
-    <lastmod>2026-11-16T06:18:44.389Z</lastmod>
+    <lastmod>2026-11-17T19:36:48.502Z</lastmod>
   </url>
 </urlset>

@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "pib-crecimiento-interanual-trimestral",
     "nombre": "PIB: crecimiento interanual (trimestral)",
     "code": "namq_10_gdp",
     "query": "&unit=CLV_PCH_SM&na_item=B1GQ&s_adj=SCA",
@@ -21,6 +22,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "pib-per-capita-en-paridad-de-poder-de-compra",
     "nombre": "PIB per cápita en paridad de poder de compra",
     "code": "nama_10r_2gdp",
     "query": "&unit=PPS_EU27_2020_HAB",
@@ -31,6 +33,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "indice-de-produccion-industrial",
     "nombre": "Índice de producción industrial",
     "code": "sts_inpr_m",
     "query": "&nace_r2=B-D&s_adj=SCA&unit=I21",
@@ -40,6 +43,7 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "indice-de-comercio-minorista",
     "nombre": "Índice de comercio minorista",
     "code": "sts_trtu_m",
     "query": "&nace_r2=G47&s_adj=SCA&unit=I21",
@@ -49,12 +53,78 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "indicador-de-sentimiento-economico",
     "nombre": "Indicador de sentimiento económico",
     "code": "ei_bssi_m_r2",
     "query": "&indic=BS-ESI-I&s_adj=SA",
     "unidad": "Índice (media a largo plazo = 100)",
     "frecuencia": "Mensual",
     "descripcion": "Indicador compuesto de confianza de industria, servicios, consumidores, construcción y comercio (Comisión Europea).",
+    "desde": 2008
+  },
+  {
+    "id": "consumo-de-los-hogares-crecimiento-interanual",
+    "nombre": "Consumo de los hogares: crecimiento interanual",
+    "code": "namq_10_gdp",
+    "query": "&unit=CLV_PCH_SM&na_item=P31_S14_S15&s_adj=SCA",
+    "unidad": "% de variación interanual",
+    "frecuencia": "Trimestral",
+    "descripcion": "Gasto en consumo final de los hogares y las ISFLSH, en volumen.",
+    "cero": true,
+    "desde": 2005
+  },
+  {
+    "id": "inversion-formacion-bruta-de-capital-fijo-crecimiento-intera",
+    "nombre": "Inversión (formación bruta de capital fijo): crecimiento interanual",
+    "code": "namq_10_gdp",
+    "query": "&unit=CLV_PCH_SM&na_item=P51G&s_adj=SCA",
+    "unidad": "% de variación interanual",
+    "frecuencia": "Trimestral",
+    "descripcion": "Inversión en bienes de equipo, construcción y activos intangibles, en volumen.",
+    "cero": true,
+    "desde": 2005
+  },
+  {
+    "id": "produccion-en-la-construccion",
+    "nombre": "Producción en la construcción",
+    "code": "sts_copr_m",
+    "query": "&nace_r2=F&s_adj=SCA&unit=I21",
+    "unidad": "Índice (2021 = 100)",
+    "frecuencia": "Mensual",
+    "descripcion": "Volumen de producción del sector de la construcción, corregido de estacionalidad y calendario.",
+    "desde": 2008
+  },
+  {
+    "id": "productividad-del-trabajo-por-hora-variacion-anual",
+    "nombre": "Productividad del trabajo por hora: variación anual",
+    "code": "nama_10_lp_ulc",
+    "query": "&na_item=RLPR_HW&unit=PCH_PRE",
+    "unidad": "% de variación anual",
+    "frecuencia": "Anual",
+    "descripcion": "Crecimiento del PIB real por hora trabajada.",
+    "cero": true,
+    "desde": 2000
+  },
+  {
+    "id": "costes-laborales-unitarios-nominales-variacion-anual",
+    "nombre": "Costes laborales unitarios nominales: variación anual",
+    "code": "nama_10_lp_ulc",
+    "query": "&na_item=NULC_PER&unit=PCH_PRE",
+    "unidad": "% de variación anual",
+    "frecuencia": "Anual",
+    "descripcion": "Coste laboral por unidad producida; indicador de competitividad-precio.",
+    "cero": true,
+    "desde": 2000
+  },
+  {
+    "id": "confianza-del-consumidor",
+    "nombre": "Confianza del consumidor",
+    "code": "ei_bsco_m",
+    "query": "&indic=BS-CSMCI&s_adj=SA",
+    "unidad": "Saldo de respuestas (%)",
+    "frecuencia": "Mensual",
+    "descripcion": "Indicador de confianza de los consumidores de la Comisión Europea (expectativas sobre su situación financiera, la economía y las compras importantes).",
+    "cero": true,
     "desde": 2008
   }
 ]
@@ -198,12 +268,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

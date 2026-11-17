@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "pib-per-capita-en-paridad-de-poder-de-compra",
     "nombre": "PIB per cápita en paridad de poder de compra",
     "code": "nama_10r_2gdp",
     "query": "&unit=PPS_EU27_2020_HAB",
@@ -21,6 +22,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "tasa-de-paro",
     "nombre": "Tasa de paro",
     "code": "lfst_r_lfu3rt",
     "query": "&sex=T&age=Y15-74&unit=PC",
@@ -31,6 +33,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "gasto-en-i-d-del-pib",
     "nombre": "Gasto en I+D (% del PIB)",
     "code": "rd_e_gerdreg",
     "query": "&sectperf=TOTAL&unit=PC_GDP",
@@ -41,6 +44,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "pernoctaciones-turisticas",
     "nombre": "Pernoctaciones turísticas",
     "code": "tour_occ_nin2",
     "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553",
@@ -51,6 +55,7 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "riesgo-de-pobreza-o-exclusion-social-arope",
     "nombre": "Riesgo de pobreza o exclusión social (AROPE)",
     "code": "ilc_peps11n",
     "query": "&unit=PC",
@@ -59,6 +64,39 @@ indicadores = [
     "descripcion": "Tasa AROPE de las comunidades autónomas.",
     "regional": true,
     "desde": 2015
+  },
+  {
+    "id": "tasa-de-empleo-20-64-anos",
+    "nombre": "Tasa de empleo (20-64 años)",
+    "code": "lfst_r_lfe2emprt",
+    "query": "&sex=T&age=Y20-64&unit=PC",
+    "unidad": "% de la población",
+    "frecuencia": "Anual",
+    "descripcion": "Tasa de empleo de las comunidades autónomas.",
+    "regional": true,
+    "desde": 2005
+  },
+  {
+    "id": "tasa-de-riesgo-de-pobreza",
+    "nombre": "Tasa de riesgo de pobreza",
+    "code": "ilc_li41",
+    "query": "&unit=PC",
+    "unidad": "% de la población",
+    "frecuencia": "Anual",
+    "descripcion": "Tasa de riesgo de pobreza de las comunidades autónomas.",
+    "regional": true,
+    "desde": 2008
+  },
+  {
+    "id": "poblacion",
+    "nombre": "Población",
+    "code": "demo_r_d2jan",
+    "query": "&sex=T&age=TOTAL",
+    "unidad": "Personas",
+    "frecuencia": "Anual",
+    "descripcion": "Población residente a 1 de enero.",
+    "regional": true,
+    "desde": 2000
   }
 ]
 ```
@@ -201,12 +239,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

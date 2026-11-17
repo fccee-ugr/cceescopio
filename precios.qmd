@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "ipca-inflacion-general-tasa-anual",
     "nombre": "IPCA: inflación general (tasa anual)",
     "code": "prc_hicp_minr",
     "query": "&unit=RCH_A&coicop18=TOTAL",
@@ -31,6 +32,7 @@ indicadores = [
     ]
   },
   {
+    "id": "ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual",
     "nombre": "IPCA: alimentos y bebidas no alcohólicas (tasa anual)",
     "code": "prc_hicp_minr",
     "query": "&unit=RCH_A&coicop18=CP01",
@@ -51,6 +53,7 @@ indicadores = [
     ]
   },
   {
+    "id": "ipca-energia-tasa-anual",
     "nombre": "IPCA: energía (tasa anual)",
     "code": "prc_hicp_minr",
     "query": "&unit=RCH_A&coicop18=NRG",
@@ -71,6 +74,7 @@ indicadores = [
     ]
   },
   {
+    "id": "ipca-servicios-tasa-anual",
     "nombre": "IPCA: servicios (tasa anual)",
     "code": "prc_hicp_minr",
     "query": "&unit=RCH_A&coicop18=SERV",
@@ -91,6 +95,7 @@ indicadores = [
     ]
   },
   {
+    "id": "precio-de-la-vivienda-tasa-anual",
     "nombre": "Precio de la vivienda (tasa anual)",
     "code": "prc_hpi_q",
     "query": "&purchase=TOTAL&unit=RCH_A",
@@ -99,6 +104,48 @@ indicadores = [
     "descripcion": "Tasa de variación anual del índice de precios de la vivienda (nueva y de segunda mano).",
     "cero": true,
     "desde": 2008
+  },
+  {
+    "id": "ipca-inflacion-subyacente-sin-energia-ni-alimentos",
+    "nombre": "IPCA: inflación subyacente (sin energía ni alimentos)",
+    "code": "prc_hicp_minr",
+    "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD",
+    "unidad": "%",
+    "frecuencia": "Mensual",
+    "descripcion": "Tasa de variación anual del IPCA excluidos la energía y los alimentos: aproxima la tendencia de fondo de los precios.",
+    "cero": true,
+    "desde": 2005,
+    "alt": [
+      {
+        "code": "prc_hicp_minr",
+        "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD"
+      },
+      {
+        "code": "prc_hicp_manr",
+        "query": "&coicop=TOT_X_NRG_FOOD"
+      }
+    ]
+  },
+  {
+    "id": "precios-industriales-tasa-anual",
+    "nombre": "Precios industriales (tasa anual)",
+    "code": "sts_inppd_m",
+    "query": "&nace_r2=B-E36&s_adj=NSA&unit=PCH_SM",
+    "unidad": "%",
+    "frecuencia": "Mensual",
+    "descripcion": "Variación anual de los precios de producción industrial en el mercado interior (anticipa la inflación de consumo).",
+    "cero": true,
+    "desde": 2005
+  },
+  {
+    "id": "nivel-de-precios-comparado-ue-27-100",
+    "nombre": "Nivel de precios comparado (UE-27 = 100)",
+    "code": "prc_ppp_ind",
+    "query": "&na_item=PLI_EU27_2020&ppp_cat=GDP",
+    "unidad": "Índice (UE-27 = 100)",
+    "frecuencia": "Anual",
+    "descripcion": "Nivel general de precios de cada país respecto a la media de la UE, a partir de las paridades de poder de compra.",
+    "desde": 2000
   }
 ]
 ```
@@ -241,12 +288,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

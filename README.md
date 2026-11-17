@@ -22,14 +22,32 @@ _goatcounter.html      contador de visitas (opcional)
 images/                logos de la UGR y la Facultad; images/brand: logo de CCEEscopio
 media/                 vídeo de presentación y su portada
 tools/make_pages.py    genera las páginas de indicadores a partir de una lista única
+                       (y data/indicadores.json, data/indicadores_specs.json)
+tools/make_apps.py     genera las herramientas: calculadora.qmd, ficha.qmd, relaciona.qmd
+tools/asignaturas.py   asignaturas de los grados por departamento, con indicadores y ejemplos de uso
+tools/make_docencia.py genera docencia/<departamento>.qmd, indicadores.qmd (buscador)
+                       y _deptos_cards.md (tarjetas de docencia.qmd)
+docencia/              páginas por departamento y asignatura (generadas)
 tools/make_logo.py     genera el logo
 ```
 
 ## Añadir o modificar indicadores
 
 1. Edita la lista de la categoría correspondiente en `tools/make_pages.py` (nombre, código de la tabla de Eurostat, filtros, unidad, frecuencia y descripción; `regional=True` para tablas por comunidades autónomas).
-2. Ejecuta `python3 tools/make_pages.py` para regenerar las páginas.
-3. Ejecuta `quarto render`.
+2. Regenera todo, en este orden:
+
+```
+python3 tools/make_pages.py
+python3 tools/make_apps.py
+python3 tools/make_docencia.py
+quarto render
+```
+
+Cada indicador tiene un identificador (se crea a partir de su nombre) que permite enlazarlo directamente: `precios.html?i=ipca-inflacion-general-tasa-anual`. Si cambias el nombre de un indicador, actualiza su alias en `tools/asignaturas.py`.
+
+## Docencia por departamentos y asignaturas
+
+Las asignaturas, su departamento, los indicadores recomendados (por su alias) y el ejemplo de uso están en `tools/asignaturas.py`. Para añadir una asignatura o cambiar un ejemplo, edita ese fichero y ejecuta `python3 tools/make_docencia.py`. Si se añade un departamento, copia también el fragmento `tools/_menu_docencia.yml` en el menú *Docencia* de `_quarto.yml`.
 
 Los filtros de cada tabla se pueden consultar en el navegador de datos de Eurostat (https://ec.europa.eu/eurostat/databrowser). Si una consulta falla, la web intenta alternativas (por ejemplo, la tabla anterior del IPCA) y, en último caso, muestra un aviso con el enlace a Eurostat.
 

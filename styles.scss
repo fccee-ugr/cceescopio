@@ -84,3 +84,22 @@ h2 { border-bottom: 2px solid rgba($ccee-orange, .4); padding-bottom: .25rem; }
 .contact-box { background: $ccee-cream; border-radius: 10px; padding: 1.25rem 1.5rem; border-left: 6px solid $ccee-magenta; }
 iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2); border-radius: 8px; }
 .visit-counter .vc-num { font-weight: 700; color: $ccee-magenta; }
+
+/* Docencia por departamentos y asignaturas */
+.asig-grados { color: #555; font-size: .95rem; margin: -.2rem 0 .6rem; }
+.asig-cat { display: inline-block; margin-left: .35rem; padding: 0 .45rem; border-radius: 10px; font-size: .75em;
+  background: rgba($ccee-orange, .15); color: darken($ccee-orange, 20%); white-space: nowrap; }
+.uso-box { border-left: 4px solid $ccee-magenta; background: $ccee-cream; border-radius: 8px; padding: .6rem .9rem; margin: .6rem 0 1rem; }
+.uso-box p:last-child { margin-bottom: 0; }
+
+/* Herramientas */
+.calc-result { background: $ccee-cream; border-left: 5px solid $ccee-magenta; border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; }
+.calc-big { font-size: 1.45rem; line-height: 1.35; b { color: $ccee-magenta; } }
+.calc-small { color: #555; font-size: .95rem; margin-top: .4rem; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: .8rem; margin: .8rem 0 1rem; }
+.kpi { background: #fff; border: 1px solid #eadde3; border-top: 4px solid $ccee-magenta; border-radius: 10px; padding: .7rem .9rem; }
+.kpi:nth-child(even) { border-top-color: $ccee-orange; }
+.kpi-l { font-weight: 600; font-size: .92rem; line-height: 1.2; min-height: 2.2em; a { color: $ccee-dark; } }
+.kpi-n { font-size: 1.7rem; font-weight: 800; color: $ccee-magenta; line-height: 1.1; margin-top: .2rem; }
+.kpi-s { color: #666; font-size: .8rem; }
+.ficha-t { margin-top: .5rem; color: $ccee-magenta; }

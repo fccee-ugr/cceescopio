@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "pernoctaciones-en-hoteles",
     "nombre": "Pernoctaciones en hoteles",
     "code": "tour_occ_nim",
     "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551",
@@ -20,6 +21,7 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "pernoctaciones-de-no-residentes-en-hoteles",
     "nombre": "Pernoctaciones de no residentes en hoteles",
     "code": "tour_occ_nim",
     "query": "&c_resid=FOR&unit=NR&nace_r2=I551",
@@ -29,6 +31,7 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "llegadas-de-viajeros-a-hoteles",
     "nombre": "Llegadas de viajeros a hoteles",
     "code": "tour_occ_arm",
     "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551",
@@ -38,6 +41,7 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "pernoctaciones-por-regiones",
     "nombre": "Pernoctaciones por regiones",
     "code": "tour_occ_nin2",
     "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553",
@@ -46,6 +50,36 @@ indicadores = [
     "descripcion": "Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas.",
     "regional": true,
     "desde": 2008
+  },
+  {
+    "id": "pernoctaciones-de-residentes-en-hoteles",
+    "nombre": "Pernoctaciones de residentes en hoteles",
+    "code": "tour_occ_nim",
+    "query": "&c_resid=NAT&unit=NR&nace_r2=I551",
+    "unidad": "Número de pernoctaciones",
+    "frecuencia": "Mensual",
+    "descripcion": "Noches pasadas en hoteles por viajeros residentes en el propio país (turismo interno).",
+    "desde": 2008
+  },
+  {
+    "id": "pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan",
+    "nombre": "Pernoctaciones en apartamentos y alojamientos de corta estancia",
+    "code": "tour_occ_nim",
+    "query": "&c_resid=TOTAL&unit=NR&nace_r2=I552",
+    "unidad": "Número de pernoctaciones",
+    "frecuencia": "Mensual",
+    "descripcion": "Noches pasadas en apartamentos turísticos, casas rurales y otros alojamientos de corta estancia.",
+    "desde": 2008
+  },
+  {
+    "id": "tasa-de-ocupacion-de-las-plazas-hoteleras",
+    "nombre": "Tasa de ocupación de las plazas hoteleras",
+    "code": "tour_occ_mnor",
+    "query": "&accomunit=BEDPL&nace_r2=I551",
+    "unidad": "% de plazas ocupadas",
+    "frecuencia": "Mensual",
+    "descripcion": "Porcentaje de plazas en hoteles ocupadas en el mes.",
+    "desde": 2010
   }
 ]
 ```
@@ -188,12 +222,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

@@ -5,7 +5,21 @@ subtitle: "Cómo usar CCEEscopio en las asignaturas, los TFG y TFM y la investig
 
 CCEEscopio está pensado como una **herramienta común para el profesorado, el estudiantado y el personal investigador** de la Facultad de Ciencias Económicas y Empresariales: datos oficiales, actualizados y comparables, listos para usar en clase y en la investigación.
 
-## En la docencia
+## Por departamentos y asignaturas
+
+Hemos revisado los planes de estudio de los grados de la Facultad (ADE, Economía, Finanzas y Contabilidad, Marketing e Investigación de Mercados y Turismo, y sus dobles grados) y, para cada asignatura, proponemos los **indicadores de CCEEscopio** más útiles y un **ejemplo de uso** en clase. Cada indicador enlaza directamente con su gráfico.
+
+{{< include _deptos_cards.md >}}
+
+## Herramientas para el aula
+
+- [**Calculadora de inflación**](calculadora.qmd): actualiza cantidades de un año a otro y calcula la pérdida de poder adquisitivo.
+- [**Ficha de país o región**](ficha.qmd): los indicadores clave de un territorio, con su comparación con la UE y España.
+- [**Relaciona dos indicadores**](relaciona.qmd): diagrama de dispersión de los países de la UE (curva de Phillips, ley de Okun, gasto social y pobreza…).
+- [**Buscador de indicadores**](indicadores.qmd): todos los indicadores en una tabla.
+- **Enlace directo a un indicador**: debajo de cada gráfico, el enlace 🔗 abre la página con ese indicador ya seleccionado, para ponerlo en PRADO o en la guía docente.
+
+## Resumen por materias
 
 | Materia | Ejemplos de uso con CCEEscopio |
 |---|---|
@@ -16,7 +30,9 @@ CCEEscopio está pensado como una **herramienta común para el profesorado, el e
 | Dirección y Organización de Empresas | Digitalización y adopción de la inteligencia artificial; confianza empresarial; comercio electrónico. |
 | Finanzas y Contabilidad | Rentabilidad de la deuda pública y prima de riesgo; tipo de cambio euro/dólar; precios de la vivienda. |
 | Turismo | Estacionalidad de la demanda hotelera; turismo internacional; comparación entre comunidades. |
-| Economía pública y desigualdad | Gini, S80/S20, pobreza y exclusión social; comparación entre países y comunidades autónomas. |
+| Economía pública, desigualdad y pobreza | Gini, S80/S20, tasa de riesgo de pobreza, umbral de pobreza, pobreza infantil y laboral, carencia material, sobrecarga del coste de la vivienda; gasto social y presión fiscal. |
+| Economía internacional | Exportaciones e importaciones, balanza por cuenta corriente, posición de inversión internacional, nivel de precios y PIB per cápita respecto a la UE. |
+| Demografía y capital humano | Población, fecundidad, envejecimiento, esperanza de vida, estudios superiores y abandono escolar. |
 | Economía de la energía y del medio ambiente | Energías renovables, precios de la electricidad y emisiones. |
 
 ### Ideas de actividades

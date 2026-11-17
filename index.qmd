@@ -7,7 +7,7 @@ page-layout: full
 ::: {.hero}
 ![](images/brand/cceescopio_logo.png){.hero-logo fig-alt="CCEEscopio. Observando la economía y la empresa"}
 
-**CCEEscopio** es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar los principales datos de la economía y la empresa (precios, empleo, actividad, innovación, turismo, finanzas públicas, desigualdad y sostenibilidad) para España, Andalucía y los países de la Unión Europea.
+**CCEEscopio** es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar **99 indicadores** de la economía y la empresa (precios, empleo, actividad, empresa e innovación, turismo, sector público y mercados financieros, desigualdad y pobreza, sostenibilidad, población y economía internacional) para España, Andalucía y los países de la Unión Europea.
 
 <p class="tagline">Datos oficiales, actualizados y descargables, al servicio de la **docencia** y la **investigación** de la Facultad.</p>
 :::
@@ -38,14 +38,34 @@ page-layout: full
 
 [<span class="icon">🏛️</span><h3>Sector público y mercados</h3><p>Deuda y déficit públicos, bono a 10 años y tipo de cambio euro/dólar.</p>](publico.qmd){.card-ccee}
 
-[<span class="icon">⚖️</span><h3>Desigualdad</h3><p>Gini, S80/S20 y riesgo de pobreza o exclusión social, también por comunidades.</p>](desigualdad.qmd){.card-ccee}
+[<span class="icon">⚖️</span><h3>Desigualdad y pobreza</h3><p>Gini, S80/S20, riesgo de pobreza, umbral de pobreza, pobreza infantil y laboral, carencia material y vivienda.</p>](desigualdad.qmd){.card-ccee}
 
 [<span class="icon">🌱</span><h3>Energía y sostenibilidad</h3><p>Energías renovables, precio de la electricidad y emisiones.</p>](sostenibilidad.qmd){.card-ccee}
+
+[<span class="icon">👪</span><h3>Población, educación y salud</h3><p>Población, fecundidad, envejecimiento, esperanza de vida y capital humano.</p>](poblacion.qmd){.card-ccee}
+
+[<span class="icon">🌍</span><h3>Economía internacional</h3><p>Exportaciones, balanza por cuenta corriente, inversión internacional y convergencia con la UE.</p>](internacional.qmd){.card-ccee}
 
 [<span class="icon">🗺️</span><h3>Andalucía y regiones</h3><p>Andalucía frente al resto de comunidades autónomas y la UE.</p>](andalucia.qmd){.card-ccee}
 
 [<span class="icon">🏆</span><h3>Rankings</h3><p>La UGR en Economía, Empresa, Finanzas, Estadística y Turismo.</p>](rankings.qmd){.card-ccee}
 :::
+
+## Herramientas
+
+::: {.cards}
+[<span class="icon">🧮</span><h3>Calculadora de inflación</h3><p>¿Cuánto valen hoy los euros de otro año?</p>](calculadora.qmd){.card-ccee}
+
+[<span class="icon">🪪</span><h3>Ficha de país o región</h3><p>Los indicadores clave de un territorio de un vistazo.</p>](ficha.qmd){.card-ccee}
+
+[<span class="icon">🔗</span><h3>Relaciona dos indicadores</h3><p>Curva de Phillips, ley de Okun y otras relaciones entre países.</p>](relaciona.qmd){.card-ccee}
+
+[<span class="icon">🔎</span><h3>Buscador de indicadores</h3><p>Los 99 indicadores de CCEEscopio en una tabla.</p>](indicadores.qmd){.card-ccee}
+:::
+
+## Para cada asignatura de la Facultad
+
+En [**Docencia**](docencia.qmd) encontrarás, **por departamentos y asignaturas** de los grados de la Facultad, los indicadores recomendados y ejemplos de uso en clase.
 
 ## Una herramienta para la docencia y la investigación
 

@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "tasa-de-paro",
     "nombre": "Tasa de paro",
     "code": "une_rt_m",
     "query": "&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT",
@@ -20,6 +21,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "tasa-de-paro-juvenil-menores-de-25-anos",
     "nombre": "Tasa de paro juvenil (menores de 25 años)",
     "code": "une_rt_m",
     "query": "&s_adj=SA&age=Y_LT25&sex=T&unit=PC_ACT",
@@ -29,6 +31,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "tasa-de-paro-de-las-mujeres",
     "nombre": "Tasa de paro de las mujeres",
     "code": "une_rt_m",
     "query": "&s_adj=SA&age=TOTAL&sex=F&unit=PC_ACT",
@@ -38,6 +41,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "tasa-de-empleo-20-64-anos",
     "nombre": "Tasa de empleo (20-64 años)",
     "code": "lfsi_emp_a",
     "query": "&indic_em=EMP_LFS&sex=T&age=Y20-64&unit=PC_POP",
@@ -47,12 +51,74 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "tasa-de-paro-por-regiones",
     "nombre": "Tasa de paro por regiones",
     "code": "lfst_r_lfu3rt",
     "query": "&sex=T&age=Y15-74&unit=PC",
     "unidad": "% de la población activa",
     "frecuencia": "Anual",
     "descripcion": "Tasa de paro de las comunidades autónomas (NUTS 2).",
+    "regional": true,
+    "desde": 2005
+  },
+  {
+    "id": "paro-de-larga-duracion",
+    "nombre": "Paro de larga duración",
+    "code": "une_ltu_a",
+    "query": "&sex=T&age=Y15-74&indic_em=LTU&unit=PC_ACT",
+    "unidad": "% de la población activa",
+    "frecuencia": "Anual",
+    "descripcion": "Personas que llevan 12 meses o más buscando empleo, en porcentaje de la población activa.",
+    "desde": 2005
+  },
+  {
+    "id": "jovenes-que-ni-estudian-ni-trabajan-15-29-anos",
+    "nombre": "Jóvenes que ni estudian ni trabajan (15-29 años)",
+    "code": "sdg_08_20",
+    "query": "&sex=T&age=Y15-29&unit=PC",
+    "unidad": "% de la población de 15-29 años",
+    "frecuencia": "Anual",
+    "descripcion": "Jóvenes que no tienen empleo ni siguen ningún tipo de educación o formación (indicador NEET).",
+    "desde": 2005
+  },
+  {
+    "id": "coste-laboral-por-hora",
+    "nombre": "Coste laboral por hora",
+    "code": "lc_lci_lev",
+    "query": "&nace_r2=B-S_X_O&lcstruct=D1_D4_MD5&unit=EUR",
+    "unidad": "€ por hora",
+    "frecuencia": "Anual",
+    "descripcion": "Coste laboral medio por hora trabajada (salarios y cotizaciones sociales) en la industria, la construcción y los servicios.",
+    "desde": 2008
+  },
+  {
+    "id": "salario-minimo-mensual",
+    "nombre": "Salario mínimo mensual",
+    "code": "earn_mw_cur",
+    "query": "&currency=EUR",
+    "unidad": "€ al mes",
+    "frecuencia": "Semestral",
+    "descripcion": "Salario mínimo legal mensual bruto en los países que lo tienen establecido.",
+    "desde": 2005
+  },
+  {
+    "id": "brecha-salarial-de-genero",
+    "nombre": "Brecha salarial de género",
+    "code": "sdg_05_20",
+    "query": "&unit=PC",
+    "unidad": "% del salario medio de los hombres",
+    "frecuencia": "Anual",
+    "descripcion": "Diferencia entre la ganancia media por hora de hombres y mujeres, en porcentaje de la de los hombres.",
+    "desde": 2007
+  },
+  {
+    "id": "tasa-de-empleo-por-regiones-20-64-anos",
+    "nombre": "Tasa de empleo por regiones (20-64 años)",
+    "code": "lfst_r_lfe2emprt",
+    "query": "&sex=T&age=Y20-64&unit=PC",
+    "unidad": "% de la población",
+    "frecuencia": "Anual",
+    "descripcion": "Tasa de empleo de las comunidades autónomas.",
     "regional": true,
     "desde": 2005
   }
@@ -197,12 +263,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}

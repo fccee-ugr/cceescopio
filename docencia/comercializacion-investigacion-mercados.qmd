@@ -1,0 +1,178 @@
+---
+title: "Departamento de Comercialización e Investigación de Mercados"
+subtitle: "Asignaturas de los grados de la Facultad e indicadores de CCEEscopio para usar en ellas"
+---
+
+Marketing, comportamiento del consumidor, distribución, comunicación e investigación de mercados: CCEEscopio aporta datos de consumo, comercio, digitalización y población para analizar los mercados.
+
+Cada indicador enlaza directamente con su gráfico interactivo, desde el que se pueden comparar países y regiones y descargar los datos en CSV.
+
+## Introducción al Márketing {#introduccion-al-marketing}
+
+<p class="asig-grados">🎓 Todos los grados (1.º-2.º)</p>
+
+**Indicadores recomendados**
+
+- [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Población](../poblacion.html?i=poblacion) <span class="asig-cat">Población, educación y salud</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis del entorno de marketing: tamaño del mercado, consumo de los hogares, confianza del consumidor y compra por internet.
+:::
+
+## Dirección Comercial (I y II) y Dirección Comercial en ADE y Turismo {#direccion-comercial-i-y-ii-y-direccion-comercial-e}
+
+<p class="asig-grados">🎓 ADE (2.º), Marketing (1.º-2.º), Turismo (2.º)</p>
+
+**Indicadores recomendados**
+
+- [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Previsión de ventas con indicadores adelantados: confianza del consumidor y ventas del comercio minorista.
+:::
+
+## Comportamiento del Consumidor y Sociología del Consumo {#comportamiento-del-consumidor-y-sociologia-del-con}
+
+<p class="asig-grados">🎓 Marketing (2.º y 4.º)</p>
+
+**Indicadores recomendados**
+
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Carencia material y social severa](../desigualdad.html?i=carencia-material-y-social-severa) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Cómo influyen la renta, la inflación y la confianza en las decisiones de compra; diferencias entre países.
+:::
+
+## Distribución Comercial (I y II), Logística y Merchandising {#distribucion-comercial-i-y-ii-logistica-y-merchand}
+
+<p class="asig-grados">🎓 ADE (4.º), Marketing (2.º-4.º)</p>
+
+**Indicadores recomendados**
+
+- [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Confianza del comercio minorista](../empresa.html?i=confianza-del-comercio-minorista) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Evolución del comercio minorista frente al comercio electrónico y confianza del sector de la distribución.
+:::
+
+## Investigación de Mercados (I, II y III) {#investigacion-de-mercados-i-ii-y-iii}
+
+<p class="asig-grados">🎓 ADE (4.º, optativa), Marketing (2.º-3.º)</p>
+
+**Indicadores recomendados**
+
+- [Población](../poblacion.html?i=poblacion) <span class="asig-cat">Población, educación y salud</span>
+- [Población por regiones](../poblacion.html?i=poblacion-por-regiones) <span class="asig-cat">Población, educación y salud</span>
+- [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Fuentes secundarias para investigar mercados: dimensionar el mercado potencial con la población y la renta, y diseñar la muestra de una encuesta.
+:::
+
+## Comunicación Integrada para el Marketing (I y II), Comunicación Comercial y Planificación de Medios y Soportes {#comunicacion-integrada-para-el-marketing-i-y-ii-co}
+
+<p class="asig-grados">🎓 ADE (4.º), Marketing (2.º-4.º)</p>
+
+**Indicadores recomendados**
+
+- [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Población](../poblacion.html?i=poblacion) <span class="asig-cat">Población, educación y salud</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Penetración de internet y del comercio electrónico como base para elegir medios y canales digitales.
+:::
+
+## Marketing Internacional y Dirección de Ventas {#marketing-internacional-y-direccion-de-ventas}
+
+<p class="asig-grados">🎓 Marketing (3.º)</p>
+
+**Indicadores recomendados**
+
+- [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) <span class="asig-cat">Economía internacional y sector exterior</span>
+- [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) <span class="asig-cat">Actividad económica y coyuntura</span>
+- [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) <span class="asig-cat">Precios e inflación</span>
+- [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Población](../poblacion.html?i=poblacion) <span class="asig-cat">Población, educación y salud</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Selección de mercados exteriores: PIB per cápita, nivel de precios, tamaño de la población y tipo de cambio de los posibles destinos.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+## Marketing Sectorial, Marketing Cultural y Turístico, Marketing de Productos Turísticos y Marketing Hotelero y de Restauración {#marketing-sectorial-marketing-cultural-y-turistico}
+
+<p class="asig-grados">🎓 Marketing (3.º-4.º), Turismo (3.º-4.º)</p>
+
+**Indicadores recomendados**
+
+- [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) <span class="asig-cat">Turismo</span>
+- [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) <span class="asig-cat">Turismo</span>
+- [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) <span class="asig-cat">Turismo</span>
+- [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) <span class="asig-cat">Turismo</span>
+- [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual) <span class="asig-cat">Precios e inflación</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Segmentar la demanda turística (residentes y extranjeros, hoteles y apartamentos) y su estacionalidad para planificar campañas.
+:::
+
+## Marketing Electrónico, Desarrollo de Nuevos Productos e Informática Aplicada a la Gestión Comercial {#marketing-electronico-desarrollo-de-nuevos-product}
+
+<p class="asig-grados">🎓 Marketing (4.º, optativas)</p>
+
+**Indicadores recomendados**
+
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) <span class="asig-cat">Empresa, innovación y digitalización</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Adopción digital de consumidores y empresas en la UE: compra por internet e inteligencia artificial.
+:::
+
+## Marketing Social y Político {#marketing-social-y-politico}
+
+<p class="asig-grados">🎓 Marketing (4.º)</p>
+
+**Indicadores recomendados**
+
+- [Riesgo de pobreza o exclusión social (AROPE)](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-arope) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Índice de Gini](../desigualdad.html?i=indice-de-gini) <span class="asig-cat">Desigualdad, pobreza y condiciones de vida</span>
+- [Abandono temprano de la educación y la formación](../poblacion.html?i=abandono-temprano-de-la-educacion-y-la-formacion) <span class="asig-cat">Población, educación y salud</span>
+- [Esperanza de vida al nacer](../poblacion.html?i=esperanza-de-vida-al-nacer) <span class="asig-cat">Población, educación y salud</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Diagnóstico de problemas sociales con datos (pobreza, desigualdad, abandono escolar) para diseñar campañas de marketing social.
+:::
+
+## Marketing Financiero {#marketing-financiero}
+
+<p class="asig-grados">🎓 Finanzas y Contabilidad (3.º, optativa)</p>
+
+**Indicadores recomendados**
+
+- [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) <span class="asig-cat">Sector público y mercados financieros</span>
+- [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) <span class="asig-cat">Empresa, innovación y digitalización</span>
+- [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) <span class="asig-cat">Actividad económica y coyuntura</span>
+
+::: {.uso-box}
+**Ejemplo de uso.** Comercialización de productos financieros según el entorno de tipos de interés y la confianza de los hogares.
+:::
+
+<p class="source">Asignaturas según los planes de estudio publicados en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. La asignación a departamentos sigue el área de conocimiento de cada materia; consulta la guía docente para confirmarla. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>

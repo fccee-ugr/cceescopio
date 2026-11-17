@@ -11,6 +11,7 @@ Elige un indicador y los territorios que quieras comparar. Pasa el ratón sobre 
 //| echo: false
 indicadores = [
   {
+    "id": "cuota-de-energias-renovables",
     "nombre": "Cuota de energías renovables",
     "code": "nrg_ind_ren",
     "query": "&nrg_bal=REN&unit=PC",
@@ -20,6 +21,7 @@ indicadores = [
     "desde": 2005
   },
   {
+    "id": "precio-de-la-electricidad-para-hogares",
     "nombre": "Precio de la electricidad para hogares",
     "code": "nrg_pc_204",
     "query": "&product=6000&nrg_cons=KWH2500-4999&unit=KWH&tax=I_TAX&currency=EUR",
@@ -29,12 +31,63 @@ indicadores = [
     "desde": 2008
   },
   {
+    "id": "emisiones-netas-de-gases-de-efecto-invernadero",
     "nombre": "Emisiones netas de gases de efecto invernadero",
     "code": "sdg_13_10",
     "query": "&unit=I90",
     "unidad": "Índice (1990 = 100)",
     "frecuencia": "Anual",
     "descripcion": "Emisiones netas de gases de efecto invernadero, incluido el uso del suelo, respecto a 1990.",
+    "desde": 2000
+  },
+  {
+    "id": "emisiones-de-gases-de-efecto-invernadero-por-habitante",
+    "nombre": "Emisiones de gases de efecto invernadero por habitante",
+    "code": "sdg_13_10",
+    "query": "&unit=T_HAB",
+    "unidad": "Toneladas de CO₂ equivalente por habitante",
+    "frecuencia": "Anual",
+    "descripcion": "Emisiones netas de gases de efecto invernadero por habitante.",
+    "desde": 2000
+  },
+  {
+    "id": "dependencia-energetica",
+    "nombre": "Dependencia energética",
+    "code": "nrg_ind_id",
+    "query": "&siec=TOTAL&unit=PC",
+    "unidad": "% de las necesidades energéticas",
+    "frecuencia": "Anual",
+    "descripcion": "Parte de la energía que un país necesita y que tiene que importar.",
+    "desde": 2000
+  },
+  {
+    "id": "precio-del-gas-natural-para-hogares",
+    "nombre": "Precio del gas natural para hogares",
+    "code": "nrg_pc_202",
+    "query": "&product=4100&nrg_cons=GJ20-199&unit=KWH&tax=I_TAX&currency=EUR",
+    "unidad": "€ por kWh (con impuestos)",
+    "frecuencia": "Semestral",
+    "descripcion": "Precio medio del gas natural para consumidores domésticos con consumo medio.",
+    "desde": 2008
+  },
+  {
+    "id": "residuos-municipales-por-habitante",
+    "nombre": "Residuos municipales por habitante",
+    "code": "env_wasmun",
+    "query": "&wst_oper=GEN&unit=KG_HAB",
+    "unidad": "kg por habitante",
+    "frecuencia": "Anual",
+    "descripcion": "Residuos urbanos generados por habitante.",
+    "desde": 2000
+  },
+  {
+    "id": "tasa-de-reciclaje-de-residuos-municipales",
+    "nombre": "Tasa de reciclaje de residuos municipales",
+    "code": "sdg_11_60",
+    "query": "&unit=PC",
+    "unidad": "% de los residuos municipales",
+    "frecuencia": "Anual",
+    "descripcion": "Porcentaje de los residuos municipales que se recicla o composta.",
     "desde": 2000
   }
 ]
@@ -178,12 +231,17 @@ function csv(rows) {
 
 ```{ojs}
 //| echo: false
-viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre})
+indInicial = {
+  // Permite enlazar directamente a un indicador: pagina.html?i=identificador
+  const p = new URLSearchParams(window.location.search).get("i");
+  return indicadores.find(d => d.id === p) ?? indicadores[0];
+}
+viewof ind = Inputs.select(indicadores, {label: "Indicador", format: d => d.nombre, value: indInicial})
 ```
 
 ```{ojs}
 //| echo: false
-html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""}</span></p>`
+html`<p class="ind-desc">${ind.descripcion}<span class="ind-meta">Unidad: ${ind.unidad} · Frecuencia: ${ind.frecuencia} · Fuente: <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank" rel="noopener">Eurostat, ${ind.code}</a>${ind.regional ? " · Datos regionales (NUTS 2)" : ""} · <a href="?i=${ind.id}" title="Enlace directo a este indicador para compartirlo o ponerlo en una guía docente">🔗 Enlace a este indicador</a></span></p>`
 ```
 
 ```{ojs}
