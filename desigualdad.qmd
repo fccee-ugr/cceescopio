@@ -394,11 +394,21 @@ mapa = {
     })}</div>`;
   }
   const es = mapaGeo.features.filter(f => f.properties.geo?.startsWith("ES"));
-  const pen = es.filter(f => !["ES70", "ES63", "ES64"].includes(f.properties.geo));
+  const pen = es.filter(f => f.properties.geo !== "ES70");
+  // Ceuta y Melilla son muy pequeñas: se marcan además con un círculo para que se vean y se puedan consultar
+  const ciudades = es.filter(f => ["ES63", "ES64"].includes(f.properties.geo)).map(f => {
+    const [lon, lat] = d3.geoCentroid(f), r = mapaVals.get(f.properties.geo);
+    return {lon, lat, f, valor: r ? r.valor : null};
+  });
+  const marcasCiudades = [
+    Plot.dot(ciudades.filter(c => c.valor === null), {x: "lon", y: "lat", r: 9, fill: "#ECE7E9", stroke: "#3C3C3B", strokeWidth: 1.2, title: c => tit(c.f), tip: true}),
+    Plot.dot(ciudades.filter(c => c.valor !== null), {x: "lon", y: "lat", r: 9, fill: "valor", stroke: "#3C3C3B", strokeWidth: 1.2, title: c => tit(c.f), tip: true}),
+    Plot.text(ciudades, {x: "lon", y: "lat", text: c => nombresGeo[c.f.properties.geo], dy: 18, fontSize: 11, fill: "#3C3C3B"})
+  ];
   const can = es.filter(f => f.properties.geo === "ES70");
   const principal = Plot.plot({width: 700, height: 560, color: mapaColor,
     projection: {type: "conic-conformal", rotate: [3.5, 0], parallels: [36, 43], domain: {type: "FeatureCollection", features: pen}},
-    marks: marcas(es)});
+    marks: [...marcas(es), ...marcasCiudades]});
   const islas = can.length ? Plot.plot({width: 220, height: 130, color: {...mapaColor, legend: false},
     projection: {type: "conic-conformal", rotate: [15.5, 0], parallels: [27, 29], domain: {type: "FeatureCollection", features: can}},
     marks: marcas(can)}) : "";

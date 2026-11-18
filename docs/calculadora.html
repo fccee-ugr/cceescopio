@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4b877ba5a4f39e17ce1d1a988526a2e3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3f95cff6ce278ed4888e5efcac98a956.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -774,10 +774,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
     box.appendChild(s);
   }
+  function showAll(n) {
+    show(n);
+    document.querySelectorAll(".visitas-ccee").forEach(el => {
+      const num = el.querySelector(".vc-num"); if (num) num.textContent = n;
+      el.hidden = false;
+    });
+  }
   if (!local) {
     fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d && d.count) show(String(d.count).replace(/\s/g, ".")); })
+      .then(d => { if (d && d.count) showAll(String(d.count).replace(/\s/g, ".")); })
       .catch(() => {});
   }
 

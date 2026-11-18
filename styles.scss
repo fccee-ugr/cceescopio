@@ -110,7 +110,7 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 
 /* Mapas */
 .mapa-es { position: relative; display: inline-block; max-width: 100%; }
-.mapa-inset { position: absolute; left: 0; bottom: 0; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 2px 4px;
+.mapa-inset { position: absolute; right: 0; bottom: 0; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 2px 4px;
   span { font-size: .75rem; color: #666; display: block; } }
 
 /* Botón flotante de la encuesta de satisfacción */
@@ -138,3 +138,11 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 .uso-tabla td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .uso-tabla td.barra { width: 28%; }
 .uso-tabla td.barra span { display: block; height: .7rem; border-radius: 4px; background: $ccee-magenta; opacity: .75; min-width: 2px; }
+
+/* Contador de visitas destacado en la portada */
+.visitas-ccee { display: inline-block; margin: .4rem 0 0; padding: .3rem .9rem; border-radius: 999px;
+  background: rgba($ccee-magenta, .08); color: $ccee-dark; font-weight: 600; }
+.visitas-ccee .vc-num { color: $ccee-magenta; font-weight: 800; font-size: 1.1em; }
+.visit-counter { white-space: nowrap; }
+
+[hidden] { display: none !important; }

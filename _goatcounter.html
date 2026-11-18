@@ -32,10 +32,17 @@
     s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
     box.appendChild(s);
   }
+  function showAll(n) {
+    show(n);
+    document.querySelectorAll(".visitas-ccee").forEach(el => {
+      const num = el.querySelector(".vc-num"); if (num) num.textContent = n;
+      el.hidden = false;
+    });
+  }
   if (!local) {
     fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d && d.count) show(String(d.count).replace(/\s/g, ".")); })
+      .then(d => { if (d && d.count) showAll(String(d.count).replace(/\s/g, ".")); })
       .catch(() => {});
   }
 
