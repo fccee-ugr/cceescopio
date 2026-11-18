@@ -10,7 +10,7 @@ project:
 website:
   title: "CCEEscopio"
   description: "CCEEscopio: observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. Observando la economía y la empresa."
-  site-url: "https://jfmunozrosas.github.io/cceescopio"   # <- cambiar por la URL definitiva
+  site-url: "https://fccee-ugr.github.io/cceescopio"   # <- cambiar por la URL definitiva
   favicon: images/brand/cceescopio_icono.png
   page-navigation: true
   open-graph: true
