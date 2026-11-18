@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Uso de CCEEscopio – CCEEscopio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/brand/cceescopio_icono.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-4b877ba5a4f39e17ce1d1a988526a2e3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<meta property="og:title" content="Uso de CCEEscopio – CCEEscopio">
+<meta property="og:description" content="Visitas, uso de los recursos y resultados de la encuesta de satisfacción (datos de GoatCounter)">
+<meta property="og:image" content="https://fccee-ugr.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta property="og:site_name" content="CCEEscopio">
+<meta property="og:image:height" content="480">
+<meta property="og:image:width" content="1960">
+<meta name="twitter:title" content="Uso de CCEEscopio – CCEEscopio">
+<meta name="twitter:description" content="Visitas, uso de los recursos y resultados de la encuesta de satisfacción (datos de GoatCounter)">
+<meta name="twitter:image" content="https://fccee-ugr.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta name="twitter:image-height" content="480">
+<meta name="twitter:image-width" content="1960">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/brand/cceescopio_navbar.png" alt="Logo de CCEEscopio" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="./precios.html">
+ <span class="dropdown-text">Precios e inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empleo.html">
+ <span class="dropdown-text">Mercado laboral</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./actividad.html">
+ <span class="dropdown-text">Actividad económica y coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresa.html">
+ <span class="dropdown-text">Empresa, innovación y digitalización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./turismo.html">
+ <span class="dropdown-text">Turismo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./publico.html">
+ <span class="dropdown-text">Sector público y mercados financieros</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad.html">
+ <span class="dropdown-text">Desigualdad, pobreza y condiciones de vida</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sostenibilidad.html">
+ <span class="dropdown-text">Energía y sostenibilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./poblacion.html">
+ <span class="dropdown-text">Población, educación y salud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./internacional.html">
+ <span class="dropdown-text">Economía internacional y sector exterior</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">🔎 Buscador de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./andalucia.html">
+ <span class="dropdown-text">Andalucía y las regiones españolas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-herramientas" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Herramientas</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-herramientas">    
+        <li>
+    <a class="dropdown-item" href="./calculadora.html">
+ <span class="dropdown-text">Calculadora de inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ficha.html">
+ <span class="dropdown-text">Ficha de país o región</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./relaciona.html">
+ <span class="dropdown-text">Relaciona dos indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">Buscador de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./rankings.html"> 
+<span class="menu-text">Rankings</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./datos.html"> 
+<span class="menu-text">Datos y fuentes</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-docencia" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Docencia</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-docencia">    
+        <li>
+    <a class="dropdown-item" href="./docencia.html">
+ <span class="dropdown-text">Docencia e investigación: cómo usar CCEEscopio</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Por grados y asignaturas</li>
+        <li>
+    <a class="dropdown-item" href="./docencia/gade.html">
+ <span class="dropdown-text">GADE · Administración y Dirección de Empresas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/geco.html">
+ <span class="dropdown-text">GECO · Economía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gfico.html">
+ <span class="dropdown-text">GFICO · Finanzas y Contabilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gmim.html">
+ <span class="dropdown-text">GMIM · Marketing e Investigación de Mercados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gtur.html">
+ <span class="dropdown-text">GTUR · Turismo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./contacto.html"> 
+<span class="menu-text">Contacto</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content column-page" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Uso de CCEEscopio</h1>
+<p class="subtitle lead">Visitas, uso de los recursos y resultados de la encuesta de satisfacción (datos de GoatCounter)</p>
+</div>
+
+
+
+<div class="quarto-title-meta column-page">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de modificación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">18 de noviembre de 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Esta página lee en directo los contadores públicos de GoatCounter. El detalle completo (por días, países, navegadores, origen de las visitas…) está en el <a href="https://cceescopio.goatcounter.com">panel de GoatCounter</a>. Las cifras son acumuladas desde que se activó el contador; no incluyen las visitas desde la vista previa local.</p>
+<div id="uso-ccee">
+<div class="kpi-grid" id="uso-kpis"></div>
+<h2 class="anchored">Visitas por página</h2><div id="uso-paginas" class="uso-tabla">Cargando…</div>
+<h2 class="anchored">Uso de los recursos</h2>
+<p class="source">«Uso de controles»: visitas en las que se cambió algún selector (indicador, territorios, año…). «Mapa»: visitas en las que se pasó el ratón por el mapa.</p>
+<div id="uso-recursos" class="uso-tabla">Cargando…</div>
+<h2 class="anchored">Encuesta de satisfacción</h2><div id="uso-encuesta">Cargando…</div>
+<h2 class="anchored">Indicadores más consultados</h2>
+<p><button id="uso-btn-ind" class="enc-enviar">Cargar el ranking de los 99 indicadores</button></p>
+<div id="uso-indicadores" class="uso-tabla"></div>
+</div>
+<script>
+(function () {
+  const GC = "https://cceescopio.goatcounter.com/counter/";
+  const PAGINAS = [{"html": "actividad.html", "clave": "actividad", "titulo": "Actividad económica y coyuntura"}, {"html": "andalucia.html", "clave": "andalucia", "titulo": "Andalucía y las regiones españolas"}, {"html": "calculadora.html", "clave": "calculadora", "titulo": "Calculadora de inflación"}, {"html": "contacto.html", "clave": "contacto", "titulo": "Contacto"}, {"html": "datos.html", "clave": "datos", "titulo": "Datos y fuentes"}, {"html": "desigualdad.html", "clave": "desigualdad", "titulo": "Desigualdad, pobreza y condiciones de vida"}, {"html": "docencia.html", "clave": "docencia", "titulo": "Docencia e investigación"}, {"html": "empleo.html", "clave": "empleo", "titulo": "Mercado laboral"}, {"html": "empresa.html", "clave": "empresa", "titulo": "Empresa, innovación y digitalización"}, {"html": "encuesta.html", "clave": "encuesta", "titulo": "Encuesta de satisfacción"}, {"html": "ficha.html", "clave": "ficha", "titulo": "Ficha de país o región"}, {"html": "index.html", "clave": "index", "titulo": "CCEEscopio"}, {"html": "indicadores.html", "clave": "indicadores", "titulo": "Buscador de indicadores"}, {"html": "internacional.html", "clave": "internacional", "titulo": "Economía internacional y sector exterior"}, {"html": "poblacion.html", "clave": "poblacion", "titulo": "Población, educación y salud"}, {"html": "precios.html", "clave": "precios", "titulo": "Precios e inflación"}, {"html": "publico.html", "clave": "publico", "titulo": "Sector público y mercados financieros"}, {"html": "rankings.html", "clave": "rankings", "titulo": "La Universidad de Granada en los rankings"}, {"html": "relaciona.html", "clave": "relaciona", "titulo": "Relaciona dos indicadores"}, {"html": "sostenibilidad.html", "clave": "sostenibilidad", "titulo": "Energía y sostenibilidad"}, {"html": "turismo.html", "clave": "turismo", "titulo": "Turismo"}, {"html": "docencia/gade.html", "clave": "docencia-gade", "titulo": "Grado en Administración y Dirección de Empresas (GADE)"}, {"html": "docencia/geco.html", "clave": "docencia-geco", "titulo": "Grado en Economía (GECO)"}, {"html": "docencia/gfico.html", "clave": "docencia-gfico", "titulo": "Grado en Finanzas y Contabilidad (GFICO)"}, {"html": "docencia/gmim.html", "clave": "docencia-gmim", "titulo": "Grado en Marketing e Investigación de Mercados (GMIM)"}, {"html": "docencia/gtur.html", "clave": "docencia-gtur", "titulo": "Grado en Turismo (GTUR)"}];
+  const INDS = [{"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "pagina": "precios"}, {"id": "ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual", "nombre": "IPCA: alimentos y bebidas no alcohólicas (tasa anual)", "pagina": "precios"}, {"id": "ipca-energia-tasa-anual", "nombre": "IPCA: energía (tasa anual)", "pagina": "precios"}, {"id": "ipca-servicios-tasa-anual", "nombre": "IPCA: servicios (tasa anual)", "pagina": "precios"}, {"id": "precio-de-la-vivienda-tasa-anual", "nombre": "Precio de la vivienda (tasa anual)", "pagina": "precios"}, {"id": "ipca-inflacion-subyacente-sin-energia-ni-alimentos", "nombre": "IPCA: inflación subyacente (sin energía ni alimentos)", "pagina": "precios"}, {"id": "precios-industriales-tasa-anual", "nombre": "Precios industriales (tasa anual)", "pagina": "precios"}, {"id": "nivel-de-precios-comparado-ue-27-100", "nombre": "Nivel de precios comparado (UE-27 = 100)", "pagina": "precios"}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "pagina": "empleo"}, {"id": "tasa-de-paro-juvenil-menores-de-25-anos", "nombre": "Tasa de paro juvenil (menores de 25 años)", "pagina": "empleo"}, {"id": "tasa-de-paro-de-las-mujeres", "nombre": "Tasa de paro de las mujeres", "pagina": "empleo"}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "pagina": "empleo"}, {"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "pagina": "empleo"}, {"id": "paro-de-larga-duracion", "nombre": "Paro de larga duración", "pagina": "empleo"}, {"id": "jovenes-que-ni-estudian-ni-trabajan-15-29-anos", "nombre": "Jóvenes que ni estudian ni trabajan (15-29 años)", "pagina": "empleo"}, {"id": "coste-laboral-por-hora", "nombre": "Coste laboral por hora", "pagina": "empleo"}, {"id": "salario-minimo-mensual", "nombre": "Salario mínimo mensual", "pagina": "empleo"}, {"id": "brecha-salarial-de-genero", "nombre": "Brecha salarial de género", "pagina": "empleo"}, {"id": "tasa-de-empleo-por-regiones-20-64-anos", "nombre": "Tasa de empleo por regiones (20-64 años)", "pagina": "empleo"}, {"id": "pib-crecimiento-interanual-trimestral", "nombre": "PIB: crecimiento interanual (trimestral)", "pagina": "actividad"}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "pagina": "actividad"}, {"id": "indice-de-produccion-industrial", "nombre": "Índice de producción industrial", "pagina": "actividad"}, {"id": "indice-de-comercio-minorista", "nombre": "Índice de comercio minorista", "pagina": "actividad"}, {"id": "indicador-de-sentimiento-economico", "nombre": "Indicador de sentimiento económico", "pagina": "actividad"}, {"id": "consumo-de-los-hogares-crecimiento-interanual", "nombre": "Consumo de los hogares: crecimiento interanual", "pagina": "actividad"}, {"id": "inversion-formacion-bruta-de-capital-fijo-crecimiento-intera", "nombre": "Inversión (formación bruta de capital fijo): crecimiento interanual", "pagina": "actividad"}, {"id": "produccion-en-la-construccion", "nombre": "Producción en la construcción", "pagina": "actividad"}, {"id": "productividad-del-trabajo-por-hora-variacion-anual", "nombre": "Productividad del trabajo por hora: variación anual", "pagina": "actividad"}, {"id": "costes-laborales-unitarios-nominales-variacion-anual", "nombre": "Costes laborales unitarios nominales: variación anual", "pagina": "actividad"}, {"id": "confianza-del-consumidor", "nombre": "Confianza del consumidor", "pagina": "actividad"}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "pagina": "empresa"}, {"id": "gasto-en-i-d-por-regiones-del-pib", "nombre": "Gasto en I+D por regiones (% del PIB)", "pagina": "empresa"}, {"id": "empresas-que-usan-inteligencia-artificial", "nombre": "Empresas que usan inteligencia artificial", "pagina": "empresa"}, {"id": "personas-que-compran-por-internet", "nombre": "Personas que compran por internet", "pagina": "empresa"}, {"id": "confianza-de-la-industria", "nombre": "Confianza de la industria", "pagina": "empresa"}, {"id": "declaraciones-de-quiebra-de-empresas-indice", "nombre": "Declaraciones de quiebra de empresas (índice)", "pagina": "empresa"}, {"id": "registros-de-nuevas-empresas-indice", "nombre": "Registros de nuevas empresas (índice)", "pagina": "empresa"}, {"id": "confianza-en-los-servicios", "nombre": "Confianza en los servicios", "pagina": "empresa"}, {"id": "confianza-del-comercio-minorista", "nombre": "Confianza del comercio minorista", "pagina": "empresa"}, {"id": "confianza-de-la-construccion", "nombre": "Confianza de la construcción", "pagina": "empresa"}, {"id": "hogares-con-acceso-a-internet", "nombre": "Hogares con acceso a internet", "pagina": "empresa"}, {"id": "pernoctaciones-en-hoteles", "nombre": "Pernoctaciones en hoteles", "pagina": "turismo"}, {"id": "pernoctaciones-de-no-residentes-en-hoteles", "nombre": "Pernoctaciones de no residentes en hoteles", "pagina": "turismo"}, {"id": "llegadas-de-viajeros-a-hoteles", "nombre": "Llegadas de viajeros a hoteles", "pagina": "turismo"}, {"id": "pernoctaciones-por-regiones", "nombre": "Pernoctaciones por regiones", "pagina": "turismo"}, {"id": "pernoctaciones-de-residentes-en-hoteles", "nombre": "Pernoctaciones de residentes en hoteles", "pagina": "turismo"}, {"id": "pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan", "nombre": "Pernoctaciones en apartamentos y alojamientos de corta estancia", "pagina": "turismo"}, {"id": "tasa-de-ocupacion-de-las-plazas-hoteleras", "nombre": "Tasa de ocupación de las plazas hoteleras", "pagina": "turismo"}, {"id": "deuda-publica-del-pib", "nombre": "Deuda pública (% del PIB)", "pagina": "publico"}, {"id": "deficit-o-superavit-publico-del-pib", "nombre": "Déficit (−) o superávit (+) público (% del PIB)", "pagina": "publico"}, {"id": "rentabilidad-del-bono-a-10-anos", "nombre": "Rentabilidad del bono a 10 años", "pagina": "publico"}, {"id": "tipo-de-cambio-euro-dolar", "nombre": "Tipo de cambio euro / dólar", "pagina": "publico"}, {"id": "ingresos-fiscales-del-pib", "nombre": "Ingresos fiscales (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-total-del-pib", "nombre": "Gasto público total (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-en-sanidad-del-pib", "nombre": "Gasto público en sanidad (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-en-educacion-del-pib", "nombre": "Gasto público en educación (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-en-proteccion-social-del-pib", "nombre": "Gasto público en protección social (% del PIB)", "pagina": "publico"}, {"id": "euribor-a-3-meses", "nombre": "Euríbor a 3 meses", "pagina": "publico"}, {"id": "indice-de-gini", "nombre": "Índice de Gini", "pagina": "desigualdad"}, {"id": "ratio-s80-s20", "nombre": "Ratio S80/S20", "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-60-de-la-mediana", "nombre": "Tasa de riesgo de pobreza (60 % de la mediana)", "pagina": "desigualdad"}, {"id": "umbral-de-pobreza-hogar-de-una-persona", "nombre": "Umbral de pobreza (hogar de una persona)", "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos", "nombre": "Riesgo de pobreza o exclusión social: menores de 18 años", "pagina": "desigualdad"}, {"id": "carencia-material-y-social-severa", "nombre": "Carencia material y social severa", "pagina": "desigualdad"}, {"id": "pobreza-de-las-personas-que-trabajan", "nombre": "Pobreza de las personas que trabajan", "pagina": "desigualdad"}, {"id": "sobrecarga-del-coste-de-la-vivienda", "nombre": "Sobrecarga del coste de la vivienda", "pagina": "desigualdad"}, {"id": "renta-mediana-equivalente", "nombre": "Renta mediana equivalente", "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-por-regiones", "nombre": "Tasa de riesgo de pobreza por regiones", "pagina": "desigualdad"}, {"id": "cuota-de-energias-renovables", "nombre": "Cuota de energías renovables", "pagina": "sostenibilidad"}, {"id": "precio-de-la-electricidad-para-hogares", "nombre": "Precio de la electricidad para hogares", "pagina": "sostenibilidad"}, {"id": "emisiones-netas-de-gases-de-efecto-invernadero", "nombre": "Emisiones netas de gases de efecto invernadero", "pagina": "sostenibilidad"}, {"id": "emisiones-de-gases-de-efecto-invernadero-por-habitante", "nombre": "Emisiones de gases de efecto invernadero por habitante", "pagina": "sostenibilidad"}, {"id": "dependencia-energetica", "nombre": "Dependencia energética", "pagina": "sostenibilidad"}, {"id": "precio-del-gas-natural-para-hogares", "nombre": "Precio del gas natural para hogares", "pagina": "sostenibilidad"}, {"id": "residuos-municipales-por-habitante", "nombre": "Residuos municipales por habitante", "pagina": "sostenibilidad"}, {"id": "tasa-de-reciclaje-de-residuos-municipales", "nombre": "Tasa de reciclaje de residuos municipales", "pagina": "sostenibilidad"}, {"id": "poblacion", "nombre": "Población", "pagina": "poblacion"}, {"id": "poblacion-por-regiones", "nombre": "Población por regiones", "pagina": "poblacion"}, {"id": "tasa-de-fecundidad", "nombre": "Tasa de fecundidad", "pagina": "poblacion"}, {"id": "tasa-de-dependencia-de-las-personas-mayores", "nombre": "Tasa de dependencia de las personas mayores", "pagina": "poblacion"}, {"id": "esperanza-de-vida-al-nacer", "nombre": "Esperanza de vida al nacer", "pagina": "poblacion"}, {"id": "poblacion-de-25-34-anos-con-estudios-superiores", "nombre": "Población de 25-34 años con estudios superiores", "pagina": "poblacion"}, {"id": "abandono-temprano-de-la-educacion-y-la-formacion", "nombre": "Abandono temprano de la educación y la formación", "pagina": "poblacion"}, {"id": "exportaciones-de-bienes-y-servicios-del-pib", "nombre": "Exportaciones de bienes y servicios (% del PIB)", "pagina": "internacional"}, {"id": "importaciones-de-bienes-y-servicios-del-pib", "nombre": "Importaciones de bienes y servicios (% del PIB)", "pagina": "internacional"}, {"id": "exportaciones-crecimiento-interanual-trimestral", "nombre": "Exportaciones: crecimiento interanual (trimestral)", "pagina": "internacional"}, {"id": "saldo-por-cuenta-corriente-del-pib", "nombre": "Saldo por cuenta corriente (% del PIB)", "pagina": "internacional"}, {"id": "posicion-de-inversion-internacional-neta-del-pib", "nombre": "Posición de inversión internacional neta (% del PIB)", "pagina": "internacional"}, {"id": "pib-per-capita-en-ppc-ue-27-100", "nombre": "PIB per cápita en PPC (UE-27 = 100)", "pagina": "internacional"}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "pagina": "andalucia"}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "pagina": "andalucia"}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "pagina": "andalucia"}, {"id": "pernoctaciones-turisticas", "nombre": "Pernoctaciones turísticas", "pagina": "andalucia"}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "pagina": "andalucia"}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "pagina": "andalucia"}, {"id": "tasa-de-riesgo-de-pobreza", "nombre": "Tasa de riesgo de pobreza", "pagina": "andalucia"}, {"id": "poblacion", "nombre": "Población", "pagina": "andalucia"}];
+  const ENC = {"perfil": [["estudiante-grado", "Estudiante de grado"], ["estudiante-posgrado", "Estudiante de máster o doctorado"], ["pdi", "Profesorado o PI"], ["ptgas", "PTGAS"], ["otro", "Otro"]], "grado": [["gade", "GADE"], ["geco", "GECO"], ["gfico", "GFICO"], ["gmim", "GMIM"], ["gtur", "GTUR"], ["doble-grado", "Doble grado"], ["ninguno", "Ninguno / otro"]], "para": [["clases", "Clases"], ["estudiar", "Estudiar"], ["tfg-tfm", "TFG o TFM"], ["investigacion", "Investigación"], ["curiosidad", "Curiosidad"]], "recurso": [["graficos", "Gráficos"], ["mapas", "Mapas"], ["descarga-csv", "Descarga CSV"], ["calculadora", "Calculadora"], ["ficha", "Ficha"], ["relaciona", "Relaciona"], ["buscador", "Buscador"], ["docencia-grados", "Grados y asignaturas"], ["rankings", "Rankings"]], "recomendaria": [["si", "Sí"], ["quiza", "Quizá"], ["no", "No"]]};
+  const base = location.pathname.replace(/[^/]*$/, "");
+  const fmt = n => n.toLocaleString("es-ES");
+  const cache = new Map();
+  function contar(path) {
+    if (!cache.has(path)) cache.set(path, fetch(GC + encodeURIComponent(path) + ".json")
+      .then(r => r.ok ? r.json() : {count: "0"})
+      .then(d => +String(d.count).replace(/[^0-9]/g, "") || 0)
+      .catch(() => 0));
+    return cache.get(path);
+  }
+  async function lote(paths) {  // como máximo 6 peticiones a la vez
+    const out = new Array(paths.length); let i = 0;
+    async function w() { while (i < paths.length) { const k = i++; out[k] = await contar(paths[k]); } }
+    await Promise.all(Array.from({length: 6}, w)); return out;
+  }
+  function tabla(filas, cab) {
+    const max = Math.max(1, ...filas.map(f => f[f.length - 1]));
+    return `<table class="table table-sm"><thead><tr>${cab.map(c => `<th>${c}</th>`).join("")}<th></th></tr></thead><tbody>` +
+      filas.map(f => `<tr>${f.map((c, j) => `<td${typeof c === "number" ? ' class="num"' : ""}>${typeof c === "number" ? fmt(c) : c}</td>`).join("")}` +
+        `<td class="barra"><span style="width:${100 * f[f.length - 1] / max}%"></span></td></tr>`).join("") + `</tbody></table>`;
+  }
+  const kpi = (l, n, s) => `<div class="kpi"><div class="kpi-l">${l}</div><div class="kpi-n">${fmt(n)}</div><div class="kpi-s">${s}</div></div>`;
+
+  (async () => {
+    // Visitas por página
+    const vis = await lote(PAGINAS.map(p => base + p.html));
+    const idx = PAGINAS.findIndex(p => p.html === "index.html");
+    if (idx >= 0) vis[idx] += await contar(base);
+    const total = await contar("TOTAL");
+    const filasP = PAGINAS.map((p, i) => [`<a href="${p.html}">${p.titulo}</a>`, vis[i]]).sort((a, b) => b[1] - a[1]);
+    document.getElementById("uso-paginas").innerHTML = tabla(filasP, ["Página", "Visitas"]);
+
+    // Recursos
+    const claves = PAGINAS.map(p => p.clave);
+    const [uso, desc, mapa] = await Promise.all([lote(claves.map(c => "uso/" + c)), lote(claves.map(c => "descarga/" + c)), lote(claves.map(c => "mapa/" + c))]);
+    const filasR = PAGINAS.map((p, i) => [`<a href="${p.html}">${p.titulo}</a>`, uso[i], mapa[i], desc[i], uso[i] + mapa[i] + desc[i]])
+      .filter(f => f[4] > 0).sort((a, b) => b[4] - a[4]);
+    document.getElementById("uso-recursos").innerHTML = filasR.length ? tabla(filasR, ["Página", "Uso de controles", "Mapa", "Descargas CSV", "Total"]) : "<p>Todavía no hay datos de uso.</p>";
+    const [vRep, vComp, encN] = await lote(["video/reproducir", "video/completo", "encuesta/enviada"]);
+    const sum = a => a.reduce((x, y) => x + y, 0);
+    document.getElementById("uso-kpis").innerHTML =
+      kpi("Visitas totales", total, "todas las páginas") +
+      kpi("Uso de herramientas y paneles", sum(uso), "visitas con interacción") +
+      kpi("Descargas de datos", sum(desc), "ficheros CSV") +
+      kpi("Uso de los mapas", sum(mapa), "visitas") +
+      kpi("Vídeo", vRep, `reproducciones · ${fmt(vComp)} completas`) +
+      kpi("Encuestas", encN, "respuestas recibidas");
+
+    // Encuesta
+    let h = "";
+    for (const q of ["satisfaccion", "facilidad"]) {
+      const n = await lote([1, 2, 3, 4, 5].map(v => `encuesta/${q}/${v}`));
+      const tot = sum(n), media = tot ? sum(n.map((x, i) => x * (i + 1))) / tot : 0;
+      h += `<h3>${q === "satisfaccion" ? "Valoración general" : "Facilidad de uso"}: ${tot ? media.toLocaleString("es-ES", {maximumFractionDigits: 2}) + " / 5" : "sin respuestas"}</h3>`;
+      if (tot) h += tabla([5, 4, 3, 2, 1].map(v => ["★".repeat(v), n[v - 1]]), ["Estrellas", "Respuestas"]);
+    }
+    const nombresQ = {perfil: "Perfil", grado: "Grado", para: "Para qué lo usan", recurso: "Recursos más útiles", recomendaria: "¿Lo recomendarían?"};
+    for (const [q, ops] of Object.entries(ENC)) {
+      const n = await lote(ops.map(o => `encuesta/${q}/${o[0]}`));
+      if (sum(n)) h += `<h3>${nombresQ[q]}</h3>` + tabla(ops.map((o, i) => [o[1], n[i]]).sort((a, b) => b[1] - a[1]), ["Respuesta", "N.º"]);
+    }
+    document.getElementById("uso-encuesta").innerHTML = h || "<p>Todavía no hay respuestas.</p>";
+  })();
+
+  document.getElementById("uso-btn-ind").addEventListener("click", async ev => {
+    ev.target.disabled = true; ev.target.textContent = "Cargando…";
+    const [n, l] = await Promise.all([lote(INDS.map(d => "indicador/" + d.id)), lote(INDS.map(d => "enlace-directo/" + d.id))]);
+    const filas = INDS.map((d, i) => [`<a href="${d.pagina}.html?i=${d.id}">${d.nombre}</a>`, l[i], n[i] + l[i]])
+      .filter(f => f[2] > 0).sort((a, b) => b[2] - a[2]);
+    document.getElementById("uso-indicadores").innerHTML = filas.length ? tabla(filas, ["Indicador", "Por enlace directo", "Consultas"]) : "<p>Todavía no hay datos.</p>";
+    ev.target.remove();
+  });
+})();
+</script>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<!--
+  Contador de visitas y de uso (GoatCounter, gratuito y sin cookies).
+  1. Crea el sitio en https://www.goatcounter.com con el código cceescopio.
+  2. En Settings, activa "Allow adding visitor counts on your website".
+  Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+
+  Además de las visitas a cada página, se registran estos eventos de uso
+  (en el panel de GoatCounter aparecen marcados como "event"):
+    uso/<página>            primera vez que se cambia un control (indicador, territorio, año...) en una visita
+    indicador/<id>          cada indicador consultado en los paneles
+    enlace-directo/<id>     visitas que llegan con un enlace directo a un indicador (?i=)
+    descarga/<página>       descargas de datos en CSV
+    mapa/<página>           uso del mapa interactivo (pasar el ratón por él)
+    video/reproducir, video/completo
+    salida/<dominio>        clics en enlaces a otras webs (INE, Eurostat...)
+    encuesta/...            respuestas de la encuesta de satisfacción
+-->
+<script data-goatcounter="https://cceescopio.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<script>
+(function () {
+  const GC_CODE = "cceescopio";
+  const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const offset = (document.querySelector('meta[name="quarto:offset"]') || {}).content || "./";
+
+  // ---------- Contador de visitas en el pie ----------
+  function show(n) {
+    const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
+    if (!box || document.getElementById("visit-counter")) return;
+    const s = document.createElement("span");
+    s.id = "visit-counter";
+    s.className = "visit-counter";
+    s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
+    box.appendChild(s);
+  }
+  if (!local) {
+    fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.count) show(String(d.count).replace(/\s/g, ".")); })
+      .catch(() => {});
+  }
+
+  // ---------- Eventos de uso ----------
+  const pagina = (() => {
+    const p = location.pathname.replace(/\/$/, "/index.html").split("/").slice(-2);
+    const f = p[1].replace(/\.html$/, "") || "index";
+    return p[0] === "docencia" ? `docencia-${f}` : f;
+  })();
+  const slug = s => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+                     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const cola = [], hechos = new Set();
+  function enviar(path, title) {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title: title || path, event: true});
+    else cola.push([path, title]);
+  }
+  const espera = setInterval(() => {
+    if (window.goatcounter && window.goatcounter.count) { clearInterval(espera); cola.splice(0).forEach(a => enviar(...a)); }
+  }, 500);
+  setTimeout(() => clearInterval(espera), 20000);
+  // Una sola vez por visita a la página (salvo que se pida lo contrario)
+  window.cceeEvento = function (path, title, repetir) {
+    if (local) { console.log("[CCEEscopio evento]", path); return; }
+    if (!repetir && hechos.has(path)) return;
+    hechos.add(path); enviar(path, title);
+  };
+
+  const ini = new URLSearchParams(location.search).get("i");
+  if (ini) cceeEvento(`enlace-directo/${ini}`, `Enlace directo: ${ini}`);
+
+  // Controles de los paneles (selectores, años, cantidades...)
+  document.addEventListener("change", ev => {
+    const el = ev.target;
+    if (!el.closest || !el.closest("form, .cell-output, .observablehq")) return;
+    if (el.closest("#encuesta-ccee")) return;
+    cceeEvento(`uso/${pagina}`, `Uso de controles: ${pagina}`);
+    const form = el.closest("form");
+    const etiqueta = form && form.querySelector("label") ? form.querySelector("label").textContent.trim() : "";
+    if (etiqueta === "Indicador" && el.tagName === "SELECT" && el.selectedOptions[0]) {
+      const id = slug(el.selectedOptions[0].textContent);
+      cceeEvento(`indicador/${id}`, el.selectedOptions[0].textContent);
+    }
+  }, true);
+
+  // Descargas y enlaces externos
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest && ev.target.closest("a");
+    if (!a) return;
+    if (a.hasAttribute("download") || /\.csv(\?|$)/i.test(a.getAttribute("href") || "")) {
+      cceeEvento(`descarga/${pagina}`, `Descarga de datos: ${pagina}`, true);
+      return;
+    }
+    try {
+      const u = new URL(a.href, location.href);
+      if (/^https?:$/.test(u.protocol) && u.hostname !== location.hostname)
+        cceeEvento(`salida/${u.hostname.replace(/^www\./, "")}`, `Enlace externo: ${u.hostname}`, true);
+    } catch (e) {}
+  }, true);
+
+  // Mapa interactivo
+  document.addEventListener("pointerover", ev => {
+    if (ev.target.closest && ev.target.closest(".mapa-ccee")) cceeEvento(`mapa/${pagina}`, `Uso del mapa: ${pagina}`);
+  }, {passive: true});
+
+  // Vídeo de presentación
+  document.addEventListener("play", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/reproducir", "Vídeo: reproducción"); }, true);
+  document.addEventListener("ended", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/completo", "Vídeo: visto completo"); }, true);
+
+  // ---------- Botón flotante de la encuesta de satisfacción ----------
+  function botonEncuesta() {
+    if (pagina === "encuesta" || pagina === "uso") return;
+    const b = document.createElement("a");
+    b.href = offset + "encuesta.html";
+    b.className = "btn-encuesta";
+    b.innerHTML = "⭐ ¿Nos valoras?";
+    b.title = "Encuesta de satisfacción (menos de un minuto)";
+    b.addEventListener("click", () => cceeEvento(`encuesta/boton/${pagina}`, "Clic en el botón de la encuesta"));
+    document.body.appendChild(b);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", botonEncuesta);
+  else botonEncuesta();
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/fccee-ugr\.github\.io\/cceescopio");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>CCEEscopio · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="images/logos_ugr_fccee.jpg" alt="Universidad de Granada y Facultad de Ciencias Económicas y Empresariales" height="38"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

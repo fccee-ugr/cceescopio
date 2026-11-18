@@ -12,7 +12,7 @@ page-layout: full
 <p class="tagline">Datos oficiales, actualizados y descargables, al servicio de la **docencia** y la **investigación** de la Facultad.</p>
 :::
 
-## CCEEscopio en un minuto
+## CCEEscopio en vídeo
 
 ```{=html}
 <div class="video-wrap">
@@ -92,6 +92,10 @@ En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, G
 ## Datos siempre actualizados
 
 Los indicadores se **descargan en directo de la API de Eurostat** cada vez que se abre una página, de modo que muestran siempre la última publicación oficial. Cada gráfico permite elegir los territorios que se comparan (España, Andalucía, comunidades autónomas y países de la UE), consultar los valores pasando el ratón y **descargar los datos** en CSV.
+
+## Tu opinión cuenta
+
+¿Te resulta útil CCEEscopio? Responde a la [**encuesta de satisfacción**](encuesta.qmd): es anónima y se contesta en menos de un minuto. También puedes abrirla desde el botón **⭐ ¿Nos valoras?** que aparece en todas las páginas.
 
 ## Quién lo gestiona
 

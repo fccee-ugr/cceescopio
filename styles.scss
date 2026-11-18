@@ -112,3 +112,29 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 .mapa-es { position: relative; display: inline-block; max-width: 100%; }
 .mapa-inset { position: absolute; left: 0; bottom: 0; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 2px 4px;
   span { font-size: .75rem; color: #666; display: block; } }
+
+/* Botón flotante de la encuesta de satisfacción */
+.btn-encuesta {
+  position: fixed; right: 18px; bottom: 18px; z-index: 1030;
+  background: $ccee-magenta; color: #fff !important; text-decoration: none !important;
+  font-weight: 700; font-size: .95rem; padding: .55rem 1rem; border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .18); transition: transform .15s, background .15s;
+}
+.btn-encuesta:hover { transform: translateY(-2px); background: darken($ccee-magenta, 8%); }
+@media print { .btn-encuesta { display: none; } }
+
+/* Encuesta */
+.encuesta fieldset { border: 1px solid #E6DEDA; border-radius: 12px; padding: .8rem 1.1rem 1rem; margin: 0 0 1.1rem; background: #FBF7F3; }
+.encuesta legend { float: none; width: auto; font-size: 1.05rem; font-weight: 700; padding: 0 .4rem; margin: 0; }
+.encuesta label { display: block; margin: .25rem 0; cursor: pointer; }
+.encuesta input { margin-right: .45rem; accent-color: $ccee-magenta; }
+.estrellas button { border: 0; background: none; font-size: 2.3rem; line-height: 1; color: #DDD3CF; cursor: pointer; padding: 0 .12rem; }
+.estrellas button.on { color: #F29200; }
+.enc-enviar { background: $ccee-magenta; color: #fff; border: 0; border-radius: 999px; padding: .6rem 1.4rem; font-weight: 700; }
+.enc-enviar:disabled { opacity: .6; }
+.enc-error { color: #B00020; font-weight: 600; }
+
+/* Página de uso */
+.uso-tabla td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.uso-tabla td.barra { width: 28%; }
+.uso-tabla td.barra span { display: block; height: .7rem; border-radius: 4px; background: $ccee-magenta; opacity: .75; min-width: 2px; }

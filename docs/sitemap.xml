@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/turismo.html</loc>
-    <lastmod>2026-11-18T05:00:18.943Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/uso.html</loc>
+    <lastmod>2026-11-18T06:10:12.516Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/relaciona.html</loc>
-    <lastmod>2026-11-18T05:00:19.353Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/sostenibilidad.html</loc>
+    <lastmod>2026-11-18T06:10:15.496Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/publico.html</loc>
-    <lastmod>2026-11-18T05:00:19.320Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/rankings.html</loc>
+    <lastmod>2026-11-18T05:00:19.332Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/poblacion.html</loc>
-    <lastmod>2026-11-18T05:00:19.282Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/precios.html</loc>
+    <lastmod>2026-11-18T06:10:15.471Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/indicadores.html</loc>
-    <lastmod>2026-11-18T05:00:19.257Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/internacional.html</loc>
+    <lastmod>2026-11-18T06:10:15.445Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/ficha.html</loc>
-    <lastmod>2026-11-18T05:00:19.227Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/index.html</loc>
+    <lastmod>2026-11-18T06:10:15.431Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fccee-ugr.github.io/cceescopio/encuesta.html</loc>
+    <lastmod>2026-11-18T06:10:12.670Z</lastmod>
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/empleo.html</loc>
-    <lastmod>2026-11-18T05:00:19.197Z</lastmod>
+    <lastmod>2026-11-18T06:10:15.411Z</lastmod>
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/docencia/gtur.html</loc>
@@ -50,19 +54,19 @@
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/actividad.html</loc>
-    <lastmod>2026-11-18T05:00:19.088Z</lastmod>
+    <lastmod>2026-11-18T06:10:15.363Z</lastmod>
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/andalucia.html</loc>
-    <lastmod>2026-11-18T05:00:19.105Z</lastmod>
+    <lastmod>2026-11-18T06:10:15.378Z</lastmod>
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/contacto.html</loc>
-    <lastmod>2026-11-18T05:00:19.136Z</lastmod>
+    <lastmod>2026-11-18T06:10:15.391Z</lastmod>
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/desigualdad.html</loc>
-    <lastmod>2026-11-18T05:00:19.167Z</lastmod>
+    <lastmod>2026-11-18T06:10:15.397Z</lastmod>
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/docencia/geco.html</loc>
@@ -78,26 +82,30 @@
   </url>
   <url>
     <loc>https://fccee-ugr.github.io/cceescopio/empresa.html</loc>
-    <lastmod>2026-11-18T05:00:19.211Z</lastmod>
+    <lastmod>2026-11-18T06:10:15.425Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/index.html</loc>
-    <lastmod>2026-11-18T05:00:19.243Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/ficha.html</loc>
+    <lastmod>2026-11-18T05:00:19.227Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/internacional.html</loc>
-    <lastmod>2026-11-18T05:00:19.269Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/indicadores.html</loc>
+    <lastmod>2026-11-18T05:00:19.257Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/precios.html</loc>
-    <lastmod>2026-11-18T05:00:19.306Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/poblacion.html</loc>
+    <lastmod>2026-11-18T06:10:15.445Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/rankings.html</loc>
-    <lastmod>2026-11-18T05:00:19.332Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/publico.html</loc>
+    <lastmod>2026-11-18T06:10:15.482Z</lastmod>
   </url>
   <url>
-    <loc>https://fccee-ugr.github.io/cceescopio/sostenibilidad.html</loc>
-    <lastmod>2026-11-18T05:00:19.366Z</lastmod>
+    <loc>https://fccee-ugr.github.io/cceescopio/relaciona.html</loc>
+    <lastmod>2026-11-18T05:00:19.353Z</lastmod>
+  </url>
+  <url>
+    <loc>https://fccee-ugr.github.io/cceescopio/turismo.html</loc>
+    <lastmod>2026-11-18T06:10:15.520Z</lastmod>
   </url>
 </urlset>

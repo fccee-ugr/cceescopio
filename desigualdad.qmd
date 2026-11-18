@@ -387,11 +387,11 @@ mapa = {
   ];
   if (!ind.regional) {
     const feats = mapaGeo.features;
-    return Plot.plot({
+    return html`<div class="mapa-ccee">${Plot.plot({
       width: 760, height: 620, color: mapaColor,
       projection: {type: "azimuthal-equal-area", rotate: [-10, -52], domain: {type: "MultiPoint", coordinates: [[-11, 35], [33, 35], [33, 70], [-11, 70], [25, 34]]}},
       marks: marcas(feats, true)
-    });
+    })}</div>`;
   }
   const es = mapaGeo.features.filter(f => f.properties.geo?.startsWith("ES"));
   const pen = es.filter(f => !["ES70", "ES63", "ES64"].includes(f.properties.geo));
@@ -402,7 +402,7 @@ mapa = {
   const islas = can.length ? Plot.plot({width: 220, height: 130, color: {...mapaColor, legend: false},
     projection: {type: "conic-conformal", rotate: [15.5, 0], parallels: [27, 29], domain: {type: "FeatureCollection", features: can}},
     marks: marcas(can)}) : "";
-  return html`<div class="mapa-es">${principal}<div class="mapa-inset"><span>Canarias</span>${islas}</div></div>`;
+  return html`<div class="mapa-es mapa-ccee">${principal}<div class="mapa-inset"><span>Canarias</span>${islas}</div></div>`;
 }
 ```
 

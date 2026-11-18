@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-eb54e367bab13acadae22a493ec9cd11.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4b877ba5a4f39e17ce1d1a988526a2e3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -428,15 +428,30 @@ Fuente: Unidad de Analítica de la Universidad de Granada, <a href="https://anal
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
 <!--
-  Contador de visitas (GoatCounter, gratuito y sin cookies).
-  1. Crea una cuenta en https://www.goatcounter.com con el código cceescopio.
+  Contador de visitas y de uso (GoatCounter, gratuito y sin cookies).
+  1. Crea el sitio en https://www.goatcounter.com con el código cceescopio.
   2. En Settings, activa "Allow adding visitor counts on your website".
   Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+
+  Además de las visitas a cada página, se registran estos eventos de uso
+  (en el panel de GoatCounter aparecen marcados como "event"):
+    uso/<página>            primera vez que se cambia un control (indicador, territorio, año...) en una visita
+    indicador/<id>          cada indicador consultado en los paneles
+    enlace-directo/<id>     visitas que llegan con un enlace directo a un indicador (?i=)
+    descarga/<página>       descargas de datos en CSV
+    mapa/<página>           uso del mapa interactivo (pasar el ratón por él)
+    video/reproducir, video/completo
+    salida/<dominio>        clics en enlaces a otras webs (INE, Eurostat...)
+    encuesta/...            respuestas de la encuesta de satisfacción
 -->
 <script data-goatcounter="https://cceescopio.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
 <script>
 (function () {
   const GC_CODE = "cceescopio";
+  const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const offset = (document.querySelector('meta[name="quarto:offset"]') || {}).content || "./";
+
+  // ---------- Contador de visitas en el pie ----------
   function show(n) {
     const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
     if (!box || document.getElementById("visit-counter")) return;
@@ -446,12 +461,91 @@ Fuente: Unidad de Analítica de la Universidad de Granada, <a href="https://anal
     s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
     box.appendChild(s);
   }
-  // No se cuenta la vista previa local (quarto preview)
-  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") return;
-  fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
-    .then(r => r.ok ? r.json() : null)
-    .then(d => { if (d && d.count) show(String(d.count).replace(/\s/g, ".")); })
-    .catch(() => {});
+  if (!local) {
+    fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.count) show(String(d.count).replace(/\s/g, ".")); })
+      .catch(() => {});
+  }
+
+  // ---------- Eventos de uso ----------
+  const pagina = (() => {
+    const p = location.pathname.replace(/\/$/, "/index.html").split("/").slice(-2);
+    const f = p[1].replace(/\.html$/, "") || "index";
+    return p[0] === "docencia" ? `docencia-${f}` : f;
+  })();
+  const slug = s => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+                     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const cola = [], hechos = new Set();
+  function enviar(path, title) {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title: title || path, event: true});
+    else cola.push([path, title]);
+  }
+  const espera = setInterval(() => {
+    if (window.goatcounter && window.goatcounter.count) { clearInterval(espera); cola.splice(0).forEach(a => enviar(...a)); }
+  }, 500);
+  setTimeout(() => clearInterval(espera), 20000);
+  // Una sola vez por visita a la página (salvo que se pida lo contrario)
+  window.cceeEvento = function (path, title, repetir) {
+    if (local) { console.log("[CCEEscopio evento]", path); return; }
+    if (!repetir && hechos.has(path)) return;
+    hechos.add(path); enviar(path, title);
+  };
+
+  const ini = new URLSearchParams(location.search).get("i");
+  if (ini) cceeEvento(`enlace-directo/${ini}`, `Enlace directo: ${ini}`);
+
+  // Controles de los paneles (selectores, años, cantidades...)
+  document.addEventListener("change", ev => {
+    const el = ev.target;
+    if (!el.closest || !el.closest("form, .cell-output, .observablehq")) return;
+    if (el.closest("#encuesta-ccee")) return;
+    cceeEvento(`uso/${pagina}`, `Uso de controles: ${pagina}`);
+    const form = el.closest("form");
+    const etiqueta = form && form.querySelector("label") ? form.querySelector("label").textContent.trim() : "";
+    if (etiqueta === "Indicador" && el.tagName === "SELECT" && el.selectedOptions[0]) {
+      const id = slug(el.selectedOptions[0].textContent);
+      cceeEvento(`indicador/${id}`, el.selectedOptions[0].textContent);
+    }
+  }, true);
+
+  // Descargas y enlaces externos
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest && ev.target.closest("a");
+    if (!a) return;
+    if (a.hasAttribute("download") || /\.csv(\?|$)/i.test(a.getAttribute("href") || "")) {
+      cceeEvento(`descarga/${pagina}`, `Descarga de datos: ${pagina}`, true);
+      return;
+    }
+    try {
+      const u = new URL(a.href, location.href);
+      if (/^https?:$/.test(u.protocol) && u.hostname !== location.hostname)
+        cceeEvento(`salida/${u.hostname.replace(/^www\./, "")}`, `Enlace externo: ${u.hostname}`, true);
+    } catch (e) {}
+  }, true);
+
+  // Mapa interactivo
+  document.addEventListener("pointerover", ev => {
+    if (ev.target.closest && ev.target.closest(".mapa-ccee")) cceeEvento(`mapa/${pagina}`, `Uso del mapa: ${pagina}`);
+  }, {passive: true});
+
+  // Vídeo de presentación
+  document.addEventListener("play", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/reproducir", "Vídeo: reproducción"); }, true);
+  document.addEventListener("ended", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/completo", "Vídeo: visto completo"); }, true);
+
+  // ---------- Botón flotante de la encuesta de satisfacción ----------
+  function botonEncuesta() {
+    if (pagina === "encuesta" || pagina === "uso") return;
+    const b = document.createElement("a");
+    b.href = offset + "encuesta.html";
+    b.className = "btn-encuesta";
+    b.innerHTML = "⭐ ¿Nos valoras?";
+    b.title = "Encuesta de satisfacción (menos de un minuto)";
+    b.addEventListener("click", () => cceeEvento(`encuesta/boton/${pagina}`, "Clic en el botón de la encuesta"));
+    document.body.appendChild(b);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", botonEncuesta);
+  else botonEncuesta();
 })();
 </script>
 <script type="ojs-module-contents">

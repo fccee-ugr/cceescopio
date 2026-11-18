@@ -1,0 +1,123 @@
+---
+title: "Encuesta de satisfacción"
+subtitle: "Ayúdanos a mejorar CCEEscopio. Menos de un minuto, anónima y sin registro"
+toc: false
+---
+
+Tus respuestas nos sirven para saber qué recursos son más útiles y qué conviene mejorar. La encuesta es **anónima**: no se guarda ningún dato personal ni se usan cookies.
+
+```{=html}
+<form id="encuesta-ccee" class="encuesta" novalidate>
+
+<fieldset>
+  <legend>1. ¿Cuál es tu perfil?</legend>
+  <label><input type="radio" name="perfil" value="estudiante-grado"> Estudiante de grado</label>
+  <label><input type="radio" name="perfil" value="estudiante-posgrado"> Estudiante de máster o doctorado</label>
+  <label><input type="radio" name="perfil" value="pdi"> Profesorado o personal investigador</label>
+  <label><input type="radio" name="perfil" value="ptgas"> Personal técnico, de gestión y de administración</label>
+  <label><input type="radio" name="perfil" value="otro"> Otro (fuera de la UGR)</label>
+</fieldset>
+
+<fieldset>
+  <legend>2. ¿Con qué grado estás relacionado/a?</legend>
+  <label><input type="radio" name="grado" value="gade"> GADE</label>
+  <label><input type="radio" name="grado" value="geco"> GECO</label>
+  <label><input type="radio" name="grado" value="gfico"> GFICO</label>
+  <label><input type="radio" name="grado" value="gmim"> GMIM</label>
+  <label><input type="radio" name="grado" value="gtur"> GTUR</label>
+  <label><input type="radio" name="grado" value="doble-grado"> Doble grado</label>
+  <label><input type="radio" name="grado" value="ninguno"> Ninguno / otro</label>
+</fieldset>
+
+<fieldset>
+  <legend>3. Valoración general de CCEEscopio</legend>
+  <div class="estrellas" data-name="satisfaccion">
+    <button type="button" data-v="1" aria-label="1 de 5">★</button><button type="button" data-v="2" aria-label="2 de 5">★</button><button type="button" data-v="3" aria-label="3 de 5">★</button><button type="button" data-v="4" aria-label="4 de 5">★</button><button type="button" data-v="5" aria-label="5 de 5">★</button>
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend>4. ¿Es fácil de usar?</legend>
+  <div class="estrellas" data-name="facilidad">
+    <button type="button" data-v="1" aria-label="1 de 5">★</button><button type="button" data-v="2" aria-label="2 de 5">★</button><button type="button" data-v="3" aria-label="3 de 5">★</button><button type="button" data-v="4" aria-label="4 de 5">★</button><button type="button" data-v="5" aria-label="5 de 5">★</button>
+  </div>
+</fieldset>
+
+<fieldset>
+  <legend>5. ¿Para qué lo usas? (puedes marcar varias)</legend>
+  <label><input type="checkbox" name="para" value="clases"> Preparar o impartir clases</label>
+  <label><input type="checkbox" name="para" value="estudiar"> Estudiar una asignatura</label>
+  <label><input type="checkbox" name="para" value="tfg-tfm"> TFG o TFM</label>
+  <label><input type="checkbox" name="para" value="investigacion"> Investigación (artículos, tesis, proyectos)</label>
+  <label><input type="checkbox" name="para" value="curiosidad"> Informarme o por curiosidad</label>
+</fieldset>
+
+<fieldset>
+  <legend>6. ¿Qué recursos te resultan más útiles? (puedes marcar varios)</legend>
+  <label><input type="checkbox" name="recurso" value="graficos"> Gráficos de series temporales</label>
+  <label><input type="checkbox" name="recurso" value="mapas"> Mapas interactivos</label>
+  <label><input type="checkbox" name="recurso" value="descarga-csv"> Descarga de datos en CSV</label>
+  <label><input type="checkbox" name="recurso" value="calculadora"> Calculadora de inflación</label>
+  <label><input type="checkbox" name="recurso" value="ficha"> Ficha de país o región</label>
+  <label><input type="checkbox" name="recurso" value="relaciona"> Relaciona dos indicadores</label>
+  <label><input type="checkbox" name="recurso" value="buscador"> Buscador de indicadores</label>
+  <label><input type="checkbox" name="recurso" value="docencia-grados"> Indicadores por grados y asignaturas</label>
+  <label><input type="checkbox" name="recurso" value="rankings"> Rankings</label>
+</fieldset>
+
+<fieldset>
+  <legend>7. ¿Recomendarías CCEEscopio a un compañero o compañera?</legend>
+  <label><input type="radio" name="recomendaria" value="si"> Sí</label>
+  <label><input type="radio" name="recomendaria" value="quiza"> Quizá</label>
+  <label><input type="radio" name="recomendaria" value="no"> No</label>
+</fieldset>
+
+<p class="enc-error" hidden>Responde al menos a la valoración general (pregunta 3).</p>
+<button type="submit" class="enc-enviar">Enviar respuestas</button>
+</form>
+
+<div id="encuesta-gracias" class="contact-box" hidden>
+  <p><b>¡Muchas gracias por tu opinión!</b> Tus respuestas se han registrado de forma anónima.</p>
+  <p>¿Quieres proponer un indicador, un recurso nuevo o comentar algo? <a id="enc-mail" href="mailto:investiga_ccee@ugr.es?subject=CCEEscopio%3A%20sugerencia">Escríbenos a investiga_ccee@ugr.es</a>.</p>
+</div>
+
+<script>
+(function () {
+  const form = document.getElementById("encuesta-ccee");
+  const valores = {};
+  form.querySelectorAll(".estrellas").forEach(g => {
+    const bs = [...g.querySelectorAll("button")];
+    const pinta = v => bs.forEach(b => b.classList.toggle("on", +b.dataset.v <= v));
+    bs.forEach(b => {
+      b.addEventListener("click", () => { valores[g.dataset.name] = +b.dataset.v; pinta(+b.dataset.v); });
+      b.addEventListener("mouseenter", () => pinta(+b.dataset.v));
+    });
+    g.addEventListener("mouseleave", () => pinta(valores[g.dataset.name] || 0));
+  });
+  let enviada = false;
+  try { enviada = localStorage.getItem("ccee-encuesta") === "1"; } catch (e) {}
+  const gracias = () => { form.hidden = true; document.getElementById("encuesta-gracias").hidden = false; };
+  if (enviada) {
+    gracias();
+    document.getElementById("encuesta-gracias").insertAdjacentHTML("afterbegin", "<p>Ya respondiste a la encuesta desde este navegador.</p>");
+  }
+  form.addEventListener("submit", ev => {
+    ev.preventDefault();
+    if (!valores.satisfaccion) { form.querySelector(".enc-error").hidden = false; return; }
+    const ev_ = (p, t) => window.cceeEvento && window.cceeEvento(p, t, true);
+    ev_("encuesta/enviada", "Encuesta: respuestas enviadas");
+    ev_(`encuesta/satisfaccion/${valores.satisfaccion}`, `Encuesta: valoración general ${valores.satisfaccion}/5`);
+    if (valores.facilidad) ev_(`encuesta/facilidad/${valores.facilidad}`, `Encuesta: facilidad de uso ${valores.facilidad}/5`);
+    ["perfil", "grado", "recomendaria"].forEach(n => {
+      const r = form.querySelector(`input[name="${n}"]:checked`);
+      if (r) ev_(`encuesta/${n}/${r.value}`, `Encuesta: ${n} = ${r.value}`);
+    });
+    ["para", "recurso"].forEach(n => form.querySelectorAll(`input[name="${n}"]:checked`)
+      .forEach(r => ev_(`encuesta/${n}/${r.value}`, `Encuesta: ${n} = ${r.value}`)));
+    try { localStorage.setItem("ccee-encuesta", "1"); } catch (e) {}
+    gracias();
+    window.scrollTo({top: 0, behavior: "smooth"});
+  });
+})();
+</script>
+```
