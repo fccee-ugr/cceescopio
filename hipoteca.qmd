@@ -1,0 +1,314 @@
+---
+title: "Simulador de hipotecas y préstamos"
+subtitle: "Cuota, intereses, TAE y cuadro de amortización (sistema francés) con el euríbor real"
+toc: false
+---
+
+Calcula la **cuota mensual** de una hipoteca o de un préstamo personal, cuánto pagarás en **intereses**, la **TAE** y el **cuadro de amortización**. En las hipotecas variables se usa el **euríbor a 12 meses** más reciente publicado por Eurostat, y puedes simular qué pasaría si sube o baja. Para Matemáticas Financieras, Operaciones Financieras y Finanzas personales.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+especEur = ({"id": "euribor-12", "nombre": "Euríbor a 12 meses", "code": "irt_st_m", "query": "&int_rt=IRT_M12&geo=EA", "unidad": "%", "frecuencia": "Mensual", "sinGeo": true, "serie": "Euríbor a 12 meses", "desde": 2000, "alt": [{"code": "irt_st_m", "query": "&int_rt=IRT_M12"}]})
+datosEur = cargar(especEur)
+eurUlt = datosEur.ok ? d3.greatest(datosEur.rows, r => r.fecha) : null
+```
+
+```{ojs}
+//| echo: false
+viewof capitalH = Inputs.number([0, 1e9], {label: "Capital prestado (€)", value: 150000, step: 1000})
+viewof plazoH = Inputs.range([1, 40], {label: "Plazo (años)", value: 25, step: 1})
+viewof tipoH = Inputs.radio(["Fijo", "Variable (euríbor + diferencial)"], {label: "Tipo de interés", value: "Variable (euríbor + diferencial)"})
+```
+
+```{ojs}
+//| echo: false
+viewof fijoH = Inputs.range([0, 15], {label: "Tipo fijo (% anual)", value: 3, step: 0.05, disabled: !tipoH.startsWith("Fijo")})
+viewof eurH = Inputs.range([-1, 6], {label: "Euríbor inicial (%)", value: eurUlt ? Math.round(eurUlt.valor * 100) / 100 : 2.5, step: 0.01, disabled: tipoH.startsWith("Fijo")})
+viewof difH = Inputs.range([0, 5], {label: "Diferencial (puntos)", value: 0.8, step: 0.05, disabled: tipoH.startsWith("Fijo")})
+viewof subidaH = Inputs.range([-3, 5], {label: "Escenario: cambio del euríbor desde el 2.º año (puntos)", value: 0, step: 0.25, disabled: tipoH.startsWith("Fijo")})
+viewof comisionH = Inputs.range([0, 3], {label: "Comisión de apertura (%)", value: 0, step: 0.1})
+viewof gastosH = Inputs.number([0, 1e6], {label: "Otros gastos iniciales a cargo del cliente (€)", value: 0, step: 50})
+```
+
+```{ojs}
+//| echo: false
+simH = {
+  const n = plazoH * 12;
+  const cuotaDe = (C, iAnual, m) => { const r = iAnual / 1200; return r === 0 ? C / m : C * r / (1 - Math.pow(1 + r, -m)); };
+  const variable = !tipoH.startsWith("Fijo");
+  const i1 = variable ? eurH + difH : fijoH;
+  const i2 = variable ? Math.max(0, eurH + subidaH) + difH : fijoH;
+  let pendiente = capitalH, cuota = cuotaDe(capitalH, i1, n), filas = [], i = i1;
+  for (let k = 1; k <= n; k++) {
+    if (variable && k === 13) { i = i2; cuota = cuotaDe(pendiente, i, n - 12); }
+    const intereses = pendiente * i / 1200, amort = cuota - intereses;
+    pendiente = Math.max(0, pendiente - amort);
+    filas.push({mes: k, anio: Math.ceil(k / 12), tipo: i, cuota, intereses, amortizacion: amort, pendiente});
+  }
+  // TAE: tipo que iguala lo recibido neto de gastos con el valor actual de las cuotas
+  const neto = capitalH * (1 - comisionH / 100) - gastosH;
+  const va = (r) => d3.sum(filas, f => f.cuota / Math.pow(1 + r, f.mes));
+  let lo = -0.0099, hi = 0.05;
+  for (let k = 0; k < 100; k++) { const mid = (lo + hi) / 2; if (va(mid) > neto) lo = mid; else hi = mid; }
+  const tae = (Math.pow(1 + (lo + hi) / 2, 12) - 1) * 100;
+  const porAnio = d3.rollups(filas, v => ({anio: v[0].anio, tipo: v[0].tipo, cuota: v[v.length - 1].cuota, intereses: d3.sum(v, f => f.intereses), amortizacion: d3.sum(v, f => f.amortizacion), pendiente: v[v.length - 1].pendiente}), f => f.anio).map(d => d[1]);
+  return {filas, porAnio, cuota1: filas[0].cuota, cuota2: filas[Math.min(12, n - 1)].cuota, i1, i2, tae, variable,
+          totalInt: d3.sum(filas, f => f.intereses), totalPag: d3.sum(filas, f => f.cuota)};
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  const e2 = (v) => locES.format(",.2f")(v);
+  const tarjeta = (l, v, s) => html`<div class="kpi"><div class="kpi-l">${l}</div><div class="kpi-n">${v}</div><div class="kpi-s">${s}</div></div>`;
+  return html`<div class="kpi-grid">
+    ${tarjeta("Cuota mensual", `${e2(simH.cuota1)} €`, `Tipo del primer año: ${e2(simH.i1)} %`)}
+    ${simH.variable ? tarjeta("Cuota desde el 2.º año", `${e2(simH.cuota2)} €`, `Tipo: ${e2(simH.i2)} % (${subidaH >= 0 ? "+" : ""}${e2(subidaH)} puntos de euríbor)`) : ""}
+    ${tarjeta("Intereses totales", `${locES.format(",.0f")(simH.totalInt)} €`, `${e2(100 * simH.totalInt / capitalH)} % del capital`)}
+    ${tarjeta("Total a pagar", `${locES.format(",.0f")(simH.totalPag)} €`, `${plazoH * 12} cuotas`)}
+    ${tarjeta("TAE", `${e2(simH.tae)} %`, comisionH || gastosH ? "Incluye comisión y gastos" : "Sin comisiones ni gastos")}
+  </div>
+  ${eurUlt ? html`<p class="source">Euríbor a 12 meses más reciente: <b>${e2(eurUlt.valor)} %</b> (${eurUlt.periodo}), Eurostat (${datosEur.code}).</p>` : html`<p class="source">No se ha podido descargar el euríbor; ajusta su valor a mano.</p>`}`;
+}
+```
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  height: 300, marginLeft: 60, x: {label: "Año", tickFormat: d => String(d), interval: 1}, y: {label: "€ pagados en el año", grid: true, tickFormat: v => locES.format(",.0f")(v)},
+  color: {legend: true, domain: ["Intereses", "Amortización de capital"], range: ["#F29200", "#B5175F"]},
+  marks: [
+    Plot.barY(simH.porAnio.flatMap(d => [{anio: d.anio, tipo: "Intereses", v: d.intereses}, {anio: d.anio, tipo: "Amortización de capital", v: d.amortizacion}]),
+      {x: "anio", y: "v", fill: "tipo", title: d => `Año ${d.anio} · ${d.tipo}: ${locES.format(",.0f")(d.v)} €`}),
+    Plot.ruleY([0])
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+{
+  const e2 = (v) => locES.format(",.2f")(v);
+  const tabla = Inputs.table(simH.porAnio, {
+    columns: ["anio", "tipo", "cuota", "intereses", "amortizacion", "pendiente"],
+    header: {anio: "Año", tipo: "Tipo (%)", cuota: "Cuota mensual (€)", intereses: "Intereses del año (€)", amortizacion: "Capital amortizado (€)", pendiente: "Capital pendiente (€)"},
+    format: {anio: d => d, tipo: e2, cuota: e2, intereses: e2, amortizacion: e2, pendiente: e2}, rows: 12, layout: "auto"});
+  const desc = DOM.download(() => new Blob(["﻿" + d3.dsvFormat(";").format(simH.filas.map(f => ({mes: f.mes, tipo_anual: e2(f.tipo), cuota: e2(f.cuota), intereses: e2(f.intereses), amortizacion: e2(f.amortizacion), capital_pendiente: e2(f.pendiente)})))], {type: "text/csv;charset=utf-8"}), "cuadro_amortizacion.csv", "⬇ Cuadro de amortización mensual (CSV)");
+  return html`<h3>Cuadro de amortización (resumen anual)</h3>${tabla}${desc}`;
+}
+```
+
+```{ojs}
+//| echo: false
+datosEur.ok ? Plot.plot({height: 220, marginLeft: 45, x: {type: "time", label: null}, y: {label: "Euríbor a 12 meses (%)", grid: true},
+  marks: [Plot.ruleY([0], {stroke: "#999"}), Plot.line(datosEur.rows, {x: "fecha", y: "valor", stroke: "#B5175F", strokeWidth: 2}),
+    Plot.tip(datosEur.rows, Plot.pointerX({x: "fecha", y: "valor", title: d => `${d.periodo}: ${locES.format(",.3f")(d.valor)} %`}))]}) : html``
+```
+
+::: {.callout-note appearance="simple"}
+**Cómo se calcula.** Sistema francés (cuota constante): cuota = C · i / (1 − (1 + i)^−n), con i = tipo anual / 12 y n = número de meses. En la hipoteca variable la cuota se recalcula al cumplirse el primer año con el nuevo tipo y el capital pendiente. La **TAE** es el tipo anual efectivo que iguala lo que recibes (capital menos comisión y gastos) con el valor actual de todas las cuotas. Es una simulación orientativa: los bancos revisan el tipo cada 6 o 12 meses con el euríbor del mes anterior y pueden aplicar bonificaciones.
+:::

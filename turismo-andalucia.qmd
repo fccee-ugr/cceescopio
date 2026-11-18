@@ -1,0 +1,297 @@
+---
+title: "Turismo en Andalucía"
+subtitle: "Pernoctaciones, viajeros, estancia media y mercados nacional e internacional, comparados con España"
+toc: false
+---
+
+Panel del turismo en **alojamientos turísticos** (hoteles, apartamentos turísticos y campings) de Andalucía, con datos de Eurostat para las regiones europeas (NUTS 2). Para el **turismo de la provincia y la ciudad de Granada**, consulta las fuentes oficiales del final de la página.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+consultaT = async (code, extra, desde = 2010) => {
+  const intentos = [`&geo=ES61&geo=ES&unit=NR&nace_r2=I551-I553${extra}`, `&geo=ES61&geo=ES${extra}`];
+  for (const q of intentos) {
+    try { const r = await eurostat(code, `${q}&sinceTimePeriod=${desde}`); if (r.length) return r; } catch (e) {}
+  }
+  return [];
+}
+nochesT = consultaT("tour_occ_nin2", "&c_resid=DOM&c_resid=FOR&c_resid=TOTAL")
+llegadasT = consultaT("tour_occ_arn2", "&c_resid=TOTAL")
+mensualT = consultaT("tour_occ_nin2m", "&c_resid=DOM&c_resid=FOR&c_resid=TOTAL", 2019)
+regionesT = eurostat("tour_occ_nin2", "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553" + geosRegiones.map(g => `&geo=${g}`).join("") + "&sinceTimePeriod=" + (new Date().getFullYear() - 3)).catch(e => [])
+```
+
+```{ojs}
+//| echo: false
+{
+  const tot = nochesT.filter(r => r.c_resid === "TOTAL" || !r.c_resid);
+  if (!tot.length) return html`<div class="callout callout-warning"><p>No se han podido descargar los datos de turismo de Eurostat. Inténtalo más tarde.</p></div>`;
+  const ult = d3.max(tot.filter(r => r.geo === "ES61"), r => r.time);
+  const v = (geo, res, t = ult, src = nochesT) => src.find(r => r.geo === geo && (r.c_resid ?? "TOTAL") === res && r.time === t)?.value;
+  const ant = String(+ult - 1);
+  const an = v("ES61", "TOTAL"), es = v("ES", "TOTAL"), anAnt = v("ES61", "TOTAL", ant);
+  const lleg = llegadasT.find(r => r.geo === "ES61" && r.time === ult)?.value;
+  const fmt0 = (x) => x == null ? "–" : locES.format(",.0f")(x);
+  const k = (l, n, s) => html`<div class="kpi"><div class="kpi-l">${l}</div><div class="kpi-n">${n}</div><div class="kpi-s">${s}</div></div>`;
+  return html`<div class="kpi-grid">
+    ${k(`Pernoctaciones en ${ult}`, fmt0(an), anAnt ? `${an >= anAnt ? "▲" : "▼"} ${locES.format(",.1f")(100 * (an / anAnt - 1))} % respecto a ${ant}` : "")}
+    ${k("Peso en España", es ? `${locES.format(",.1f")(100 * an / es)} %` : "–", "de las pernoctaciones de España")}
+    ${k("Turismo internacional", v("ES61", "FOR") && an ? `${locES.format(",.1f")(100 * v("ES61", "FOR") / an)} %` : "–", "de las pernoctaciones son de no residentes")}
+    ${k("Estancia media", lleg && an ? `${locES.format(",.2f")(an / lleg)} noches` : "–", "pernoctaciones / viajeros")}
+  </div>`;
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  const filas = nochesT.filter(r => r.geo === "ES61" && ["DOM", "FOR"].includes(r.c_resid)).map(r => ({...r, fecha: fecha(r.time), mercado: r.c_resid === "DOM" ? "Residentes en España" : "No residentes"}));
+  if (!filas.length) return html``;
+  return Plot.plot({title: "Pernoctaciones en Andalucía según la residencia del viajero", height: 300, marginLeft: 70,
+    x: {type: "time", label: null}, y: {label: "Pernoctaciones", grid: true, tickFormat: v => locES.format(",.0f")(v / 1e6) + " M"},
+    color: {legend: true, range: ["#B5175F", "#F29200"]},
+    marks: [Plot.areaY(filas, {x: "fecha", y: "value", fill: "mercado", fillOpacity: 0.85}),
+      Plot.tip(filas, Plot.pointer({x: "fecha", y: "value", title: d => `${d.mercado} · ${d.time}: ${locES.format(",.0f")(d.value)}`}))]});
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  const filas = mensualT.filter(r => (r.c_resid ?? "TOTAL") === "TOTAL").map(r => ({...r, fecha: fecha(r.time)})).filter(r => r.fecha)
+    .map(r => ({...r, mes: r.fecha.getMonth(), anio: String(r.fecha.getFullYear()), territorio: r.geo === "ES61" ? "Andalucía" : "España"}));
+  if (!filas.length) return html`<p class="source">La serie mensual por regiones no está disponible ahora mismo en Eurostat.</p>`;
+  const anios = [...new Set(filas.map(r => r.anio))].sort().slice(-4);
+  const an = filas.filter(r => r.territorio === "Andalucía" && anios.includes(r.anio));
+  const meses = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  return Plot.plot({title: "Estacionalidad: pernoctaciones mensuales en Andalucía", height: 300, marginLeft: 60,
+    x: {label: null, tickFormat: m => meses[m], domain: d3.range(12)}, y: {label: "Pernoctaciones", grid: true, tickFormat: v => locES.format(",.1f")(v / 1e6) + " M"},
+    color: {legend: true, domain: anios, range: ["#ddd", "#c9a3b6", "#d65a92", "#B5175F"].slice(-anios.length)},
+    marks: [Plot.line(an, {x: "mes", y: "value", stroke: "anio", strokeWidth: 2.2}), Plot.dot(an, {x: "mes", y: "value", fill: "anio", r: 3,
+      title: d => `${meses[d.mes]} ${d.anio}: ${locES.format(",.0f")(d.value)}`})]});
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!regionesT.length) return html``;
+  const ult = d3.max(regionesT.filter(r => r.geo.length > 2), r => r.time);
+  const filas = regionesT.filter(r => r.time === ult && r.geo.length > 2).map(r => ({...r, ccaa: nombresGeo[r.geo] ?? r.geoLabel})).sort((a, b) => b.value - a.value);
+  return Plot.plot({title: `Pernoctaciones por comunidad autónoma (${ult})`, height: 26 * filas.length + 40, marginLeft: 170, marginRight: 70,
+    x: {label: null, grid: true, tickFormat: v => locES.format(",.0f")(v / 1e6) + " M"}, y: {label: null, domain: filas.map(d => d.ccaa)},
+    marks: [Plot.barX(filas, {x: "value", y: "ccaa", fill: d => d.geo === "ES61" ? "#B5175F" : "#D9C2CC"}),
+      Plot.text(filas, {x: "value", y: "ccaa", text: d => locES.format(",.1f")(d.value / 1e6) + " M", dx: 4, textAnchor: "start", fontSize: 11})]});
+}
+```
+
+<p class="source">Fuente: Eurostat, alojamientos turísticos por regiones NUTS 2 (tour_occ_nin2, tour_occ_arn2 y tour_occ_nin2m). Más indicadores en <a href="turismo.qmd">Turismo</a>.</p>
+
+### Granada y Andalucía: fuentes oficiales con más detalle
+
+- **INE, Encuestas de ocupación en alojamientos turísticos**: viajeros, pernoctaciones, grado de ocupación y precios por provincias y por puntos turísticos (incluidas Granada y otras ciudades andaluzas). Consultar en [INEbase](https://www.ine.es/).
+- **Instituto de Estadística y Cartografía de Andalucía (IECA)**: Encuesta de Coyuntura Turística de Andalucía, con gasto, origen y perfil del turista. [Web del IECA](https://www.juntadeandalucia.es/institutodeestadisticaycartografia).
+- **INE, Frontur y Egatur**: llegadas y gasto de los turistas internacionales por comunidad autónoma.

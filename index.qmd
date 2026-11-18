@@ -95,6 +95,13 @@ En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, G
 
 Los indicadores se **descargan en directo de la API de Eurostat** cada vez que se abre una página, de modo que muestran siempre la última publicación oficial. Cada gráfico permite elegir los territorios que se comparan (España, Andalucía, comunidades autónomas y países de la UE), consultar los valores pasando el ratón y **descargar los datos** en CSV.
 
+## Novedades
+
+- **Para estudiar y enseñar**: [ejercicios autocorregibles](ejercicios.qmd) con los últimos datos, [generador de gráficos para el TFG](graficos.qmd) con la cita en APA y [glosario de indicadores](glosario.qmd).
+- **Herramientas**: [simulador de hipotecas y préstamos](hipoteca.qmd) con el euríbor real, [conversor de unidades](conversor.qmd) y [comparador de comunidades autónomas](comparador.qmd).
+- **Paneles**: [mercados al día](mercados.qmd), [turismo en Andalucía](turismo-andalucia.qmd), [demografía empresarial](empresas.qmd) y [consumo y confianza](consumo.qmd).
+- **Al día**: [boletín de coyuntura](boletin.qmd), [datos recientes y calendario](calendario.qmd) y [bases de datos de la Biblioteca](biblioteca.qmd).
+
 ## Tu opinión cuenta
 
 ¿Te resulta útil CCEEscopio? Responde a la [**encuesta de satisfacción**](encuesta.qmd): es anónima y se contesta en menos de un minuto. También puedes abrirla desde el botón **⭐ ¿Nos valoras?** que aparece en todas las páginas.

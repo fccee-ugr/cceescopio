@@ -63,6 +63,12 @@ Tus respuestas nos sirven para saber qué recursos son más útiles y qué convi
   <label><input type="checkbox" name="recurso" value="buscador"> Buscador de indicadores</label>
   <label><input type="checkbox" name="recurso" value="docencia-grados"> Indicadores por grados y asignaturas</label>
   <label><input type="checkbox" name="recurso" value="rankings"> Rankings</label>
+  <label><input type="checkbox" name="recurso" value="ejercicios"> Ejercicios autocorregibles</label>
+  <label><input type="checkbox" name="recurso" value="graficos-tfg"> Generador de gráficos para el TFG</label>
+  <label><input type="checkbox" name="recurso" value="hipoteca"> Simulador de hipotecas y préstamos</label>
+  <label><input type="checkbox" name="recurso" value="paneles"> Paneles (mercados, turismo en Andalucía, empresas, consumo)</label>
+  <label><input type="checkbox" name="recurso" value="boletin"> Boletín de coyuntura</label>
+  <label><input type="checkbox" name="recurso" value="glosario"> Glosario de indicadores</label>
 </fieldset>
 
 <fieldset>

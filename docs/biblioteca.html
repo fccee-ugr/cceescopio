@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Bases de datos de la Biblioteca y fuentes abiertas – CCEEscopio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/brand/cceescopio_icono.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-59e71d268315c87941dd543aa188ae66.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+<meta property="og:title" content="Bases de datos de la Biblioteca y fuentes abiertas – CCEEscopio">
+<meta property="og:description" content="Dónde encontrar datos de empresas, mercados y países para el TFG, el TFM y la tesis">
+<meta property="og:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta property="og:site_name" content="CCEEscopio">
+<meta property="og:image:height" content="480">
+<meta property="og:image:width" content="1960">
+<meta name="twitter:title" content="Bases de datos de la Biblioteca y fuentes abiertas – CCEEscopio">
+<meta name="twitter:description" content="Dónde encontrar datos de empresas, mercados y países para el TFG, el TFM y la tesis">
+<meta name="twitter:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta name="twitter:image-height" content="480">
+<meta name="twitter:image-width" content="1960">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/brand/cceescopio_navbar.png" alt="Logo de CCEEscopio" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="./precios.html">
+ <span class="dropdown-text">Precios e inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empleo.html">
+ <span class="dropdown-text">Mercado laboral</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./actividad.html">
+ <span class="dropdown-text">Actividad económica y coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresa.html">
+ <span class="dropdown-text">Empresa, innovación y digitalización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./turismo.html">
+ <span class="dropdown-text">Turismo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./publico.html">
+ <span class="dropdown-text">Sector público y mercados financieros</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad.html">
+ <span class="dropdown-text">Desigualdad, pobreza y condiciones de vida</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sostenibilidad.html">
+ <span class="dropdown-text">Energía y sostenibilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./poblacion.html">
+ <span class="dropdown-text">Población, educación y salud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./internacional.html">
+ <span class="dropdown-text">Economía internacional y sector exterior</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">🔎 Buscador de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./andalucia.html">
+ <span class="dropdown-text">Andalucía y las regiones españolas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Paneles temáticos</li>
+        <li>
+    <a class="dropdown-item" href="./turismo-andalucia.html">
+ <span class="dropdown-text">Turismo en Andalucía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresas.html">
+ <span class="dropdown-text">Demografía empresarial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./consumo.html">
+ <span class="dropdown-text">Consumo y confianza</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mercados.html">
+ <span class="dropdown-text">Mercados al día</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-herramientas" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Herramientas</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-herramientas">    
+        <li>
+    <a class="dropdown-item" href="./calculadora.html">
+ <span class="dropdown-text">Calculadora de inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ficha.html">
+ <span class="dropdown-text">Ficha de país o región</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./relaciona.html">
+ <span class="dropdown-text">Relaciona dos indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./comparador.html">
+ <span class="dropdown-text">Comparador de comunidades autónomas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./conversor.html">
+ <span class="dropdown-text">Conversor de unidades económicas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./hipoteca.html">
+ <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./graficos.html">
+ <span class="dropdown-text">Generador de gráficos para el TFG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ejercicios.html">
+ <span class="dropdown-text">Ejercicios autocorregibles</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./boletin.html">
+ <span class="dropdown-text">Boletín de coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./calendario.html">
+ <span class="dropdown-text">Datos recientes y calendario</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">Buscador de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./rankings.html"> 
+<span class="menu-text">Rankings</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-datos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-datos">    
+        <li>
+    <a class="dropdown-item" href="./datos.html">
+ <span class="dropdown-text">Datos y fuentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./glosario.html">
+ <span class="dropdown-text">Glosario de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./biblioteca.html">
+ <span class="dropdown-text">Bases de datos de la Biblioteca y fuentes abiertas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-docencia" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Docencia</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-docencia">    
+        <li>
+    <a class="dropdown-item" href="./docencia.html">
+ <span class="dropdown-text">Docencia e investigación: cómo usar CCEEscopio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ejercicios.html">
+ <span class="dropdown-text">Ejercicios autocorregibles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./graficos.html">
+ <span class="dropdown-text">Generador de gráficos para el TFG</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Por grados y asignaturas</li>
+        <li>
+    <a class="dropdown-item" href="./docencia/gade.html">
+ <span class="dropdown-text">GADE · Administración y Dirección de Empresas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/geco.html">
+ <span class="dropdown-text">GECO · Economía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gfico.html">
+ <span class="dropdown-text">GFICO · Finanzas y Contabilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gmim.html">
+ <span class="dropdown-text">GMIM · Marketing e Investigación de Mercados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gtur.html">
+ <span class="dropdown-text">GTUR · Turismo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./contacto.html"> 
+<span class="menu-text">Contacto</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul class="collapse">
+  <li><a href="#bases-de-datos-suscritas-por-la-ugr" id="toc-bases-de-datos-suscritas-por-la-ugr" class="nav-link active" data-scroll-target="#bases-de-datos-suscritas-por-la-ugr">Bases de datos suscritas por la UGR</a></li>
+  <li><a href="#fuentes-abiertas-sin-suscripción" id="toc-fuentes-abiertas-sin-suscripción" class="nav-link" data-scroll-target="#fuentes-abiertas-sin-suscripción">Fuentes abiertas (sin suscripción)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Bases de datos de la Biblioteca y fuentes abiertas</h1>
+<p class="subtitle lead">Dónde encontrar datos de empresas, mercados y países para el TFG, el TFM y la tesis</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de modificación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">18 de noviembre de 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>La Universidad de Granada tiene suscritas varias bases de datos de economía y empresa. <strong>El acceso está restringido a la comunidad universitaria</strong>: entra desde la red de la UGR o con la <strong>VPN</strong> si estás fuera. La lista completa y actualizada está en el <a href="https://bibliotecaugr.libguides.com/az.php">listado de bases de datos de la Biblioteca</a>.</p>
+<section id="bases-de-datos-suscritas-por-la-ugr" class="level2">
+<h2 class="anchored" data-anchor-id="bases-de-datos-suscritas-por-la-ugr">Bases de datos suscritas por la UGR</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Base de datos</th>
+<th>Qué contiene</th>
+<th>Para qué sirve</th>
+<th>Grados</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Orbis</strong></td>
+<td>Información financiera y corporativa de empresas de todo el mundo</td>
+<td>Análisis de estados financieros, sectores y competidores; muestras de empresas para el TFG</td>
+<td>GADE, GFICO, GECO</td>
+</tr>
+<tr class="even">
+<td><strong>Orbis Intellectual Property</strong></td>
+<td>Empresas y sus patentes</td>
+<td>Innovación, tecnología y propiedad intelectual de las empresas</td>
+<td>GADE, GECO</td>
+</tr>
+<tr class="odd">
+<td><strong>Statista</strong></td>
+<td>Estadísticas e informes de mercados e industrias de muchas fuentes</td>
+<td>Datos de mercado, consumo y sectores para planes de marketing y de empresa</td>
+<td>GMIM, GTUR, GADE</td>
+</tr>
+<tr class="even">
+<td><strong>Datastream</strong></td>
+<td>Series financieras y macroeconómicas (cotizaciones, índices, tipos, bonos)</td>
+<td>Finanzas, mercados de capitales y econometría financiera</td>
+<td>GFICO, GECO</td>
+</tr>
+<tr class="odd">
+<td><strong>CHELEM</strong></td>
+<td>Comercio internacional y cuentas nacionales de todos los países</td>
+<td>Economía internacional, especialización comercial y competitividad</td>
+<td>GECO, GADE</td>
+</tr>
+<tr class="even">
+<td><strong>Harvard Business Publishing</strong></td>
+<td>Casos y artículos de gestión empresarial</td>
+<td>Casos prácticos de dirección, estrategia y marketing</td>
+<td>GADE, GMIM</td>
+</tr>
+<tr class="odd">
+<td><strong>Scopus y Web of Science</strong></td>
+<td>Artículos científicos con sus citas</td>
+<td>Revisión de la literatura y búsqueda de referencias</td>
+<td>Todos</td>
+</tr>
+<tr class="even">
+<td><strong>ProQuest y EBSCOhost</strong></td>
+<td>Revistas y bases de datos bibliográficas, incluidas las de economía y empresa</td>
+<td>Artículos a texto completo para el marco teórico</td>
+<td>Todos</td>
+</tr>
+</tbody>
+</table>
+<p>La Biblioteca organiza <strong>talleres de formación</strong> sobre estas bases de datos. Consulta las novedades en la <a href="https://biblioteca.ugr.es/">web de la Biblioteca</a> y en la página de la <a href="https://fccee.ugr.es/">Facultad</a>.</p>
+</section>
+<section id="fuentes-abiertas-sin-suscripción" class="level2">
+<h2 class="anchored" data-anchor-id="fuentes-abiertas-sin-suscripción">Fuentes abiertas (sin suscripción)</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Fuente</th>
+<th>Qué contiene</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://ec.europa.eu/eurostat">Eurostat</a></td>
+<td>Estadísticas oficiales de la UE: la fuente de casi todos los indicadores de CCEEscopio</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.ine.es/">INEbase</a></td>
+<td>Estadísticas oficiales de España, con detalle por comunidad, provincia y municipio</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.juntadeandalucia.es/institutodeestadisticaycartografia">IECA</a></td>
+<td>Estadísticas de Andalucía, provincias y municipios</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.bde.es/">Banco de España</a></td>
+<td>Tipos de interés, crédito, balanza de pagos y cuentas financieras</td>
+</tr>
+<tr class="odd">
+<td><a href="https://data.ecb.europa.eu/">Banco Central Europeo</a></td>
+<td>Política monetaria, tipos de cambio y mercados financieros de la zona euro</td>
+</tr>
+<tr class="even">
+<td><a href="https://data-explorer.oecd.org/">OCDE</a></td>
+<td>Comparaciones entre países desarrollados: productividad, educación, fiscalidad</td>
+</tr>
+<tr class="odd">
+<td><a href="https://data.worldbank.org/">Banco Mundial</a></td>
+<td>Indicadores del desarrollo de todos los países del mundo</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.imf.org/en/Data">FMI</a></td>
+<td>Previsiones y estadísticas macroeconómicas y financieras</td>
+</tr>
+<tr class="odd">
+<td><a href="https://economy-finance.ec.europa.eu/">AMECO (Comisión Europea)</a></td>
+<td>Base macroeconómica de la Comisión Europea, con series largas y previsiones</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Consejo para el TFG.</strong> Empieza por una fuente abierta (Eurostat, INE) para el contexto y usa Orbis o Statista solo para los datos de empresas o mercados que no encuentres en abierto. Cita siempre la base de datos y la fecha de consulta. El <a href="./graficos.html">Generador de gráficos</a> te da la cita en formato APA.</p>
+</div>
+</div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<!--
+  Contador de visitas y de uso (GoatCounter, gratuito y sin cookies).
+  1. Crea el sitio en https://www.goatcounter.com con el código cceescopio.
+  2. En Settings, activa "Allow adding visitor counts on your website".
+  Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+
+  Además de las visitas a cada página, se registran estos eventos de uso
+  (en el panel de GoatCounter aparecen marcados como "event"):
+    uso/<página>            primera vez que se cambia un control (indicador, territorio, año...) en una visita
+    indicador/<id>          cada indicador consultado en los paneles
+    enlace-directo/<id>     visitas que llegan con un enlace directo a un indicador (?i=)
+    descarga/<página>       descargas de datos en CSV
+    mapa/<página>           uso del mapa interactivo (pasar el ratón por él)
+    video/reproducir, video/completo
+    salida/<dominio>        clics en enlaces a otras webs (INE, Eurostat...)
+    encuesta/...            respuestas de la encuesta de satisfacción
+-->
+<script data-goatcounter="https://cceescopio.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<script>
+(function () {
+  const GC_CODE = "cceescopio";
+  const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const offset = (document.querySelector('meta[name="quarto:offset"]') || {}).content || "./";
+
+  // ---------- Contador de visitas en el pie ----------
+  function show(n) {
+    const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
+    if (!box || document.getElementById("visit-counter")) return;
+    const s = document.createElement("span");
+    s.id = "visit-counter";
+    s.className = "visit-counter";
+    s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
+    box.appendChild(s);
+  }
+  function showAll(n) {
+    show(n);
+    document.querySelectorAll(".visitas-ccee").forEach(el => {
+      const num = el.querySelector(".vc-num"); if (num) num.textContent = n;
+      el.hidden = false;
+    });
+  }
+  if (!local) {
+    fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.count) showAll(String(d.count).replace(/\s/g, ".")); })
+      .catch(() => {});
+  }
+
+  // ---------- Eventos de uso ----------
+  const pagina = (() => {
+    const p = location.pathname.replace(/\/$/, "/index.html").split("/").slice(-2);
+    const f = p[1].replace(/\.html$/, "") || "index";
+    return p[0] === "docencia" ? `docencia-${f}` : f;
+  })();
+  const slug = s => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+                     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const cola = [], hechos = new Set();
+  function enviar(path, title) {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title: title || path, event: true});
+    else cola.push([path, title]);
+  }
+  const espera = setInterval(() => {
+    if (window.goatcounter && window.goatcounter.count) { clearInterval(espera); cola.splice(0).forEach(a => enviar(...a)); }
+  }, 500);
+  setTimeout(() => clearInterval(espera), 20000);
+  // Una sola vez por visita a la página (salvo que se pida lo contrario)
+  window.cceeEvento = function (path, title, repetir) {
+    if (local) { console.log("[CCEEscopio evento]", path); return; }
+    if (!repetir && hechos.has(path)) return;
+    hechos.add(path); enviar(path, title);
+  };
+
+  const ini = new URLSearchParams(location.search).get("i");
+  if (ini) cceeEvento(`enlace-directo/${ini}`, `Enlace directo: ${ini}`);
+
+  // Controles de los paneles (selectores, años, cantidades...)
+  document.addEventListener("change", ev => {
+    const el = ev.target;
+    if (!el.closest || !el.closest("form, .cell-output, .observablehq")) return;
+    if (el.closest("#encuesta-ccee")) return;
+    cceeEvento(`uso/${pagina}`, `Uso de controles: ${pagina}`);
+    const form = el.closest("form");
+    const etiqueta = form && form.querySelector("label") ? form.querySelector("label").textContent.trim() : "";
+    if (etiqueta === "Indicador" && el.tagName === "SELECT" && el.selectedOptions[0]) {
+      const id = slug(el.selectedOptions[0].textContent);
+      cceeEvento(`indicador/${id}`, el.selectedOptions[0].textContent);
+    }
+  }, true);
+
+  // Descargas y enlaces externos
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest && ev.target.closest("a");
+    if (!a) return;
+    if (a.hasAttribute("download") || /\.csv(\?|$)/i.test(a.getAttribute("href") || "")) {
+      cceeEvento(`descarga/${pagina}`, `Descarga de datos: ${pagina}`, true);
+      return;
+    }
+    try {
+      const u = new URL(a.href, location.href);
+      if (/^https?:$/.test(u.protocol) && u.hostname !== location.hostname)
+        cceeEvento(`salida/${u.hostname.replace(/^www\./, "")}`, `Enlace externo: ${u.hostname}`, true);
+    } catch (e) {}
+  }, true);
+
+  // Mapa interactivo
+  document.addEventListener("pointerover", ev => {
+    if (ev.target.closest && ev.target.closest(".mapa-ccee")) cceeEvento(`mapa/${pagina}`, `Uso del mapa: ${pagina}`);
+  }, {passive: true});
+
+  // Vídeo de presentación
+  document.addEventListener("play", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/reproducir", "Vídeo: reproducción"); }, true);
+  document.addEventListener("ended", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/completo", "Vídeo: visto completo"); }, true);
+
+  // ---------- Botón flotante de la encuesta de satisfacción ----------
+  function botonEncuesta() {
+    if (pagina === "encuesta" || pagina === "uso") return;
+    const b = document.createElement("a");
+    b.href = offset + "encuesta.html";
+    b.className = "btn-encuesta";
+    b.innerHTML = "⭐ ¿Nos valoras?";
+    b.title = "Encuesta de satisfacción (menos de un minuto)";
+    b.addEventListener("click", () => cceeEvento(`encuesta/boton/${pagina}`, "Clic en el botón de la encuesta"));
+    document.body.appendChild(b);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", botonEncuesta);
+  else botonEncuesta();
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jfmunozrosas\.github\.io\/cceescopio");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>CCEEscopio · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="images/logos_ugr_fccee.jpg" alt="Universidad de Granada y Facultad de Ciencias Económicas y Empresariales" height="38"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

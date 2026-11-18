@@ -1,0 +1,916 @@
+---
+title: "Glosario de indicadores"
+subtitle: "Qué mide cada indicador, cómo se calcula, de dónde sale y los errores de interpretación más frecuentes"
+toc: true
+toc-depth: 2
+---
+
+```{=html}
+<div class="glos-buscar"><input id="glos-q" type="search" placeholder="Buscar en el glosario (por ejemplo: paro, Gini, euríbor)…" aria-label="Buscar en el glosario"><span id="glos-n"></span></div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const q = document.getElementById("glos-q"), n = document.getElementById("glos-n");
+  const items = [...document.querySelectorAll(".glosario-item")];
+  const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  q.addEventListener("input", () => {
+    const t = norm(q.value.trim()); let k = 0;
+    items.forEach(el => { const ok = !t || norm(el.textContent).includes(t); el.style.display = ok ? "" : "none"; if (ok) k++; });
+    n.textContent = t ? `${k} resultados` : "";
+  });
+});
+</script>
+```
+
+## Conceptos clave
+
+::: {.glosario-item}
+### Déficit y deuda pública (% del PIB) {#deficit-y-deuda-publica-del-pib}
+
+El déficit es la diferencia entre ingresos y gastos públicos de un año; la deuda es el saldo acumulado. Ambos se expresan en % del PIB para comparar países.
+
+<span class="glos-error">⚠ Error frecuente:</span> Confundir reducir el déficit con reducir la deuda.
+:::
+
+::: {.glosario-item}
+### Desestacionalización {#desestacionalizacion}
+
+Las series corregidas de estacionalidad y calendario (SA, SCA) eliminan los movimientos que se repiten cada año. Permiten comparar un periodo con el inmediatamente anterior.
+
+<span class="glos-error">⚠ Error frecuente:</span> Mezclar datos originales y desestacionalizados en el mismo análisis.
+:::
+
+::: {.glosario-item}
+### Euríbor {#euribor}
+
+Tipo de interés al que los bancos de la zona euro se prestan dinero entre sí. El euríbor a 12 meses es la referencia de la mayoría de las hipotecas variables en España. Ver el [Simulador de hipotecas](hipoteca.qmd).
+
+<span class="glos-error">⚠ Error frecuente:</span> Pensar que la cuota cambia en cuanto se mueve el euríbor: se revisa cada 6 o 12 meses.
+:::
+
+::: {.glosario-item}
+### Euros corrientes y euros constantes {#euros-corrientes-y-euros-constantes}
+
+Los euros corrientes son los de cada año; los constantes descuentan la inflación: valor real = valor nominal × IPC(año base) / IPC(año). Herramientas: [Conversor de unidades](conversor.qmd) y [Calculadora de inflación](calculadora.qmd).
+
+<span class="glos-error">⚠ Error frecuente:</span> Comparar salarios o precios de años distintos sin deflactar.
+:::
+
+::: {.glosario-item}
+### Índice de Gini {#indice-de-gini}
+
+Mide la desigualdad de la renta entre 0 (todos tienen lo mismo) y 100 (una persona lo tiene todo). Se calcula con la renta disponible equivalente de los hogares (EU-SILC).
+
+<span class="glos-error">⚠ Error frecuente:</span> Interpretar diferencias pequeñas sin tener en cuenta el error de muestreo de la encuesta (véase el proyecto GiniUs).
+:::
+
+::: {.glosario-item}
+### Inflación subyacente {#inflacion-subyacente}
+
+Variación de los precios sin los componentes más volátiles (energía y, según la definición, alimentos no elaborados). Indica la tendencia de fondo de la inflación.
+
+<span class="glos-error">⚠ Error frecuente:</span> Pensar que una inflación general baja por el abaratamiento de la energía significa que los precios ya no presionan.
+:::
+
+::: {.glosario-item}
+### IPC frente a IPCA {#ipc-frente-a-ipca}
+
+El IPC es el índice nacional del INE; el IPCA es el índice armonizado de la UE, con la misma metodología en todos los países. En España las tasas suelen ser muy parecidas, pero no iguales.
+
+<span class="glos-error">⚠ Error frecuente:</span> Actualizar un contrato de alquiler con el IPCA cuando la ley o el contrato hablan del IPC.
+:::
+
+::: {.glosario-item}
+### Números índice y cambio de base {#numeros-indice-y-cambio-de-base}
+
+Índice = 100 × valor / valor del año base. Para cambiar de base, se divide toda la serie entre el valor del nuevo año base y se multiplica por 100. Las tasas de variación no cambian.
+
+<span class="glos-error">⚠ Error frecuente:</span> Comparar niveles de dos índices con bases distintas.
+:::
+
+::: {.glosario-item}
+### Paridad de poder de compra (PPC) {#paridad-de-poder-de-compra-ppc}
+
+Tipo de conversión que iguala el poder adquisitivo entre países. El PIB per cápita en PPC compara niveles de vida eliminando las diferencias de precios.
+
+<span class="glos-error">⚠ Error frecuente:</span> Comparar rentas entre países en euros sin ajustar por el nivel de precios.
+:::
+
+::: {.glosario-item}
+### Pernoctaciones, viajeros y estancia media {#pernoctaciones-viajeros-y-estancia-media}
+
+Viajeros son las llegadas a los alojamientos; pernoctaciones, las noches. Estancia media = pernoctaciones / viajeros.
+
+<span class="glos-error">⚠ Error frecuente:</span> Comparar pernoctaciones entre regiones sin tener en cuenta su tamaño o su oferta de plazas.
+:::
+
+::: {.glosario-item}
+### Prima de riesgo {#prima-de-riesgo}
+
+Diferencia entre la rentabilidad del bono a 10 años de un país y la del bono alemán, normalmente en puntos básicos (1 punto porcentual = 100 puntos básicos). Ver [Mercados al día](mercados.qmd).
+
+<span class="glos-error">⚠ Error frecuente:</span> Expresarla en porcentaje en lugar de en puntos básicos.
+:::
+
+::: {.glosario-item}
+### Productividad y costes laborales unitarios {#productividad-y-costes-laborales-unitarios}
+
+Productividad = producción por hora trabajada. Coste laboral unitario = coste laboral por unidad producida: sube si los salarios crecen más que la productividad.
+
+<span class="glos-error">⚠ Error frecuente:</span> Comparar salarios entre países sin tener en cuenta la productividad.
+:::
+
+::: {.glosario-item}
+### Puntos porcentuales frente a porcentaje {#puntos-porcentuales-frente-a-porcentaje}
+
+Si la tasa de paro pasa del 12 % al 10 %, baja **2 puntos porcentuales**, pero baja un **16,7 %** (2/12). Los cambios de indicadores que ya son porcentajes se expresan en puntos.
+
+<span class="glos-error">⚠ Error frecuente:</span> Decir que el paro «ha bajado un 2 %» cuando ha bajado 2 puntos.
+:::
+
+::: {.glosario-item}
+### Ratio S80/S20 {#ratio-s80-s20}
+
+Cociente entre la renta del 20 % de la población con más ingresos y la del 20 % con menos. Un valor de 5 significa que el quintil superior recibe cinco veces más que el inferior.
+
+<span class="glos-error">⚠ Error frecuente:</span> Confundirlo con un porcentaje.
+:::
+
+::: {.glosario-item}
+### Saldo por cuenta corriente {#saldo-por-cuenta-corriente}
+
+Diferencia entre los ingresos y los pagos de un país con el exterior por bienes, servicios, rentas y transferencias. Un saldo positivo indica capacidad de financiación frente al resto del mundo.
+
+<span class="glos-error">⚠ Error frecuente:</span> Identificarlo solo con la balanza comercial de bienes.
+:::
+
+::: {.glosario-item}
+### Tasa AROPE {#tasa-arope}
+
+Personas en riesgo de pobreza o exclusión social: en riesgo de pobreza (renta < 60 % de la mediana), con carencia material y social severa o en hogares con baja intensidad en el empleo. Una persona se cuenta una sola vez.
+
+<span class="glos-error">⚠ Error frecuente:</span> Sumar las tres componentes, que se solapan.
+:::
+
+::: {.glosario-item}
+### Tasa de paro, de actividad y de empleo {#tasa-de-paro-de-actividad-y-de-empleo}
+
+Paro = parados / población activa. Actividad = activos / población en edad de trabajar. Empleo = ocupados / población en edad de trabajar. El paro puede bajar porque la gente deja de buscar empleo, no solo porque encuentre trabajo.
+
+<span class="glos-error">⚠ Error frecuente:</span> Usar el paro registrado en las oficinas de empleo como si fuera la tasa de paro de la EPA.
+:::
+
+::: {.glosario-item}
+### Tasa de variación interanual {#tasa-de-variacion-interanual}
+
+(Valor del periodo / valor del mismo periodo del año anterior − 1) × 100. Compara meses o trimestres iguales y evita el efecto de la estacionalidad.
+
+<span class="glos-error">⚠ Error frecuente:</span> Comparar un mes con el anterior en series con mucha estacionalidad (turismo, empleo).
+:::
+
+::: {.glosario-item}
+### Tasa media anual acumulativa {#tasa-media-anual-acumulativa}
+
+[(Valor final / valor inicial)^(1/n) − 1] × 100, con n años. Es el crecimiento anual constante que lleva del valor inicial al final.
+
+<span class="glos-error">⚠ Error frecuente:</span> Dividir el crecimiento total entre el número de años (media simple), que sobrestima el crecimiento.
+:::
+
+::: {.glosario-item}
+### Umbral y tasa de riesgo de pobreza {#umbral-y-tasa-de-riesgo-de-pobreza}
+
+El umbral es el 60 % de la renta mediana equivalente del país; la tasa es el porcentaje de personas por debajo. Es una medida relativa: si la renta de todos sube igual, la tasa no cambia.
+
+<span class="glos-error">⚠ Error frecuente:</span> Leerla como pobreza absoluta o comparar umbrales entre países sin ajustar por precios.
+:::
+
+
+## Los 91 indicadores de CCEEscopio
+
+::: {.glosario-item}
+### Abandono temprano de la educación y la formación {#ind-abandono-temprano-de-la-educacion-y-la-formacion}
+
+Jóvenes que solo tienen la educación secundaria obligatoria y no siguen estudiando; el objetivo europeo para 2030 es menos del 9 %.
+
+<span class="glos-meta">% de la población de 18-24 años · Anual · Área: [Población, educación y salud](poblacion.qmd) · Fuente: [Eurostat, sdg_04_10](https://ec.europa.eu/eurostat/databrowser/view/sdg_04_10/default/table?lang=es) · [Ver el gráfico](poblacion.qmd?i=abandono-temprano-de-la-educacion-y-la-formacion)</span>
+:::
+
+::: {.glosario-item}
+### Brecha salarial de género {#ind-brecha-salarial-de-genero}
+
+Diferencia entre la ganancia media por hora de hombres y mujeres, en porcentaje de la de los hombres.
+
+<span class="glos-meta">% del salario medio de los hombres · Anual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, sdg_05_20](https://ec.europa.eu/eurostat/databrowser/view/sdg_05_20/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=brecha-salarial-de-genero)</span>
+:::
+
+::: {.glosario-item}
+### Carencia material y social severa {#ind-carencia-material-y-social-severa}
+
+Personas que no pueden permitirse al menos 7 de 13 elementos básicos (pagar facturas, calefacción, imprevistos, etc.).
+
+<span class="glos-meta">% de la población · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_mdsd11](https://ec.europa.eu/eurostat/databrowser/view/ilc_mdsd11/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=carencia-material-y-social-severa)</span>
+:::
+
+::: {.glosario-item}
+### Confianza de la construcción {#ind-confianza-de-la-construccion}
+
+Indicador de confianza de las empresas de construcción (Comisión Europea).
+
+<span class="glos-meta">Saldo de respuestas (%) · Mensual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, ei_bsbu_m_r2](https://ec.europa.eu/eurostat/databrowser/view/ei_bsbu_m_r2/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=confianza-de-la-construccion)</span>
+:::
+
+::: {.glosario-item}
+### Confianza de la industria {#ind-confianza-de-la-industria}
+
+Indicador de confianza industrial: diferencia entre respuestas positivas y negativas sobre pedidos, existencias y producción esperada.
+
+<span class="glos-meta">Saldo de respuestas (%) · Mensual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, ei_bsin_m_r2](https://ec.europa.eu/eurostat/databrowser/view/ei_bsin_m_r2/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=confianza-de-la-industria)</span>
+:::
+
+::: {.glosario-item}
+### Confianza del comercio minorista {#ind-confianza-del-comercio-minorista}
+
+Indicador de confianza del comercio minorista (Comisión Europea).
+
+<span class="glos-meta">Saldo de respuestas (%) · Mensual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, ei_bsrt_m_r2](https://ec.europa.eu/eurostat/databrowser/view/ei_bsrt_m_r2/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=confianza-del-comercio-minorista)</span>
+:::
+
+::: {.glosario-item}
+### Confianza del consumidor {#ind-confianza-del-consumidor}
+
+Indicador de confianza de los consumidores de la Comisión Europea (expectativas sobre su situación financiera, la economía y las compras importantes).
+
+<span class="glos-meta">Saldo de respuestas (%) · Mensual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, ei_bsco_m](https://ec.europa.eu/eurostat/databrowser/view/ei_bsco_m/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=confianza-del-consumidor)</span>
+:::
+
+::: {.glosario-item}
+### Confianza en los servicios {#ind-confianza-en-los-servicios}
+
+Indicador de confianza de las empresas de servicios (Comisión Europea).
+
+<span class="glos-meta">Saldo de respuestas (%) · Mensual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, ei_bsse_m_r2](https://ec.europa.eu/eurostat/databrowser/view/ei_bsse_m_r2/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=confianza-en-los-servicios)</span>
+:::
+
+::: {.glosario-item}
+### Consumo de los hogares: crecimiento interanual {#ind-consumo-de-los-hogares-crecimiento-interanual}
+
+Gasto en consumo final de los hogares y las ISFLSH, en volumen.
+
+<span class="glos-meta">% de variación interanual · Trimestral · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, namq_10_gdp](https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=consumo-de-los-hogares-crecimiento-interanual)</span>
+:::
+
+::: {.glosario-item}
+### Coste laboral por hora {#ind-coste-laboral-por-hora}
+
+Coste laboral medio por hora trabajada (salarios y cotizaciones sociales) en la industria, la construcción y los servicios.
+
+<span class="glos-meta">€ por hora · Anual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, lc_lci_lev](https://ec.europa.eu/eurostat/databrowser/view/lc_lci_lev/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=coste-laboral-por-hora)</span>
+:::
+
+::: {.glosario-item}
+### Costes laborales unitarios nominales: variación anual {#ind-costes-laborales-unitarios-nominales-variacion-anual}
+
+Coste laboral por unidad producida; indicador de competitividad-precio.
+
+<span class="glos-meta">% de variación anual · Anual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, nama_10_lp_ulc](https://ec.europa.eu/eurostat/databrowser/view/nama_10_lp_ulc/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=costes-laborales-unitarios-nominales-variacion-anual)</span>
+:::
+
+::: {.glosario-item}
+### Cuota de energías renovables {#ind-cuota-de-energias-renovables}
+
+Porcentaje de energía procedente de fuentes renovables; el objetivo europeo para 2030 es el 42,5 %.
+
+<span class="glos-meta">% del consumo final bruto de energía · Anual · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, nrg_ind_ren](https://ec.europa.eu/eurostat/databrowser/view/nrg_ind_ren/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=cuota-de-energias-renovables)</span>
+:::
+
+::: {.glosario-item}
+### Declaraciones de quiebra de empresas (índice) {#ind-declaraciones-de-quiebra-de-empresas-indice}
+
+Evolución del número de empresas declaradas en quiebra o concurso.
+
+<span class="glos-meta">Índice (2021 = 100) · Trimestral · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, sts_rb_q](https://ec.europa.eu/eurostat/databrowser/view/sts_rb_q/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=declaraciones-de-quiebra-de-empresas-indice)</span>
+:::
+
+::: {.glosario-item}
+### Déficit (−) o superávit (+) público (% del PIB) {#ind-deficit-o-superavit-publico-del-pib}
+
+Capacidad o necesidad de financiación de las administraciones públicas.
+
+<span class="glos-meta">% del PIB · Anual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, gov_10dd_edpt1](https://ec.europa.eu/eurostat/databrowser/view/gov_10dd_edpt1/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=deficit-o-superavit-publico-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Dependencia energética {#ind-dependencia-energetica}
+
+Parte de la energía que un país necesita y que tiene que importar.
+
+<span class="glos-meta">% de las necesidades energéticas · Anual · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, nrg_ind_id](https://ec.europa.eu/eurostat/databrowser/view/nrg_ind_id/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=dependencia-energetica)</span>
+:::
+
+::: {.glosario-item}
+### Deuda pública (% del PIB) {#ind-deuda-publica-del-pib}
+
+Deuda bruta consolidada de las administraciones públicas (criterio de Maastricht).
+
+<span class="glos-meta">% del PIB · Anual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, gov_10dd_edpt1](https://ec.europa.eu/eurostat/databrowser/view/gov_10dd_edpt1/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=deuda-publica-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Emisiones de gases de efecto invernadero por habitante {#ind-emisiones-de-gases-de-efecto-invernadero-por-habitante}
+
+Emisiones netas de gases de efecto invernadero por habitante.
+
+<span class="glos-meta">Toneladas de CO₂ equivalente por habitante · Anual · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, sdg_13_10](https://ec.europa.eu/eurostat/databrowser/view/sdg_13_10/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=emisiones-de-gases-de-efecto-invernadero-por-habitante)</span>
+:::
+
+::: {.glosario-item}
+### Emisiones netas de gases de efecto invernadero {#ind-emisiones-netas-de-gases-de-efecto-invernadero}
+
+Emisiones netas de gases de efecto invernadero, incluido el uso del suelo, respecto a 1990.
+
+<span class="glos-meta">Índice (1990 = 100) · Anual · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, sdg_13_10](https://ec.europa.eu/eurostat/databrowser/view/sdg_13_10/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=emisiones-netas-de-gases-de-efecto-invernadero)</span>
+:::
+
+::: {.glosario-item}
+### Empresas que usan inteligencia artificial {#ind-empresas-que-usan-inteligencia-artificial}
+
+Porcentaje de empresas de 10 o más personas empleadas que usan al menos una tecnología de inteligencia artificial.
+
+<span class="glos-meta">% de empresas · Anual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, isoc_eb_ai](https://ec.europa.eu/eurostat/databrowser/view/isoc_eb_ai/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=empresas-que-usan-inteligencia-artificial)</span>
+:::
+
+::: {.glosario-item}
+### Esperanza de vida al nacer {#ind-esperanza-de-vida-al-nacer}
+
+Número medio de años que se espera que viva una persona recién nacida.
+
+<span class="glos-meta">Años · Anual · Área: [Población, educación y salud](poblacion.qmd) · Fuente: [Eurostat, demo_mlexpec](https://ec.europa.eu/eurostat/databrowser/view/demo_mlexpec/default/table?lang=es) · [Ver el gráfico](poblacion.qmd?i=esperanza-de-vida-al-nacer)</span>
+:::
+
+::: {.glosario-item}
+### Euríbor a 3 meses {#ind-euribor-a-3-meses}
+
+Tipo de interés del mercado interbancario de la zona euro a tres meses, referencia de muchos préstamos.
+
+<span class="glos-meta">% · Mensual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, irt_st_m](https://ec.europa.eu/eurostat/databrowser/view/irt_st_m/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=euribor-a-3-meses)</span>
+:::
+
+::: {.glosario-item}
+### Exportaciones: crecimiento interanual (trimestral) {#ind-exportaciones-crecimiento-interanual-trimestral}
+
+Exportaciones de bienes y servicios en volumen.
+
+<span class="glos-meta">% de variación interanual · Trimestral · Área: [Economía internacional y sector exterior](internacional.qmd) · Fuente: [Eurostat, namq_10_gdp](https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table?lang=es) · [Ver el gráfico](internacional.qmd?i=exportaciones-crecimiento-interanual-trimestral)</span>
+:::
+
+::: {.glosario-item}
+### Exportaciones de bienes y servicios (% del PIB) {#ind-exportaciones-de-bienes-y-servicios-del-pib}
+
+Peso de las exportaciones en el PIB: indicador del grado de apertura.
+
+<span class="glos-meta">% del PIB · Anual · Área: [Economía internacional y sector exterior](internacional.qmd) · Fuente: [Eurostat, nama_10_gdp](https://ec.europa.eu/eurostat/databrowser/view/nama_10_gdp/default/table?lang=es) · [Ver el gráfico](internacional.qmd?i=exportaciones-de-bienes-y-servicios-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Gasto en I+D (% del PIB) {#ind-gasto-en-i-d-del-pib}
+
+Gasto interno total en investigación y desarrollo; el objetivo europeo es el 3 % del PIB.
+
+<span class="glos-meta">% del PIB · Anual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, rd_e_gerdtot](https://ec.europa.eu/eurostat/databrowser/view/rd_e_gerdtot/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=gasto-en-i-d-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Gasto en I+D por regiones (% del PIB) {#ind-gasto-en-i-d-por-regiones-del-pib}
+
+Gasto interno en I+D de las comunidades autónomas.
+
+<span class="glos-meta">% del PIB · Anual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, rd_e_gerdreg](https://ec.europa.eu/eurostat/databrowser/view/rd_e_gerdreg/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=gasto-en-i-d-por-regiones-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Gasto público en educación (% del PIB) {#ind-gasto-publico-en-educacion-del-pib}
+
+Gasto de las administraciones públicas en educación (clasificación COFOG).
+
+<span class="glos-meta">% del PIB · Anual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, gov_10a_exp](https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=gasto-publico-en-educacion-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Gasto público en protección social (% del PIB) {#ind-gasto-publico-en-proteccion-social-del-pib}
+
+Gasto en pensiones, desempleo, familia, vivienda y exclusión social (clasificación COFOG).
+
+<span class="glos-meta">% del PIB · Anual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, gov_10a_exp](https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=gasto-publico-en-proteccion-social-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Gasto público en sanidad (% del PIB) {#ind-gasto-publico-en-sanidad-del-pib}
+
+Gasto de las administraciones públicas en sanidad (clasificación COFOG).
+
+<span class="glos-meta">% del PIB · Anual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, gov_10a_exp](https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=gasto-publico-en-sanidad-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Gasto público total (% del PIB) {#ind-gasto-publico-total-del-pib}
+
+Gasto total de las administraciones públicas.
+
+<span class="glos-meta">% del PIB · Anual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, gov_10a_exp](https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=gasto-publico-total-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Hogares con acceso a internet {#ind-hogares-con-acceso-a-internet}
+
+Porcentaje de hogares con acceso a internet en casa.
+
+<span class="glos-meta">% de hogares · Anual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, isoc_ci_in_h](https://ec.europa.eu/eurostat/databrowser/view/isoc_ci_in_h/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=hogares-con-acceso-a-internet)</span>
+:::
+
+::: {.glosario-item}
+### Importaciones de bienes y servicios (% del PIB) {#ind-importaciones-de-bienes-y-servicios-del-pib}
+
+Peso de las importaciones en el PIB.
+
+<span class="glos-meta">% del PIB · Anual · Área: [Economía internacional y sector exterior](internacional.qmd) · Fuente: [Eurostat, nama_10_gdp](https://ec.europa.eu/eurostat/databrowser/view/nama_10_gdp/default/table?lang=es) · [Ver el gráfico](internacional.qmd?i=importaciones-de-bienes-y-servicios-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Indicador de sentimiento económico {#ind-indicador-de-sentimiento-economico}
+
+Indicador compuesto de confianza de industria, servicios, consumidores, construcción y comercio (Comisión Europea).
+
+<span class="glos-meta">Índice (media a largo plazo = 100) · Mensual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, ei_bssi_m_r2](https://ec.europa.eu/eurostat/databrowser/view/ei_bssi_m_r2/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=indicador-de-sentimiento-economico)</span>
+:::
+
+::: {.glosario-item}
+### Índice de comercio minorista {#ind-indice-de-comercio-minorista}
+
+Volumen de ventas del comercio minorista, corregido de estacionalidad y calendario.
+
+<span class="glos-meta">Índice (2021 = 100) · Mensual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, sts_trtu_m](https://ec.europa.eu/eurostat/databrowser/view/sts_trtu_m/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=indice-de-comercio-minorista)</span>
+:::
+
+::: {.glosario-item}
+### Índice de Gini {#ind-indice-de-gini}
+
+Coeficiente de Gini de la renta disponible equivalente (0 = igualdad perfecta; 100 = máxima desigualdad).
+
+<span class="glos-meta">Coeficiente (0-100) · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_di12](https://ec.europa.eu/eurostat/databrowser/view/ilc_di12/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=indice-de-gini)</span>
+:::
+
+::: {.glosario-item}
+### Índice de producción industrial {#ind-indice-de-produccion-industrial}
+
+Volumen de producción de la industria (extractiva, manufacturera y energía), corregido de estacionalidad y calendario.
+
+<span class="glos-meta">Índice (2021 = 100) · Mensual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, sts_inpr_m](https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=indice-de-produccion-industrial)</span>
+:::
+
+::: {.glosario-item}
+### Ingresos fiscales (% del PIB) {#ind-ingresos-fiscales-del-pib}
+
+Impuestos y cotizaciones sociales recaudados por las administraciones públicas y las instituciones de la UE (presión fiscal).
+
+<span class="glos-meta">% del PIB · Anual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, gov_10a_taxag](https://ec.europa.eu/eurostat/databrowser/view/gov_10a_taxag/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=ingresos-fiscales-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Inversión (formación bruta de capital fijo): crecimiento interanual {#ind-inversion-formacion-bruta-de-capital-fijo-crecimiento-intera}
+
+Inversión en bienes de equipo, construcción y activos intangibles, en volumen.
+
+<span class="glos-meta">% de variación interanual · Trimestral · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, namq_10_gdp](https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera)</span>
+:::
+
+::: {.glosario-item}
+### IPCA: alimentos y bebidas no alcohólicas (tasa anual) {#ind-ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual}
+
+Tasa de variación anual de los precios de los alimentos y bebidas no alcohólicas.
+
+<span class="glos-meta">% · Mensual · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, prc_hicp_minr](https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual)</span>
+:::
+
+::: {.glosario-item}
+### IPCA: energía (tasa anual) {#ind-ipca-energia-tasa-anual}
+
+Tasa de variación anual de los precios de la energía (electricidad, gas, combustibles).
+
+<span class="glos-meta">% · Mensual · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, prc_hicp_minr](https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=ipca-energia-tasa-anual)</span>
+:::
+
+::: {.glosario-item}
+### IPCA: inflación general (tasa anual) {#ind-ipca-inflacion-general-tasa-anual}
+
+Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).
+
+<span class="glos-meta">% · Mensual · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, prc_hicp_minr](https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=ipca-inflacion-general-tasa-anual)</span>
+:::
+
+::: {.glosario-item}
+### IPCA: inflación subyacente (sin energía ni alimentos) {#ind-ipca-inflacion-subyacente-sin-energia-ni-alimentos}
+
+Tasa de variación anual del IPCA excluidos la energía y los alimentos: aproxima la tendencia de fondo de los precios.
+
+<span class="glos-meta">% · Mensual · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, prc_hicp_minr](https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos)</span>
+:::
+
+::: {.glosario-item}
+### IPCA: servicios (tasa anual) {#ind-ipca-servicios-tasa-anual}
+
+Tasa de variación anual de los precios de los servicios.
+
+<span class="glos-meta">% · Mensual · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, prc_hicp_minr](https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=ipca-servicios-tasa-anual)</span>
+:::
+
+::: {.glosario-item}
+### Jóvenes que ni estudian ni trabajan (15-29 años) {#ind-jovenes-que-ni-estudian-ni-trabajan-15-29-anos}
+
+Jóvenes que no tienen empleo ni siguen ningún tipo de educación o formación (indicador NEET).
+
+<span class="glos-meta">% de la población de 15-29 años · Anual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, sdg_08_20](https://ec.europa.eu/eurostat/databrowser/view/sdg_08_20/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=jovenes-que-ni-estudian-ni-trabajan-15-29-anos)</span>
+:::
+
+::: {.glosario-item}
+### Llegadas de viajeros a hoteles {#ind-llegadas-de-viajeros-a-hoteles}
+
+Viajeros que se alojan en hoteles y alojamientos similares.
+
+<span class="glos-meta">Número de viajeros · Mensual · Área: [Turismo](turismo.qmd) · Fuente: [Eurostat, tour_occ_arm](https://ec.europa.eu/eurostat/databrowser/view/tour_occ_arm/default/table?lang=es) · [Ver el gráfico](turismo.qmd?i=llegadas-de-viajeros-a-hoteles)</span>
+:::
+
+::: {.glosario-item}
+### Nivel de precios comparado (UE-27 = 100) {#ind-nivel-de-precios-comparado-ue-27-100}
+
+Nivel general de precios de cada país respecto a la media de la UE, a partir de las paridades de poder de compra.
+
+<span class="glos-meta">Índice (UE-27 = 100) · Anual · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, prc_ppp_ind](https://ec.europa.eu/eurostat/databrowser/view/prc_ppp_ind/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=nivel-de-precios-comparado-ue-27-100)</span>
+:::
+
+::: {.glosario-item}
+### Paro de larga duración {#ind-paro-de-larga-duracion}
+
+Personas que llevan 12 meses o más buscando empleo, en porcentaje de la población activa.
+
+<span class="glos-meta">% de la población activa · Anual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, une_ltu_a](https://ec.europa.eu/eurostat/databrowser/view/une_ltu_a/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=paro-de-larga-duracion)</span>
+:::
+
+::: {.glosario-item}
+### Pernoctaciones de no residentes en hoteles {#ind-pernoctaciones-de-no-residentes-en-hoteles}
+
+Noches pasadas por viajeros residentes en el extranjero.
+
+<span class="glos-meta">Número de pernoctaciones · Mensual · Área: [Turismo](turismo.qmd) · Fuente: [Eurostat, tour_occ_nim](https://ec.europa.eu/eurostat/databrowser/view/tour_occ_nim/default/table?lang=es) · [Ver el gráfico](turismo.qmd?i=pernoctaciones-de-no-residentes-en-hoteles)</span>
+:::
+
+::: {.glosario-item}
+### Pernoctaciones de residentes en hoteles {#ind-pernoctaciones-de-residentes-en-hoteles}
+
+Noches pasadas en hoteles por viajeros residentes en el propio país (turismo interno).
+
+<span class="glos-meta">Número de pernoctaciones · Mensual · Área: [Turismo](turismo.qmd) · Fuente: [Eurostat, tour_occ_nim](https://ec.europa.eu/eurostat/databrowser/view/tour_occ_nim/default/table?lang=es) · [Ver el gráfico](turismo.qmd?i=pernoctaciones-de-residentes-en-hoteles)</span>
+:::
+
+::: {.glosario-item}
+### Pernoctaciones en apartamentos y alojamientos de corta estancia {#ind-pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan}
+
+Noches pasadas en apartamentos turísticos, casas rurales y otros alojamientos de corta estancia.
+
+<span class="glos-meta">Número de pernoctaciones · Mensual · Área: [Turismo](turismo.qmd) · Fuente: [Eurostat, tour_occ_nim](https://ec.europa.eu/eurostat/databrowser/view/tour_occ_nim/default/table?lang=es) · [Ver el gráfico](turismo.qmd?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan)</span>
+:::
+
+::: {.glosario-item}
+### Pernoctaciones en hoteles {#ind-pernoctaciones-en-hoteles}
+
+Noches pasadas por residentes y no residentes en hoteles y alojamientos similares.
+
+<span class="glos-meta">Número de pernoctaciones · Mensual · Área: [Turismo](turismo.qmd) · Fuente: [Eurostat, tour_occ_nim](https://ec.europa.eu/eurostat/databrowser/view/tour_occ_nim/default/table?lang=es) · [Ver el gráfico](turismo.qmd?i=pernoctaciones-en-hoteles)</span>
+:::
+
+::: {.glosario-item}
+### Pernoctaciones por regiones {#ind-pernoctaciones-por-regiones}
+
+Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas.
+
+<span class="glos-meta">Número de pernoctaciones · Anual · Área: [Turismo](turismo.qmd) · Fuente: [Eurostat, tour_occ_nin2](https://ec.europa.eu/eurostat/databrowser/view/tour_occ_nin2/default/table?lang=es) · [Ver el gráfico](turismo.qmd?i=pernoctaciones-por-regiones)</span>
+:::
+
+::: {.glosario-item}
+### Personas que compran por internet {#ind-personas-que-compran-por-internet}
+
+Porcentaje de personas de 16 a 74 años que han comprado bienes o servicios por internet en los últimos 12 meses.
+
+<span class="glos-meta">% de personas · Anual · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, isoc_ec_ibuy](https://ec.europa.eu/eurostat/databrowser/view/isoc_ec_ibuy/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=personas-que-compran-por-internet)</span>
+:::
+
+::: {.glosario-item}
+### PIB: crecimiento interanual (trimestral) {#ind-pib-crecimiento-interanual-trimestral}
+
+Tasa de variación del PIB en volumen respecto al mismo trimestre del año anterior.
+
+<span class="glos-meta">% de variación interanual · Trimestral · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, namq_10_gdp](https://ec.europa.eu/eurostat/databrowser/view/namq_10_gdp/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=pib-crecimiento-interanual-trimestral)</span>
+:::
+
+::: {.glosario-item}
+### PIB per cápita en paridad de poder de compra {#ind-pib-per-capita-en-paridad-de-poder-de-compra}
+
+PIB por habitante en paridad de poder de compra; permite comparar el nivel de vida entre regiones y países.
+
+<span class="glos-meta">PPC por habitante · Anual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, nama_10r_2gdp](https://ec.europa.eu/eurostat/databrowser/view/nama_10r_2gdp/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=pib-per-capita-en-paridad-de-poder-de-compra)</span>
+:::
+
+::: {.glosario-item}
+### PIB per cápita en PPC (UE-27 = 100) {#ind-pib-per-capita-en-ppc-ue-27-100}
+
+Volumen del PIB por habitante en paridad de poder de compra respecto a la media de la UE.
+
+<span class="glos-meta">Índice (UE-27 = 100) · Anual · Área: [Economía internacional y sector exterior](internacional.qmd) · Fuente: [Eurostat, tec00114](https://ec.europa.eu/eurostat/databrowser/view/tec00114/default/table?lang=es) · [Ver el gráfico](internacional.qmd?i=pib-per-capita-en-ppc-ue-27-100)</span>
+:::
+
+::: {.glosario-item}
+### Población {#ind-poblacion}
+
+Población residente a 1 de enero.
+
+<span class="glos-meta">Personas · Anual · Área: [Población, educación y salud](poblacion.qmd) · Fuente: [Eurostat, demo_pjan](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=es) · [Ver el gráfico](poblacion.qmd?i=poblacion)</span>
+:::
+
+::: {.glosario-item}
+### Población de 25-34 años con estudios superiores {#ind-poblacion-de-25-34-anos-con-estudios-superiores}
+
+Personas jóvenes con educación terciaria; el objetivo europeo para 2030 es el 45 %.
+
+<span class="glos-meta">% de la población de 25-34 años · Anual · Área: [Población, educación y salud](poblacion.qmd) · Fuente: [Eurostat, sdg_04_20](https://ec.europa.eu/eurostat/databrowser/view/sdg_04_20/default/table?lang=es) · [Ver el gráfico](poblacion.qmd?i=poblacion-de-25-34-anos-con-estudios-superiores)</span>
+:::
+
+::: {.glosario-item}
+### Población por regiones {#ind-poblacion-por-regiones}
+
+Población residente a 1 de enero en las comunidades autónomas.
+
+<span class="glos-meta">Personas · Anual · Área: [Población, educación y salud](poblacion.qmd) · Fuente: [Eurostat, demo_r_d2jan](https://ec.europa.eu/eurostat/databrowser/view/demo_r_d2jan/default/table?lang=es) · [Ver el gráfico](poblacion.qmd?i=poblacion-por-regiones)</span>
+:::
+
+::: {.glosario-item}
+### Pobreza de las personas que trabajan {#ind-pobreza-de-las-personas-que-trabajan}
+
+Personas ocupadas de 18 a 64 años en riesgo de pobreza (pobreza laboral).
+
+<span class="glos-meta">% de las personas ocupadas · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_iw01](https://ec.europa.eu/eurostat/databrowser/view/ilc_iw01/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=pobreza-de-las-personas-que-trabajan)</span>
+:::
+
+::: {.glosario-item}
+### Posición de inversión internacional neta (% del PIB) {#ind-posicion-de-inversion-internacional-neta-del-pib}
+
+Activos financieros frente al exterior menos pasivos; los valores negativos indican endeudamiento exterior neto.
+
+<span class="glos-meta">% del PIB · Anual · Área: [Economía internacional y sector exterior](internacional.qmd) · Fuente: [Eurostat, tipsii10](https://ec.europa.eu/eurostat/databrowser/view/tipsii10/default/table?lang=es) · [Ver el gráfico](internacional.qmd?i=posicion-de-inversion-internacional-neta-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Precio de la electricidad para hogares {#ind-precio-de-la-electricidad-para-hogares}
+
+Precio medio de la electricidad para consumidores domésticos con un consumo anual de 2.500-5.000 kWh.
+
+<span class="glos-meta">€ por kWh (con impuestos) · Semestral · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, nrg_pc_204](https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_204/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=precio-de-la-electricidad-para-hogares)</span>
+:::
+
+::: {.glosario-item}
+### Precio de la vivienda (tasa anual) {#ind-precio-de-la-vivienda-tasa-anual}
+
+Tasa de variación anual del índice de precios de la vivienda (nueva y de segunda mano).
+
+<span class="glos-meta">% · Trimestral · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, prc_hpi_q](https://ec.europa.eu/eurostat/databrowser/view/prc_hpi_q/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=precio-de-la-vivienda-tasa-anual)</span>
+:::
+
+::: {.glosario-item}
+### Precio del gas natural para hogares {#ind-precio-del-gas-natural-para-hogares}
+
+Precio medio del gas natural para consumidores domésticos con consumo medio.
+
+<span class="glos-meta">€ por kWh (con impuestos) · Semestral · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, nrg_pc_202](https://ec.europa.eu/eurostat/databrowser/view/nrg_pc_202/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=precio-del-gas-natural-para-hogares)</span>
+:::
+
+::: {.glosario-item}
+### Precios industriales (tasa anual) {#ind-precios-industriales-tasa-anual}
+
+Variación anual de los precios de producción industrial en el mercado interior (anticipa la inflación de consumo).
+
+<span class="glos-meta">% · Mensual · Área: [Precios e inflación](precios.qmd) · Fuente: [Eurostat, sts_inppd_m](https://ec.europa.eu/eurostat/databrowser/view/sts_inppd_m/default/table?lang=es) · [Ver el gráfico](precios.qmd?i=precios-industriales-tasa-anual)</span>
+:::
+
+::: {.glosario-item}
+### Producción en la construcción {#ind-produccion-en-la-construccion}
+
+Volumen de producción del sector de la construcción, corregido de estacionalidad y calendario.
+
+<span class="glos-meta">Índice (2021 = 100) · Mensual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, sts_copr_m](https://ec.europa.eu/eurostat/databrowser/view/sts_copr_m/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=produccion-en-la-construccion)</span>
+:::
+
+::: {.glosario-item}
+### Productividad del trabajo por hora: variación anual {#ind-productividad-del-trabajo-por-hora-variacion-anual}
+
+Crecimiento del PIB real por hora trabajada.
+
+<span class="glos-meta">% de variación anual · Anual · Área: [Actividad económica y coyuntura](actividad.qmd) · Fuente: [Eurostat, nama_10_lp_ulc](https://ec.europa.eu/eurostat/databrowser/view/nama_10_lp_ulc/default/table?lang=es) · [Ver el gráfico](actividad.qmd?i=productividad-del-trabajo-por-hora-variacion-anual)</span>
+:::
+
+::: {.glosario-item}
+### Ratio S80/S20 {#ind-ratio-s80-s20}
+
+Renta del 20 % más rico dividida entre la del 20 % más pobre.
+
+<span class="glos-meta">Ratio · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_di11](https://ec.europa.eu/eurostat/databrowser/view/ilc_di11/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=ratio-s80-s20)</span>
+:::
+
+::: {.glosario-item}
+### Registros de nuevas empresas (índice) {#ind-registros-de-nuevas-empresas-indice}
+
+Evolución del número de empresas de nueva creación inscritas en los registros.
+
+<span class="glos-meta">Índice (2021 = 100) · Trimestral · Área: [Empresa, innovación y digitalización](empresa.qmd) · Fuente: [Eurostat, sts_rb_q](https://ec.europa.eu/eurostat/databrowser/view/sts_rb_q/default/table?lang=es) · [Ver el gráfico](empresa.qmd?i=registros-de-nuevas-empresas-indice)</span>
+:::
+
+::: {.glosario-item}
+### Renta mediana equivalente {#ind-renta-mediana-equivalente}
+
+Renta disponible equivalente mediana por persona.
+
+<span class="glos-meta">€ al año · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_di03](https://ec.europa.eu/eurostat/databrowser/view/ilc_di03/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=renta-mediana-equivalente)</span>
+:::
+
+::: {.glosario-item}
+### Rentabilidad del bono a 10 años {#ind-rentabilidad-del-bono-a-10-anos}
+
+Rendimiento de la deuda pública a largo plazo (criterio de convergencia de Maastricht).
+
+<span class="glos-meta">% · Mensual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, irt_lt_mcby_m](https://ec.europa.eu/eurostat/databrowser/view/irt_lt_mcby_m/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=rentabilidad-del-bono-a-10-anos)</span>
+:::
+
+::: {.glosario-item}
+### Residuos municipales por habitante {#ind-residuos-municipales-por-habitante}
+
+Residuos urbanos generados por habitante.
+
+<span class="glos-meta">kg por habitante · Anual · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, env_wasmun](https://ec.europa.eu/eurostat/databrowser/view/env_wasmun/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=residuos-municipales-por-habitante)</span>
+:::
+
+::: {.glosario-item}
+### Riesgo de pobreza o exclusión social (AROPE) {#ind-riesgo-de-pobreza-o-exclusion-social-arope}
+
+Personas en riesgo de pobreza, con carencia material y social severa o en hogares con baja intensidad de empleo.
+
+<span class="glos-meta">% de la población · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_peps01n](https://ec.europa.eu/eurostat/databrowser/view/ilc_peps01n/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=riesgo-de-pobreza-o-exclusion-social-arope)</span>
+:::
+
+::: {.glosario-item}
+### Riesgo de pobreza o exclusión social: menores de 18 años {#ind-riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos}
+
+Tasa AROPE infantil.
+
+<span class="glos-meta">% de la población menor de 18 años · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_peps01n](https://ec.europa.eu/eurostat/databrowser/view/ilc_peps01n/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos)</span>
+:::
+
+::: {.glosario-item}
+### Riesgo de pobreza o exclusión social por regiones {#ind-riesgo-de-pobreza-o-exclusion-social-por-regiones}
+
+Tasa AROPE de las comunidades autónomas.
+
+<span class="glos-meta">% de la población · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_peps11n](https://ec.europa.eu/eurostat/databrowser/view/ilc_peps11n/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=riesgo-de-pobreza-o-exclusion-social-por-regiones)</span>
+:::
+
+::: {.glosario-item}
+### Salario mínimo mensual {#ind-salario-minimo-mensual}
+
+Salario mínimo legal mensual bruto en los países que lo tienen establecido.
+
+<span class="glos-meta">€ al mes · Semestral · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, earn_mw_cur](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=salario-minimo-mensual)</span>
+:::
+
+::: {.glosario-item}
+### Saldo por cuenta corriente (% del PIB) {#ind-saldo-por-cuenta-corriente-del-pib}
+
+Diferencia entre ingresos y pagos por bienes, servicios y rentas con el resto del mundo.
+
+<span class="glos-meta">% del PIB · Trimestral · Área: [Economía internacional y sector exterior](internacional.qmd) · Fuente: [Eurostat, bop_gdp6_q](https://ec.europa.eu/eurostat/databrowser/view/bop_gdp6_q/default/table?lang=es) · [Ver el gráfico](internacional.qmd?i=saldo-por-cuenta-corriente-del-pib)</span>
+:::
+
+::: {.glosario-item}
+### Sobrecarga del coste de la vivienda {#ind-sobrecarga-del-coste-de-la-vivienda}
+
+Personas que destinan más del 40 % de su renta disponible a la vivienda.
+
+<span class="glos-meta">% de la población · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_lvho07a](https://ec.europa.eu/eurostat/databrowser/view/ilc_lvho07a/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=sobrecarga-del-coste-de-la-vivienda)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de dependencia de las personas mayores {#ind-tasa-de-dependencia-de-las-personas-mayores}
+
+Población de 65 años o más en relación con la población en edad de trabajar.
+
+<span class="glos-meta">% de la población de 15-64 años · Anual · Área: [Población, educación y salud](poblacion.qmd) · Fuente: [Eurostat, demo_pjanind](https://ec.europa.eu/eurostat/databrowser/view/demo_pjanind/default/table?lang=es) · [Ver el gráfico](poblacion.qmd?i=tasa-de-dependencia-de-las-personas-mayores)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de empleo (20-64 años) {#ind-tasa-de-empleo-20-64-anos}
+
+Porcentaje de personas ocupadas de 20 a 64 años; el objetivo de la UE para 2030 es el 78 %.
+
+<span class="glos-meta">% de la población · Anual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, lfsi_emp_a](https://ec.europa.eu/eurostat/databrowser/view/lfsi_emp_a/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=tasa-de-empleo-20-64-anos)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de empleo por regiones (20-64 años) {#ind-tasa-de-empleo-por-regiones-20-64-anos}
+
+Tasa de empleo de las comunidades autónomas.
+
+<span class="glos-meta">% de la población · Anual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, lfst_r_lfe2emprt](https://ec.europa.eu/eurostat/databrowser/view/lfst_r_lfe2emprt/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=tasa-de-empleo-por-regiones-20-64-anos)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de fecundidad {#ind-tasa-de-fecundidad}
+
+Número medio de hijos por mujer (indicador coyuntural de fecundidad).
+
+<span class="glos-meta">Hijos por mujer · Anual · Área: [Población, educación y salud](poblacion.qmd) · Fuente: [Eurostat, demo_find](https://ec.europa.eu/eurostat/databrowser/view/demo_find/default/table?lang=es) · [Ver el gráfico](poblacion.qmd?i=tasa-de-fecundidad)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de ocupación de las plazas hoteleras {#ind-tasa-de-ocupacion-de-las-plazas-hoteleras}
+
+Porcentaje de plazas en hoteles ocupadas en el mes.
+
+<span class="glos-meta">% de plazas ocupadas · Mensual · Área: [Turismo](turismo.qmd) · Fuente: [Eurostat, tour_occ_mnor](https://ec.europa.eu/eurostat/databrowser/view/tour_occ_mnor/default/table?lang=es) · [Ver el gráfico](turismo.qmd?i=tasa-de-ocupacion-de-las-plazas-hoteleras)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de paro {#ind-tasa-de-paro}
+
+Porcentaje de personas desempleadas sobre la población activa (15-74 años), desestacionalizado.
+
+<span class="glos-meta">% de la población activa · Mensual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, une_rt_m](https://ec.europa.eu/eurostat/databrowser/view/une_rt_m/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=tasa-de-paro)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de paro de las mujeres {#ind-tasa-de-paro-de-las-mujeres}
+
+Tasa de paro femenina, desestacionalizada.
+
+<span class="glos-meta">% de la población activa · Mensual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, une_rt_m](https://ec.europa.eu/eurostat/databrowser/view/une_rt_m/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=tasa-de-paro-de-las-mujeres)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de paro juvenil (menores de 25 años) {#ind-tasa-de-paro-juvenil-menores-de-25-anos}
+
+Paro de las personas menores de 25 años, desestacionalizado.
+
+<span class="glos-meta">% de la población activa · Mensual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, une_rt_m](https://ec.europa.eu/eurostat/databrowser/view/une_rt_m/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=tasa-de-paro-juvenil-menores-de-25-anos)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de paro por regiones {#ind-tasa-de-paro-por-regiones}
+
+Tasa de paro de las comunidades autónomas (NUTS 2).
+
+<span class="glos-meta">% de la población activa · Anual · Área: [Mercado laboral](empleo.qmd) · Fuente: [Eurostat, lfst_r_lfu3rt](https://ec.europa.eu/eurostat/databrowser/view/lfst_r_lfu3rt/default/table?lang=es) · [Ver el gráfico](empleo.qmd?i=tasa-de-paro-por-regiones)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de reciclaje de residuos municipales {#ind-tasa-de-reciclaje-de-residuos-municipales}
+
+Porcentaje de los residuos municipales que se recicla o composta.
+
+<span class="glos-meta">% de los residuos municipales · Anual · Área: [Energía y sostenibilidad](sostenibilidad.qmd) · Fuente: [Eurostat, sdg_11_60](https://ec.europa.eu/eurostat/databrowser/view/sdg_11_60/default/table?lang=es) · [Ver el gráfico](sostenibilidad.qmd?i=tasa-de-reciclaje-de-residuos-municipales)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de riesgo de pobreza (60 % de la mediana) {#ind-tasa-de-riesgo-de-pobreza-60-de-la-mediana}
+
+Personas con una renta disponible equivalente inferior al 60 % de la mediana nacional.
+
+<span class="glos-meta">% de la población · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_li02](https://ec.europa.eu/eurostat/databrowser/view/ilc_li02/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=tasa-de-riesgo-de-pobreza-60-de-la-mediana)</span>
+:::
+
+::: {.glosario-item}
+### Tasa de riesgo de pobreza por regiones {#ind-tasa-de-riesgo-de-pobreza-por-regiones}
+
+Tasa de riesgo de pobreza de las comunidades autónomas.
+
+<span class="glos-meta">% de la población · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_li41](https://ec.europa.eu/eurostat/databrowser/view/ilc_li41/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=tasa-de-riesgo-de-pobreza-por-regiones)</span>
+:::
+
+::: {.glosario-item}
+### Tipo de cambio euro / dólar {#ind-tipo-de-cambio-euro-dolar}
+
+Media mensual del tipo de cambio de referencia del euro frente al dólar estadounidense.
+
+<span class="glos-meta">Dólares por euro · Mensual · Área: [Sector público y mercados financieros](publico.qmd) · Fuente: [Eurostat, ert_bil_eur_m](https://ec.europa.eu/eurostat/databrowser/view/ert_bil_eur_m/default/table?lang=es) · [Ver el gráfico](publico.qmd?i=tipo-de-cambio-euro-dolar)</span>
+:::
+
+::: {.glosario-item}
+### Umbral de pobreza (hogar de una persona) {#ind-umbral-de-pobreza-hogar-de-una-persona}
+
+Renta anual por debajo de la cual una persona que vive sola se considera en riesgo de pobreza.
+
+<span class="glos-meta">€ al año · Anual · Área: [Desigualdad, pobreza y condiciones de vida](desigualdad.qmd) · Fuente: [Eurostat, ilc_li01](https://ec.europa.eu/eurostat/databrowser/view/ilc_li01/default/table?lang=es) · [Ver el gráfico](desigualdad.qmd?i=umbral-de-pobreza-hogar-de-una-persona)</span>
+:::
+

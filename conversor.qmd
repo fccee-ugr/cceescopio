@@ -1,0 +1,322 @@
+---
+title: "Conversor de unidades económicas"
+subtitle: "Euros corrientes y constantes, paridad de poder de compra, valores per cápita y cambio de base de números índice"
+toc: true
+---
+
+Cuatro conversiones que se usan constantemente en clase y en los TFG. Las tres primeras usan datos oficiales de Eurostat; la cuarta trabaja con la serie que pegues.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+leerSerie = (txt) => txt.split(/\n/).map(l => l.trim()).filter(Boolean).map(l => {
+  const p = l.includes(";") || l.includes("\t") ? l.split(/[;\t]/) : l.split(/\s+/);
+  const num = (x) => { x = (x ?? "").trim(); if (x.includes(",")) x = x.replace(/\./g, "").replace(",", "."); return parseFloat(x); };
+  return {periodo: (p[0] ?? "").trim(), valor: num(p[1])};
+}).filter(d => d.periodo && Number.isFinite(d.valor))
+e2 = (v) => locES.format(",.2f")(v)
+ipcConv = cargar({"nombre": "IPCA (índice, media anual)", "code": "prc_hicp_aind", "query": "&unit=INX_A_AVG&coicop=CP00", "unidad": "Índice", "frecuencia": "Anual", "desde": 1996, "alt": [{"code": "prc_hicp_aind", "query": "&unit=INX_A_AVG&coicop18=TOTAL"}]})
+pliConv = cargar({"id": "nivel-de-precios-comparado-ue-27-100", "nombre": "Nivel de precios comparado (UE-27 = 100)", "code": "prc_ppp_ind", "query": "&na_item=PLI_EU27_2020&ppp_cat=GDP", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Nivel general de precios de cada país respecto a la media de la UE, a partir de las paridades de poder de compra.", "desde": 2000, "pagina": "precios"})
+pobConv = cargar({"id": "poblacion", "nombre": "Población", "code": "demo_pjan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero.", "desde": 2000, "pagina": "poblacion"})
+```
+
+## 1. Euros corrientes a euros constantes
+
+Pega una serie en euros corrientes (una línea por año: `año;valor`) y elige el año base. Se divide cada valor por el IPCA de su año y se multiplica por el IPCA del año base.
+
+```{ojs}
+//| echo: false
+paisesIpc = ipcConv.ok ? [...new Set(ipcConv.rows.map(r => r.territorio))].sort((a, b) => a.localeCompare(b, "es")) : []
+viewof paisK = Inputs.select(paisesIpc, {label: "País", value: "España"})
+viewof serieK = Inputs.textarea({label: "Serie en euros corrientes", value: "2015;1000\n2018;1050\n2021;1100\n2024;1250", rows: 5})
+aniosK = ipcConv.ok ? ipcConv.rows.filter(r => r.territorio === paisK).map(r => r.periodo).sort() : []
+viewof baseK = Inputs.select(aniosK, {label: "Año base (euros de…)", value: aniosK[aniosK.length - 1]})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!ipcConv.ok) return html`<p class="pending">No se ha podido descargar el IPCA.</p>`;
+  const ipc = new Map(ipcConv.rows.filter(r => r.territorio === paisK).map(r => [r.periodo, r.valor]));
+  const filas = leerSerie(serieK).map(d => ({...d, ipc: ipc.get(d.periodo), real: ipc.get(d.periodo) ? d.valor * ipc.get(baseK) / ipc.get(d.periodo) : NaN}));
+  return Inputs.table(filas, {header: {periodo: "Año", valor: "Euros corrientes", ipc: "IPCA (media anual)", real: `Euros constantes de ${baseK}`},
+    format: {valor: e2, ipc: e2, real: v => Number.isFinite(v) ? e2(v) : "sin IPCA"}, layout: "auto"});
+}
+```
+
+## 2. Paridad de poder de compra entre países
+
+¿Cuánto dinero hace falta en otro país para comprar lo mismo? Se usa el **nivel de precios comparado** (UE-27 = 100): cantidad en B = cantidad en A × nivel de precios de B / nivel de precios de A.
+
+```{ojs}
+//| echo: false
+paisesPli = pliConv.ok ? [...new Set(pliConv.rows.map(r => r.territorio))].sort((a, b) => a.localeCompare(b, "es")) : []
+aniosPli = pliConv.ok ? [...new Set(pliConv.rows.map(r => r.periodo))].sort() : []
+viewof cantP = Inputs.number([0, 1e12], {label: "Cantidad (€)", value: 1000, step: 1})
+viewof paisA = Inputs.select(paisesPli, {label: "En el país", value: "España"})
+viewof paisB = Inputs.select(paisesPli, {label: "Equivale en", value: "Alemania"})
+viewof anioP = Inputs.select(aniosPli, {label: "Año", value: aniosPli[aniosPli.length - 1]})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!pliConv.ok) return html`<p class="pending">No se han podido descargar los niveles de precios.</p>`;
+  const v = (t) => pliConv.rows.find(r => r.territorio === t && r.periodo === anioP)?.valor;
+  const a = v(paisA), b = v(paisB);
+  if (!a || !b) return html`<p class="pending">No hay datos de ambos países en ${anioP}.</p>`;
+  return html`<div class="calc-result"><div class="calc-big">${e2(cantP)} € en ${paisA} compran lo mismo que <b>${e2(cantP * b / a)} €</b> en ${paisB}</div>
+  <div class="calc-small">Nivel de precios (UE-27 = 100) en ${anioP}: ${paisA} ${e2(a)} · ${paisB} ${e2(b)} · En estándares de poder de compra: ${e2(cantP / (a / 100))} EPC</div></div>`;
+}
+```
+
+## 3. Valores per cápita
+
+Divide una magnitud de un país entre su población a 1 de enero del año elegido.
+
+```{ojs}
+//| echo: false
+paisesPob = pobConv.ok ? [...new Set(pobConv.rows.map(r => r.territorio))].sort((a, b) => a.localeCompare(b, "es")) : []
+aniosPob = pobConv.ok ? [...new Set(pobConv.rows.map(r => r.periodo))].sort() : []
+viewof magC = Inputs.number([0, 1e15], {label: "Magnitud total", value: 1500, step: 1})
+viewof escC = Inputs.select(["euros", "miles de euros", "millones de euros", "miles de millones de euros"], {label: "Unidad", value: "miles de millones de euros"})
+viewof paisPC = Inputs.select(paisesPob, {label: "País", value: "España"})
+viewof anioPC = Inputs.select(aniosPob, {label: "Año", value: aniosPob[aniosPob.length - 1]})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!pobConv.ok) return html`<p class="pending">No se ha podido descargar la población.</p>`;
+  const pob = pobConv.rows.find(r => r.territorio === paisPC && r.periodo === anioPC)?.valor;
+  const mult = {"euros": 1, "miles de euros": 1e3, "millones de euros": 1e6, "miles de millones de euros": 1e9}[escC];
+  if (!pob) return html`<p class="pending">No hay población de ${paisPC} en ${anioPC}.</p>`;
+  return html`<div class="calc-result"><div class="calc-big"><b>${e2(magC * mult / pob)} € por habitante</b></div>
+  <div class="calc-small">${locES.format(",.0f")(magC * mult)} € / ${locES.format(",.0f")(pob)} habitantes (${paisPC}, 1 de enero de ${anioPC})</div></div>`;
+}
+```
+
+## 4. Cambio de base de un número índice
+
+Pega la serie del índice (`periodo;valor`) y elige el nuevo periodo base. Se muestran el índice en la nueva base y la tasa de variación respecto al periodo anterior, que no cambia con la base.
+
+```{ojs}
+//| echo: false
+viewof serieI = Inputs.textarea({label: "Serie del índice", value: "2019;104,2\n2020;103,9\n2021;107,1\n2022;115,9\n2023;120,0\n2024;123,4", rows: 6})
+periodosI = leerSerie(serieI).map(d => d.periodo)
+viewof baseI = Inputs.select(periodosI, {label: "Nuevo periodo base (= 100)", value: periodosI[0]})
+```
+
+```{ojs}
+//| echo: false
+{
+  const s = leerSerie(serieI), b = s.find(d => d.periodo === baseI)?.valor;
+  if (!b) return html``;
+  const filas = s.map((d, i) => ({periodo: d.periodo, original: d.valor, nueva: 100 * d.valor / b, tasa: i ? 100 * (d.valor / s[i - 1].valor - 1) : NaN}));
+  return html`${Inputs.table(filas, {header: {periodo: "Periodo", original: "Índice original", nueva: `Base ${baseI} = 100`, tasa: "Variación (%)"},
+    format: {original: e2, nueva: e2, tasa: v => Number.isFinite(v) ? e2(v) : ""}, layout: "auto"})}
+  ${DOM.download(() => new Blob(["﻿" + d3.dsvFormat(";").format(filas.map(f => ({periodo: f.periodo, original: e2(f.original), nueva_base: e2(f.nueva), variacion: Number.isFinite(f.tasa) ? e2(f.tasa) : ""})))], {type: "text/csv;charset=utf-8"}), "indice_nueva_base.csv", "⬇ Descargar (CSV)")}`;
+}
+```

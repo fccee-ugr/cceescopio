@@ -1,0 +1,40 @@
+---
+title: "Bases de datos de la Biblioteca y fuentes abiertas"
+subtitle: "Dónde encontrar datos de empresas, mercados y países para el TFG, el TFM y la tesis"
+toc: true
+---
+
+La Universidad de Granada tiene suscritas varias bases de datos de economía y empresa. **El acceso está restringido a la comunidad universitaria**: entra desde la red de la UGR o con la **VPN** si estás fuera. La lista completa y actualizada está en el [listado de bases de datos de la Biblioteca](https://bibliotecaugr.libguides.com/az.php).
+
+## Bases de datos suscritas por la UGR
+
+| Base de datos | Qué contiene | Para qué sirve | Grados |
+| --- | --- | --- | --- |
+| **Orbis** | Información financiera y corporativa de empresas de todo el mundo | Análisis de estados financieros, sectores y competidores; muestras de empresas para el TFG | GADE, GFICO, GECO |
+| **Orbis Intellectual Property** | Empresas y sus patentes | Innovación, tecnología y propiedad intelectual de las empresas | GADE, GECO |
+| **Statista** | Estadísticas e informes de mercados e industrias de muchas fuentes | Datos de mercado, consumo y sectores para planes de marketing y de empresa | GMIM, GTUR, GADE |
+| **Datastream** | Series financieras y macroeconómicas (cotizaciones, índices, tipos, bonos) | Finanzas, mercados de capitales y econometría financiera | GFICO, GECO |
+| **CHELEM** | Comercio internacional y cuentas nacionales de todos los países | Economía internacional, especialización comercial y competitividad | GECO, GADE |
+| **Harvard Business Publishing** | Casos y artículos de gestión empresarial | Casos prácticos de dirección, estrategia y marketing | GADE, GMIM |
+| **Scopus y Web of Science** | Artículos científicos con sus citas | Revisión de la literatura y búsqueda de referencias | Todos |
+| **ProQuest y EBSCOhost** | Revistas y bases de datos bibliográficas, incluidas las de economía y empresa | Artículos a texto completo para el marco teórico | Todos |
+
+La Biblioteca organiza **talleres de formación** sobre estas bases de datos. Consulta las novedades en la [web de la Biblioteca](https://biblioteca.ugr.es/) y en la página de la [Facultad](https://fccee.ugr.es/).
+
+## Fuentes abiertas (sin suscripción)
+
+| Fuente | Qué contiene |
+| --- | --- |
+| [Eurostat](https://ec.europa.eu/eurostat) | Estadísticas oficiales de la UE: la fuente de casi todos los indicadores de CCEEscopio |
+| [INEbase](https://www.ine.es/) | Estadísticas oficiales de España, con detalle por comunidad, provincia y municipio |
+| [IECA](https://www.juntadeandalucia.es/institutodeestadisticaycartografia) | Estadísticas de Andalucía, provincias y municipios |
+| [Banco de España](https://www.bde.es/) | Tipos de interés, crédito, balanza de pagos y cuentas financieras |
+| [Banco Central Europeo](https://data.ecb.europa.eu/) | Política monetaria, tipos de cambio y mercados financieros de la zona euro |
+| [OCDE](https://data-explorer.oecd.org/) | Comparaciones entre países desarrollados: productividad, educación, fiscalidad |
+| [Banco Mundial](https://data.worldbank.org/) | Indicadores del desarrollo de todos los países del mundo |
+| [FMI](https://www.imf.org/en/Data) | Previsiones y estadísticas macroeconómicas y financieras |
+| [AMECO (Comisión Europea)](https://economy-finance.ec.europa.eu/) | Base macroeconómica de la Comisión Europea, con series largas y previsiones |
+
+::: {.callout-tip appearance="simple"}
+**Consejo para el TFG.** Empieza por una fuente abierta (Eurostat, INE) para el contexto y usa Orbis o Statista solo para los datos de empresas o mercados que no encuentres en abierto. Cita siempre la base de datos y la fecha de consulta. El [Generador de gráficos](graficos.qmd) te da la cita en formato APA.
+:::

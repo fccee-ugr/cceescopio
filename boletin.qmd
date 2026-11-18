@@ -1,0 +1,257 @@
+---
+title: "Boletín de coyuntura"
+subtitle: "Los datos más relevantes del mes para España y Andalucía, listos para compartir"
+toc: false
+---
+
+El boletín se **genera automáticamente** con los últimos datos de Eurostat cada vez que abres la página. Copia el texto para redes sociales o la web de la Facultad, o guárdalo en PDF con el botón **Imprimir**.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+especBol = [{"id": "tasa-de-paro", "nombre": "Tasa de paro", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Porcentaje de personas desempleadas sobre la población activa (15-74 años), desestacionalizado.", "desde": 2005, "pagina": "empleo", "terr": "España"}, {"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "code": "lfst_r_lfu3rt", "query": "&sex=T&age=Y15-74&unit=PC", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Tasa de paro de las comunidades autónomas (NUTS 2).", "regional": true, "desde": 2005, "pagina": "empleo", "terr": "Andalucía"}, {"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOTAL", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP00"}, {"code": "prc_hicp_manr", "query": "&coicop=CP00"}], "pagina": "precios", "terr": "España"}, {"id": "pib-crecimiento-interanual-trimestral", "nombre": "PIB: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=B1GQ&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Tasa de variación del PIB en volumen respecto al mismo trimestre del año anterior.", "cero": true, "desde": 2005, "pagina": "actividad", "terr": "España"}, {"id": "euribor-a-3-meses", "nombre": "Euríbor a 3 meses", "code": "irt_st_m", "query": "&int_rt=IRT_M3&geo=EA", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tipo de interés del mercado interbancario de la zona euro a tres meses, referencia de muchos préstamos.", "sinGeo": true, "serie": "Euríbor a 3 meses", "cero": true, "desde": 2000, "pagina": "publico", "terr": null}, {"id": "confianza-del-consumidor", "nombre": "Confianza del consumidor", "code": "ei_bsco_m", "query": "&indic=BS-CSMCI&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de los consumidores de la Comisión Europea (expectativas sobre su situación financiera, la economía y las compras importantes).", "cero": true, "desde": 2008, "pagina": "actividad", "terr": "España"}, {"id": "pernoctaciones-por-regiones", "nombre": "Pernoctaciones por regiones", "code": "tour_occ_nin2", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553", "unidad": "Número de pernoctaciones", "frecuencia": "Anual", "descripcion": "Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas.", "regional": true, "desde": 2008, "pagina": "turismo", "terr": "Andalucía"}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "code": "ilc_peps11n", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa AROPE de las comunidades autónomas.", "regional": true, "desde": 2015, "pagina": "desigualdad", "terr": "Andalucía"}]
+cargasBol = Promise.all(especBol.map(s => cargar(s).catch(e => ({ok: false, rows: []}))))
+mesesBol = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+periodoTxt = (r, frec) => frec === "Mensual" ? `${mesesBol[r.fecha.getMonth()]} de ${r.fecha.getFullYear()}` : frec === "Trimestral" ? `el ${Math.floor(r.fecha.getMonth() / 3) + 1}.º trimestre de ${r.fecha.getFullYear()}` : `${r.fecha.getFullYear()}`
+datosBol = especBol.map((s, i) => {
+  const d = cargasBol[i]; if (!d.ok) return null;
+  const terr = s.terr ?? s.serie ?? s.nombre;
+  const serie = d.rows.filter(r => r.territorio === terr).sort((a, b) => a.fecha - b.fecha);
+  const u = serie[serie.length - 1]; if (!u) return null;
+  const hace = serie.filter(r => r.fecha.getFullYear() === u.fecha.getFullYear() - 1 && r.fecha.getMonth() === u.fecha.getMonth()).pop();
+  const pct = /%|saldo/i.test(s.unidad);
+  let cambio = "", frase = "";
+  if (hace) {
+    const dif = pct ? u.valor - hace.valor : 100 * (u.valor / hace.valor - 1);
+    const dir = Math.abs(dif) < 0.05 ? "igual que" : dif > 0 ? `${fmt(Math.abs(dif))} ${pct ? "puntos" : "%"} más que` : `${fmt(Math.abs(dif))} ${pct ? "puntos" : "%"} menos que`;
+    cambio = `${dif >= 0 ? "▲" : "▼"} ${fmt(Math.abs(dif))} ${pct ? "puntos" : "%"} en un año`;
+    frase = `${s.nombre.replace(/ por regiones/i, "")} (${terr}): ${fmt(u.valor)}${pct ? " %" : ""} en ${periodoTxt(u, s.frecuencia)}, ${dir} hace un año.`;
+  } else frase = `${s.nombre.replace(/ por regiones/i, "")} (${terr}): ${fmt(u.valor)}${pct ? " %" : ""} en ${periodoTxt(u, s.frecuencia)}.`;
+  return {s, terr, u, cambio, frase, serie: serie.slice(-24)};
+}).filter(Boolean)
+```
+
+```{ojs}
+//| echo: false
+{
+  const hoy = new Date();
+  const titulo = `Boletín de coyuntura CCEEscopio · ${mesesBol[hoy.getMonth()]} de ${hoy.getFullYear()}`;
+  const texto = `📊 ${titulo}\n\n` + datosBol.map(d => `• ${d.frase}`).join("\n") + `\n\nFuente: Eurostat. Más datos en CCEEscopio (FCCEE, Universidad de Granada).`;
+  const copiar = html`<button class="copiar">📋 Copiar el texto</button>`;
+  copiar.onclick = async () => { try { await navigator.clipboard.writeText(texto); copiar.textContent = "Copiado ✓"; } catch (e) { copiar.textContent = "Selecciona el texto y cópialo"; } };
+  const imprimir = html`<button class="copiar">🖨 Imprimir o guardar en PDF</button>`;
+  imprimir.onclick = () => window.print();
+  return html`<div class="boletin">
+    <h2 class="bol-t">${titulo}</h2>
+    <div class="kpi-grid">${datosBol.map(d => html`<div class="kpi"><div class="kpi-l"><a href="${d.s.pagina}.html?i=${d.s.id}">${d.s.nombre.replace(/ por regiones/i, "")}</a> · ${d.terr}</div>
+      <div class="kpi-n">${fmt(d.u.valor)}</div><div class="kpi-s">${d.s.unidad} · ${d.u.periodo}</div>
+      ${Plot.plot({height: 46, width: 210, margin: 2, axis: null, marks: [Plot.line(d.serie, {x: "fecha", y: "valor", stroke: "#B5175F", strokeWidth: 1.6})]})}
+      <div class="kpi-s">${d.cambio}</div></div>`)}</div>
+    <h3>Texto para compartir</h3>
+    <pre class="bol-texto">${texto}</pre>
+    <div class="graf-botones no-print">${copiar}${imprimir}</div>
+  </div>`;
+}
+```

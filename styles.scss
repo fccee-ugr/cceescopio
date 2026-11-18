@@ -154,3 +154,49 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 .mapa-tip b { color: $ccee-magenta; }
 .mapa-zona { cursor: pointer; }
 .mapa-hl { stroke: $ccee-dark !important; stroke-width: 2px !important; }
+
+/* ---------- Recursos nuevos (noviembre de 2026) ---------- */
+/* Ejercicios */
+.ej-card { border: 1px solid #eadde3; border-left: 6px solid $ccee-magenta; border-radius: 12px; padding: 1rem 1.2rem; background: #fff; margin: .8rem 0; }
+.ej-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; font-size: .85rem; }
+.ej-area { background: rgba($ccee-magenta, .1); color: $ccee-magenta; font-weight: 700; padding: .1rem .6rem; border-radius: 999px; }
+.ej-pts { color: $ccee-dark; font-weight: 600; }
+.ej-q { font-size: 1.12rem; margin: .7rem 0; }
+.ej-row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.ej-input { width: 11rem; padding: .4rem .6rem; border: 1px solid #ccc; border-radius: 8px; font-size: 1.05rem; }
+.ej-unidad { color: #666; }
+.ej-check, .ej-op, .copiar { background: $ccee-magenta; color: #fff; border: 0; border-radius: 999px; padding: .45rem 1.1rem; font-weight: 700; cursor: pointer; }
+.ej-opciones { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ej-op { background: #fff; color: $ccee-dark; border: 2px solid $ccee-magenta; }
+.ej-op:hover { background: rgba($ccee-magenta, .08); }
+.ej-fb { margin-top: .8rem; padding: .6rem .8rem; border-radius: 8px; }
+.ej-fb:empty { display: none; }
+.ej-ok { background: #e5f4e4; }
+.ej-mal { background: #fbebeb; }
+/* Gráficos y citas */
+.grafico-tfg { max-width: 100%; height: auto; border: 1px solid #eee; border-radius: 8px; }
+.graf-botones { display: flex; flex-wrap: wrap; gap: .6rem; margin: .8rem 0; }
+.graf-botones a, .graf-botones button { text-decoration: none; }
+.cita { display: flex; gap: .8rem; align-items: flex-start; background: #FBF7F3; border: 1px solid #E6DEDA; border-radius: 8px; padding: .6rem .8rem; margin-bottom: .6rem; font-size: .92rem; }
+.cita span { flex: 1; }
+.graf-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 1rem; }
+.graf-2 h4 { font-size: 1rem; margin: .6rem 0 .2rem; }
+/* Glosario */
+.glos-buscar { position: sticky; top: 60px; z-index: 5; background: #fff; padding: .5rem 0; display: flex; gap: .8rem; align-items: center; }
+.glos-buscar input { flex: 1; padding: .55rem .8rem; border: 1px solid #ccc; border-radius: 999px; font-size: 1rem; }
+.glosario-item { border-bottom: 1px solid #eee; padding: .3rem 0 .8rem; }
+.glosario-item h3 { font-size: 1.08rem; margin-top: .8rem; }
+.glos-error { color: #B00020; font-weight: 700; }
+.glos-meta { font-size: .85rem; color: #666; }
+/* Comparador y calendario */
+.cmp-tabla td.num { text-align: right; white-space: nowrap; }
+.per { font-size: .78rem; color: #888; }
+.cmp-res { display: inline-block; margin-right: 1.2rem; }
+.badge-nuevo { background: #4C9A2A; color: #fff; font-size: .72rem; font-weight: 700; padding: .05rem .45rem; border-radius: 999px; margin-left: .3rem; }
+/* Boletín */
+.bol-t { color: $ccee-magenta; }
+.bol-texto { white-space: pre-wrap; background: #FBF7F3; border: 1px solid #E6DEDA; border-radius: 8px; padding: .8rem 1rem; font-family: inherit; font-size: .95rem; }
+@media print {
+  .no-print, nav, .navbar, footer, .btn-encuesta, #quarto-sidebar, .quarto-title-meta { display: none !important; }
+  .kpi { break-inside: avoid; }
+}

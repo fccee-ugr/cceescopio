@@ -1,0 +1,293 @@
+---
+title: "Demografía empresarial"
+subtitle: "Creación, cierre y supervivencia de empresas en España y en Europa"
+toc: false
+---
+
+¿Se crean más empresas de las que cierran? ¿Cuántas sobreviven a los tres años? La primera parte muestra la **evolución trimestral** de los registros de nuevas empresas y de las quiebras. La segunda es un **explorador de la demografía empresarial** de Eurostat: elige el indicador, el sector y los países.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+especEmp = [{"id": "registros-de-nuevas-empresas-indice", "nombre": "Registros de nuevas empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=REG&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas de nueva creación inscritas en los registros.", "desde": 2015, "pagina": "empresa"}, {"id": "declaraciones-de-quiebra-de-empresas-indice", "nombre": "Declaraciones de quiebra de empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=BKRT&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas declaradas en quiebra o concurso.", "desde": 2015, "pagina": "empresa"}]
+cargasEmp = Promise.all(especEmp.map(s => cargar(s).catch(e => ({ok: false, rows: []}))))
+```
+
+```{ojs}
+//| echo: false
+html`<div class="graf-2">${especEmp.map((s, k) => {
+  const d = cargasEmp[k];
+  if (!d.ok) return html`<div><h4>${s.nombre}</h4><p class="pending">Sin datos ahora mismo.</p></div>`;
+  const filas = d.rows.filter(r => ["España", "UE-27", "Alemania", "Francia", "Italia"].includes(r.territorio));
+  return html`<div><h4><a href="${s.pagina}.html?i=${s.id}">${s.nombre}</a></h4>${Plot.plot({height: 260, width: 440, marginLeft: 45,
+    x: {type: "time", label: null}, y: {label: s.unidad, grid: true}, color: {legend: true, domain: ["España", "UE-27", "Alemania", "Francia", "Italia"], range: ["#B5175F", "#3C3C3B", "#bbb", "#d8b4c6", "#F29200"]},
+    marks: [Plot.ruleY([100], {stroke: "#ccc"}), Plot.line(filas, {x: "fecha", y: "valor", stroke: "territorio", strokeWidth: 1.6}),
+      Plot.tip(filas, Plot.pointer({x: "fecha", y: "valor", title: d => `${d.territorio} · ${d.periodo}: ${fmt(d.valor)}`}))]})}</div>`;
+})}</div>`
+```
+
+## Explorador de la demografía empresarial
+
+```{ojs}
+//| echo: false
+jsonstatEtiq = (js) => {
+  const ids = js.id, size = js.size, dims = js.dimension, out = [];
+  const codes = ids.map(d => { const idx = dims[d].category.index; return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]); });
+  const etiq = Object.fromEntries(ids.map(d => [d, dims[d].category.label || {}]));
+  const vals = js.value;
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) { let rem = i; const rec = {}; for (let d = ids.length - 1; d >= 0; d--) { rec[ids[d]] = codes[d][rem % size[d]]; rem = Math.floor(rem / size[d]); } rec.value = +vals[i]; out.push(rec); }
+  return {recs: out, etiq, ids};
+}
+bdEmp = {
+  const base = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/";
+  const geos = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"].map(g => `&geo=${g}`).join("");
+  const intentos = [["bd_size", "&size_emp=TOTAL"], ["bd_size", ""], ["bd_9bd_sz_cl_r2", "&sizeclas=TOTAL"], ["bd_9bd_sz_cl_r2", ""]];
+  for (const [code, q] of intentos) {
+    try {
+      const r = await fetch(`${base}${code}?format=JSON&lang=EN${geos}${q}&sinceTimePeriod=2012`);
+      if (!r.ok) continue;
+      const js = await r.json(); const d = jsonstatEtiq(js);
+      if (d.recs.length) return {...d, code};
+    } catch (e) {}
+  }
+  return null;
+}
+dimsEmp = bdEmp ? bdEmp.ids.filter(d => !["geo", "time", "freq"].includes(d) && new Set(bdEmp.recs.map(r => r[d])).size > 1) : []
+```
+
+```{ojs}
+//| echo: false
+viewof selEmp = {
+  if (!bdEmp) return Object.assign(html`<p class="pending">El explorador no puede descargar ahora los datos de Eurostat.</p>`, {value: {}});
+  const preferido = {indic_sbs: ["V97020", "V97030", "V97043"], indic_sb: ["V97020", "V97030", "V97043"], nace_r2: ["B-S_X_K642", "B-N_X_K642"]};
+  const controles = dimsEmp.map(d => {
+    const cods = [...new Set(bdEmp.recs.map(r => r[d]))];
+    const val = (preferido[d] ?? []).find(c => cods.includes(c)) ?? cods[0];
+    return [d, Inputs.select(cods, {label: d.startsWith("indic") ? "Indicador" : d === "nace_r2" ? "Sector (NACE)" : d, format: c => bdEmp.etiq[d][c] ?? c, value: val})];
+  });
+  const form = html`<div>${controles.map(([, c]) => c)}</div>`;
+  const leer = () => Object.fromEntries(controles.map(([d, c]) => [d, c.value]));
+  form.value = leer();
+  controles.forEach(([, c]) => c.addEventListener("input", () => { form.value = leer(); form.dispatchEvent(new Event("input", {bubbles: true})); }));
+  return form;
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!bdEmp) return html``;
+  const filas = bdEmp.recs.filter(r => dimsEmp.every(d => r[d] === selEmp[d])).map(r => ({...r, fecha: fecha(r.time), pais: nombresGeo[r.geo] ?? bdEmp.etiq.geo[r.geo]}));
+  const ind = Object.entries(selEmp).find(([d]) => d.startsWith("indic"));
+  const titulo = ind ? bdEmp.etiq[ind[0]][ind[1]] : "";
+  if (!filas.length) return html`<p class="pending">No hay datos para esa combinación.</p>`;
+  return html`<h4>${titulo}</h4>${Plot.plot({height: 320, marginLeft: 60, x: {type: "time", label: null}, y: {label: null, grid: true, tickFormat: v => fmt(v)},
+    color: {legend: true, range: ["#B5175F", "#3C3C3B", "#bbb", "#d8b4c6", "#F29200", "#2A7AB0"]},
+    marks: [Plot.line(filas, {x: "fecha", y: "value", stroke: "pais", strokeWidth: 2}), Plot.dot(filas, {x: "fecha", y: "value", fill: "pais", r: 2.5}),
+      Plot.tip(filas, Plot.pointer({x: "fecha", y: "value", title: d => `${d.pais} · ${d.time}: ${fmt(d.value)}`}))]})}
+  <p class="source">Fuente: Eurostat, demografía empresarial (${bdEmp.code}). Tasa de natalidad: empresas nacidas / empresas activas × 100. Tasa de mortalidad: empresas que cierran / activas × 100. Tasa de supervivencia a 3 años: empresas nacidas hace 3 años que siguen activas / nacidas ese año × 100.</p>`;
+}
+```

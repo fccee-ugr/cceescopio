@@ -30,7 +30,8 @@ ENC = {
              ("curiosidad", "Curiosidad")],
     "recurso": [("graficos", "Gráficos"), ("mapas", "Mapas"), ("descarga-csv", "Descarga CSV"), ("calculadora", "Calculadora"),
                 ("ficha", "Ficha"), ("relaciona", "Relaciona"), ("buscador", "Buscador"), ("docencia-grados", "Grados y asignaturas"),
-                ("rankings", "Rankings")],
+                ("rankings", "Rankings"), ("ejercicios", "Ejercicios"), ("graficos-tfg", "Gráficos TFG"),
+                ("hipoteca", "Hipotecas"), ("paneles", "Paneles"), ("boletin", "Boletín"), ("glosario", "Glosario")],
     "recomendaria": [("si", "Sí"), ("quiza", "Quizá"), ("no", "No")],
 }
 

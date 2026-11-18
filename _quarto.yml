@@ -10,7 +10,7 @@ project:
 website:
   title: "CCEEscopio"
   description: "CCEEscopio: observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. Observando la economía y la empresa."
-  site-url: "https://fccee-ugr.github.io/cceescopio"   # <- cambiar por la URL definitiva
+  site-url: "https://jfmunozrosas.github.io/cceescopio"   # <- cambiar por la URL definitiva
   favicon: images/brand/cceescopio_icono.png
   page-navigation: true
   open-graph: true
@@ -52,6 +52,16 @@ website:
             text: "🔎 Buscador de indicadores"
           - href: andalucia.qmd
             text: "Andalucía y las regiones españolas"
+          - text: "---"
+          - text: "Paneles temáticos"
+          - href: turismo-andalucia.qmd
+            text: "Turismo en Andalucía"
+          - href: empresas.qmd
+            text: "Demografía empresarial"
+          - href: consumo.qmd
+            text: "Consumo y confianza"
+          - href: mercados.qmd
+            text: "Mercados al día"
       - text: Herramientas
         menu:
           - href: calculadora.qmd
@@ -60,16 +70,42 @@ website:
             text: "Ficha de país o región"
           - href: relaciona.qmd
             text: "Relaciona dos indicadores"
+          - href: comparador.qmd
+            text: "Comparador de comunidades autónomas"
+          - href: conversor.qmd
+            text: "Conversor de unidades económicas"
+          - href: hipoteca.qmd
+            text: "Simulador de hipotecas y préstamos"
+          - text: "---"
+          - href: graficos.qmd
+            text: "Generador de gráficos para el TFG"
+          - href: ejercicios.qmd
+            text: "Ejercicios autocorregibles"
+          - text: "---"
+          - href: boletin.qmd
+            text: "Boletín de coyuntura"
+          - href: calendario.qmd
+            text: "Datos recientes y calendario"
           - href: indicadores.qmd
             text: "Buscador de indicadores"
       - href: rankings.qmd
         text: Rankings
-      - href: datos.qmd
-        text: "Datos y fuentes"
+      - text: "Datos"
+        menu:
+          - href: datos.qmd
+            text: "Datos y fuentes"
+          - href: glosario.qmd
+            text: "Glosario de indicadores"
+          - href: biblioteca.qmd
+            text: "Bases de datos de la Biblioteca y fuentes abiertas"
       - text: "Docencia"
         menu:
           - href: docencia.qmd
             text: "Docencia e investigación: cómo usar CCEEscopio"
+          - href: ejercicios.qmd
+            text: "Ejercicios autocorregibles"
+          - href: graficos.qmd
+            text: "Generador de gráficos para el TFG"
           - text: "---"
           - text: "Por grados y asignaturas"
           - href: docencia/gade.qmd
