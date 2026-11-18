@@ -1,0 +1,287 @@
+---
+title: "Ciclo económico y semáforo de coyuntura"
+subtitle: "¿En qué fase del ciclo está la economía? Reloj del ciclo con los últimos datos"
+toc: true
+---
+
+Cada indicador se compara con su **tendencia** (media móvil de los últimos 12 meses o 4 trimestres). Su posición respecto a la tendencia (por encima o por debajo) y su dirección (mejorando o empeorando) lo sitúan en una de las cuatro fases del **reloj del ciclo**:
+
+| | Mejorando | Empeorando |
+|---|---|---|
+| **Por encima de la tendencia** | 🟢 Expansión | 🟡 Desaceleración |
+| **Por debajo de la tendencia** | 🔵 Recuperación | 🔴 Recesión |
+
+En la tasa de paro se invierte el signo, porque más paro es peor.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+especC = [{"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOTAL", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP00"}, {"code": "prc_hicp_manr", "query": "&coicop=CP00"}], "pagina": "precios"}, {"id": "ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual", "nombre": "IPCA: alimentos y bebidas no alcohólicas (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP01", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de los alimentos y bebidas no alcohólicas.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP01"}, {"code": "prc_hicp_manr", "query": "&coicop=CP01"}], "pagina": "precios"}, {"id": "ipca-energia-tasa-anual", "nombre": "IPCA: energía (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=NRG", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de la energía (electricidad, gas, combustibles).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=NRG"}, {"code": "prc_hicp_manr", "query": "&coicop=NRG"}], "pagina": "precios"}, {"id": "ipca-servicios-tasa-anual", "nombre": "IPCA: servicios (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=SERV", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de los servicios.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=SERV"}, {"code": "prc_hicp_manr", "query": "&coicop=SERV"}], "pagina": "precios"}, {"id": "precio-de-la-vivienda-tasa-anual", "nombre": "Precio de la vivienda (tasa anual)", "code": "prc_hpi_q", "query": "&purchase=TOTAL&unit=RCH_A", "unidad": "%", "frecuencia": "Trimestral", "descripcion": "Tasa de variación anual del índice de precios de la vivienda (nueva y de segunda mano).", "cero": true, "desde": 2008, "pagina": "precios"}, {"id": "ipca-inflacion-subyacente-sin-energia-ni-alimentos", "nombre": "IPCA: inflación subyacente (sin energía ni alimentos)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del IPCA excluidos la energía y los alimentos: aproxima la tendencia de fondo de los precios.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD"}, {"code": "prc_hicp_manr", "query": "&coicop=TOT_X_NRG_FOOD"}], "pagina": "precios"}, {"id": "precios-industriales-tasa-anual", "nombre": "Precios industriales (tasa anual)", "code": "sts_inppd_m", "query": "&nace_r2=B-E36&s_adj=NSA&unit=PCH_SM", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Variación anual de los precios de producción industrial en el mercado interior (anticipa la inflación de consumo).", "cero": true, "desde": 2005, "pagina": "precios"}, {"id": "nivel-de-precios-comparado-ue-27-100", "nombre": "Nivel de precios comparado (UE-27 = 100)", "code": "prc_ppp_ind", "query": "&na_item=PLI_EU27_2020&ppp_cat=GDP", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Nivel general de precios de cada país respecto a la media de la UE, a partir de las paridades de poder de compra.", "desde": 2000, "pagina": "precios"}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Porcentaje de personas desempleadas sobre la población activa (15-74 años), desestacionalizado.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-paro-juvenil-menores-de-25-anos", "nombre": "Tasa de paro juvenil (menores de 25 años)", "code": "une_rt_m", "query": "&s_adj=SA&age=Y_LT25&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Paro de las personas menores de 25 años, desestacionalizado.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-paro-de-las-mujeres", "nombre": "Tasa de paro de las mujeres", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=F&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Tasa de paro femenina, desestacionalizada.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "code": "lfsi_emp_a", "query": "&indic_em=EMP_LFS&sex=T&age=Y20-64&unit=PC_POP", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Porcentaje de personas ocupadas de 20 a 64 años; el objetivo de la UE para 2030 es el 78 %.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "code": "lfst_r_lfu3rt", "query": "&sex=T&age=Y15-74&unit=PC", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Tasa de paro de las comunidades autónomas (NUTS 2).", "regional": true, "desde": 2005, "pagina": "empleo"}, {"id": "paro-de-larga-duracion", "nombre": "Paro de larga duración", "code": "une_ltu_a", "query": "&sex=T&age=Y15-74&indic_em=LTU&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Personas que llevan 12 meses o más buscando empleo, en porcentaje de la población activa.", "desde": 2005, "pagina": "empleo"}, {"id": "jovenes-que-ni-estudian-ni-trabajan-15-29-anos", "nombre": "Jóvenes que ni estudian ni trabajan (15-29 años)", "code": "sdg_08_20", "query": "&sex=T&age=Y15-29&unit=PC", "unidad": "% de la población de 15-29 años", "frecuencia": "Anual", "descripcion": "Jóvenes que no tienen empleo ni siguen ningún tipo de educación o formación (indicador NEET).", "desde": 2005, "pagina": "empleo"}, {"id": "coste-laboral-por-hora", "nombre": "Coste laboral por hora", "code": "lc_lci_lev", "query": "&nace_r2=B-S_X_O&lcstruct=D1_D4_MD5&unit=EUR", "unidad": "€ por hora", "frecuencia": "Anual", "descripcion": "Coste laboral medio por hora trabajada (salarios y cotizaciones sociales) en la industria, la construcción y los servicios.", "desde": 2008, "pagina": "empleo"}, {"id": "salario-minimo-mensual", "nombre": "Salario mínimo mensual", "code": "earn_mw_cur", "query": "&currency=EUR", "unidad": "€ al mes", "frecuencia": "Semestral", "descripcion": "Salario mínimo legal mensual bruto en los países que lo tienen establecido.", "desde": 2005, "pagina": "empleo"}, {"id": "brecha-salarial-de-genero", "nombre": "Brecha salarial de género", "code": "sdg_05_20", "query": "&unit=PC", "unidad": "% del salario medio de los hombres", "frecuencia": "Anual", "descripcion": "Diferencia entre la ganancia media por hora de hombres y mujeres, en porcentaje de la de los hombres.", "desde": 2007, "pagina": "empleo"}, {"id": "tasa-de-empleo-por-regiones-20-64-anos", "nombre": "Tasa de empleo por regiones (20-64 años)", "code": "lfst_r_lfe2emprt", "query": "&sex=T&age=Y20-64&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de empleo de las comunidades autónomas.", "regional": true, "desde": 2005, "pagina": "empleo"}, {"id": "pib-crecimiento-interanual-trimestral", "nombre": "PIB: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=B1GQ&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Tasa de variación del PIB en volumen respecto al mismo trimestre del año anterior.", "cero": true, "desde": 2005, "pagina": "actividad"}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "code": "nama_10r_2gdp", "query": "&unit=PPS_EU27_2020_HAB", "unidad": "PPC por habitante", "frecuencia": "Anual", "descripcion": "PIB por habitante en paridad de poder de compra; permite comparar el nivel de vida entre regiones y países.", "regional": true, "desde": 2005, "pagina": "actividad"}, {"id": "indice-de-produccion-industrial", "nombre": "Índice de producción industrial", "code": "sts_inpr_m", "query": "&nace_r2=B-D&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción de la industria (extractiva, manufacturera y energía), corregido de estacionalidad y calendario.", "desde": 2008, "pagina": "actividad"}, {"id": "indice-de-comercio-minorista", "nombre": "Índice de comercio minorista", "code": "sts_trtu_m", "query": "&nace_r2=G47&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de ventas del comercio minorista, corregido de estacionalidad y calendario.", "desde": 2008, "pagina": "actividad"}, {"id": "indicador-de-sentimiento-economico", "nombre": "Indicador de sentimiento económico", "code": "ei_bssi_m_r2", "query": "&indic=BS-ESI-I&s_adj=SA", "unidad": "Índice (media a largo plazo = 100)", "frecuencia": "Mensual", "descripcion": "Indicador compuesto de confianza de industria, servicios, consumidores, construcción y comercio (Comisión Europea).", "desde": 2008, "pagina": "actividad"}, {"id": "consumo-de-los-hogares-crecimiento-interanual", "nombre": "Consumo de los hogares: crecimiento interanual", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P31_S14_S15&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Gasto en consumo final de los hogares y las ISFLSH, en volumen.", "cero": true, "desde": 2005, "pagina": "actividad"}, {"id": "inversion-formacion-bruta-de-capital-fijo-crecimiento-intera", "nombre": "Inversión (formación bruta de capital fijo): crecimiento interanual", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P51G&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Inversión en bienes de equipo, construcción y activos intangibles, en volumen.", "cero": true, "desde": 2005, "pagina": "actividad"}, {"id": "produccion-en-la-construccion", "nombre": "Producción en la construcción", "code": "sts_copr_m", "query": "&nace_r2=F&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción del sector de la construcción, corregido de estacionalidad y calendario.", "desde": 2008, "pagina": "actividad"}, {"id": "productividad-del-trabajo-por-hora-variacion-anual", "nombre": "Productividad del trabajo por hora: variación anual", "code": "nama_10_lp_ulc", "query": "&na_item=RLPR_HW&unit=PCH_PRE", "unidad": "% de variación anual", "frecuencia": "Anual", "descripcion": "Crecimiento del PIB real por hora trabajada.", "cero": true, "desde": 2000, "pagina": "actividad"}, {"id": "costes-laborales-unitarios-nominales-variacion-anual", "nombre": "Costes laborales unitarios nominales: variación anual", "code": "nama_10_lp_ulc", "query": "&na_item=NULC_PER&unit=PCH_PRE", "unidad": "% de variación anual", "frecuencia": "Anual", "descripcion": "Coste laboral por unidad producida; indicador de competitividad-precio.", "cero": true, "desde": 2000, "pagina": "actividad"}, {"id": "confianza-del-consumidor", "nombre": "Confianza del consumidor", "code": "ei_bsco_m", "query": "&indic=BS-CSMCI&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de los consumidores de la Comisión Europea (expectativas sobre su situación financiera, la economía y las compras importantes).", "cero": true, "desde": 2008, "pagina": "actividad"}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "code": "rd_e_gerdtot", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno total en investigación y desarrollo; el objetivo europeo es el 3 % del PIB.", "desde": 2005, "pagina": "empresa"}, {"id": "gasto-en-i-d-por-regiones-del-pib", "nombre": "Gasto en I+D por regiones (% del PIB)", "code": "rd_e_gerdreg", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno en I+D de las comunidades autónomas.", "regional": true, "desde": 2005, "pagina": "empresa"}, {"id": "empresas-que-usan-inteligencia-artificial", "nombre": "Empresas que usan inteligencia artificial", "code": "isoc_eb_ai", "query": "&indic_is=E_AI_TANY&size_emp=GE10&unit=PC_ENT", "unidad": "% de empresas", "frecuencia": "Anual", "descripcion": "Porcentaje de empresas de 10 o más personas empleadas que usan al menos una tecnología de inteligencia artificial.", "desde": 2021, "pagina": "empresa"}, {"id": "personas-que-compran-por-internet", "nombre": "Personas que compran por internet", "code": "isoc_ec_ibuy", "query": "&indic_is=I_BUY3&ind_type=IND_TOTAL&unit=PC_IND", "unidad": "% de personas", "frecuencia": "Anual", "descripcion": "Porcentaje de personas de 16 a 74 años que han comprado bienes o servicios por internet en los últimos 12 meses.", "desde": 2008, "pagina": "empresa"}, {"id": "confianza-de-la-industria", "nombre": "Confianza de la industria", "code": "ei_bsin_m_r2", "query": "&indic=BS-ICI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza industrial: diferencia entre respuestas positivas y negativas sobre pedidos, existencias y producción esperada.", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "declaraciones-de-quiebra-de-empresas-indice", "nombre": "Declaraciones de quiebra de empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=BKRT&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas declaradas en quiebra o concurso.", "desde": 2015, "pagina": "empresa"}, {"id": "registros-de-nuevas-empresas-indice", "nombre": "Registros de nuevas empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=REG&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas de nueva creación inscritas en los registros.", "desde": 2015, "pagina": "empresa"}, {"id": "confianza-en-los-servicios", "nombre": "Confianza en los servicios", "code": "ei_bsse_m_r2", "query": "&indic=BS-SCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de las empresas de servicios (Comisión Europea).", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "confianza-del-comercio-minorista", "nombre": "Confianza del comercio minorista", "code": "ei_bsrt_m_r2", "query": "&indic=BS-RCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza del comercio minorista (Comisión Europea).", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "confianza-de-la-construccion", "nombre": "Confianza de la construcción", "code": "ei_bsbu_m_r2", "query": "&indic=BS-CCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de las empresas de construcción (Comisión Europea).", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "hogares-con-acceso-a-internet", "nombre": "Hogares con acceso a internet", "code": "isoc_ci_in_h", "query": "&unit=PC_HH&hhtyp=TOTAL&indic_is=H_IACC", "unidad": "% de hogares", "frecuencia": "Anual", "descripcion": "Porcentaje de hogares con acceso a internet en casa.", "desde": 2008, "pagina": "empresa"}, {"id": "pernoctaciones-en-hoteles", "nombre": "Pernoctaciones en hoteles", "code": "tour_occ_nim", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas por residentes y no residentes en hoteles y alojamientos similares.", "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-de-no-residentes-en-hoteles", "nombre": "Pernoctaciones de no residentes en hoteles", "code": "tour_occ_nim", "query": "&c_resid=FOR&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas por viajeros residentes en el extranjero.", "desde": 2008, "pagina": "turismo"}, {"id": "llegadas-de-viajeros-a-hoteles", "nombre": "Llegadas de viajeros a hoteles", "code": "tour_occ_arm", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551", "unidad": "Número de viajeros", "frecuencia": "Mensual", "descripcion": "Viajeros que se alojan en hoteles y alojamientos similares.", "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-por-regiones", "nombre": "Pernoctaciones por regiones", "code": "tour_occ_nin2", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553", "unidad": "Número de pernoctaciones", "frecuencia": "Anual", "descripcion": "Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas.", "regional": true, "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-de-residentes-en-hoteles", "nombre": "Pernoctaciones de residentes en hoteles", "code": "tour_occ_nim", "query": "&c_resid=NAT&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas en hoteles por viajeros residentes en el propio país (turismo interno).", "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan", "nombre": "Pernoctaciones en apartamentos y alojamientos de corta estancia", "code": "tour_occ_nim", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I552", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas en apartamentos turísticos, casas rurales y otros alojamientos de corta estancia.", "desde": 2008, "pagina": "turismo"}, {"id": "tasa-de-ocupacion-de-las-plazas-hoteleras", "nombre": "Tasa de ocupación de las plazas hoteleras", "code": "tour_occ_mnor", "query": "&accomunit=BEDPL&nace_r2=I551", "unidad": "% de plazas ocupadas", "frecuencia": "Mensual", "descripcion": "Porcentaje de plazas en hoteles ocupadas en el mes.", "desde": 2010, "pagina": "turismo"}, {"id": "deuda-publica-del-pib", "nombre": "Deuda pública (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=GD", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Deuda bruta consolidada de las administraciones públicas (criterio de Maastricht).", "desde": 2000, "pagina": "publico"}, {"id": "deficit-o-superavit-publico-del-pib", "nombre": "Déficit (−) o superávit (+) público (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=B9", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Capacidad o necesidad de financiación de las administraciones públicas.", "cero": true, "desde": 2000, "pagina": "publico"}, {"id": "rentabilidad-del-bono-a-10-anos", "nombre": "Rentabilidad del bono a 10 años", "code": "irt_lt_mcby_m", "query": "&int_rt=MCBY", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Rendimiento de la deuda pública a largo plazo (criterio de convergencia de Maastricht).", "desde": 2000, "pagina": "publico"}, {"id": "tipo-de-cambio-euro-dolar", "nombre": "Tipo de cambio euro / dólar", "code": "ert_bil_eur_m", "query": "&currency=USD&statinfo=AVG", "unidad": "Dólares por euro", "frecuencia": "Mensual", "descripcion": "Media mensual del tipo de cambio de referencia del euro frente al dólar estadounidense.", "sinGeo": true, "serie": "Euro / dólar", "desde": 2000, "pagina": "publico"}, {"id": "ingresos-fiscales-del-pib", "nombre": "Ingresos fiscales (% del PIB)", "code": "gov_10a_taxag", "query": "&unit=PC_GDP&sector=S13_S212&na_item=D2_D5_D91_D61_M_D995", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Impuestos y cotizaciones sociales recaudados por las administraciones públicas y las instituciones de la UE (presión fiscal).", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-total-del-pib", "nombre": "Gasto público total (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=TOTAL", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto total de las administraciones públicas.", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-en-sanidad-del-pib", "nombre": "Gasto público en sanidad (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF07", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto de las administraciones públicas en sanidad (clasificación COFOG).", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-en-educacion-del-pib", "nombre": "Gasto público en educación (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF09", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto de las administraciones públicas en educación (clasificación COFOG).", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-en-proteccion-social-del-pib", "nombre": "Gasto público en protección social (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF10", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto en pensiones, desempleo, familia, vivienda y exclusión social (clasificación COFOG).", "desde": 2000, "pagina": "publico"}, {"id": "euribor-a-3-meses", "nombre": "Euríbor a 3 meses", "code": "irt_st_m", "query": "&int_rt=IRT_M3&geo=EA", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tipo de interés del mercado interbancario de la zona euro a tres meses, referencia de muchos préstamos.", "sinGeo": true, "serie": "Euríbor a 3 meses", "cero": true, "desde": 2000, "pagina": "publico"}, {"id": "indice-de-gini", "nombre": "Índice de Gini", "code": "ilc_di12", "query": "", "unidad": "Coeficiente (0-100)", "frecuencia": "Anual", "descripcion": "Coeficiente de Gini de la renta disponible equivalente (0 = igualdad perfecta; 100 = máxima desigualdad).", "desde": 2005, "pagina": "desigualdad"}, {"id": "ratio-s80-s20", "nombre": "Ratio S80/S20", "code": "ilc_di11", "query": "", "unidad": "Ratio", "frecuencia": "Anual", "descripcion": "Renta del 20 % más rico dividida entre la del 20 % más pobre.", "desde": 2005, "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "code": "ilc_peps01n", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas en riesgo de pobreza, con carencia material y social severa o en hogares con baja intensidad de empleo.", "desde": 2015, "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "code": "ilc_peps11n", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa AROPE de las comunidades autónomas.", "regional": true, "desde": 2015, "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-60-de-la-mediana", "nombre": "Tasa de riesgo de pobreza (60 % de la mediana)", "code": "ilc_li02", "query": "&indic_il=LI_R_MD60&age=TOTAL&sex=T&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas con una renta disponible equivalente inferior al 60 % de la mediana nacional.", "desde": 2005, "pagina": "desigualdad"}, {"id": "umbral-de-pobreza-hogar-de-una-persona", "nombre": "Umbral de pobreza (hogar de una persona)", "code": "ilc_li01", "query": "&hhtyp=A1&indic_il=LI_C_MD60&currency=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta anual por debajo de la cual una persona que vive sola se considera en riesgo de pobreza.", "desde": 2005, "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos", "nombre": "Riesgo de pobreza o exclusión social: menores de 18 años", "code": "ilc_peps01n", "query": "&unit=PC&age=Y_LT18&sex=T", "unidad": "% de la población menor de 18 años", "frecuencia": "Anual", "descripcion": "Tasa AROPE infantil.", "desde": 2015, "pagina": "desigualdad"}, {"id": "carencia-material-y-social-severa", "nombre": "Carencia material y social severa", "code": "ilc_mdsd11", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas que no pueden permitirse al menos 7 de 13 elementos básicos (pagar facturas, calefacción, imprevistos, etc.).", "desde": 2015, "pagina": "desigualdad"}, {"id": "pobreza-de-las-personas-que-trabajan", "nombre": "Pobreza de las personas que trabajan", "code": "ilc_iw01", "query": "&wstatus=EMP&sex=T&age=Y18-64&unit=PC", "unidad": "% de las personas ocupadas", "frecuencia": "Anual", "descripcion": "Personas ocupadas de 18 a 64 años en riesgo de pobreza (pobreza laboral).", "desde": 2005, "pagina": "desigualdad"}, {"id": "sobrecarga-del-coste-de-la-vivienda", "nombre": "Sobrecarga del coste de la vivienda", "code": "ilc_lvho07a", "query": "&age=TOTAL&sex=T&incgrp=TOTAL&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas que destinan más del 40 % de su renta disponible a la vivienda.", "desde": 2005, "pagina": "desigualdad"}, {"id": "renta-mediana-equivalente", "nombre": "Renta mediana equivalente", "code": "ilc_di03", "query": "&age=TOTAL&sex=T&indic_il=MED_E&unit=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta disponible equivalente mediana por persona.", "desde": 2005, "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-por-regiones", "nombre": "Tasa de riesgo de pobreza por regiones", "code": "ilc_li41", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de riesgo de pobreza de las comunidades autónomas.", "regional": true, "desde": 2008, "pagina": "desigualdad"}, {"id": "cuota-de-energias-renovables", "nombre": "Cuota de energías renovables", "code": "nrg_ind_ren", "query": "&nrg_bal=REN&unit=PC", "unidad": "% del consumo final bruto de energía", "frecuencia": "Anual", "descripcion": "Porcentaje de energía procedente de fuentes renovables; el objetivo europeo para 2030 es el 42,5 %.", "desde": 2005, "pagina": "sostenibilidad"}, {"id": "precio-de-la-electricidad-para-hogares", "nombre": "Precio de la electricidad para hogares", "code": "nrg_pc_204", "query": "&product=6000&nrg_cons=KWH2500-4999&unit=KWH&tax=I_TAX&currency=EUR", "unidad": "€ por kWh (con impuestos)", "frecuencia": "Semestral", "descripcion": "Precio medio de la electricidad para consumidores domésticos con un consumo anual de 2.500-5.000 kWh.", "desde": 2008, "pagina": "sostenibilidad"}, {"id": "emisiones-netas-de-gases-de-efecto-invernadero", "nombre": "Emisiones netas de gases de efecto invernadero", "code": "sdg_13_10", "query": "&unit=I90", "unidad": "Índice (1990 = 100)", "frecuencia": "Anual", "descripcion": "Emisiones netas de gases de efecto invernadero, incluido el uso del suelo, respecto a 1990.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "emisiones-de-gases-de-efecto-invernadero-por-habitante", "nombre": "Emisiones de gases de efecto invernadero por habitante", "code": "sdg_13_10", "query": "&unit=T_HAB", "unidad": "Toneladas de CO₂ equivalente por habitante", "frecuencia": "Anual", "descripcion": "Emisiones netas de gases de efecto invernadero por habitante.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "dependencia-energetica", "nombre": "Dependencia energética", "code": "nrg_ind_id", "query": "&siec=TOTAL&unit=PC", "unidad": "% de las necesidades energéticas", "frecuencia": "Anual", "descripcion": "Parte de la energía que un país necesita y que tiene que importar.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "precio-del-gas-natural-para-hogares", "nombre": "Precio del gas natural para hogares", "code": "nrg_pc_202", "query": "&product=4100&nrg_cons=GJ20-199&unit=KWH&tax=I_TAX&currency=EUR", "unidad": "€ por kWh (con impuestos)", "frecuencia": "Semestral", "descripcion": "Precio medio del gas natural para consumidores domésticos con consumo medio.", "desde": 2008, "pagina": "sostenibilidad"}, {"id": "residuos-municipales-por-habitante", "nombre": "Residuos municipales por habitante", "code": "env_wasmun", "query": "&wst_oper=GEN&unit=KG_HAB", "unidad": "kg por habitante", "frecuencia": "Anual", "descripcion": "Residuos urbanos generados por habitante.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "tasa-de-reciclaje-de-residuos-municipales", "nombre": "Tasa de reciclaje de residuos municipales", "code": "sdg_11_60", "query": "&unit=PC", "unidad": "% de los residuos municipales", "frecuencia": "Anual", "descripcion": "Porcentaje de los residuos municipales que se recicla o composta.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "poblacion", "nombre": "Población", "code": "demo_pjan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero.", "desde": 2000, "pagina": "poblacion"}, {"id": "poblacion-por-regiones", "nombre": "Población por regiones", "code": "demo_r_d2jan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero en las comunidades autónomas.", "regional": true, "desde": 2000, "pagina": "poblacion"}, {"id": "tasa-de-fecundidad", "nombre": "Tasa de fecundidad", "code": "demo_find", "query": "&indic_de=TOTFERRT", "unidad": "Hijos por mujer", "frecuencia": "Anual", "descripcion": "Número medio de hijos por mujer (indicador coyuntural de fecundidad).", "desde": 2000, "pagina": "poblacion"}, {"id": "tasa-de-dependencia-de-las-personas-mayores", "nombre": "Tasa de dependencia de las personas mayores", "code": "demo_pjanind", "query": "&indic_de=OLDDEP1", "unidad": "% de la población de 15-64 años", "frecuencia": "Anual", "descripcion": "Población de 65 años o más en relación con la población en edad de trabajar.", "desde": 2000, "pagina": "poblacion"}, {"id": "esperanza-de-vida-al-nacer", "nombre": "Esperanza de vida al nacer", "code": "demo_mlexpec", "query": "&sex=T&age=Y_LT1&unit=YR", "unidad": "Años", "frecuencia": "Anual", "descripcion": "Número medio de años que se espera que viva una persona recién nacida.", "desde": 2000, "pagina": "poblacion"}, {"id": "poblacion-de-25-34-anos-con-estudios-superiores", "nombre": "Población de 25-34 años con estudios superiores", "code": "sdg_04_20", "query": "&sex=T&unit=PC", "unidad": "% de la población de 25-34 años", "frecuencia": "Anual", "descripcion": "Personas jóvenes con educación terciaria; el objetivo europeo para 2030 es el 45 %.", "desde": 2005, "pagina": "poblacion"}, {"id": "abandono-temprano-de-la-educacion-y-la-formacion", "nombre": "Abandono temprano de la educación y la formación", "code": "sdg_04_10", "query": "&sex=T&unit=PC", "unidad": "% de la población de 18-24 años", "frecuencia": "Anual", "descripcion": "Jóvenes que solo tienen la educación secundaria obligatoria y no siguen estudiando; el objetivo europeo para 2030 es menos del 9 %.", "desde": 2005, "pagina": "poblacion"}, {"id": "exportaciones-de-bienes-y-servicios-del-pib", "nombre": "Exportaciones de bienes y servicios (% del PIB)", "code": "nama_10_gdp", "query": "&unit=PC_GDP&na_item=P6", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Peso de las exportaciones en el PIB: indicador del grado de apertura.", "desde": 2000, "pagina": "internacional"}, {"id": "importaciones-de-bienes-y-servicios-del-pib", "nombre": "Importaciones de bienes y servicios (% del PIB)", "code": "nama_10_gdp", "query": "&unit=PC_GDP&na_item=P7", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Peso de las importaciones en el PIB.", "desde": 2000, "pagina": "internacional"}, {"id": "exportaciones-crecimiento-interanual-trimestral", "nombre": "Exportaciones: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P6&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Exportaciones de bienes y servicios en volumen.", "cero": true, "desde": 2005, "pagina": "internacional"}, {"id": "saldo-por-cuenta-corriente-del-pib", "nombre": "Saldo por cuenta corriente (% del PIB)", "code": "bop_gdp6_q", "query": "&bop_item=CA&stk_flow=BAL&partner=WRL_REST&unit=PC_GDP&s_adj=NSA", "unidad": "% del PIB", "frecuencia": "Trimestral", "descripcion": "Diferencia entre ingresos y pagos por bienes, servicios y rentas con el resto del mundo.", "cero": true, "desde": 2008, "pagina": "internacional"}, {"id": "posicion-de-inversion-internacional-neta-del-pib", "nombre": "Posición de inversión internacional neta (% del PIB)", "code": "tipsii10", "query": "", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Activos financieros frente al exterior menos pasivos; los valores negativos indican endeudamiento exterior neto.", "cero": true, "desde": 2008, "pagina": "internacional"}, {"id": "pib-per-capita-en-ppc-ue-27-100", "nombre": "PIB per cápita en PPC (UE-27 = 100)", "code": "tec00114", "query": "", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Volumen del PIB por habitante en paridad de poder de compra respecto a la media de la UE.", "desde": 2005, "pagina": "internacional"}]
+cicloIds = [["pib-crecimiento-interanual-trimestral", 1], ["tasa-de-paro", -1], ["indice-de-produccion-industrial", 1], ["indice-de-comercio-minorista", 1], ["indicador-de-sentimiento-economico", 1], ["confianza-del-consumidor", 1], ["confianza-de-la-industria", 1], ["produccion-en-la-construccion", 1], ["confianza-en-los-servicios", 1], ["pernoctaciones-en-hoteles", 1]]
+viewof geoCiclo = Inputs.select(["España", "UE-27", "Alemania", "Francia", "Italia", "Portugal"], {label: "Territorio", value: "España"})
+FASES = ({exp: ["Expansión", "#4C9A2A", "🟢"], des: ["Desaceleración", "#E6A400", "🟡"], rec: ["Recesión", "#C0392B", "🔴"], recu: ["Recuperación", "#2C6FBB", "🔵"]})
+cicloDe = (rows, signo, trimestral) => {
+  const v = rows.slice().sort((a, b) => a.fecha - b.fecha);
+  const L = trimestral ? 4 : 12, h = trimestral ? 1 : 3;
+  const out = [];
+  for (let i = L; i < v.length; i++) {
+    const tend = d3.mean(v.slice(i - L, i + 1), r => r.valor);
+    out.push({...v[i], brecha: signo * (v[i].valor - tend)});
+  }
+  const sd = d3.deviation(out, o => o.brecha) || 1;
+  out.forEach((o, i) => { o.z = o.brecha / sd; o.dz = i >= h ? o.z - out[i - h].z : 0; o.fase = o.z >= 0 ? (o.dz >= 0 ? "exp" : "des") : (o.dz >= 0 ? "recu" : "rec"); });
+  return out;
+}
+cicloTodos = (await Promise.all(cicloIds.map(async ([id, signo]) => {
+  const s = especC.find(x => x.id === id); if (!s) return null;
+  const d = await cargar(s); if (!d.ok) return null;
+  const rows = d.rows.filter(r => r.territorio === geoCiclo); if (rows.length < 20) return null;
+  return {s, c: cicloDe(rows, signo, s.frecuencia === "Trimestral")};
+}))).filter(Boolean)
+```
+
+## Semáforo de coyuntura
+
+```{ojs}
+//| echo: false
+{
+  if (!cicloTodos.length) return html`<p class="pending">No se han podido cargar los datos.</p>`;
+  const cuenta = d3.rollup(cicloTodos, v => v.length, x => x.c.at(-1).fase);
+  const dom = [...cuenta].sort((a, b) => b[1] - a[1])[0][0];
+  return html`<p class="juego-grande" style="color:${FASES[dom][1]}">${FASES[dom][2]} ${FASES[dom][0]}</p>
+  <p>Fase predominante en ${geoCiclo}: ${[...cuenta].map(([f, n]) => `${FASES[f][2]} ${FASES[f][0]}: ${n}`).join(" · ")} indicadores.</p>
+  <table class="uso-tabla"><tr><th>Indicador</th><th>Último dato</th><th>Valor</th><th>Frente a la tendencia</th><th>Fase</th></tr>
+  ${cicloTodos.map(({s, c}) => { const u = c.at(-1); return html`<tr><td>${s.nombre}</td><td>${u.periodo}</td><td>${fmt(u.valor)}</td><td>${u.z >= 0 ? "▲ por encima" : "▼ por debajo"} (${fmt(u.z)} σ)</td><td style="color:${FASES[u.fase][1]};font-weight:700">${FASES[u.fase][2]} ${FASES[u.fase][0]}</td></tr>`; })}</table>`;
+}
+```
+
+## Reloj del ciclo
+
+```{ojs}
+//| echo: false
+viewof indCiclo = Inputs.select(new Map(cicloTodos.map(x => [x.s.nombre, x])), {label: "Indicador"})
+viewof nCiclo = Inputs.range([6, 60], {label: "Periodos a mostrar", value: 24, step: 1})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!indCiclo) return html``;
+  const tr = indCiclo.c.slice(-nCiclo);
+  const m = Math.max(1.5, d3.max(tr, d => Math.max(Math.abs(d.z), Math.abs(d.dz))) * 1.1);
+  const cuad = [{x1: 0, x2: m, y1: 0, y2: m, f: "exp"}, {x1: 0, x2: m, y1: -m, y2: 0, f: "des"}, {x1: -m, x2: 0, y1: -m, y2: 0, f: "rec"}, {x1: -m, x2: 0, y1: 0, y2: m, f: "recu"}];
+  return Plot.plot({height: 440, width: 520, marginLeft: 50, x: {domain: [-m, m], label: "Posición frente a la tendencia (σ) →"}, y: {domain: [-m, m], label: "↑ Dirección (cambio reciente)"},
+    marks: [Plot.rect(cuad, {x1: "x1", x2: "x2", y1: "y1", y2: "y2", fill: d => FASES[d.f][1], fillOpacity: 0.1}),
+      Plot.text(cuad, {x: d => (d.x1 + d.x2) / 2, y: d => d.y1 > -0.01 ? m * 0.9 : -m * 0.9, text: d => FASES[d.f][0], fill: d => FASES[d.f][1], fontWeight: 700, fontSize: 13}),
+      Plot.ruleX([0]), Plot.ruleY([0]),
+      Plot.line(tr, {x: "z", y: "dz", stroke: "#888", curve: "catmull-rom", markerEnd: "arrow"}),
+      Plot.dot(tr, {x: "z", y: "dz", r: (d, i) => i === tr.length - 1 ? 7 : 3, fill: d => FASES[d.fase][1], tip: true, title: d => `${d.periodo}: ${fmt(d.valor)}\n${FASES[d.fase][0]}`}),
+      Plot.text(tr.filter((d, i) => i === 0 || i === tr.length - 1), {x: "z", y: "dz", text: "periodo", dy: -12, fontSize: 10})]});
+}
+```
+
+::: {.callout-note appearance="simple"}
+**Cómo se calcula.** Tendencia: media móvil de los últimos 12 meses (4 trimestres). Brecha: diferencia entre el dato y la tendencia, dividida por su desviación típica. Dirección: cambio de la brecha en los últimos 3 meses (1 trimestre). Es un método sencillo con fines docentes; los organismos oficiales (OCDE, Banco de España) usan filtros más elaborados.
+:::

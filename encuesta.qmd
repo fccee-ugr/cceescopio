@@ -69,6 +69,10 @@ Tus respuestas nos sirven para saber qué recursos son más útiles y qué convi
   <label><input type="checkbox" name="recurso" value="paneles"> Paneles (mercados, turismo en Andalucía, empresas, consumo)</label>
   <label><input type="checkbox" name="recurso" value="boletin"> Boletín de coyuntura</label>
   <label><input type="checkbox" name="recurso" value="glosario"> Glosario de indicadores</label>
+  <label><input type="checkbox" name="recurso" value="juegos"> Juegos con datos y modo aula</label>
+  <label><input type="checkbox" name="recurso" value="examen"> Generador de exámenes y fichas (profesorado)</label>
+  <label><input type="checkbox" name="recurso" value="analisis"> Análisis (extremos, ciclo, convergencia, desfases, previsión)</label>
+  <label><input type="checkbox" name="recurso" value="simuladores"> Calculadora de desigualdad y simulador fiscal</label>
 </fieldset>
 
 <fieldset>

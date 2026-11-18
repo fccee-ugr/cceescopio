@@ -31,7 +31,8 @@ ENC = {
     "recurso": [("graficos", "Gráficos"), ("mapas", "Mapas"), ("descarga-csv", "Descarga CSV"), ("calculadora", "Calculadora"),
                 ("ficha", "Ficha"), ("relaciona", "Relaciona"), ("buscador", "Buscador"), ("docencia-grados", "Grados y asignaturas"),
                 ("rankings", "Rankings"), ("ejercicios", "Ejercicios"), ("graficos-tfg", "Gráficos TFG"),
-                ("hipoteca", "Hipotecas"), ("paneles", "Paneles"), ("boletin", "Boletín"), ("glosario", "Glosario")],
+                ("hipoteca", "Hipotecas"), ("paneles", "Paneles"), ("boletin", "Boletín"), ("glosario", "Glosario"),
+                ("juegos", "Juegos"), ("examen", "Exámenes"), ("analisis", "Análisis"), ("simuladores", "Simuladores")],
     "recomendaria": [("si", "Sí"), ("quiza", "Quizá"), ("no", "No")],
 }
 
