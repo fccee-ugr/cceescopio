@@ -1,7 +1,7 @@
-"""Asignaturas de los grados de la Facultad de Ciencias Económicas y Empresariales (UGR) agrupadas por
-departamento, con los indicadores de CCEEscopio recomendados y un ejemplo de uso.
+"""Fichas de uso por materia: indicadores de CCEEscopio recomendados y un ejemplo de uso para las asignaturas
+de los grados de la Facultad (agrupadas por área). tools/make_docencia.py asigna a cada asignatura de
+tools/grados.py la ficha de su materia y genera las páginas por grado.
 Fuente de las asignaturas: planes de estudio publicados en https://fccee.ugr.es/docencia/grados (curso 2026/2027).
-La asignación a departamentos sigue el área de conocimiento de cada materia; puede revisarse en la guía docente.
 Para modificarla, edita este fichero y ejecuta: python3 tools/make_docencia.py"""
 
 # Alias cortos de los indicadores (identificadores de data/indicadores.json)

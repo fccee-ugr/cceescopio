@@ -71,30 +71,24 @@ website:
           - href: docencia.qmd
             text: "Docencia e investigación: cómo usar CCEEscopio"
           - text: "---"
-          - text: "Por departamentos y asignaturas"
-          - href: docencia/teoria-historia-economica.qmd
-            text: "Teoría e Historia Económica"
-          - href: docencia/economia-aplicada.qmd
-            text: "Economía Aplicada"
-          - href: docencia/economia-internacional-espana.qmd
-            text: "Economía Internacional y de España"
-          - href: docencia/metodos-cuantitativos.qmd
-            text: "Métodos Cuantitativos para la Economía y la Empresa"
-          - href: docencia/economia-financiera-contabilidad.qmd
-            text: "Economía Financiera y Contabilidad"
-          - href: docencia/comercializacion-investigacion-mercados.qmd
-            text: "Comercialización e Investigación de Mercados"
-          - href: docencia/organizacion-empresas.qmd
-            text: "Organización de Empresas I y II"
-          - href: docencia/otros-departamentos.qmd
-            text: "Otros departamentos con docencia en la Facultad"
+          - text: "Por grados y asignaturas"
+          - href: docencia/gade.qmd
+            text: "GADE · Administración y Dirección de Empresas"
+          - href: docencia/geco.qmd
+            text: "GECO · Economía"
+          - href: docencia/gfico.qmd
+            text: "GFICO · Finanzas y Contabilidad"
+          - href: docencia/gmim.qmd
+            text: "GMIM · Marketing e Investigación de Mercados"
+          - href: docencia/gtur.qmd
+            text: "GTUR · Turismo"
       - href: contacto.qmd
         text: "Contacto"
   page-footer:
     left: "CCEEscopio · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es)"
     right: "![](images/logos_ugr_fccee.jpg){height=38 fig-alt='Universidad de Granada y Facultad de Ciencias Económicas y Empresariales'}"
 
-date-modified: "2026-11-17"
+date-modified: "2026-11-18"
 
 format:
   html:

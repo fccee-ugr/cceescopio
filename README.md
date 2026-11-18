@@ -24,10 +24,11 @@ media/                 vídeo de presentación y su portada
 tools/make_pages.py    genera las páginas de indicadores a partir de una lista única
                        (y data/indicadores.json, data/indicadores_specs.json)
 tools/make_apps.py     genera las herramientas: calculadora.qmd, ficha.qmd, relaciona.qmd
-tools/asignaturas.py   asignaturas de los grados por departamento, con indicadores y ejemplos de uso
-tools/make_docencia.py genera docencia/<departamento>.qmd, indicadores.qmd (buscador)
-                       y _deptos_cards.md (tarjetas de docencia.qmd)
-docencia/              páginas por departamento y asignatura (generadas)
+tools/grados.py        planes de estudio de GADE, GECO, GFICO, GMIM y GTUR por cursos
+tools/asignaturas.py   fichas de uso por materia (indicadores recomendados y ejemplos de uso)
+tools/make_docencia.py genera docencia/<grado>.qmd, indicadores.qmd (buscador)
+                       y _grados_cards.md (tarjetas de docencia.qmd)
+docencia/              páginas por grado, curso y asignatura (generadas)
 tools/make_logo.py     genera el logo
 ```
 
@@ -45,11 +46,9 @@ quarto render
 
 Cada indicador tiene un identificador (se crea a partir de su nombre) que permite enlazarlo directamente: `precios.html?i=ipca-inflacion-general-tasa-anual`. Si cambias el nombre de un indicador, actualiza su alias en `tools/asignaturas.py`.
 
-## Docencia por departamentos y asignaturas
+## Docencia por grados y asignaturas
 
-Las asignaturas, su departamento, los indicadores recomendados (por su alias) y el ejemplo de uso están en `tools/asignaturas.py`. Para añadir una asignatura o cambiar un ejemplo, edita ese fichero y ejecuta `python3 tools/make_docencia.py`. Si se añade un departamento, copia también el fragmento `tools/_menu_docencia.yml` en el menú *Docencia* de `_quarto.yml`.
-
-Los filtros de cada tabla se pueden consultar en el navegador de datos de Eurostat (https://ec.europa.eu/eurostat/databrowser). Si una consulta falla, la web intenta alternativas (por ejemplo, la tabla anterior del IPCA) y, en último caso, muestra un aviso con el enlace a Eurostat.
+Las asignaturas de cada grado y curso están en `tools/grados.py` y los indicadores recomendados y el ejemplo de uso de cada materia, en `tools/asignaturas.py`. Para añadir una asignatura o cambiar un ejemplo, edita esos ficheros y ejecuta `python3 tools/make_docencia.py`.
 
 ## Publicar
 

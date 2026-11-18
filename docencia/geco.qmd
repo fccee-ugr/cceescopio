@@ -1,0 +1,448 @@
+---
+title: "Grado en Economía (GECO)"
+subtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"
+---
+
+Para cada asignatura del **Grado en Economía** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. Plan de estudios y guías docentes: [web de la Facultad](https://fccee.ugr.es/docencia/grados/graduadoa-economia).
+
+No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.
+
+## Primer curso {#curso-1}
+
+### Economía Política {#economia-politica}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Primer contacto con los grandes agregados: el alumnado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Fundamentos de Dirección y Administración de Empresas {#fundamentos-de-direccion-y-administracion-de-empre}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** La empresa y su entorno: demografía empresarial (altas y quiebras), clima de confianza y adopción de la inteligencia artificial.
+:::
+
+### Introducción a las Operaciones Financieras {#introduccion-a-las-operaciones-financieras}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Tipos de interés nominales y reales: calcular la cuota de una hipoteca con el euríbor actual y descontar la inflación para obtener el tipo real.
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+### Introducción al Márketing {#introduccion-al-marketing}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis del entorno de marketing: tamaño del mercado, consumo de los hogares, confianza del consumidor y compra por internet.
+:::
+
+### Matemáticas {#matematicas}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Funciones, tasas de crecimiento y logaritmos con series reales: crecimiento compuesto de la población o del nivel de precios.
+:::
+
+### Contabilidad General {#contabilidad-general}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto de la información contable: efecto de la inflación sobre el valor de existencias y activos; dinámica de creación y cierre de empresas.
+:::
+
+### Historia del Desarrollo Económico Mundial Contemporáneo {#historia-del-desarrollo-economico-mundial-contempo}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Esperanza de vida al nacer](../poblacion.html?i=esperanza-de-vida-al-nacer) · [Tasa de fecundidad](../poblacion.html?i=tasa-de-fecundidad)
+
+::: {.uso-box}
+**Ejemplo de uso.** Divergencia y convergencia: comparar el PIB per cápita y la esperanza de vida de los países europeos para conectar la historia con la situación actual.
+:::
+
+### Introducción al Derecho {#introduccion-al-derecho}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto económico del derecho de sociedades y concursal: creación de empresas y procedimientos de quiebra.
+:::
+
+### Matemáticas para la Economía I {#matematicas-para-la-economia-i}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Funciones, tasas de crecimiento y logaritmos con series reales: crecimiento compuesto de la población o del nivel de precios.
+:::
+
+### Microeconomía I {#microeconomia-i}
+
+**Indicadores recomendados:** [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Elasticidades y estructura de mercado con precios reales: comparar la subida de la energía y de los alimentos con la inflación general, o el salario mínimo entre países para discutir sus efectos en el mercado de trabajo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+## Segundo curso {#curso-2}
+
+### Instrumentos para el Análisis de la Economía Española y Mundial {#instrumentos-para-el-analisis-de-la-economia-espan}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Fuentes estadísticas y su uso: dónde se obtiene cada indicador (Eurostat, INE, Banco de España), cómo se descarga y cómo se cita.
+:::
+
+**Herramientas útiles:** [Datos y fuentes](../datos.qmd)
+
+### Macroeconomía I {#macroeconomia-i}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Inversión (formación bruta de capital fijo): crecimiento interanual](../actividad.html?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Ciclo económico, curva de Phillips y ley de Okun con datos: relacionar el crecimiento del PIB con la variación del paro y la inflación con el paro de los países de la UE; seguir la política monetaria del BCE a través del euríbor.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Matemáticas para la Economía II {#matematicas-para-la-economia-ii}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Funciones, tasas de crecimiento y logaritmos con series reales: crecimiento compuesto de la población o del nivel de precios.
+:::
+
+### Microeconomía II {#microeconomia-ii}
+
+**Indicadores recomendados:** [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Elasticidades y estructura de mercado con precios reales: comparar la subida de la energía y de los alimentos con la inflación general, o el salario mínimo entre países para discutir sus efectos en el mercado de trabajo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Técnicas Cuantitativas I {#tecnicas-cuantitativas-i}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+### Economía Española {#economia-espanola}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual) · [Gasto en I+D (% del PIB)](../empresa.html?i=gasto-en-i-d-del-pib) · [Cuota de energías renovables](../sostenibilidad.html?i=cuota-de-energias-renovables)
+
+::: {.uso-box}
+**Ejemplo de uso.** Seguir la guía de la asignatura con datos: crecimiento y fluctuaciones, estructura productiva, sector exterior (balanza por cuenta corriente), mercado de trabajo, sector público y deuda.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd) · [Relaciona dos indicadores](../relaciona.qmd)
+
+### Economía Mundial {#economia-mundial}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar)
+
+::: {.uso-box}
+**Ejemplo de uso.** Comparación internacional del nivel de vida, la apertura comercial y los desequilibrios exteriores de los países europeos.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Macroeconomía II {#macroeconomia-ii}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Inversión (formación bruta de capital fijo): crecimiento interanual](../actividad.html?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Ciclo económico, curva de Phillips y ley de Okun con datos: relacionar el crecimiento del PIB con la variación del paro y la inflación con el paro de los países de la UE; seguir la política monetaria del BCE a través del euríbor.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Microeconomía III {#microeconomia-iii}
+
+**Indicadores recomendados:** [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Elasticidades y estructura de mercado con precios reales: comparar la subida de la energía y de los alimentos con la inflación general, o el salario mínimo entre países para discutir sus efectos en el mercado de trabajo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Técnicas Cuantitativas II {#tecnicas-cuantitativas-ii}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+## Tercer curso {#curso-3}
+
+### Econometría I {#econometria-i}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico)
+
+::: {.uso-box}
+**Ejemplo de uso.** Regresión con datos reales: ley de Okun (PIB y paro), curva de Phillips, función de consumo, modelos de series temporales (estacionalidad, raíces unitarias) y datos de panel de países.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Datos y fuentes](../datos.qmd)
+
+### Economía del Sector Público I {#economia-del-sector-publico-i}
+
+**Indicadores recomendados:** [Gasto público total (% del PIB)](../publico.html?i=gasto-publico-total-del-pib) · [Ingresos fiscales (% del PIB)](../publico.html?i=ingresos-fiscales-del-pib) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib) · [Gasto público en protección social (% del PIB)](../publico.html?i=gasto-publico-en-proteccion-social-del-pib) · [Gasto público en sanidad (% del PIB)](../publico.html?i=gasto-publico-en-sanidad-del-pib) · [Gasto público en educación (% del PIB)](../publico.html?i=gasto-publico-en-educacion-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Tamaño y composición del sector público: comparar la presión fiscal y el gasto por funciones de España con la UE; reglas fiscales europeas de deuda (60 %) y déficit (3 %).
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Macroeconomía III {#macroeconomia-iii}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Inversión (formación bruta de capital fijo): crecimiento interanual](../actividad.html?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Ciclo económico, curva de Phillips y ley de Okun con datos: relacionar el crecimiento del PIB con la variación del paro y la inflación con el paro de los países de la UE; seguir la política monetaria del BCE a través del euríbor.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Microeconomía IV {#microeconomia-iv}
+
+**Indicadores recomendados:** [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Elasticidades y estructura de mercado con precios reales: comparar la subida de la energía y de los alimentos con la inflación general, o el salario mínimo entre países para discutir sus efectos en el mercado de trabajo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Política Económica: Objetivos e Instrumentos {#politica-economica-objetivos-e-instrumentos}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Cuadro de mando de la política económica: crecimiento, estabilidad de precios, empleo y equilibrio exterior y presupuestario, comparando España con la UE.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Econometría II {#econometria-ii}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico)
+
+::: {.uso-box}
+**Ejemplo de uso.** Regresión con datos reales: ley de Okun (PIB y paro), curva de Phillips, función de consumo, modelos de series temporales (estacionalidad, raíces unitarias) y datos de panel de países.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Datos y fuentes](../datos.qmd)
+
+### Economía del Sector Público II {#economia-del-sector-publico-ii}
+
+**Indicadores recomendados:** [Gasto público total (% del PIB)](../publico.html?i=gasto-publico-total-del-pib) · [Ingresos fiscales (% del PIB)](../publico.html?i=ingresos-fiscales-del-pib) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib) · [Gasto público en protección social (% del PIB)](../publico.html?i=gasto-publico-en-proteccion-social-del-pib) · [Gasto público en sanidad (% del PIB)](../publico.html?i=gasto-publico-en-sanidad-del-pib) · [Gasto público en educación (% del PIB)](../publico.html?i=gasto-publico-en-educacion-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Tamaño y composición del sector público: comparar la presión fiscal y el gasto por funciones de España con la UE; reglas fiscales europeas de deuda (60 %) y déficit (3 %).
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Historia del Pensamiento Económico {#historia-del-pensamiento-economico}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones) · [Riesgo de pobreza o exclusión social por regiones](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-por-regiones) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** La herencia histórica de las diferencias regionales: renta, paro y pobreza de Andalucía frente a España y la UE en la actualidad.
+:::
+
+### Macroeconomía IV {#macroeconomia-iv}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Inversión (formación bruta de capital fijo): crecimiento interanual](../actividad.html?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Ciclo económico, curva de Phillips y ley de Okun con datos: relacionar el crecimiento del PIB con la variación del paro y la inflación con el paro de los países de la UE; seguir la política monetaria del BCE a través del euríbor.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Organización Económica Internacional {#organizacion-economica-internacional}
+
+**Indicadores recomendados:** [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Posición de inversión internacional neta (% del PIB)](../internacional.html?i=posicion-de-inversion-internacional-neta-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Convergencia nominal y real en la UE: criterios de Maastricht, nivel de precios y PIB per cápita respecto a la media europea.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+## Cuarto curso {#curso-4}
+
+### Creación de Empresas {#creacion-de-empresas}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses)
+
+::: {.uso-box}
+**Ejemplo de uso.** Plan de empresa: momento del ciclo, coste de la financiación y dinámica de creación y cierre de empresas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Econometría III {#econometria-iii}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico)
+
+::: {.uso-box}
+**Ejemplo de uso.** Regresión con datos reales: ley de Okun (PIB y paro), curva de Phillips, función de consumo, modelos de series temporales (estacionalidad, raíces unitarias) y datos de panel de países.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Datos y fuentes](../datos.qmd)
+
+### Economía Monetaria y Bancaria *(optativa)* {#economia-monetaria-y-bancaria}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) · [Precio de la vivienda (tasa anual)](../precios.html?i=precio-de-la-vivienda-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Transmisión de la política monetaria: del euríbor a los precios de la vivienda y a la inflación; la prima de riesgo como diferencia de rentabilidad entre el bono español y el alemán.
+:::
+
+### Economía de la Salud *(optativa)* {#economia-de-la-salud}
+
+**Indicadores recomendados:** [Gasto público en sanidad (% del PIB)](../publico.html?i=gasto-publico-en-sanidad-del-pib) · [Esperanza de vida al nacer](../poblacion.html?i=esperanza-de-vida-al-nacer) · [Tasa de dependencia de las personas mayores](../poblacion.html?i=tasa-de-dependencia-de-las-personas-mayores)
+
+::: {.uso-box}
+**Ejemplo de uso.** Gasto sanitario y resultados en salud: relación entre el gasto público en sanidad y la esperanza de vida en la UE; envejecimiento y presión sobre el sistema.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Economía del Gasto Público *(optativa)* {#economia-del-gasto-publico}
+
+**Indicadores recomendados:** [Gasto público total (% del PIB)](../publico.html?i=gasto-publico-total-del-pib) · [Gasto público en protección social (% del PIB)](../publico.html?i=gasto-publico-en-proteccion-social-del-pib) · [Gasto público en sanidad (% del PIB)](../publico.html?i=gasto-publico-en-sanidad-del-pib) · [Gasto público en educación (% del PIB)](../publico.html?i=gasto-publico-en-educacion-del-pib) · [Riesgo de pobreza o exclusión social (AROPE)](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-arope)
+
+::: {.uso-box}
+**Ejemplo de uso.** Gasto social y resultados: relacionar el gasto en protección social con la tasa de riesgo de pobreza o exclusión de los países de la UE.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Economía del Trabajo *(optativa)* {#economia-del-trabajo}
+
+**Indicadores recomendados:** [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Tasa de paro juvenil (menores de 25 años)](../empleo.html?i=tasa-de-paro-juvenil-menores-de-25-anos) · [Tasa de paro de las mujeres](../empleo.html?i=tasa-de-paro-de-las-mujeres) · [Paro de larga duración](../empleo.html?i=paro-de-larga-duracion) · [Jóvenes que ni estudian ni trabajan (15-29 años)](../empleo.html?i=jovenes-que-ni-estudian-ni-trabajan-15-29-anos) · [Brecha salarial de género](../empleo.html?i=brecha-salarial-de-genero) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora) · [Pobreza de las personas que trabajan](../desigualdad.html?i=pobreza-de-las-personas-que-trabajan)
+
+::: {.uso-box}
+**Ejemplo de uso.** Diagnóstico del mercado laboral español: paro juvenil y de larga duración, jóvenes que ni estudian ni trabajan, brecha salarial de género y pobreza laboral.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Economía y Política Regional *(optativa)* {#economia-y-politica-regional}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones) · [Tasa de empleo por regiones (20-64 años)](../empleo.html?i=tasa-de-empleo-por-regiones-20-64-anos) · [Gasto en I+D por regiones (% del PIB)](../empresa.html?i=gasto-en-i-d-por-regiones-del-pib) · [Riesgo de pobreza o exclusión social por regiones](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-por-regiones) · [Tasa de riesgo de pobreza por regiones](../desigualdad.html?i=tasa-de-riesgo-de-pobreza-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Convergencia regional: ¿se acerca Andalucía a la media española y europea? Comparación de renta, empleo, I+D y pobreza por comunidades autónomas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Historia Económica de España *(optativa)* {#historia-economica-de-espana}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones) · [Riesgo de pobreza o exclusión social por regiones](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-por-regiones) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** La herencia histórica de las diferencias regionales: renta, paro y pobreza de Andalucía frente a España y la UE en la actualidad.
+:::
+
+### Macroeconomía Internacional *(optativa)* {#macroeconomia-internacional}
+
+**Indicadores recomendados:** [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Posición de inversión internacional neta (% del PIB)](../internacional.html?i=posicion-de-inversion-internacional-neta-del-pib) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Desequilibrios exteriores en la zona euro: saldo por cuenta corriente y posición de inversión internacional de España, Alemania e Italia; tipo de cambio del euro y paridad del poder de compra.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Política Económica de España *(optativa)* {#politica-economica-de-espana}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Cuadro de mando de la política económica: crecimiento, estabilidad de precios, empleo y equilibrio exterior y presupuestario, comparando España con la UE.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Economía Experimental *(optativa)* {#economia-experimental}
+
+**Indicadores recomendados:** [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico)
+
+::: {.uso-box}
+**Ejemplo de uso.** Expectativas y comportamiento: comparar las encuestas de confianza con los resultados de los experimentos en el aula.
+:::
+
+### Economía Urbana *(optativa)* {#economia-urbana}
+
+**Indicadores recomendados:** [Precio de la vivienda (tasa anual)](../precios.html?i=precio-de-la-vivienda-tasa-anual) · [Sobrecarga del coste de la vivienda](../desigualdad.html?i=sobrecarga-del-coste-de-la-vivienda) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Residuos municipales por habitante](../sostenibilidad.html?i=residuos-municipales-por-habitante)
+
+::: {.uso-box}
+**Ejemplo de uso.** Vivienda y ciudad: precio de la vivienda y sobrecarga de su coste para los hogares; población y residuos urbanos.
+:::
+
+### Economía de la Unión Europea *(optativa)* {#economia-de-la-union-europea}
+
+**Indicadores recomendados:** [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Posición de inversión internacional neta (% del PIB)](../internacional.html?i=posicion-de-inversion-internacional-neta-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Convergencia nominal y real en la UE: criterios de Maastricht, nivel de precios y PIB per cápita respecto a la media europea.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Economía del Medio Ambiente y de los Recursos Naturales *(optativa)* {#economia-del-medio-ambiente-y-de-los-recursos-natu}
+
+**Indicadores recomendados:** [Cuota de energías renovables](../sostenibilidad.html?i=cuota-de-energias-renovables) · [Emisiones netas de gases de efecto invernadero](../sostenibilidad.html?i=emisiones-netas-de-gases-de-efecto-invernadero) · [Emisiones de gases de efecto invernadero por habitante](../sostenibilidad.html?i=emisiones-de-gases-de-efecto-invernadero-por-habitante) · [Dependencia energética](../sostenibilidad.html?i=dependencia-energetica) · [Residuos municipales por habitante](../sostenibilidad.html?i=residuos-municipales-por-habitante) · [Tasa de reciclaje de residuos municipales](../sostenibilidad.html?i=tasa-de-reciclaje-de-residuos-municipales)
+
+::: {.uso-box}
+**Ejemplo de uso.** Objetivos climáticos europeos: renovables, emisiones por habitante y economía circular (residuos y reciclaje) en España frente a la UE.
+:::
+
+### Historia Económica de Andalucía *(optativa)* {#historia-economica-de-andalucia}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones) · [Riesgo de pobreza o exclusión social por regiones](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-por-regiones) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** La herencia histórica de las diferencias regionales: renta, paro y pobreza de Andalucía frente a España y la UE en la actualidad.
+:::
+
+### Integración Económica Internacional *(optativa)* {#integracion-economica-internacional}
+
+**Indicadores recomendados:** [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Posición de inversión internacional neta (% del PIB)](../internacional.html?i=posicion-de-inversion-internacional-neta-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Convergencia nominal y real en la UE: criterios de Maastricht, nivel de precios y PIB per cápita respecto a la media europea.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+<p class="source">Asignaturas según el plan de estudios publicado en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>

@@ -5,11 +5,11 @@ subtitle: "Cómo usar CCEEscopio en las asignaturas, los TFG y TFM y la investig
 
 CCEEscopio está pensado como una **herramienta común para el profesorado, el estudiantado y el personal investigador** de la Facultad de Ciencias Económicas y Empresariales: datos oficiales, actualizados y comparables, listos para usar en clase y en la investigación.
 
-## Por departamentos y asignaturas
+## Por grados y asignaturas
 
-Hemos revisado los planes de estudio de los grados de la Facultad (ADE, Economía, Finanzas y Contabilidad, Marketing e Investigación de Mercados y Turismo, y sus dobles grados) y, para cada asignatura, proponemos los **indicadores de CCEEscopio** más útiles y un **ejemplo de uso** en clase. Cada indicador enlaza directamente con su gráfico.
+Hemos revisado los planes de estudio de los cinco grados de la Facultad y, **curso a curso**, proponemos para cada asignatura los **indicadores de CCEEscopio** más útiles y un **ejemplo de uso** en clase. Cada indicador enlaza directamente con su gráfico y su mapa.
 
-{{< include _deptos_cards.md >}}
+{{< include _grados_cards.md >}}
 
 ## Herramientas para el aula
 

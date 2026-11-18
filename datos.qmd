@@ -68,6 +68,3 @@ Muchos trabajos de investigación requieren **microdatos** (datos individuales d
 - **Eurostat:** microdatos de EU-SILC y de la Encuesta de Población Activa europea, con solicitud previa por parte de la universidad.
 - **Banco de España:** Encuesta Financiera de las Familias.
 
-::: {.callout-tip appearance="simple"}
-¿Necesitas ayuda para localizar o tratar datos para tu investigación? Escribe a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).
-:::

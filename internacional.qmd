@@ -207,6 +207,40 @@ function colores(terrs) {
   return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
 }
 
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
 function csv(rows) {
   return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
 }
@@ -256,6 +290,66 @@ datos.ok ? (terr.length ? Plot.plot({
 }) : html`<p class="pending">Elige al menos un territorio.</p>`)
 : html`<div class="callout callout-warning"><p><b>No se han podido cargar los datos de Eurostat</b> (${datos.error}). Inténtalo de nuevo más tarde o consulta la tabla directamente en <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank">Eurostat</a>.</p></div>`
 ```
+
+## Mapa
+
+```{ojs}
+//| echo: false
+mapaPeriodos = datos.ok ? [...new Set(datos.rows.map(r => r.periodo))].sort().reverse() : []
+viewof mapaP = ind.sinGeo ? html`` : Inputs.select(["Último dato disponible", ...mapaPeriodos], {label: "Periodo del mapa"})
+mapaGeo = (datos.ok && !ind.sinGeo) ? geoNuts(ind.regional ? 2 : 0) : null
+```
+
+```{ojs}
+//| echo: false
+mapaVals = {
+  const m = new Map();
+  if (!datos.ok || ind.sinGeo) return m;
+  const rows = (mapaP === "Último dato disponible" || !mapaP) ? ultimos : datos.rows.filter(r => r.periodo === mapaP);
+  for (const r of rows) if (r.codigo_territorio) m.set(r.codigo_territorio, r);
+  return m;
+}
+mapaColor = {
+  const v = [...mapaVals.values()].map(r => r.valor);
+  return (ind.cero && d3.min(v) < 0 && d3.max(v) > 0)
+    ? {type: "diverging", scheme: "RdBu", pivot: 0, legend: true, label: ind.unidad, tickFormat: x => fmt(x)}
+    : {type: "quantile", n: 5, scheme: "PuRd", legend: true, label: ind.unidad, tickFormat: x => fmt(x)};
+}
+mapa = {
+  if (ind.sinGeo) return html`<p class="pending">Este indicador no tiene desglose territorial.</p>`;
+  if (!datos.ok) return html``;
+  if (!mapaGeo) return html`<p class="pending">No se han podido cargar los límites geográficos para el mapa.</p>`;
+  const nombre = f => nombresGeo[f.properties.geo] ?? f.properties.NAME_LATN ?? f.properties.NAME ?? f.properties.geo;
+  const tit = f => { const r = mapaVals.get(f.properties.geo); return r ? `${nombre(f)} (${r.periodo})\n${fmt(r.valor)} ${ind.unidad}` : `${nombre(f)}\nSin datos`; };
+  const marcas = (feats, clip = false) => [
+    Plot.geo(feats, {fill: "#ECE7E9", stroke: "white", strokeWidth: 0.6, clip}),
+    Plot.geo(feats.filter(f => mapaVals.has(f.properties.geo)), {fill: f => mapaVals.get(f.properties.geo).valor, stroke: "white", strokeWidth: 0.6, title: tit, tip: true, clip}),
+    Plot.geo(feats.filter(f => ["ES", "ES61"].includes(f.properties.geo)), {stroke: "#3C3C3B", strokeWidth: 1.6, clip})
+  ];
+  if (!ind.regional) {
+    const feats = mapaGeo.features;
+    return Plot.plot({
+      width: 760, height: 620, color: mapaColor,
+      projection: {type: "azimuthal-equal-area", rotate: [-10, -52], domain: {type: "MultiPoint", coordinates: [[-11, 35], [33, 35], [33, 70], [-11, 70], [25, 34]]}},
+      marks: marcas(feats, true)
+    });
+  }
+  const es = mapaGeo.features.filter(f => f.properties.geo?.startsWith("ES"));
+  const pen = es.filter(f => !["ES70", "ES63", "ES64"].includes(f.properties.geo));
+  const can = es.filter(f => f.properties.geo === "ES70");
+  const principal = Plot.plot({width: 700, height: 560, color: mapaColor,
+    projection: {type: "conic-conformal", rotate: [3.5, 0], parallels: [36, 43], domain: {type: "FeatureCollection", features: pen}},
+    marks: marcas(es)});
+  const islas = can.length ? Plot.plot({width: 220, height: 130, color: {...mapaColor, legend: false},
+    projection: {type: "conic-conformal", rotate: [15.5, 0], parallels: [27, 29], domain: {type: "FeatureCollection", features: can}},
+    marks: marcas(can)}) : "";
+  return html`<div class="mapa-es">${principal}<div class="mapa-inset"><span>Canarias</span>${islas}</div></div>`;
+}
+```
+
+<p class="source">Pasa el ratón por un territorio para ver su valor. Gris: sin datos para ese periodo. Límites geográficos: © EuroGeographics para los límites administrativos (Eurostat-GISCO).</p>
+
+## Último dato por territorio
 
 ```{ojs}
 //| echo: false

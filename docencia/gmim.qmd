@@ -1,0 +1,406 @@
+---
+title: "Grado en Marketing e Investigación de Mercados (GMIM)"
+subtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"
+---
+
+Para cada asignatura del **Grado en Marketing e Investigación de Mercados** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. Plan de estudios y guías docentes: [web de la Facultad](https://fccee.ugr.es/docencia/grados/graduadoa-marketing-e-investigacion-mercados).
+
+No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.
+
+## Primer curso {#curso-1}
+
+### Economía Política {#economia-politica}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Primer contacto con los grandes agregados: el alumnado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Fundamentos de Dirección y Administración de Empresas {#fundamentos-de-direccion-y-administracion-de-empre}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** La empresa y su entorno: demografía empresarial (altas y quiebras), clima de confianza y adopción de la inteligencia artificial.
+:::
+
+### Introducción a las Operaciones Financieras {#introduccion-a-las-operaciones-financieras}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Tipos de interés nominales y reales: calcular la cuota de una hipoteca con el euríbor actual y descontar la inflación para obtener el tipo real.
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+### Introducción al Márketing {#introduccion-al-marketing}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis del entorno de marketing: tamaño del mercado, consumo de los hogares, confianza del consumidor y compra por internet.
+:::
+
+### Matemáticas {#matematicas}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Funciones, tasas de crecimiento y logaritmos con series reales: crecimiento compuesto de la población o del nivel de precios.
+:::
+
+### Contabilidad General {#contabilidad-general}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto de la información contable: efecto de la inflación sobre el valor de existencias y activos; dinámica de creación y cierre de empresas.
+:::
+
+### Dirección Comercial I {#direccion-comercial-i}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Previsión de ventas con indicadores adelantados: confianza del consumidor y ventas del comercio minorista.
+:::
+
+### Historia del Desarrollo Económico Mundial Contemporáneo {#historia-del-desarrollo-economico-mundial-contempo}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Esperanza de vida al nacer](../poblacion.html?i=esperanza-de-vida-al-nacer) · [Tasa de fecundidad](../poblacion.html?i=tasa-de-fecundidad)
+
+::: {.uso-box}
+**Ejemplo de uso.** Divergencia y convergencia: comparar el PIB per cápita y la esperanza de vida de los países europeos para conectar la historia con la situación actual.
+:::
+
+### Introducción al Derecho {#introduccion-al-derecho}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto económico del derecho de sociedades y concursal: creación de empresas y procedimientos de quiebra.
+:::
+
+### Microeconomía {#microeconomia}
+
+**Indicadores recomendados:** [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Elasticidades y estructura de mercado con precios reales: comparar la subida de la energía y de los alimentos con la inflación general, o el salario mínimo entre países para discutir sus efectos en el mercado de trabajo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+## Segundo curso {#curso-2}
+
+### Dirección Comercial II {#direccion-comercial-ii}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Previsión de ventas con indicadores adelantados: confianza del consumidor y ventas del comercio minorista.
+:::
+
+### Dirección y Administración de Empresas {#direccion-y-administracion-de-empresas}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** La empresa y su entorno: demografía empresarial (altas y quiebras), clima de confianza y adopción de la inteligencia artificial.
+:::
+
+### Economía Española y Mundial {#economia-espanola-y-mundial}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100)
+
+::: {.uso-box}
+**Ejemplo de uso.** Visión de conjunto de la economía española en el contexto europeo, con fichas de país y gráficos comparados.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Macroeconomía {#macroeconomia}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Inversión (formación bruta de capital fijo): crecimiento interanual](../actividad.html?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Ciclo económico, curva de Phillips y ley de Okun con datos: relacionar el crecimiento del PIB con la variación del paro y la inflación con el paro de los países de la UE; seguir la política monetaria del BCE a través del euríbor.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Técnicas Cuantitativas I {#tecnicas-cuantitativas-i}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+### Comportamiento del Consumidor {#comportamiento-del-consumidor}
+
+**Indicadores recomendados:** [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Carencia material y social severa](../desigualdad.html?i=carencia-material-y-social-severa) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Cómo influyen la renta, la inflación y la confianza en las decisiones de compra; diferencias entre países.
+:::
+
+### Comunicación Integrada para el Marketing I {#comunicacion-integrada-para-el-marketing-i}
+
+**Indicadores recomendados:** [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Penetración de internet y del comercio electrónico como base para elegir medios y canales digitales.
+:::
+
+### Distribución Comercial I {#distribucion-comercial-i}
+
+**Indicadores recomendados:** [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del comercio minorista](../empresa.html?i=confianza-del-comercio-minorista) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Evolución del comercio minorista frente al comercio electrónico y confianza del sector de la distribución.
+:::
+
+### Investigación de Mercados I {#investigacion-de-mercados-i}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Fuentes secundarias para investigar mercados: dimensionar el mercado potencial con la población y la renta, y diseñar la muestra de una encuesta.
+:::
+
+### Técnicas Cuantitativas II {#tecnicas-cuantitativas-ii}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+## Tercer curso {#curso-3}
+
+### Comercio Exterior {#comercio-exterior}
+
+**Indicadores recomendados:** [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [Importaciones de bienes y servicios (% del PIB)](../internacional.html?i=importaciones-de-bienes-y-servicios-del-pib) · [Exportaciones: crecimiento interanual (trimestral)](../internacional.html?i=exportaciones-crecimiento-interanual-trimestral) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar)
+
+::: {.uso-box}
+**Ejemplo de uso.** Dinamismo exportador de España frente a sus socios y sensibilidad al tipo de cambio del euro.
+:::
+
+### Comunicación Integrada para el Marketing II {#comunicacion-integrada-para-el-marketing-ii}
+
+**Indicadores recomendados:** [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Penetración de internet y del comercio electrónico como base para elegir medios y canales digitales.
+:::
+
+### Dirección de Ventas {#direccion-de-ventas}
+
+**Indicadores recomendados:** [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Selección de mercados exteriores: PIB per cápita, nivel de precios, tamaño de la población y tipo de cambio de los posibles destinos.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Econometría {#econometria}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico)
+
+::: {.uso-box}
+**Ejemplo de uso.** Regresión con datos reales: ley de Okun (PIB y paro), curva de Phillips, función de consumo, modelos de series temporales (estacionalidad, raíces unitarias) y datos de panel de países.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Datos y fuentes](../datos.qmd)
+
+### Investigación de Mercados II {#investigacion-de-mercados-ii}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Fuentes secundarias para investigar mercados: dimensionar el mercado potencial con la población y la renta, y diseñar la muestra de una encuesta.
+:::
+
+### Distribución Comercial II {#distribucion-comercial-ii}
+
+**Indicadores recomendados:** [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del comercio minorista](../empresa.html?i=confianza-del-comercio-minorista) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Evolución del comercio minorista frente al comercio electrónico y confianza del sector de la distribución.
+:::
+
+### Investigación de Mercados III {#investigacion-de-mercados-iii}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Fuentes secundarias para investigar mercados: dimensionar el mercado potencial con la población y la renta, y diseñar la muestra de una encuesta.
+:::
+
+### Marketing Internacional {#marketing-internacional}
+
+**Indicadores recomendados:** [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Selección de mercados exteriores: PIB per cápita, nivel de precios, tamaño de la población y tipo de cambio de los posibles destinos.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Marketing Sectorial {#marketing-sectorial}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Segmentar la demanda turística (residentes y extranjeros, hoteles y apartamentos) y su estacionalidad para planificar campañas.
+:::
+
+### Técnicas Cuantitativas III {#tecnicas-cuantitativas-iii}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+## Cuarto curso {#curso-4}
+
+### Análisis de Datos Cualitativos *(optativa)* {#analisis-de-datos-cualitativos}
+
+**Indicadores recomendados:** [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis de conglomerados y componentes principales de los países de la UE con varios indicadores de digitalización y consumo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Creación de Empresas {#creacion-de-empresas}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses)
+
+::: {.uso-box}
+**Ejemplo de uso.** Plan de empresa: momento del ciclo, coste de la financiación y dinámica de creación y cierre de empresas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Desarrollo de Nuevos Productos *(optativa)* {#desarrollo-de-nuevos-productos}
+
+**Indicadores recomendados:** [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** Adopción digital de consumidores y empresas en la UE: compra por internet e inteligencia artificial.
+:::
+
+### Historia de la Actividad Comercial y del Marketing *(optativa)* {#historia-de-la-actividad-comercial-y-del-marketing}
+
+**Indicadores recomendados:** [Índice de producción industrial](../actividad.html?i=indice-de-produccion-industrial) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista)
+
+::: {.uso-box}
+**Ejemplo de uso.** Conectar la historia de la empresa, el comercio y el turismo con su evolución reciente: industria, creación de empresas, pernoctaciones y comercio minorista.
+:::
+
+### Informática Aplicada a la Gestión Comercial *(optativa)* {#informatica-aplicada-a-la-gestion-comercial}
+
+**Indicadores recomendados:** [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** Adopción digital de consumidores y empresas en la UE: compra por internet e inteligencia artificial.
+:::
+
+### Marketing Social y Político {#marketing-social-y-politico}
+
+**Indicadores recomendados:** [Riesgo de pobreza o exclusión social (AROPE)](../desigualdad.html?i=riesgo-de-pobreza-o-exclusion-social-arope) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Abandono temprano de la educación y la formación](../poblacion.html?i=abandono-temprano-de-la-educacion-y-la-formacion) · [Esperanza de vida al nacer](../poblacion.html?i=esperanza-de-vida-al-nacer)
+
+::: {.uso-box}
+**Ejemplo de uso.** Diagnóstico de problemas sociales con datos (pobreza, desigualdad, abandono escolar) para diseñar campañas de marketing social.
+:::
+
+### Planificación de Medios y Soportes *(optativa)* {#planificacion-de-medios-y-soportes}
+
+**Indicadores recomendados:** [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Penetración de internet y del comercio electrónico como base para elegir medios y canales digitales.
+:::
+
+### Técnicas Estadísticas Multivariantes *(optativa)* {#tecnicas-estadisticas-multivariantes}
+
+**Indicadores recomendados:** [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis de conglomerados y componentes principales de los países de la UE con varios indicadores de digitalización y consumo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Información Contable para la Gestión *(optativa)* {#informacion-contable-para-la-gestion}
+
+**Indicadores recomendados:** [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Indicadores sectoriales para interpretar la información contable de una empresa turística: ocupación y demanda.
+:::
+
+### Logística y Merchandising *(optativa)* {#logistica-y-merchandising}
+
+**Indicadores recomendados:** [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del comercio minorista](../empresa.html?i=confianza-del-comercio-minorista) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Evolución del comercio minorista frente al comercio electrónico y confianza del sector de la distribución.
+:::
+
+### Marketing Cultural y Turístico *(optativa)* {#marketing-cultural-y-turistico}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Segmentar la demanda turística (residentes y extranjeros, hoteles y apartamentos) y su estacionalidad para planificar campañas.
+:::
+
+### Marketing Electrónico *(optativa)* {#marketing-electronico}
+
+**Indicadores recomendados:** [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** Adopción digital de consumidores y empresas en la UE: compra por internet e inteligencia artificial.
+:::
+
+### Régimen Jurídico del Mercado *(optativa)* {#regimen-juridico-del-mercado}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto económico del derecho de sociedades y concursal: creación de empresas y procedimientos de quiebra.
+:::
+
+### Sistemas Informáticos de Soporte a la Colaboración y Decisión *(optativa)* {#sistemas-informaticos-de-soporte-a-la-colaboracion}
+
+**Indicadores recomendados:** [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** Digitalización de hogares y empresas: punto de partida para justificar proyectos de sistemas de información.
+:::
+
+### Sociología del Consumo *(optativa)* {#sociologia-del-consumo}
+
+**Indicadores recomendados:** [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Carencia material y social severa](../desigualdad.html?i=carencia-material-y-social-severa) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Cómo influyen la renta, la inflación y la confianza en las decisiones de compra; diferencias entre países.
+:::
+
+<p class="source">Asignaturas según el plan de estudios publicado en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>

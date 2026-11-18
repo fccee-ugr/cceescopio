@@ -20,7 +20,6 @@ Campus Universitario de Cartuja, s/n · 18071 Granada
 - **Proponer nuevos indicadores** o fuentes de datos para la docencia y la investigación.
 - **Incorporar el observatorio** o los datos de tu proyecto o grupo de investigación.
 - **Comunicar un error** o un problema al cargar algún gráfico.
-- Solicitar **ayuda para localizar datos** para un TFG, TFM, tesis doctoral o proyecto.
 
 ## Aviso sobre los datos
 

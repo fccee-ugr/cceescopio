@@ -1,0 +1,280 @@
+---
+title: "Grado en Turismo (GTUR)"
+subtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"
+---
+
+Para cada asignatura del **Grado en Turismo** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. Plan de estudios y guías docentes: [web de la Facultad](https://fccee.ugr.es/docencia/grados/graduadoa-turismo).
+
+No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.
+
+## Primer curso {#curso-1}
+
+### Estadística Aplicada al Sector Turístico {#estadistica-aplicada-al-sector-turistico}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Llegadas de viajeros a hoteles](../turismo.html?i=llegadas-de-viajeros-a-hoteles) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles)
+
+::: {.uso-box}
+**Ejemplo de uso.** Descripción de series turísticas: medias, estacionalidad, tasas de variación interanual y comparación entre comunidades autónomas.
+:::
+
+### Fundamentos en Dirección y Administración de Empresas {#fundamentos-en-direccion-y-administracion-de-empre}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** La empresa y su entorno: demografía empresarial (altas y quiebras), clima de confianza y adopción de la inteligencia artificial.
+:::
+
+### Principios de Economía I {#principios-de-economia-i}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra)
+
+::: {.uso-box}
+**Ejemplo de uso.** Explicar los conceptos básicos de la economía con el sector turístico como hilo conductor: peso del turismo, empleo y precios en España y Andalucía.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Recursos Territoriales Turísticos del Mundo {#recursos-territoriales-turisticos-del-mundo}
+
+**Indicadores recomendados:** [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras)
+
+::: {.uso-box}
+**Ejemplo de uso.** Distribución territorial de la demanda turística y presión sobre los destinos: pernoctaciones por comunidades y por tipo de alojamiento.
+:::
+
+### Introducción al Derecho {#introduccion-al-derecho}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto económico del derecho de sociedades y concursal: creación de empresas y procedimientos de quiebra.
+:::
+
+### Principios de Economía II {#principios-de-economia-ii}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra)
+
+::: {.uso-box}
+**Ejemplo de uso.** Explicar los conceptos básicos de la economía con el sector turístico como hilo conductor: peso del turismo, empleo y precios en España y Andalucía.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Recursos Territoriales Turísticos de España {#recursos-territoriales-turisticos-de-espana}
+
+**Indicadores recomendados:** [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras)
+
+::: {.uso-box}
+**Ejemplo de uso.** Distribución territorial de la demanda turística y presión sobre los destinos: pernoctaciones por comunidades y por tipo de alojamiento.
+:::
+
+## Segundo curso {#curso-2}
+
+### Derecho Mercantil {#derecho-mercantil}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto económico del derecho de sociedades y concursal: creación de empresas y procedimientos de quiebra.
+:::
+
+### Introducción al Márketing {#introduccion-al-marketing}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis del entorno de marketing: tamaño del mercado, consumo de los hogares, confianza del consumidor y compra por internet.
+:::
+
+### Contabilidad General {#contabilidad-general}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto de la información contable: efecto de la inflación sobre el valor de existencias y activos; dinámica de creación y cierre de empresas.
+:::
+
+### Dirección Comercial {#direccion-comercial}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Previsión de ventas con indicadores adelantados: confianza del consumidor y ventas del comercio minorista.
+:::
+
+### Dirección de Recursos Humanos en Empresas Turísticas {#direccion-de-recursos-humanos-en-empresas-turistic}
+
+**Indicadores recomendados:** [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Brecha salarial de género](../empleo.html?i=brecha-salarial-de-genero) · [Tasa de paro juvenil (menores de 25 años)](../empleo.html?i=tasa-de-paro-juvenil-menores-de-25-anos) · [Tasa de empleo (20-64 años)](../empleo.html?i=tasa-de-empleo-20-64-anos)
+
+::: {.uso-box}
+**Ejemplo de uso.** Políticas retributivas y de igualdad: coste laboral por hora, salario mínimo, brecha salarial de género y disponibilidad de talento joven.
+:::
+
+### Estructura Económica del Turismo {#estructura-economica-del-turismo}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Llegadas de viajeros a hoteles](../turismo.html?i=llegadas-de-viajeros-a-hoteles) · [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras)
+
+::: {.uso-box}
+**Ejemplo de uso.** Peso y estructura del turismo en España y sus comunidades: residentes frente a no residentes, hoteles frente a apartamentos, estacionalidad.
+:::
+
+## Tercer curso {#curso-3}
+
+### Información Contable para la Gestión de Empresas Turísticas {#informacion-contable-para-la-gestion-de-empresas-t}
+
+**Indicadores recomendados:** [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Indicadores sectoriales para interpretar la información contable de una empresa turística: ocupación y demanda.
+:::
+
+### Marketing de Productos Turísticos {#marketing-de-productos-turisticos}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Segmentar la demanda turística (residentes y extranjeros, hoteles y apartamentos) y su estacionalidad para planificar campañas.
+:::
+
+### Política Económica del Turismo {#politica-economica-del-turismo}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Efectos de la política turística: estacionalidad, peso del turismo internacional y presión sobre los precios de los servicios en las regiones turísticas.
+:::
+
+### Tecnología Informática para la Empresa {#tecnologia-informatica-para-la-empresa}
+
+**Indicadores recomendados:** [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** Digitalización de hogares y empresas: punto de partida para justificar proyectos de sistemas de información.
+:::
+
+### Dirección Estratégica de Empresas Turísticas {#direccion-estrategica-de-empresas-turisticas}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico) · [Gasto en I+D (% del PIB)](../empresa.html?i=gasto-en-i-d-del-pib) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis PESTEL con datos: ciclo económico, innovación, digitalización y, en turismo, evolución de la demanda.
+:::
+
+### Gestión Financiera {#gestion-financiera}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral)
+
+::: {.uso-box}
+**Ejemplo de uso.** Coste de capital y valoración: tipo libre de riesgo (bono a 10 años), tipos a corto plazo (euríbor), inflación esperada y crecimiento del PIB en las proyecciones.
+:::
+
+### Organización Internacional del Turismo {#organizacion-internacional-del-turismo}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Llegadas de viajeros a hoteles](../turismo.html?i=llegadas-de-viajeros-a-hoteles) · [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras)
+
+::: {.uso-box}
+**Ejemplo de uso.** Peso y estructura del turismo en España y sus comunidades: residentes frente a no residentes, hoteles frente a apartamentos, estacionalidad.
+:::
+
+### Planificación y Gestión Territorial para el Turismo Sostenible {#planificacion-y-gestion-territorial-para-el-turism}
+
+**Indicadores recomendados:** [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras)
+
+::: {.uso-box}
+**Ejemplo de uso.** Distribución territorial de la demanda turística y presión sobre los destinos: pernoctaciones por comunidades y por tipo de alojamiento.
+:::
+
+### Turismo Sostenible y Medio Ambiente {#turismo-sostenible-y-medio-ambiente}
+
+**Indicadores recomendados:** [Cuota de energías renovables](../sostenibilidad.html?i=cuota-de-energias-renovables) · [Emisiones de gases de efecto invernadero por habitante](../sostenibilidad.html?i=emisiones-de-gases-de-efecto-invernadero-por-habitante) · [Residuos municipales por habitante](../sostenibilidad.html?i=residuos-municipales-por-habitante) · [Tasa de reciclaje de residuos municipales](../sostenibilidad.html?i=tasa-de-reciclaje-de-residuos-municipales) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares)
+
+::: {.uso-box}
+**Ejemplo de uso.** Indicadores ambientales para la estrategia de sostenibilidad: renovables, emisiones, residuos y coste de la energía.
+:::
+
+## Cuarto curso {#curso-4}
+
+### Creación de Empresas {#creacion-de-empresas}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses)
+
+::: {.uso-box}
+**Ejemplo de uso.** Plan de empresa: momento del ciclo, coste de la financiación y dinámica de creación y cierre de empresas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Economía del Transporte {#economia-del-transporte}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Efectos de la política turística: estacionalidad, peso del turismo internacional y presión sobre los precios de los servicios en las regiones turísticas.
+:::
+
+### Fiscalidad de las Empresas del Sector del Turismo *(optativa)* {#fiscalidad-de-las-empresas-del-sector-del-turismo}
+
+**Indicadores recomendados:** [Ingresos fiscales (% del PIB)](../publico.html?i=ingresos-fiscales-del-pib) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto fiscal de las empresas turísticas: presión fiscal comparada y actividad del sector.
+:::
+
+### Geografía Turística de Andalucía *(optativa)* {#geografia-turistica-de-andalucia}
+
+**Indicadores recomendados:** [Pernoctaciones por regiones](../turismo.html?i=pernoctaciones-por-regiones) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras)
+
+::: {.uso-box}
+**Ejemplo de uso.** Distribución territorial de la demanda turística y presión sobre los destinos: pernoctaciones por comunidades y por tipo de alojamiento.
+:::
+
+### Historia Económica y Social del Turismo *(optativa)* {#historia-economica-y-social-del-turismo}
+
+**Indicadores recomendados:** [Índice de producción industrial](../actividad.html?i=indice-de-produccion-industrial) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista)
+
+::: {.uso-box}
+**Ejemplo de uso.** Conectar la historia de la empresa, el comercio y el turismo con su evolución reciente: industria, creación de empresas, pernoctaciones y comercio minorista.
+:::
+
+### Planificación y Valoración de Empresas *(optativa)* {#planificacion-y-valoracion-de-empresas}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral)
+
+::: {.uso-box}
+**Ejemplo de uso.** Coste de capital y valoración: tipo libre de riesgo (bono a 10 años), tipos a corto plazo (euríbor), inflación esperada y crecimiento del PIB en las proyecciones.
+:::
+
+### Sociología del Turismo y del Ocio *(optativa)* {#sociologia-del-turismo-y-del-ocio}
+
+**Indicadores recomendados:** [Pernoctaciones de residentes en hoteles](../turismo.html?i=pernoctaciones-de-residentes-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente)
+
+::: {.uso-box}
+**Ejemplo de uso.** Pautas de viaje de residentes y no residentes y su relación con la renta.
+:::
+
+### Marketing Hotelero y de Restauración *(optativa)* {#marketing-hotelero-y-de-restauracion}
+
+**Indicadores recomendados:** [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Pernoctaciones de no residentes en hoteles](../turismo.html?i=pernoctaciones-de-no-residentes-en-hoteles) · [Tasa de ocupación de las plazas hoteleras](../turismo.html?i=tasa-de-ocupacion-de-las-plazas-hoteleras) · [Pernoctaciones en apartamentos y alojamientos de corta estancia](../turismo.html?i=pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan) · [IPCA: servicios (tasa anual)](../precios.html?i=ipca-servicios-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Segmentar la demanda turística (residentes y extranjeros, hoteles y apartamentos) y su estacionalidad para planificar campañas.
+:::
+
+### Relaciones de Trabajo y Contratación Laboral *(optativa)* {#relaciones-de-trabajo-y-contratacion-laboral}
+
+**Indicadores recomendados:** [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Paro de larga duración](../empleo.html?i=paro-de-larga-duracion) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Efectos de las reformas laborales y del salario mínimo: evolución del paro y del coste laboral.
+:::
+
+### Sistemas de Información Basados en Internet *(optativa)* {#sistemas-de-informacion-basados-en-internet}
+
+**Indicadores recomendados:** [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** Digitalización de hogares y empresas: punto de partida para justificar proyectos de sistemas de información.
+:::
+
+<p class="source">Asignaturas según el plan de estudios publicado en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>

@@ -18,9 +18,7 @@ Inputs.table(q, {
 })
 ```
 
-<p class="source">Si el buscador no se muestra, esta es la lista completa:</p>
-
-<details><summary>Lista de indicadores</summary>
+<details><summary>Lista completa de indicadores</summary>
 
 | Indicador | Categoría | Unidad | Frecuencia | Ámbito | Tabla de Eurostat |
 |---|---|---|---|---|---|

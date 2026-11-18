@@ -1,58 +1,88 @@
-"""Genera las páginas de Docencia por departamentos y asignaturas (carpeta docencia/) y el buscador de
-indicadores (indicadores.qmd) a partir de tools/asignaturas.py y data/indicadores.json.
+"""Genera las páginas de Docencia por grados y asignaturas (docencia/gade.qmd, geco.qmd, gfico.qmd, gmim.qmd y gtur.qmd),
+las tarjetas de docencia.qmd (_grados_cards.md) y el buscador de indicadores (indicadores.qmd).
+Datos: tools/grados.py (planes de estudio), tools/asignaturas.py (fichas de uso por materia) y data/indicadores.json.
 Uso (desde la carpeta del proyecto): python3 tools/make_pages.py && python3 tools/make_docencia.py"""
-import json, os, sys, re
+import json, os, re, sys, unicodedata
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from asignaturas import DEPTS, H
+from asignaturas import DEPTS
+from grados import GR
 
 cat = json.load(open("data/indicadores.json", encoding="utf-8"))
-# Para cada identificador, la primera página en la que aparece (se evita la página regional duplicada)
 porid = {}
 for x in sorted(cat, key=lambda x: x["pagina"] == "andalucia"):
     porid.setdefault(x["id"], x)
 HERR = {"calc": ("Calculadora de inflación", "calculadora"), "ficha": ("Ficha de país o región", "ficha"),
         "rel": ("Relaciona dos indicadores", "relaciona"), "rank": ("Rankings", "rankings"), "datos": ("Datos y fuentes", "datos")}
 
+# ---- Emparejamiento asignatura -> ficha de materia
+def norm(t, keep_commas=False):
+    t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode().lower()
+    t = re.sub(r"\([^)]*\)", " ", t)
+    t = re.sub(r",", " , " if keep_commas else " ", t)
+    t = re.sub(r"[^a-z0-9 ,]", " ", t)
+    t = re.sub(r"\b(i|ii|iii|iv)\b", " ", t)
+    t = re.sub(r"\s+", " ", t).strip()
+    for _ in range(3):
+        t = re.sub(r" y( ,|$| y )", r"\1", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+FICHAS = [a for d in DEPTS for a in d["asig"]]
+GN = [norm(a["nombre"], True) for a in FICHAS]
+OVR = {"contabilidad financiera avanzada": "contabilidad financiera", "contabilidad de gestion avanzada": "contabilidad de gestion",
+       "derecho mercantil estatuto juridico del empresario y sociedades mercantiles": "derecho mercantil",
+       "fundamentos en direccion y administracion de empresas": "fundamentos de direccion y administracion de empresas",
+       "planificacion y valoracion de empresas": "planificacion financiera y valoracion de empresas",
+       "recursos territoriales turisticos de espana": "recursos territoriales turisticos",
+       "recursos territoriales turisticos del mundo": "recursos territoriales turisticos",
+       "sistemas informaticos de soporte a la colaboracion y decision": "sistemas de informacion basados en internet"}
+
+def ficha(nombre):
+    ns = norm(nombre); ns = OVR.get(ns, ns)
+    c = [k for k, g in enumerate(GN) if g.replace(" ,", "") == ns]
+    if not c:
+        pat = re.compile(r"(^|, |\by |\be )" + re.escape(ns) + r"( ,| y | e |$| en )")
+        c = [k for k, g in enumerate(GN) if pat.search(g)]
+        if len(c) > 1:
+            c = [k for k in c if re.search(r"(^|, |\by |\be )" + re.escape(ns) + r"( ,|$| en )", GN[k])] or c
+    return FICHAS[c[0]] if c else None
+
 def anchor(t):
-    import unicodedata
     t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode().lower()
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")[:50]
 
+CURSOS = {1: "Primer curso", 2: "Segundo curso", 3: "Tercer curso", 4: "Cuarto curso"}
 os.makedirs("docencia", exist_ok=True)
-nasig = 0
-for d in DEPTS:
-    out = [f'---\ntitle: "{d["nombre"]}"\nsubtitle: "Asignaturas de los grados de la Facultad e indicadores de CCEEscopio para usar en ellas"\n---\n',
-           d["intro"] + "\n"]
-    if d.get("web"):
-        out.append(f'Web del departamento: <{d["web"]}>.\n')
-    out.append("Cada indicador enlaza directamente con su gráfico interactivo, desde el que se pueden comparar países y regiones y descargar los datos en CSV.\n")
-    for a in d["asig"]:
-        nasig += 1
-        out.append(f'## {a["nombre"]} {{#{anchor(a["nombre"])}}}\n')
-        out.append(f'<p class="asig-grados">🎓 {a["grados"]}</p>\n')
-        out.append("**Indicadores recomendados**\n")
-        for i in a["ind"]:
-            x = porid[i]
-            out.append(f'- [{x["nombre"]}](../{x["pagina"]}.html?i={x["id"]}) <span class="asig-cat">{x["categoria"]}</span>')
-        out.append("")
-        out.append(f'::: {{.uso-box}}\n**Ejemplo de uso.** {a["uso"]}\n:::\n')
-        if a["herr"]:
-            hs = " · ".join(f'[{HERR[h][0]}](../{HERR[h][1]}.qmd)' for h in a["herr"])
-            out.append(f"**Herramientas útiles:** {hs}\n")
-    out.append('<p class="source">Asignaturas según los planes de estudio publicados en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. La asignación a departamentos sigue el área de conocimiento de cada materia; consulta la guía docente para confirmarla. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>\n')
-    open(f'docencia/{d["slug"]}.qmd', "w", encoding="utf-8").write("\n".join(out))
+resumen, faltan = [], []
+for sig, (nombre, url, cursos) in GR.items():
+    out = [f'---\ntitle: "{nombre} ({sig})"\nsubtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"\n---\n',
+           f"Para cada asignatura del **{nombre}** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. "
+           f"Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. "
+           f"Plan de estudios y guías docentes: [web de la Facultad]({url}).\n",
+           "No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.\n"]
+    n = 0
+    for c, txt in cursos.items():
+        out.append(f"## {CURSOS[c]} {{#curso-{c}}}\n")
+        for s in [x.strip() for x in txt.split(";") if x.strip()]:
+            opt = s.endswith("*"); s = s.rstrip("*").strip()
+            f = ficha(s)
+            if not f:
+                faltan.append(f"{sig}: {s}"); continue
+            n += 1
+            out.append(f'### {s}{" *(optativa)*" if opt else ""} {{#{anchor(s)}}}\n')
+            out.append("**Indicadores recomendados:** " + " · ".join(
+                f'[{porid[i]["nombre"]}](../{porid[i]["pagina"]}.html?i={porid[i]["id"]})' for i in f["ind"]) + "\n")
+            out.append(f'::: {{.uso-box}}\n**Ejemplo de uso.** {f["uso"]}\n:::\n')
+            if f["herr"]:
+                out.append("**Herramientas útiles:** " + " · ".join(f'[{HERR[h][0]}](../{HERR[h][1]}.qmd)' for h in f["herr"]) + "\n")
+    out.append('<p class="source">Asignaturas según el plan de estudios publicado en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>\n')
+    open(f"docencia/{sig.lower()}.qmd", "w", encoding="utf-8").write("\n".join(out))
+    resumen.append((sig, nombre, n))
 
-# Bloque de tarjetas de departamentos para docencia.qmd
-cards = "::: {.cards}\n" + "\n".join(
-    f'[<span class="icon">🏛️</span><h3>{d["nombre"].replace("Departamento de ", "").replace("Departamentos de ", "")}</h3><p>{len(d["asig"])} asignaturas o grupos de asignaturas</p>](docencia/{d["slug"]}.qmd){{.card-ccee}}\n'
-    for d in DEPTS) + ":::\n"
-open("_deptos_cards.md", "w", encoding="utf-8").write(cards)
+open("_grados_cards.md", "w", encoding="utf-8").write("::: {.cards}\n" + "\n".join(
+    f'[<span class="icon">🎓</span><span class="ct">{sig}</span><span class="cd">{nombre}: {n} asignaturas con indicadores y ejemplos de uso.</span>](docencia/{sig.lower()}.qmd){{.card-ccee}}\n'
+    for sig, nombre, n in resumen) + ":::\n")
 
-# Menú (fragmento YAML) para pegar en _quarto.yml
-menu = "\n".join(f'          - href: docencia/{d["slug"]}.qmd\n            text: "{d["nombre"].replace("Departamento de ", "").replace("Departamentos de ", "")}"' for d in DEPTS)
-open("tools/_menu_docencia.yml", "w", encoding="utf-8").write(menu + "\n")
-
-# Buscador de indicadores
+# ---- Buscador de indicadores
 filas = "\n".join(
     f'| [{x["nombre"]}]({x["pagina"]}.qmd) | {x["categoria"]} | {x["unidad"]} | {x["frecuencia"]} | {"Regional" if x["regional"] else "Países"} | {x["code"]} |'
     for x in cat)
@@ -78,9 +108,7 @@ Inputs.table(q, {{
 }})
 ```
 
-<p class="source">Si el buscador no se muestra, esta es la lista completa:</p>
-
-<details><summary>Lista de indicadores</summary>
+<details><summary>Lista completa de indicadores</summary>
 
 | Indicador | Categoría | Unidad | Frecuencia | Ámbito | Tabla de Eurostat |
 |---|---|---|---|---|---|
@@ -88,4 +116,4 @@ Inputs.table(q, {{
 
 </details>
 ''')
-print(f"{len(DEPTS)} páginas de departamentos, {nasig} asignaturas o grupos; buscador con {len(cat)} indicadores")
+print("Grados:", ", ".join(f"{s} ({n})" for s, _, n in resumen), "| sin ficha:", faltan or "ninguna")

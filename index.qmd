@@ -26,46 +26,46 @@ page-layout: full
 ## ¿Qué encontrarás?
 
 ::: {.cards}
-[<span class="icon">🛒</span><h3>Precios e inflación</h3><p>IPCA general, alimentos, energía y servicios; precios de la vivienda.</p>](precios.qmd){.card-ccee}
+[<span class="icon">🛒</span><span class="ct">Precios e inflación</span><span class="cd">IPCA general, alimentos, energía y servicios; precios de la vivienda.</span>](precios.qmd){.card-ccee}
 
-[<span class="icon">👥</span><h3>Mercado laboral</h3><p>Paro total, juvenil y femenino; tasa de empleo; paro por comunidades.</p>](empleo.qmd){.card-ccee}
+[<span class="icon">👥</span><span class="ct">Mercado laboral</span><span class="cd">Paro total, juvenil y femenino; tasa de empleo; paro por comunidades.</span>](empleo.qmd){.card-ccee}
 
-[<span class="icon">📈</span><h3>Actividad y coyuntura</h3><p>PIB, PIB per cápita, producción industrial, comercio y sentimiento económico.</p>](actividad.qmd){.card-ccee}
+[<span class="icon">📈</span><span class="ct">Actividad y coyuntura</span><span class="cd">PIB, PIB per cápita, producción industrial, comercio y sentimiento económico.</span>](actividad.qmd){.card-ccee}
 
-[<span class="icon">💡</span><h3>Empresa e innovación</h3><p>I+D, empresas que usan inteligencia artificial, comercio electrónico y confianza industrial.</p>](empresa.qmd){.card-ccee}
+[<span class="icon">💡</span><span class="ct">Empresa e innovación</span><span class="cd">I+D, empresas que usan inteligencia artificial, comercio electrónico y confianza industrial.</span>](empresa.qmd){.card-ccee}
 
-[<span class="icon">✈️</span><h3>Turismo</h3><p>Viajeros y pernoctaciones en hoteles, residentes y extranjeros, por regiones.</p>](turismo.qmd){.card-ccee}
+[<span class="icon">✈️</span><span class="ct">Turismo</span><span class="cd">Viajeros y pernoctaciones en hoteles, residentes y extranjeros, por regiones.</span>](turismo.qmd){.card-ccee}
 
-[<span class="icon">🏛️</span><h3>Sector público y mercados</h3><p>Deuda y déficit públicos, bono a 10 años y tipo de cambio euro/dólar.</p>](publico.qmd){.card-ccee}
+[<span class="icon">🏛️</span><span class="ct">Sector público y mercados</span><span class="cd">Deuda y déficit públicos, bono a 10 años y tipo de cambio euro/dólar.</span>](publico.qmd){.card-ccee}
 
-[<span class="icon">⚖️</span><h3>Desigualdad y pobreza</h3><p>Gini, S80/S20, riesgo de pobreza, umbral de pobreza, pobreza infantil y laboral, carencia material y vivienda.</p>](desigualdad.qmd){.card-ccee}
+[<span class="icon">⚖️</span><span class="ct">Desigualdad y pobreza</span><span class="cd">Gini, S80/S20, riesgo de pobreza, umbral de pobreza, pobreza infantil y laboral, carencia material y vivienda.</span>](desigualdad.qmd){.card-ccee}
 
-[<span class="icon">🌱</span><h3>Energía y sostenibilidad</h3><p>Energías renovables, precio de la electricidad y emisiones.</p>](sostenibilidad.qmd){.card-ccee}
+[<span class="icon">🌱</span><span class="ct">Energía y sostenibilidad</span><span class="cd">Energías renovables, precio de la electricidad y emisiones.</span>](sostenibilidad.qmd){.card-ccee}
 
-[<span class="icon">👪</span><h3>Población, educación y salud</h3><p>Población, fecundidad, envejecimiento, esperanza de vida y capital humano.</p>](poblacion.qmd){.card-ccee}
+[<span class="icon">👪</span><span class="ct">Población, educación y salud</span><span class="cd">Población, fecundidad, envejecimiento, esperanza de vida y capital humano.</span>](poblacion.qmd){.card-ccee}
 
-[<span class="icon">🌍</span><h3>Economía internacional</h3><p>Exportaciones, balanza por cuenta corriente, inversión internacional y convergencia con la UE.</p>](internacional.qmd){.card-ccee}
+[<span class="icon">🌍</span><span class="ct">Economía internacional</span><span class="cd">Exportaciones, balanza por cuenta corriente, inversión internacional y convergencia con la UE.</span>](internacional.qmd){.card-ccee}
 
-[<span class="icon">🗺️</span><h3>Andalucía y regiones</h3><p>Andalucía frente al resto de comunidades autónomas y la UE.</p>](andalucia.qmd){.card-ccee}
+[<span class="icon">🗺️</span><span class="ct">Andalucía y regiones</span><span class="cd">Andalucía frente al resto de comunidades autónomas y la UE.</span>](andalucia.qmd){.card-ccee}
 
-[<span class="icon">🏆</span><h3>Rankings</h3><p>La UGR en Economía, Empresa, Finanzas, Estadística y Turismo.</p>](rankings.qmd){.card-ccee}
+[<span class="icon">🏆</span><span class="ct">Rankings</span><span class="cd">La UGR en Economía, Empresa, Finanzas y Turismo.</span>](rankings.qmd){.card-ccee}
 :::
 
 ## Herramientas
 
 ::: {.cards}
-[<span class="icon">🧮</span><h3>Calculadora de inflación</h3><p>¿Cuánto valen hoy los euros de otro año?</p>](calculadora.qmd){.card-ccee}
+[<span class="icon">🧮</span><span class="ct">Calculadora de inflación</span><span class="cd">¿Cuánto valen hoy los euros de otro año?</span>](calculadora.qmd){.card-ccee}
 
-[<span class="icon">🪪</span><h3>Ficha de país o región</h3><p>Los indicadores clave de un territorio de un vistazo.</p>](ficha.qmd){.card-ccee}
+[<span class="icon">🪪</span><span class="ct">Ficha de país o región</span><span class="cd">Los indicadores clave de un territorio de un vistazo.</span>](ficha.qmd){.card-ccee}
 
-[<span class="icon">🔗</span><h3>Relaciona dos indicadores</h3><p>Curva de Phillips, ley de Okun y otras relaciones entre países.</p>](relaciona.qmd){.card-ccee}
+[<span class="icon">🔗</span><span class="ct">Relaciona dos indicadores</span><span class="cd">Curva de Phillips, ley de Okun y otras relaciones entre países.</span>](relaciona.qmd){.card-ccee}
 
-[<span class="icon">🔎</span><h3>Buscador de indicadores</h3><p>Los 99 indicadores de CCEEscopio en una tabla.</p>](indicadores.qmd){.card-ccee}
+[<span class="icon">🔎</span><span class="ct">Buscador de indicadores</span><span class="cd">Los 99 indicadores de CCEEscopio en una tabla.</span>](indicadores.qmd){.card-ccee}
 :::
 
 ## Para cada asignatura de la Facultad
 
-En [**Docencia**](docencia.qmd) encontrarás, **por departamentos y asignaturas** de los grados de la Facultad, los indicadores recomendados y ejemplos de uso en clase.
+En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, GMIM y GTUR) y asignaturas**, los indicadores recomendados y ejemplos de uso en clase.
 
 ## Una herramienta para la docencia y la investigación
 

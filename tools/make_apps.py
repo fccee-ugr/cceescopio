@@ -32,7 +32,7 @@ Esta calculadora **actualiza una cantidad de dinero** de un año a otro con el �
 
 ```{{ojs}}
 //| echo: false
-especIPC = {json.dumps(IPC_ANUAL, ensure_ascii=False)}
+especIPC = ({json.dumps(IPC_ANUAL, ensure_ascii=False)})
 datosIPC = cargar(especIPC)
 paisesIPC = datosIPC.ok ? [...new Set(datosIPC.rows.map(r => r.territorio))].sort((a, b) => a.localeCompare(b, "es")) : []
 viewof paisC = Inputs.select(paisesIPC, {{label: "País o zona", value: paisesIPC.includes("España") ? "España" : paisesIPC[0]}})
@@ -145,7 +145,7 @@ cargasF = Promise.all(especF.map(s => cargar(s).catch(e => ({{ok: false, rows: [
 
 ```{{ojs}}
 //| echo: false
-porPagina = {json.dumps({i: porid[i]["pagina"] for i in FP + FR}, ensure_ascii=False)}
+porPagina = ({json.dumps({i: porid[i]["pagina"] for i in FP + FR}, ensure_ascii=False)})
 ```
 '''
 open("ficha.qmd", "w", encoding="utf-8").write(ficha)

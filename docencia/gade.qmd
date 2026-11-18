@@ -1,0 +1,420 @@
+---
+title: "Grado en Administración y Dirección de Empresas (GADE)"
+subtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"
+---
+
+Para cada asignatura del **Grado en Administración y Dirección de Empresas** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. Plan de estudios y guías docentes: [web de la Facultad](https://fccee.ugr.es/docencia/grados/graduadoa-administracion-y-direccion-empresas).
+
+No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.
+
+## Primer curso {#curso-1}
+
+### Economía Política {#economia-politica}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Primer contacto con los grandes agregados: el alumnado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Fundamentos de Dirección y Administración de Empresas {#fundamentos-de-direccion-y-administracion-de-empre}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** La empresa y su entorno: demografía empresarial (altas y quiebras), clima de confianza y adopción de la inteligencia artificial.
+:::
+
+### Introducción a las Operaciones Financieras {#introduccion-a-las-operaciones-financieras}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Tipos de interés nominales y reales: calcular la cuota de una hipoteca con el euríbor actual y descontar la inflación para obtener el tipo real.
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+### Introducción al Márketing {#introduccion-al-marketing}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis del entorno de marketing: tamaño del mercado, consumo de los hogares, confianza del consumidor y compra por internet.
+:::
+
+### Matemáticas {#matematicas}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Funciones, tasas de crecimiento y logaritmos con series reales: crecimiento compuesto de la población o del nivel de precios.
+:::
+
+### Contabilidad General {#contabilidad-general}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto de la información contable: efecto de la inflación sobre el valor de existencias y activos; dinámica de creación y cierre de empresas.
+:::
+
+### Historia del Desarrollo Económico Mundial Contemporáneo {#historia-del-desarrollo-economico-mundial-contempo}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Esperanza de vida al nacer](../poblacion.html?i=esperanza-de-vida-al-nacer) · [Tasa de fecundidad](../poblacion.html?i=tasa-de-fecundidad)
+
+::: {.uso-box}
+**Ejemplo de uso.** Divergencia y convergencia: comparar el PIB per cápita y la esperanza de vida de los países europeos para conectar la historia con la situación actual.
+:::
+
+### Introducción al Derecho {#introduccion-al-derecho}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto económico del derecho de sociedades y concursal: creación de empresas y procedimientos de quiebra.
+:::
+
+### Matemáticas Empresariales {#matematicas-empresariales}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Funciones, tasas de crecimiento y logaritmos con series reales: crecimiento compuesto de la población o del nivel de precios.
+:::
+
+### Microeconomía {#microeconomia}
+
+**Indicadores recomendados:** [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Elasticidades y estructura de mercado con precios reales: comparar la subida de la energía y de los alimentos con la inflación general, o el salario mínimo entre países para discutir sus efectos en el mercado de trabajo.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+## Segundo curso {#curso-2}
+
+### Contabilidad Financiera I {#contabilidad-financiera-i}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto de la información contable: efecto de la inflación sobre el valor de existencias y activos; dinámica de creación y cierre de empresas.
+:::
+
+### Dirección Comercial {#direccion-comercial}
+
+**Indicadores recomendados:** [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Previsión de ventas con indicadores adelantados: confianza del consumidor y ventas del comercio minorista.
+:::
+
+### Dirección y Administración de Empresas {#direccion-y-administracion-de-empresas}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** La empresa y su entorno: demografía empresarial (altas y quiebras), clima de confianza y adopción de la inteligencia artificial.
+:::
+
+### Macroeconomía {#macroeconomia}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Inversión (formación bruta de capital fijo): crecimiento interanual](../actividad.html?i=inversion-formacion-bruta-de-capital-fijo-crecimiento-intera) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: inflación subyacente (sin energía ni alimentos)](../precios.html?i=ipca-inflacion-subyacente-sin-energia-ni-alimentos) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Ciclo económico, curva de Phillips y ley de Okun con datos: relacionar el crecimiento del PIB con la variación del paro y la inflación con el paro de los países de la UE; seguir la política monetaria del BCE a través del euríbor.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Ficha de país o región](../ficha.qmd)
+
+### Técnicas Cuantitativas I {#tecnicas-cuantitativas-i}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+### Análisis de Operaciones Financieras {#analisis-de-operaciones-financieras}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Tipos de interés nominales y reales: calcular la cuota de una hipoteca con el euríbor actual y descontar la inflación para obtener el tipo real.
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+### Contabilidad Financiera II {#contabilidad-financiera-ii}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Contexto de la información contable: efecto de la inflación sobre el valor de existencias y activos; dinámica de creación y cierre de empresas.
+:::
+
+### Economía Mundial {#economia-mundial}
+
+**Indicadores recomendados:** [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [PIB per cápita en PPC (UE-27 = 100)](../internacional.html?i=pib-per-capita-en-ppc-ue-27-100) · [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar)
+
+::: {.uso-box}
+**Ejemplo de uso.** Comparación internacional del nivel de vida, la apertura comercial y los desequilibrios exteriores de los países europeos.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Organización de Empresas {#organizacion-de-empresas}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial)
+
+::: {.uso-box}
+**Ejemplo de uso.** La empresa y su entorno: demografía empresarial (altas y quiebras), clima de confianza y adopción de la inteligencia artificial.
+:::
+
+### Técnicas Cuantitativas II {#tecnicas-cuantitativas-ii}
+
+**Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
+
+::: {.uso-box}
+**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+:::
+
+**Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
+
+## Tercer curso {#curso-3}
+
+### Contabilidad de Gestión {#contabilidad-de-gestion}
+
+**Indicadores recomendados:** [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora) · [Costes laborales unitarios nominales: variación anual](../actividad.html?i=costes-laborales-unitarios-nominales-variacion-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares)
+
+::: {.uso-box}
+**Ejemplo de uso.** Evolución de los costes de las empresas: coste laboral por hora, precios industriales y precio de la energía como inputs para presupuestos y desviaciones.
+:::
+
+### Derecho Fiscal {#derecho-fiscal}
+
+**Indicadores recomendados:** [Ingresos fiscales (% del PIB)](../publico.html?i=ingresos-fiscales-del-pib) · [Déficit (−) o superávit (+) público (% del PIB)](../publico.html?i=deficit-o-superavit-publico-del-pib)
+
+::: {.uso-box}
+**Ejemplo de uso.** Presión fiscal de España comparada con la UE como introducción al sistema tributario.
+:::
+
+### Dirección Estratégica de la Empresa I {#direccion-estrategica-de-la-empresa-i}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico) · [Gasto en I+D (% del PIB)](../empresa.html?i=gasto-en-i-d-del-pib) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis PESTEL con datos: ciclo económico, innovación, digitalización y, en turismo, evolución de la demanda.
+:::
+
+### Dirección de Operaciones I {#direccion-de-operaciones-i}
+
+**Indicadores recomendados:** [Índice de producción industrial](../actividad.html?i=indice-de-produccion-industrial) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Costes y productividad de la producción: índice de producción industrial, precios industriales y de la energía, productividad por hora.
+:::
+
+### Econometría {#econometria}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB per cápita en paridad de poder de compra](../actividad.html?i=pib-per-capita-en-paridad-de-poder-de-compra) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [Consumo de los hogares: crecimiento interanual](../actividad.html?i=consumo-de-los-hogares-crecimiento-interanual) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico)
+
+::: {.uso-box}
+**Ejemplo de uso.** Regresión con datos reales: ley de Okun (PIB y paro), curva de Phillips, función de consumo, modelos de series temporales (estacionalidad, raíces unitarias) y datos de panel de países.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd) · [Datos y fuentes](../datos.qmd)
+
+### Análisis de Estados Financieros {#analisis-de-estados-financieros}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Confianza de la industria](../empresa.html?i=confianza-de-la-industria) · [Confianza en los servicios](../empresa.html?i=confianza-en-los-servicios) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice)
+
+::: {.uso-box}
+**Ejemplo de uso.** Interpretar los ratios de una empresa en su contexto sectorial y del ciclo económico: confianza empresarial e índice de quiebras.
+:::
+
+### Dirección Estratégica de la Empresa II {#direccion-estrategica-de-la-empresa-ii}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico) · [Gasto en I+D (% del PIB)](../empresa.html?i=gasto-en-i-d-del-pib) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles)
+
+::: {.uso-box}
+**Ejemplo de uso.** Análisis PESTEL con datos: ciclo económico, innovación, digitalización y, en turismo, evolución de la demanda.
+:::
+
+### Dirección de Recursos Humanos I {#direccion-de-recursos-humanos-i}
+
+**Indicadores recomendados:** [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Brecha salarial de género](../empleo.html?i=brecha-salarial-de-genero) · [Tasa de paro juvenil (menores de 25 años)](../empleo.html?i=tasa-de-paro-juvenil-menores-de-25-anos) · [Tasa de empleo (20-64 años)](../empleo.html?i=tasa-de-empleo-20-64-anos)
+
+::: {.uso-box}
+**Ejemplo de uso.** Políticas retributivas y de igualdad: coste laboral por hora, salario mínimo, brecha salarial de género y disponibilidad de talento joven.
+:::
+
+### Economía Española {#economia-espanola}
+
+**Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual) · [Gasto en I+D (% del PIB)](../empresa.html?i=gasto-en-i-d-del-pib) · [Cuota de energías renovables](../sostenibilidad.html?i=cuota-de-energias-renovables)
+
+::: {.uso-box}
+**Ejemplo de uso.** Seguir la guía de la asignatura con datos: crecimiento y fluctuaciones, estructura productiva, sector exterior (balanza por cuenta corriente), mercado de trabajo, sector público y deuda.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd) · [Relaciona dos indicadores](../relaciona.qmd)
+
+### Métodos Cuantitativos {#metodos-cuantitativos}
+
+**Indicadores recomendados:** [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Modelización de series financieras: tipos de interés, tipo de cambio e inflación; volatilidad y correlación.
+:::
+
+## Cuarto curso {#curso-4}
+
+### Auditoría de Estados Financieros *(optativa)* {#auditoria-de-estados-financieros}
+
+**Indicadores recomendados:** [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Indicador de sentimiento económico](../actividad.html?i=indicador-de-sentimiento-economico)
+
+::: {.uso-box}
+**Ejemplo de uso.** Riesgo de empresa en funcionamiento: relacionar el ciclo económico con la evolución de las quiebras empresariales.
+:::
+
+### Comercio Exterior *(optativa)* {#comercio-exterior}
+
+**Indicadores recomendados:** [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [Importaciones de bienes y servicios (% del PIB)](../internacional.html?i=importaciones-de-bienes-y-servicios-del-pib) · [Exportaciones: crecimiento interanual (trimestral)](../internacional.html?i=exportaciones-crecimiento-interanual-trimestral) · [Saldo por cuenta corriente (% del PIB)](../internacional.html?i=saldo-por-cuenta-corriente-del-pib) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar)
+
+::: {.uso-box}
+**Ejemplo de uso.** Dinamismo exportador de España frente a sus socios y sensibilidad al tipo de cambio del euro.
+:::
+
+### Creación de Empresas {#creacion-de-empresas}
+
+**Indicadores recomendados:** [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Declaraciones de quiebra de empresas (índice)](../empresa.html?i=declaraciones-de-quiebra-de-empresas-indice) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses)
+
+::: {.uso-box}
+**Ejemplo de uso.** Plan de empresa: momento del ciclo, coste de la financiación y dinámica de creación y cierre de empresas.
+:::
+
+**Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
+
+### Dirección Financiera {#direccion-financiera}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral)
+
+::: {.uso-box}
+**Ejemplo de uso.** Coste de capital y valoración: tipo libre de riesgo (bono a 10 años), tipos a corto plazo (euríbor), inflación esperada y crecimiento del PIB en las proyecciones.
+:::
+
+### Dirección de Operaciones II *(optativa)* {#direccion-de-operaciones-ii}
+
+**Indicadores recomendados:** [Índice de producción industrial](../actividad.html?i=indice-de-produccion-industrial) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Costes y productividad de la producción: índice de producción industrial, precios industriales y de la energía, productividad por hora.
+:::
+
+### Distribución Comercial *(optativa)* {#distribucion-comercial}
+
+**Indicadores recomendados:** [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del comercio minorista](../empresa.html?i=confianza-del-comercio-minorista) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Evolución del comercio minorista frente al comercio electrónico y confianza del sector de la distribución.
+:::
+
+### Gestión Medioambiental de la Empresa *(optativa)* {#gestion-medioambiental-de-la-empresa}
+
+**Indicadores recomendados:** [Cuota de energías renovables](../sostenibilidad.html?i=cuota-de-energias-renovables) · [Emisiones de gases de efecto invernadero por habitante](../sostenibilidad.html?i=emisiones-de-gases-de-efecto-invernadero-por-habitante) · [Residuos municipales por habitante](../sostenibilidad.html?i=residuos-municipales-por-habitante) · [Tasa de reciclaje de residuos municipales](../sostenibilidad.html?i=tasa-de-reciclaje-de-residuos-municipales) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares)
+
+::: {.uso-box}
+**Ejemplo de uso.** Indicadores ambientales para la estrategia de sostenibilidad: renovables, emisiones, residuos y coste de la energía.
+:::
+
+### Gestión de Empresas en el Marco Internacional *(optativa)* {#gestion-de-empresas-en-el-marco-internacional}
+
+**Indicadores recomendados:** [Exportaciones de bienes y servicios (% del PIB)](../internacional.html?i=exportaciones-de-bienes-y-servicios-del-pib) · [Tipo de cambio euro / dólar](../publico.html?i=tipo-de-cambio-euro-dolar) · [Nivel de precios comparado (UE-27 = 100)](../precios.html?i=nivel-de-precios-comparado-ue-27-100) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Decisiones de internacionalización: costes laborales, niveles de precios y apertura de los países de destino.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Gestión de la Calidad Empresarial *(optativa)* {#gestion-de-la-calidad-empresarial}
+
+**Indicadores recomendados:** [Índice de producción industrial](../actividad.html?i=indice-de-produccion-industrial) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares) · [Productividad del trabajo por hora: variación anual](../actividad.html?i=productividad-del-trabajo-por-hora-variacion-anual)
+
+::: {.uso-box}
+**Ejemplo de uso.** Costes y productividad de la producción: índice de producción industrial, precios industriales y de la energía, productividad por hora.
+:::
+
+### Investigación de Mercados *(optativa)* {#investigacion-de-mercados}
+
+**Indicadores recomendados:** [Población](../poblacion.html?i=poblacion) · [Población por regiones](../poblacion.html?i=poblacion-por-regiones) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Confianza del consumidor](../actividad.html?i=confianza-del-consumidor)
+
+::: {.uso-box}
+**Ejemplo de uso.** Fuentes secundarias para investigar mercados: dimensionar el mercado potencial con la población y la renta, y diseñar la muestra de una encuesta.
+:::
+
+### Organización Industrial: Evidencias Históricas *(optativa)* {#organizacion-industrial-evidencias-historicas}
+
+**Indicadores recomendados:** [Índice de producción industrial](../actividad.html?i=indice-de-produccion-industrial) · [Registros de nuevas empresas (índice)](../empresa.html?i=registros-de-nuevas-empresas-indice) · [Pernoctaciones en hoteles](../turismo.html?i=pernoctaciones-en-hoteles) · [Índice de comercio minorista](../actividad.html?i=indice-de-comercio-minorista)
+
+::: {.uso-box}
+**Ejemplo de uso.** Conectar la historia de la empresa, el comercio y el turismo con su evolución reciente: industria, creación de empresas, pernoctaciones y comercio minorista.
+:::
+
+### Análisis y Control de Costes *(optativa)* {#analisis-y-control-de-costes}
+
+**Indicadores recomendados:** [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora) · [Costes laborales unitarios nominales: variación anual](../actividad.html?i=costes-laborales-unitarios-nominales-variacion-anual) · [Precios industriales (tasa anual)](../precios.html?i=precios-industriales-tasa-anual) · [Precio de la electricidad para hogares](../sostenibilidad.html?i=precio-de-la-electricidad-para-hogares) · [Precio del gas natural para hogares](../sostenibilidad.html?i=precio-del-gas-natural-para-hogares)
+
+::: {.uso-box}
+**Ejemplo de uso.** Evolución de los costes de las empresas: coste laboral por hora, precios industriales y precio de la energía como inputs para presupuestos y desviaciones.
+:::
+
+### Comunicación Comercial *(optativa)* {#comunicacion-comercial}
+
+**Indicadores recomendados:** [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet) · [Personas que compran por internet](../empresa.html?i=personas-que-compran-por-internet) · [Población](../poblacion.html?i=poblacion)
+
+::: {.uso-box}
+**Ejemplo de uso.** Penetración de internet y del comercio electrónico como base para elegir medios y canales digitales.
+:::
+
+### Dirección de Recursos Humanos II *(optativa)* {#direccion-de-recursos-humanos-ii}
+
+**Indicadores recomendados:** [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora) · [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Brecha salarial de género](../empleo.html?i=brecha-salarial-de-genero) · [Tasa de paro juvenil (menores de 25 años)](../empleo.html?i=tasa-de-paro-juvenil-menores-de-25-anos) · [Tasa de empleo (20-64 años)](../empleo.html?i=tasa-de-empleo-20-64-anos)
+
+::: {.uso-box}
+**Ejemplo de uso.** Políticas retributivas y de igualdad: coste laboral por hora, salario mínimo, brecha salarial de género y disponibilidad de talento joven.
+:::
+
+### Dirección de la Innovación y la Tecnología *(optativa)* {#direccion-de-la-innovacion-y-la-tecnologia}
+
+**Indicadores recomendados:** [Gasto en I+D (% del PIB)](../empresa.html?i=gasto-en-i-d-del-pib) · [Gasto en I+D por regiones (% del PIB)](../empresa.html?i=gasto-en-i-d-por-regiones-del-pib) · [Empresas que usan inteligencia artificial](../empresa.html?i=empresas-que-usan-inteligencia-artificial) · [Hogares con acceso a internet](../empresa.html?i=hogares-con-acceso-a-internet)
+
+::: {.uso-box}
+**Ejemplo de uso.** Sistemas de innovación: esfuerzo en I+D de países y regiones y difusión de la inteligencia artificial en las empresas.
+:::
+
+**Herramientas útiles:** [Relaciona dos indicadores](../relaciona.qmd)
+
+### Planificación y Valoración de Empresas *(optativa)* {#planificacion-y-valoracion-de-empresas}
+
+**Indicadores recomendados:** [Euríbor a 3 meses](../publico.html?i=euribor-a-3-meses) · [Rentabilidad del bono a 10 años](../publico.html?i=rentabilidad-del-bono-a-10-anos) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral)
+
+::: {.uso-box}
+**Ejemplo de uso.** Coste de capital y valoración: tipo libre de riesgo (bono a 10 años), tipos a corto plazo (euríbor), inflación esperada y crecimiento del PIB en las proyecciones.
+:::
+
+### Régimen Laboral de la Empresa *(optativa)* {#regimen-laboral-de-la-empresa}
+
+**Indicadores recomendados:** [Salario mínimo mensual](../empleo.html?i=salario-minimo-mensual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Paro de larga duración](../empleo.html?i=paro-de-larga-duracion) · [Coste laboral por hora](../empleo.html?i=coste-laboral-por-hora)
+
+::: {.uso-box}
+**Ejemplo de uso.** Efectos de las reformas laborales y del salario mínimo: evolución del paro y del coste laboral.
+:::
+
+<p class="source">Asignaturas según el plan de estudios publicado en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>

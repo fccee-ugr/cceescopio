@@ -3,7 +3,7 @@ title: "La Universidad de Granada en los rankings"
 subtitle: "Posición de la UGR en las áreas relacionadas con la Facultad de Ciencias Económicas y Empresariales"
 ---
 
-Los rankings internacionales por disciplinas permiten situar la investigación y la docencia de la UGR en las áreas de la Facultad: **Economía, Empresa, Finanzas, Estadística y Turismo**. Esta página recoge las posiciones publicadas por la [Unidad de Analítica de la UGR](https://analitica.ugr.es/rankings/) en los tres rankings internacionales más citados (ARWU o Ranking de Shanghái, QS y THE).
+Los rankings internacionales por disciplinas permiten situar la investigación y la docencia de la UGR en las áreas de la Facultad: **Economía, Empresa, Finanzas y Turismo**. Esta página recoge las posiciones publicadas por la [Unidad de Analítica de la UGR](https://analitica.ugr.es/rankings/) en los tres rankings internacionales más citados (ARWU o Ranking de Shanghái, QS y THE).
 
 ::: {.callout-note appearance="simple"}
 **Cómo leer las posiciones.** Los rankings publican **intervalos** de posiciones (por ejemplo, 151-200) a partir de cierta posición mundial. La columna *España* indica el puesto, o el intervalo de puestos, de la UGR entre las universidades españolas, y la columna *Andalucía*, entre las andaluzas.
@@ -22,7 +22,6 @@ html`<div class="cards">
   <div class="card-ccee"><div class="icon">✈️</div><h3>Turismo</h3><p>Entre las <b>100 mejores del mundo</b> (76-100) en el Ranking de Shanghái 2025 y 1.ª de Andalucía.</p></div>
   <div class="card-ccee"><div class="icon">📈</div><h3>Gestión (Management)</h3><p><b>151-200 del mundo</b> y <b>2.ª de España</b> en el Ranking de Shanghái 2025.</p></div>
   <div class="card-ccee"><div class="icon">🏢</div><h3>Administración de Empresas</h3><p>201-300 del mundo en Shanghái 2025 (101-150 en 2024) y 1.ª de Andalucía.</p></div>
-  <div class="card-ccee"><div class="icon">📊</div><h3>Estadística</h3><p>201-300 del mundo en Shanghái 2025 y 251-275 en QS 2026.</p></div>
 </div>`
 ```
 
