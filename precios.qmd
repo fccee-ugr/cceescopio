@@ -315,6 +315,39 @@ async function geoDescargar(nivel) {
   return null;
 }
 
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
 function csv(rows) {
   return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
 }
@@ -396,17 +429,17 @@ mapa = {
   const nombre = f => nombresGeo[f.properties.geo] ?? f.properties.NAME_LATN ?? f.properties.NAME ?? f.properties.geo;
   const tit = f => { const r = mapaVals.get(f.properties.geo); return r ? `${nombre(f)} (${r.periodo})\n${fmt(r.valor)} ${ind.unidad}` : `${nombre(f)}\nSin datos`; };
   const marcas = (feats, clip = false) => [
-    Plot.geo(feats, {fill: "#ECE7E9", stroke: "white", strokeWidth: 0.6, clip}),
-    Plot.geo(feats.filter(f => mapaVals.has(f.properties.geo)), {fill: f => mapaVals.get(f.properties.geo).valor, stroke: "white", strokeWidth: 0.6, title: tit, tip: true, clip}),
+    Plot.geo(feats, {fill: "#ECE7E9", stroke: "white", strokeWidth: 0.6, title: tit, clip}),
+    Plot.geo(feats.filter(f => mapaVals.has(f.properties.geo)), {fill: f => mapaVals.get(f.properties.geo).valor, stroke: "white", strokeWidth: 0.6, title: tit, clip}),
     Plot.geo(feats.filter(f => ["ES", "ES61"].includes(f.properties.geo)), {stroke: "#3C3C3B", strokeWidth: 1.6, clip})
   ];
   if (!ind.regional) {
     const feats = mapaGeo.features;
-    return html`<div class="mapa-ccee">${Plot.plot({
+    return tooltipMapa(html`<div class="mapa-ccee">${Plot.plot({
       width: 760, height: 620, color: mapaColor,
       projection: {type: "azimuthal-equal-area", rotate: [-10, -52], domain: {type: "MultiPoint", coordinates: [[-11, 35], [33, 35], [33, 70], [-11, 70], [25, 34]]}},
       marks: marcas(feats, true)
-    })}</div>`;
+    })}</div>`);
   }
   const es = mapaGeo.features.filter(f => f.properties.geo?.startsWith("ES"));
   const pen = es.filter(f => f.properties.geo !== "ES70");
@@ -416,8 +449,8 @@ mapa = {
     return {lon, lat, f, valor: r ? r.valor : null};
   });
   const marcasCiudades = [
-    Plot.dot(ciudades.filter(c => c.valor === null), {x: "lon", y: "lat", r: 9, fill: "#ECE7E9", stroke: "#3C3C3B", strokeWidth: 1.2, title: c => tit(c.f), tip: true}),
-    Plot.dot(ciudades.filter(c => c.valor !== null), {x: "lon", y: "lat", r: 9, fill: "valor", stroke: "#3C3C3B", strokeWidth: 1.2, title: c => tit(c.f), tip: true}),
+    Plot.dot(ciudades.filter(c => c.valor === null), {x: "lon", y: "lat", r: 9, fill: "#ECE7E9", stroke: "#3C3C3B", strokeWidth: 1.2, title: c => tit(c.f)}),
+    Plot.dot(ciudades.filter(c => c.valor !== null), {x: "lon", y: "lat", r: 9, fill: "valor", stroke: "#3C3C3B", strokeWidth: 1.2, title: c => tit(c.f)}),
     Plot.text(ciudades, {x: "lon", y: "lat", text: c => nombresGeo[c.f.properties.geo], dy: 18, fontSize: 11, fill: "#3C3C3B"})
   ];
   const can = es.filter(f => f.properties.geo === "ES70");
@@ -427,7 +460,7 @@ mapa = {
   const islas = can.length ? Plot.plot({width: 220, height: 130, color: {...mapaColor, legend: false},
     projection: {type: "conic-conformal", rotate: [15.5, 0], parallels: [27, 29], domain: {type: "FeatureCollection", features: can}},
     marks: marcas(can)}) : "";
-  return html`<div class="mapa-es mapa-ccee">${principal}<div class="mapa-inset"><span>Canarias</span>${islas}</div></div>`;
+  return tooltipMapa(html`<div class="mapa-es mapa-ccee">${principal}<div class="mapa-inset"><span>Canarias</span>${islas}</div></div>`);
 }
 ```
 

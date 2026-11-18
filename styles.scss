@@ -146,3 +146,11 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 .visit-counter { white-space: nowrap; }
 
 [hidden] { display: none !important; }
+
+/* Etiqueta de los mapas */
+.mapa-tip { position: fixed; z-index: 2000; pointer-events: none; background: #fff; color: $ccee-dark;
+  border: 1px solid #d9d0cc; border-radius: 8px; padding: .35rem .6rem; font-size: .85rem; line-height: 1.35;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .15); max-width: 260px; }
+.mapa-tip b { color: $ccee-magenta; }
+.mapa-zona { cursor: pointer; }
+.mapa-hl { stroke: $ccee-dark !important; stroke-width: 2px !important; }
