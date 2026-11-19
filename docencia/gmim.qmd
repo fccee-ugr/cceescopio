@@ -275,6 +275,10 @@ No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de 
 
 **Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
 
+::: {.uso-box}
+**Para el profesorado:** [generador de exámenes de Técnicas Cuantitativas III](../examen-tc3.qmd), con muestreo y decisión, versiones aleatorias, soluciones y datos de Eurostat.
+:::
+
 ## Cuarto curso {#curso-4}
 
 ### Análisis de Datos Cualitativos *(optativa)* {#analisis-de-datos-cualitativos}

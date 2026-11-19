@@ -1325,3 +1325,136 @@ viewof desdeP = Inputs.range([2000, new Date().getFullYear() - 1], {label: "Desd
 }
 ```
 ''', ESPECS=J(unicos), AREAS=J(AREAS))
+
+# =====================================================================================
+# Generador de exámenes de Técnicas Cuantitativas III (GMIM)
+# =====================================================================================
+MOTOR = "\n".join("  " + l for l in open("tools/tc3_motor.js", encoding="utf-8").read().splitlines() if not l.startswith("if (typeof module"))
+CSS_TC3 = ("body{font-family:Calibri,Arial,sans-serif;font-size:11pt;max-width:800px;margin:auto;color:#111} .tc3-titulo{font-weight:bold;text-align:center;font-size:12pt} "
+           ".tc3-sub{text-align:center;font-size:9pt;color:#555} .tc3-nombre{width:100%;border:0;margin:6px 0} .tc3-nombre td{border:0;padding:4px 0 18px;text-align:left} "
+           "table{border-collapse:collapse;margin:6px auto} td,th{border:1px solid #888;padding:2px 8px;text-align:center} .tc3-preg{margin:12px 0;break-inside:avoid} "
+           ".tc3-ap li{margin:3px 0} .tc3-sol{background:#F3F7FB;border-left:3px solid #2C6FBB;padding:4px 10px;margin:6px 0 14px} .tc3-res{font-weight:bold;color:#A6195E} "
+           ".tc3-centro{text-align:center} .tc3-tema{color:#666;font-size:9pt} .tc3-euf{border-top:2px solid #A6195E;margin-top:16px;padding-top:4px} "
+           ".tc3-titulo-euf{font-weight:bold;color:#A6195E} .tc3-meta{font-size:10pt} .tc3-pie{font-size:8pt;color:#777;margin-top:16px}")
+pagina("examen-tc3.qmd", r'''---
+title: "Generador de exámenes de Técnicas Cuantitativas III"
+subtitle: "Grado en Marketing e Investigación de Mercados · Exámenes aleatorios con soluciones, en el formato de la asignatura"
+toc: false
+---
+
+Genera un examen escrito de **Técnicas Cuantitativas III** con el formato y el formulario de la asignatura (nivel de confianza del 95 %, *z* = 2). Cada vez que pulses **Generar** cambian los temas, los enunciados y los datos. Reglas:
+
+- Como máximo **un problema por tema**. Si hay más de una pregunta, **una es de decisión** (tema 8, 9 o 10) y el resto de **muestreo** (temas 1 a 6). El tema 7 no se incluye.
+- Cada apartado lleva su **puntuación**, y la suma es la puntuación máxima elegida.
+- Los enunciados son de **economía, empresa y marketing**. Una de las preguntas usa **datos reales de Eurostat** de los indicadores de CCEEscopio (compras por internet, población de las comunidades autónomas o crecimiento del PIB).
+- Con **Evaluación Única Final**, se añade una pregunta adicional de un tema distinto, con su propia puntuación, dificultad y duración, y la misma fecha.
+
+Se descargan dos ficheros: el **examen** y el **examen con las soluciones**.
+
+__HELPERS__
+
+```{ojs}
+//| echo: false
+motorTC3 = {
+__MOTOR__
+  return crearMotorTC3();
+}
+especTC3 = __ESPECS__
+```
+
+```{ojs}
+//| echo: false
+viewof tcConv = Inputs.radio(["Ordinaria", "Extraordinaria", "Especial"], {label: "Convocatoria", value: "Ordinaria"})
+viewof tcDif = Inputs.radio(["Baja", "Media", "Alta"], {label: "Dificultad", value: "Media"})
+viewof tcN = Inputs.range([1, 7], {label: "Número de preguntas", value: 5, step: 1})
+viewof tcPuntos = Inputs.range([1, 10], {label: "Puntuación máxima", value: 10, step: 0.5})
+viewof tcTiempo = Inputs.number([10, 300], {label: "Duración (minutos)", value: 120, step: 5})
+viewof tcFecha = Inputs.date({label: "Fecha del examen", value: new Date()})
+viewof tcEUF = Inputs.toggle({label: "Incluir pregunta de Evaluación Única Final", value: false})
+```
+
+```{ojs}
+//| echo: false
+viewof tcEufDif = Inputs.radio(["Baja", "Media", "Alta"], {label: "EUF · dificultad", value: "Media", disabled: !tcEUF})
+viewof tcEufPuntos = Inputs.range([0.5, 10], {label: "EUF · puntuación", value: 2, step: 0.5, disabled: !tcEUF})
+viewof tcEufTiempo = Inputs.number([5, 180], {label: "EUF · duración (minutos)", value: 30, step: 5, disabled: !tcEUF})
+viewof tcCodigo = Inputs.text({label: "Código (opcional)", placeholder: "para repetir un examen ya generado", width: 260})
+viewof tcGenerar = Inputs.button("🎲 Generar examen", {value: 0, reduce: v => v + 1})
+```
+
+```{ojs}
+//| echo: false
+// Datos de Eurostat para las preguntas con indicadores (si fallan, el examen se genera sin ellos)
+indicadoresTC3 = {
+  const porId = (id) => especTC3.find(s => s.id === id);
+  const ult = (rows, t) => rows.filter(r => r.territorio === t).sort((a, b) => a.fecha - b.fecha).at(-1);
+  const out = {};
+  const [c, p, g] = await Promise.all(["personas-que-compran-por-internet", "poblacion-por-regiones", "pib-crecimiento-interanual-trimestral"].map(i => porId(i) ? cargar(porId(i)).catch(() => ({ok: false})) : {ok: false}));
+  if (c.ok) { const u = ult(c.rows, "España"); if (u) out.compras = {valor: u.valor, periodo: u.periodo, nombre: "Personas que compran por internet",
+    texto: "de las personas de 16 a 74 años compró bienes o servicios por internet en los últimos 12 meses", accion: "han comprado alguna vez por internet"}; }
+  if (p.ok) {
+    const ccaa = Object.entries(nombresGeo).filter(([k]) => /^ES\d\d$/.test(k) && !["ES63", "ES64"].includes(k)).map(([, v]) => v);
+    const pob = ccaa.map(t => [t, ult(p.rows, t)]).filter(([, r]) => r);
+    if (pob.length >= 3) out.poblacionTodas = pob.map(([t, r]) => ({t, v: r.valor, per: r.periodo}));
+  }
+  if (g.ok) {
+    const v = g.rows.filter(r => r.territorio === "España").sort((a, b) => a.fecha - b.fecha).slice(-40);
+    if (v.length >= 20) out.pib = {cuentas: [v.filter(r => r.valor < 1).length, v.filter(r => r.valor >= 1 && r.valor <= 3).length, v.filter(r => r.valor > 3).length],
+      desde: v[0].periodo.replace("Q", "T"), hasta: v.at(-1).periodo.replace("Q", "T")};
+  }
+  return out;
+}
+```
+
+```{ojs}
+//| echo: false
+examenTC3 = {
+  if (!tcGenerar) return null;
+  const semilla = /^\d+$/.test(tcCodigo.trim()) ? +tcCodigo.trim() : Math.floor(Math.random() * 1e9);
+  // tres comunidades distintas en cada examen (elegidas con la misma semilla)
+  let ind = {...indicadoresTC3};
+  if (ind.poblacionTodas) {
+    let s = semilla; const az = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648;
+    const tres = ind.poblacionTodas.map(x => [az(), x]).sort((a, b) => a[0] - b[0]).slice(0, 3).map(x => x[1]);
+    const tot = tres.reduce((a, x) => a + x.v, 0);
+    ind.poblacion = {regiones: tres.map(x => x.t), pob: tres.map(x => x.v), periodo: tres[0].per, pesos: tres.map(x => Math.round(10000 * x.v / tot) / 10000)};
+    ind.poblacion.pesos[2] = Math.round(10000 * (1 - ind.poblacion.pesos[0] - ind.poblacion.pesos[1])) / 10000;
+  }
+  const hay = ind.compras || ind.poblacion || ind.pib;
+  const op = {convocatoria: tcConv, dificultad: tcDif, nPreg: tcN, puntos: tcPuntos, tiempo: tcTiempo, fecha: tcFecha ?? new Date(),
+    euf: tcEUF ? {dificultad: tcEufDif, puntos: tcEufPuntos, tiempo: tcEufTiempo} : null, semilla};
+  const ex = motorTC3.generarExamen(op, hay ? ind : null);
+  window.cceeEvento && window.cceeEvento(`examen-tc3/${tcConv.toLowerCase()}`, "Generador de exámenes TC3", true);
+  return {ex, op, hay, examen: motorTC3.htmlExamen(ex, op, false), solucion: motorTC3.htmlExamen(ex, op, true)};
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!examenTC3) return html`<p class="pending">Elige las opciones y pulsa <b>Generar examen</b>.</p>`;
+  const {ex, op, hay, examen, solucion} = examenTC3;
+  const css = __CSS__;
+  const f = op.fecha instanceof Date ? op.fecha : new Date(op.fecha);
+  const base = `TC3_${op.convocatoria}_${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, "0")}-${String(f.getDate()).padStart(2, "0")}`;
+  const doc = (h) => `<html><head><meta charset="utf-8"><title>${base}</title><style>${css}</style></head><body>${h}</body></html>`;
+  const word = (h, nombre, txt) => DOM.download(() => new Blob(["﻿" + doc(h)], {type: "application/msword"}), nombre, txt);
+  const pdf = (h, txt) => { const b = html`<button class="copiar">${txt}</button>`; b.onclick = () => { const w = window.open("", "_blank"); if (!w) return alert("Permite las ventanas emergentes para imprimir."); w.document.write(doc(h)); w.document.close(); w.focus(); setTimeout(() => w.print(), 400); }; return b; };
+  const vista = html`<div class="tc3-vista">`; vista.innerHTML = examen;
+  const vistaSol = html`<div class="tc3-vista">`; vistaSol.innerHTML = solucion;
+  return html`<p>Temas: ${ex.preguntas.map((q, i) => `${i + 1}) tema ${q.tema}`).join(" · ")}${ex.euf ? ` · EUF) tema ${ex.euf.tema}` : ""}. Código del examen: <b>${ex.semilla}</b> (escríbelo en «Código» para volver a generar este mismo examen).${hay ? "" : html`<br><span class="pending">No se han podido cargar los datos de Eurostat: el examen se ha generado sin la pregunta con indicadores.</span>`}</p>
+    <div class="graf-botones no-print">
+      ${word(examen, base + "_examen.doc", "⬇ Examen (Word)")}
+      ${word(solucion, base + "_soluciones.doc", "⬇ Examen con soluciones (Word)")}
+      ${pdf(examen, "🖨 Examen en PDF")}
+      ${pdf(solucion, "🖨 Soluciones en PDF")}
+    </div>
+    ${vista}
+    <details><summary><b>Ver el examen con las soluciones</b></summary>${vistaSol}</details>`;
+}
+```
+
+::: {.callout-note appearance="simple"}
+**Antes de usar el examen**, revísalo: los datos se generan al azar y algún enunciado puede necesitar retoques. El documento de Word se puede editar con Word o LibreOffice. Para el PDF, elige «Guardar como PDF» en la ventana de impresión. Las soluciones siguen el formulario de los apuntes de la asignatura.
+:::
+''', MOTOR=MOTOR, ESPECS=J([porid[i] for i in ("personas-que-compran-por-internet", "poblacion-por-regiones", "pib-crecimiento-interanual-trimestral")]), CSS=J(CSS_TC3))
