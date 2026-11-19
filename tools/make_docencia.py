@@ -75,7 +75,7 @@ for sig, (nombre, url, cursos) in GR.items():
             if f["herr"]:
                 out.append("**Herramientas útiles:** " + " · ".join(f'[{HERR[h][0]}](../{HERR[h][1]}.qmd)' for h in f["herr"]) + "\n")
             if s == "Técnicas Cuantitativas III":
-                out.append('::: {.uso-box}\n**Para el profesorado:** [generador de exámenes de Técnicas Cuantitativas III](../examen-tc3.qmd), con muestreo y decisión, versiones aleatorias, soluciones y datos de Eurostat. [Control de asistencia](../asistencia-profesor.qmd): los estudiantes escanean un QR y descargas el Excel con la asistencia acumulada.\n:::\n')
+                out.append('::: {.uso-box}\n**Para el profesorado:** [generador de exámenes de Técnicas Cuantitativas III](../examen-tc3.qmd), con muestreo y decisión, versiones aleatorias, soluciones y datos de Eurostat.\n:::\n')
     out.append('<p class="source">Asignaturas según el plan de estudios publicado en la web de la Facultad (<a href="https://fccee.ugr.es/docencia/grados">fccee.ugr.es/docencia/grados</a>), curso 2026/2027. ¿Propones otros indicadores o ejemplos para tu asignatura? Escríbenos a <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a>.</p>\n')
     open(f"docencia/{sig.lower()}.qmd", "w", encoding="utf-8").write("\n".join(out))
     resumen.append((sig, nombre, n))

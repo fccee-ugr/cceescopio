@@ -64,6 +64,8 @@ website:
             text: "Mercados al día"
           - text: "---"
           - text: "Análisis"
+          - href: descomposiciones.qmd
+            text: "¿Qué explica cada indicador? (descomposiciones)"
           - href: extremos.qmd
             text: "Datos extremos e inusuales"
           - href: ciclo.qmd
@@ -136,8 +138,6 @@ website:
             text: "Noticias e indicadores (retos para clase)"
           - href: examen-tc3.qmd
             text: "Exámenes de Técnicas Cuantitativas III (GMIM)"
-          - href: asistencia-profesor.qmd
-            text: "Control de asistencia con QR"
           - href: juegos.qmd#aula
             text: "Modo aula: competición en clase"
           - href: presentacion.qmd

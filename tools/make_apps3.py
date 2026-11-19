@@ -1524,3 +1524,258 @@ viewof retoN = Inputs.toggle({label: "Modo reto (ocultar los indicadores)", valu
 }
 ```
 ''', AREAS=J(AREAS))
+
+# =====================================================================================
+# Descomposiciones: qué componentes explican cada indicador
+# =====================================================================================
+pagina("descomposiciones.qmd", r'''---
+title: "¿Qué explica cada indicador?"
+subtitle: "Descomposición en contribuciones: inflación, crecimiento del PIB, cuenta corriente, población y turismo"
+toc: true
+toc-depth: 2
+---
+
+Muchos indicadores son la suma de varias partes. Esta herramienta calcula cuánto **aporta cada componente** (su **contribución**, en puntos) y señala **qué componentes explican la mayor parte** del dato y de sus cambios. Por ejemplo, si la inflación es del 3 % y la energía contribuye con 1,2 puntos, la energía explica el 40 % de la subida de precios.
+
+__HELPERS__
+
+```{ojs}
+//| echo: false
+DESC = new Map([
+  ["Inflación por componentes (IPCA)", "inflacion"],
+  ["Crecimiento del PIB por componentes de la demanda", "pib"],
+  ["Saldo por cuenta corriente por componentes", "cc"],
+  ["Crecimiento de la población: natural y migratorio", "poblacion"],
+  ["Pernoctaciones hoteleras: residentes y no residentes", "turismo"]
+])
+viewof tipoDesc = Inputs.select(DESC, {label: "Indicador", value: "inflacion", width: 420})
+viewof geoDesc = Inputs.select(new Map(geosPaises.map(g => [nombresGeo[g] ?? g, g])), {label: "Territorio", value: "ES"})
+viewof desdeDesc = Inputs.range([2000, new Date().getFullYear() - 1], {label: "Desde el año", value: 2019, step: 1})
+```
+
+```{ojs}
+//| echo: false
+viewof vistaInf = tipoDesc === "inflacion"
+  ? Inputs.radio(new Map([["Componentes principales (4)", "main"], ["Grupos de gasto ECOICOP (13)", "div"]]), {label: "Componentes", value: "main"})
+  : Object.assign(html`<span></span>`, {value: "main"})
+```
+
+```{ojs}
+//| echo: false
+COMP_INF = ({
+  main: [["FOOD", "Alimentos, bebidas y tabaco", "#E6A400"], ["NRG", "Energía", "#C0392B"], ["IGD_NNRG", "Bienes industriales no energéticos", "#2C6FBB"], ["SERV", "Servicios", "#4C9A2A"]],
+  div: [["CP01", "Alimentos y bebidas no alcohólicas", "#E6A400"], ["CP02", "Bebidas alcohólicas y tabaco", "#B07D00"], ["CP03", "Vestido y calzado", "#9467BD"],
+    ["CP04", "Vivienda, agua, electricidad y gas", "#C0392B"], ["CP05", "Muebles y artículos del hogar", "#8C564B"], ["CP06", "Sanidad", "#17BECF"],
+    ["CP07", "Transporte", "#2C6FBB"], ["CP08", "Información y comunicación", "#7F7F7F"], ["CP09", "Ocio, deporte y cultura", "#E377C2"],
+    ["CP10", "Educación", "#BCBD22"], ["CP11", "Restaurantes y alojamiento", "#4C9A2A"], ["CP12", "Seguros y servicios financieros", "#3C3C3B"],
+    ["CP13", "Cuidado personal y otros", "#A6195E"]]
+})
+GRUPOS_TASAS = [["TOTAL", "Inflación general", "#000000"], ["CP01", "Alimentos", "#E6A400"], ["NRG", "Energía", "#C0392B"], ["CP04", "Vivienda", "#8C564B"], ["CP07", "Transporte", "#2C6FBB"], ["SERV", "Servicios", "#4C9A2A"]]
+porClave = (recs, dim) => d3.group(recs, r => r[dim])
+// Intenta varias consultas y devuelve la primera que da datos
+primera = async (intentos) => { for (const [code, q] of intentos) { try { const r = await eurostat(code, q); if (r.length) return {code, recs: r}; } catch (e) {} } return null; }
+desde = (y) => `&sinceTimePeriod=${y}`
+
+cargarDesc = async (tipo, g, y0, vista) => {
+  if (tipo === "inflacion") {
+    const comps = COMP_INF[vista];
+    const codigos = [...new Set(["TOTAL", ...comps.map(c => c[0]), ...GRUPOS_TASAS.map(c => c[0])])];
+    const tasas = await primera([["prc_hicp_minr", `&unit=RCH_A&geo=${g}${desde(y0)}` + codigos.map(c => `&coicop18=${c}`).join("")]]);
+    if (!tasas) return {error: "No se han podido cargar las tasas de inflación de Eurostat."};
+    const pesos = await primera([
+      ["prc_hicp_iw", `&geo=${g}${desde(y0 - 1)}` + comps.map(c => `&coicop18=${c[0]}`).join("")],
+      ...(vista === "main" ? [["prc_hicp_inw", `&geo=${g}${desde(y0 - 1)}` + comps.map(c => `&coicop=${c[0]}`).join("")]] : [])]);
+    const tas = tasas.recs.map(r => ({c: r.coicop18, periodo: r.time, fecha: fecha(r.time), v: r.value})).filter(r => r.fecha);
+    const total = tas.filter(r => r.c === "TOTAL").map(r => ({periodo: r.periodo, fecha: r.fecha, valor: r.v}));
+    const lineas = tas.filter(r => GRUPOS_TASAS.some(x => x[0] === r.c)).map(r => ({...r, grupo: GRUPOS_TASAS.find(x => x[0] === r.c)[1]}));
+    if (!pesos) return {total, lineas, comps: [], filas: [], error: "Eurostat no ha devuelto las ponderaciones del IPCA para este territorio, así que solo se muestran las tasas de cada grupo."};
+    const dim = pesos.recs[0].coicop18 !== undefined ? "coicop18" : "coicop";
+    const W = d3.rollup(pesos.recs, v => v[0].value, r => r[dim], r => +r.time);
+    const peso = (c, y) => { const m = W.get(c); if (!m) return null; const ys = [...m.keys()].filter(a => a <= y); return m.get(ys.length ? Math.max(...ys) : Math.min(...m.keys())); };
+    const filas = [];
+    for (const [per, rs] of d3.group(tas, r => r.periodo)) {
+      const y = rs[0].fecha.getFullYear();
+      const ws = comps.map(c => peso(c[0], y)), suma = d3.sum(ws.filter(Number.isFinite));
+      comps.forEach((c, i) => { const r = rs.find(x => x.c === c[0]); if (r && Number.isFinite(ws[i]) && suma) filas.push({periodo: per, fecha: r.fecha, comp: c[1], c: ws[i] / suma * r.v, tasa: r.v, peso: ws[i] / suma}); });
+    }
+    const faltan = comps.filter(c => !filas.some(f => f.comp === c[1])).map(c => c[1]);
+    return {comps: comps.map(c => ({k: c[1], color: c[2]})), filas, total, lineas, totalLabel: "Inflación general (tasa anual, %)",
+      error: faltan.length ? `Eurostat no ha devuelto datos de: ${faltan.join(", ")}; la suma de contribuciones está incompleta.` : "", unidad: "puntos porcentuales",
+      fuente: `Eurostat (prc_hicp_minr y ${pesos.code})`, nota: "Contribución de cada componente = su ponderación en la cesta del IPCA × su tasa de inflación anual. Es una aproximación: la suma de las contribuciones puede diferir unas décimas de la inflación general publicada."};
+  }
+  if (tipo === "pib") {
+    const comps = [["P31_S14_S15", "Consumo de los hogares", "#E6A400"], ["P3_S13", "Consumo de las AA. PP.", "#9467BD"], ["P51G", "Inversión (FBCF)", "#2C6FBB"], ["P52_P53", "Variación de existencias", "#BBBBBB"], ["B11", "Saldo exterior (export. − import.)", "#4C9A2A"]];
+    const base = `&s_adj=SCA&geo=${g}${desde(y0 - 1)}`;
+    const con = await primera([["namq_10_gdp", `&unit=CON_PPCH_SM${base}` + comps.map(c => `&na_item=${c[0]}`).join("")]]);
+    const tot = await primera([["namq_10_gdp", `&unit=CLV_PCH_SM&na_item=B1GQ${base}`]]);
+    if (!tot) return {error: "No se ha podido cargar el PIB de Eurostat."};
+    const total = tot.recs.map(r => ({periodo: r.time, fecha: fecha(r.time), valor: r.value})).filter(r => r.fecha && r.fecha.getFullYear() >= y0);
+    let filas = [], aprox = false;
+    if (con) filas = con.recs.map(r => ({periodo: r.time, fecha: fecha(r.time), comp: comps.find(c => c[0] === r.na_item)[1], c: r.value}));
+    else {
+      // Alternativa: contribuciones aproximadas con volúmenes encadenados
+      const v = await primera([["namq_10_gdp", `&unit=CLV10_MEUR${base}` + ["B1GQ", "P31_S14_S15", "P3_S13", "P51G", "P6", "P7"].map(c => `&na_item=${c}`).join("")]]);
+      if (!v) return {total, comps: [], filas: [], error: "Eurostat no ha devuelto los componentes del PIB."};
+      aprox = true;
+      const M = d3.rollup(v.recs, a => a[0].value, r => r.na_item, r => r.time);
+      const ant = (t) => { const [y, q] = t.split("-Q"); return `${+y - 1}-Q${q}`; };
+      for (const t of M.get("B1GQ").keys()) {
+        const t0 = ant(t), pib0 = M.get("B1GQ").get(t0); if (!pib0) continue;
+        const d = (k) => (M.get(k)?.get(t) - M.get(k)?.get(t0)) / pib0 * 100;
+        const vals = {P31_S14_S15: d("P31_S14_S15"), P3_S13: d("P3_S13"), P51G: d("P51G"), B11: d("P6") - d("P7")};
+        vals.P52_P53 = d("B1GQ") - d3.sum(Object.values(vals));
+        for (const c of comps) if (Number.isFinite(vals[c[0]])) filas.push({periodo: t, fecha: fecha(t), comp: c[1], c: vals[c[0]]});
+      }
+    }
+    filas = filas.filter(r => r.fecha && r.fecha.getFullYear() >= y0);
+    return {comps: comps.map(c => ({k: c[1], color: c[2]})), filas, total, totalLabel: "Crecimiento del PIB (tasa interanual, %)", unidad: "puntos porcentuales",
+      fuente: "Eurostat (namq_10_gdp)", nota: aprox ? "Contribuciones aproximadas a partir de volúmenes encadenados (Eurostat no ha devuelto las contribuciones oficiales); la variación de existencias recoge el resto." : "Contribuciones publicadas por Eurostat: cuántos puntos aporta cada componente de la demanda al crecimiento interanual del PIB."};
+  }
+  if (tipo === "cc") {
+    const comps = [["G", "Bienes", "#2C6FBB"], ["S", "Servicios (incluido el turismo)", "#4C9A2A"], ["IN1", "Rentas primarias", "#E6A400"], ["IN2", "Rentas secundarias", "#9467BD"]];
+    const r = await primera([["bop_gdp6_q", `&stk_flow=BAL&partner=WRL_REST&unit=PC_GDP&s_adj=NSA&geo=${g}${desde(y0)}` + [...comps.map(c => c[0]), "CA"].map(c => `&bop_item=${c}`).join("")]]);
+    if (!r) return {error: "No se ha podido cargar la balanza de pagos de Eurostat."};
+    const filas = r.recs.filter(x => x.bop_item !== "CA").map(x => ({periodo: x.time, fecha: fecha(x.time), comp: comps.find(c => c[0] === x.bop_item)[1], c: x.value}));
+    const total = r.recs.filter(x => x.bop_item === "CA").map(x => ({periodo: x.time, fecha: fecha(x.time), valor: x.value}));
+    return {comps: comps.map(c => ({k: c[1], color: c[2]})), filas, total, totalLabel: "Saldo por cuenta corriente (% del PIB)", unidad: "% del PIB", fuente: "Eurostat (bop_gdp6_q)",
+      nota: "El saldo por cuenta corriente es la suma de los saldos de bienes, servicios, rentas primarias (intereses, dividendos, salarios) y rentas secundarias (transferencias)."};
+  }
+  if (tipo === "poblacion") {
+    const comps = [["NATGROWRT", "Crecimiento natural (nacimientos − defunciones)", "#2C6FBB"], ["CNMIGRATRT", "Saldo migratorio", "#E6A400"]];
+    const r = await primera([["demo_gind", `&geo=${g}${desde(y0)}` + [...comps.map(c => c[0]), "GROWRT"].map(c => `&indic_de=${c}`).join("")]]);
+    if (!r) return {error: "No se han podido cargar los datos de población de Eurostat."};
+    const filas = r.recs.filter(x => x.indic_de !== "GROWRT").map(x => ({periodo: x.time, fecha: fecha(x.time), comp: comps.find(c => c[0] === x.indic_de)[1], c: x.value}));
+    const total = r.recs.filter(x => x.indic_de === "GROWRT").map(x => ({periodo: x.time, fecha: fecha(x.time), valor: x.value}));
+    return {comps: comps.map(c => ({k: c[1], color: c[2]})), filas, total, totalLabel: "Crecimiento de la población (por 1.000 habitantes)", unidad: "por 1.000 habitantes", fuente: "Eurostat (demo_gind)",
+      nota: "El crecimiento de la población es la suma del crecimiento natural y del saldo migratorio (que incluye un ajuste estadístico)."};
+  }
+  if (tipo === "turismo") {
+    const comps = [["NAT", "Residentes en el país", "#2C6FBB"], ["FOR", "No residentes (turismo extranjero)", "#E6A400"]];
+    const r = await primera([["tour_occ_nim", `&unit=NR&nace_r2=I551&geo=${g}${desde(y0 - 1)}&c_resid=NAT&c_resid=FOR&c_resid=TOTAL`]]);
+    if (!r) return {error: "No se han podido cargar las pernoctaciones de Eurostat."};
+    const M = d3.rollup(r.recs, a => a[0].value, x => x.c_resid, x => x.time);
+    const ant = (t) => { const [y, m] = t.split("-"); return `${+y - 1}-${m}`; };
+    const filas = [], total = [];
+    for (const t of (M.get("TOTAL") ?? new Map()).keys()) {
+      const f = fecha(t); if (!f || f.getFullYear() < y0) continue;
+      const t0 = ant(t), tot0 = M.get("TOTAL").get(t0); if (!tot0) continue;
+      total.push({periodo: t, fecha: f, valor: 100 * (M.get("TOTAL").get(t) / tot0 - 1)});
+      for (const c of comps) { const a = M.get(c[0])?.get(t), b = M.get(c[0])?.get(t0); if (Number.isFinite(a) && Number.isFinite(b)) filas.push({periodo: t, fecha: f, comp: c[1], c: 100 * (a - b) / tot0}); }
+    }
+    return {comps: comps.map(c => ({k: c[1], color: c[2]})), filas, total, totalLabel: "Pernoctaciones en hoteles (tasa interanual, %)", unidad: "puntos porcentuales", fuente: "Eurostat (tour_occ_nim)",
+      nota: "Contribución = variación interanual de las pernoctaciones de cada grupo dividida entre el total de pernoctaciones de hace un año."};
+  }
+}
+datosDesc = cargarDesc(tipoDesc, geoDesc, desdeDesc, vistaInf)
+```
+
+```{ojs}
+//| echo: false
+{
+  const d = datosDesc;
+  if (!d) return html``;
+  if (d.error && !d.filas?.length) return html`<p class="pending">${d.error}</p>`;
+  window.cceeEvento && window.cceeEvento(`descomposicion/${tipoDesc}`, `Descomposición: ${tipoDesc}`, false);
+  const pers = [...new Set([...d.filas.map(r => r.periodo), ...d.total.map(r => r.periodo)])].sort();
+  const paso = Math.max(1, Math.ceil(pers.length / 12));
+  const ticks = pers.filter((p, i) => i % paso === 0);
+  return html`<h2 id="evolucion">Evolución de las contribuciones</h2>
+    <p>${geoDesc === "ES" ? "España" : nombresGeo[geoDesc]}: barras = contribución de cada componente (${d.unidad}); línea = ${d.totalLabel.toLowerCase()}.</p>
+    ${Plot.plot({height: 420, marginLeft: 50, marginBottom: 50, width: Math.max(640, width),
+      x: {domain: pers, ticks, label: null, tickRotate: pers.length > 24 ? -45 : 0, padding: 0.15},
+      y: {grid: true, label: d.unidad},
+      color: {domain: d.comps.map(c => c.k), range: d.comps.map(c => c.color), legend: true},
+      marks: [Plot.barY(d.filas, {x: "periodo", y: "c", fill: "comp", title: r => `${r.periodo} · ${r.comp}: ${fmt(r.c)}${r.tasa !== undefined ? ` (tasa ${fmt(r.tasa)} %, peso ${fmt(100 * r.peso)} %)` : ""}`}),
+        Plot.ruleY([0], {stroke: "#555"}),
+        Plot.line(d.total.filter(r => pers.includes(r.periodo)), {x: "periodo", y: "valor", stroke: "#111", strokeWidth: 2.2}),
+        Plot.dot(d.total.filter(r => pers.includes(r.periodo)), {x: "periodo", y: "valor", fill: "#111", r: pers.length > 60 ? 1.5 : 3, title: r => `${d.totalLabel}\n${r.periodo}: ${fmt(r.valor)}`})]})}
+    <p class="nota">${d.nota} Fuente: ${d.fuente}.${d.error ? ` ${d.error}` : ""}</p>`;
+}
+```
+
+## ¿Qué explica el último dato? {#ultimo}
+
+```{ojs}
+//| echo: false
+{
+  const d = datosDesc;
+  if (!d?.filas?.length) return html``;
+  const ult = d3.max(d.filas, r => r.periodo);
+  const fs = d.filas.filter(r => r.periodo === ult).sort((a, b) => b.c - a.c);
+  const tot = d.total.find(r => r.periodo === ult)?.valor ?? d3.sum(fs, r => r.c);
+  const suma = d3.sum(fs, r => r.c), principal = d3.greatest(fs, r => Math.abs(r.c));
+  const share = (c) => suma !== 0 ? 100 * c / suma : NaN;
+  return html`<p>En <b>${ult}</b>, ${d.totalLabel.split(" (")[0].toLowerCase()}: <b>${fmt(tot)}</b>. El componente que más aporta es <b>${principal.comp}</b>, con ${fmt(principal.c)} ${d.unidad}${Number.isFinite(share(principal.c)) && Math.sign(principal.c) === Math.sign(suma) ? ` (el ${fmt(share(principal.c))} % del total)` : ""}.</p>
+  ${Plot.plot({height: 40 + 34 * fs.length, marginLeft: 260, x: {grid: true, label: `Contribución (${d.unidad})`}, y: {domain: fs.map(r => r.comp), label: null},
+    color: {domain: d.comps.map(c => c.k), range: d.comps.map(c => c.color)},
+    marks: [Plot.barX(fs, {y: "comp", x: "c", fill: "comp"}), Plot.ruleX([0]),
+      Plot.text(fs, {y: "comp", x: "c", text: r => `${fmt(r.c)}${Number.isFinite(share(r.c)) ? ` (${fmt(share(r.c))} %)` : ""}`, dx: r => r.c >= 0 ? 6 : -6, textAnchor: r => r.c >= 0 ? "start" : "end", fontSize: 11})]})}
+  <p class="nota">Entre paréntesis, el porcentaje del total que explica cada componente (los componentes con signo contrario al total restan).</p>`;
+}
+```
+
+## ¿Qué explica el cambio entre dos fechas? {#cambio}
+
+```{ojs}
+//| echo: false
+persDesc = datosDesc?.filas?.length ? [...new Set(datosDesc.filas.map(r => r.periodo))].sort() : []
+viewof perA = Inputs.select(persDesc, {label: "Desde", value: persDesc[Math.max(0, persDesc.length - 13)]})
+viewof perB = Inputs.select(persDesc, {label: "Hasta", value: persDesc.at(-1)})
+```
+
+```{ojs}
+//| echo: false
+{
+  const d = datosDesc;
+  if (!d?.filas?.length || !perA || !perB) return html``;
+  const tA = d.total.find(r => r.periodo === perA)?.valor, tB = d.total.find(r => r.periodo === perB)?.valor;
+  const cambios = d.comps.map(c => {
+    const a = d.filas.find(r => r.periodo === perA && r.comp === c.k)?.c ?? 0, b = d.filas.find(r => r.periodo === perB && r.comp === c.k)?.c ?? 0;
+    return {comp: c.k, a, b, delta: b - a};
+  }).sort((x, y) => Math.abs(y.delta) - Math.abs(x.delta));
+  const dTot = d3.sum(cambios, c => c.delta), top = cambios[0];
+  // Gráfico en cascada: del valor inicial al final, componente a componente
+  let acum = d3.sum(cambios, c => c.a);
+  const pasos = [{nombre: perA, y1: 0, y2: acum, tipo: "Total"}];
+  for (const c of cambios) { pasos.push({nombre: c.comp, y1: acum, y2: acum + c.delta, tipo: c.delta >= 0 ? "Sube" : "Baja", delta: c.delta}); acum += c.delta; }
+  pasos.push({nombre: perB, y1: 0, y2: acum, tipo: "Total"});
+  const verbo = dTot >= 0 ? "aumentó" : "disminuyó";
+  return html`<p>Entre <b>${perA}</b> y <b>${perB}</b>, ${d.totalLabel.split(" (")[0].toLowerCase()} ${tA !== undefined && tB !== undefined ? html`pasó de <b>${fmt(tA)}</b> a <b>${fmt(tB)}</b>` : html`${verbo}`} (suma de contribuciones: ${dTot >= 0 ? "+" : ""}${fmt(dTot)} ${d.unidad}).
+    El componente que más explica el cambio es <b>${top.comp}</b> (${top.delta >= 0 ? "+" : ""}${fmt(top.delta)}${dTot !== 0 && Math.sign(top.delta) === Math.sign(dTot) ? `, el ${fmt(100 * top.delta / dTot)} % del cambio` : ""}).</p>
+  ${Plot.plot({height: 380, marginBottom: 90, marginLeft: 50, x: {domain: pasos.map(p => p.nombre), label: null, tickRotate: -30}, y: {grid: true, label: d.unidad},
+    color: {domain: ["Total", "Sube", "Baja"], range: ["#3C3C3B", "#C0392B", "#2C6FBB"], legend: true},
+    marks: [Plot.barY(pasos, {x: "nombre", y1: "y1", y2: "y2", fill: "tipo", title: p => p.delta !== undefined ? `${p.nombre}: ${p.delta >= 0 ? "+" : ""}${fmt(p.delta)}` : `${p.nombre}: ${fmt(p.y2)}`}),
+      Plot.ruleY([0]), Plot.text(pasos, {x: "nombre", y: p => Math.max(p.y1, p.y2), text: p => p.delta !== undefined ? `${p.delta >= 0 ? "+" : ""}${fmt(p.delta)}` : fmt(p.y2), dy: -8, fontSize: 11})]})}
+  ${Inputs.table(cambios.map(c => ({Componente: c.comp, [perA]: c.a, [perB]: c.b, "Cambio": c.delta})), {format: {[perA]: fmt, [perB]: fmt, Cambio: fmt}, layout: "auto"})}`;
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  const d = datosDesc;
+  if (tipoDesc !== "inflacion" || !d?.lineas?.length) return html``;
+  const lin = d.lineas.filter(r => r.fecha.getFullYear() >= desdeDesc);
+  return html`<h2 id="comparar">Comparar la inflación de alimentos, energía, vivienda, transporte y servicios</h2>
+  ${Plot.plot({height: 380, marginLeft: 45, y: {grid: true, label: "Tasa de inflación anual (%)"}, x: {label: null},
+    color: {domain: GRUPOS_TASAS.map(g => g[1]), range: GRUPOS_TASAS.map(g => g[2]), legend: true},
+    marks: [Plot.ruleY([0]), Plot.line(lin, {x: "fecha", y: "v", stroke: "grupo", strokeWidth: g => g.grupo === "Inflación general" ? 3 : 1.8}),
+      Plot.tip(lin, Plot.pointer({x: "fecha", y: "v", title: r => `${r.grupo}, ${r.periodo}: ${fmt(r.v)} %`}))]})}
+  <p class="nota">Tasas de variación anual del IPCA de cada grupo (ECOICOP versión 2). Vivienda incluye alquileres, agua, electricidad, gas y otros combustibles.</p>`;
+}
+```
+
+## Datos {#datos}
+
+```{ojs}
+//| echo: false
+{
+  const d = datosDesc;
+  if (!d?.filas?.length) return html``;
+  const ancho = d3.rollups(d.filas, v => Object.fromEntries(v.map(r => [r.comp, Math.round(r.c * 1000) / 1000])), r => r.periodo).sort((a, b) => b[0].localeCompare(a[0]))
+    .map(([p, o]) => ({Periodo: p, ...o, [d.totalLabel]: d.total.find(r => r.periodo === p)?.valor}));
+  return html`${DOM.download(() => new Blob([csv(ancho)], {type: "text/csv"}), `descomposicion_${tipoDesc}_${geoDesc}.csv`, "⬇ Descargar los datos (CSV)")}
+    ${Inputs.table(ancho, {rows: 12, layout: "auto"})}`;
+}
+```
+''')

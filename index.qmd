@@ -97,9 +97,10 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · [¿Qué explica cada indicador?](descomposiciones.qmd)** <span class="badge-nuevo">nuevo</span>: descompón la inflación (alimentos, energía, vivienda, transporte, servicios…), el crecimiento del PIB, la cuenta corriente, la población y el turismo, y descubre qué componentes explican cada subida.
 - **Nuevo · [Noticias e indicadores](noticias.qmd)** <span class="badge-nuevo">nuevo</span>: noticias económicas de los últimos días con el reto de comprobarlas con los indicadores de CCEEscopio.
 - **Nuevo · 🎮 [Juegos con datos](juegos.qmd)** <span class="badge-nuevo">nuevo</span>: el dato del día, ¿más alto o más bajo?, adivina el país, ¿qué pasó aquí?, ordena los países y un **modo aula** para competir en clase. Y además, [predice el próximo dato](prediccion.qmd).
-- **Nuevo · Para el profesorado** <span class="badge-nuevo">nuevo</span>: [generador de exámenes y fichas de práctica](examen.qmd) con versiones, soluciones y exportación a PRADO, [exámenes de Técnicas Cuantitativas III](examen-tc3.qmd) con soluciones, [control de asistencia con QR](asistencia-profesor.qmd), y [modo presentación](presentacion.qmd) para proyectar en clase.
+- **Nuevo · Para el profesorado** <span class="badge-nuevo">nuevo</span>: [generador de exámenes y fichas de práctica](examen.qmd) con versiones, soluciones y exportación a PRADO, [exámenes de Técnicas Cuantitativas III](examen-tc3.qmd) con soluciones, y [modo presentación](presentacion.qmd) para proyectar en clase.
 - **Nuevo · Análisis** <span class="badge-nuevo">nuevo</span>: [datos extremos e inusuales](extremos.qmd), [ciclo económico y semáforo de coyuntura](ciclo.qmd), [convergencia σ y β](convergencia.qmd), [qué indicador se adelanta](desfases.qmd), [previsión sencilla](prevision.qmd), [calculadora de desigualdad](desigualdad-calc.qmd) y [simulador de política fiscal](politica-fiscal.qmd).
 - **Para estudiar y enseñar**: [ejercicios autocorregibles](ejercicios.qmd) con los últimos datos, [generador de gráficos para el TFG](graficos.qmd) con la cita en APA y [glosario de indicadores](glosario.qmd).
 - **Herramientas**: [simulador de hipotecas y préstamos](hipoteca.qmd) con el euríbor real, [conversor de unidades](conversor.qmd) y [comparador de comunidades autónomas](comparador.qmd).
