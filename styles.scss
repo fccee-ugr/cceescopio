@@ -266,3 +266,27 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
   .tc3-titulo-euf { font-weight: 700; color: $ccee-magenta; }
   .tc3-pie { font-size: .75rem; color: #777; }
 }
+/* Control de asistencia */
+.asis-caja { max-width: 440px; margin: 1rem auto; background: #FBF7F3; border: 1px solid #E6DEDA; border-radius: 14px; padding: 1.2rem 1.4rem;
+  label { display: block; font-weight: 600; margin-bottom: .8rem; }
+  input:not([type=checkbox]) { display: block; width: 100%; font-size: 1.15rem; padding: .45rem .6rem; border: 1px solid #ccc; border-radius: 8px; margin-top: .25rem; }
+  .asis-codigo { font-size: 1.8rem !important; letter-spacing: .4em; text-align: center; font-weight: 700; } }
+.asis-check { font-weight: 400 !important; }
+.asis-boton { width: 100%; background: $ccee-magenta; color: #fff; border: 0; border-radius: 999px; padding: .7rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
+.asis-boton:disabled { opacity: .6; }
+.asis-msg { margin-top: .8rem; font-weight: 600; &.bien { color: #2E6B12; } &.mal { color: #9A2B1E; } }
+.asis-nota { font-size: .8rem; color: #666; }
+.asis-conf label { display: block; margin: .3rem 0; }
+.asis-panel { background: #fff; border: 2px solid $ccee-magenta; border-radius: 14px; padding: 1rem 1.4rem; margin: 1rem 0; }
+.asis-panel:fullscreen { display: flex; flex-direction: column; justify-content: center; padding: 3rem; border: 0; border-radius: 0; }
+.asis-panel-cab { display: flex; justify-content: space-between; font-weight: 700; color: #555; }
+.asis-panel-cuerpo { display: flex; gap: 2rem; align-items: center; justify-content: center; flex-wrap: wrap; text-align: center; }
+.asis-qr { width: 260px; svg { width: 100%; height: auto; } }
+.asis-panel:fullscreen .asis-qr { width: 40vh; }
+.asis-et { margin: .3rem 0 0; color: #888; text-transform: uppercase; font-size: .8rem; letter-spacing: .1em; }
+.asis-sesion { font-size: 2rem; font-weight: 800; margin: 0; }
+.asis-grande { font-size: 5.5rem; font-weight: 800; color: $ccee-magenta; letter-spacing: .12em; margin: 0; font-variant-numeric: tabular-nums; }
+.asis-panel:fullscreen .asis-grande { font-size: 11rem; }
+.asis-barra { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; div { height: 100%; background: $ccee-magenta; transition: width .5s linear; } }
+.asis-cuenta { font-size: 1.3rem; font-weight: 700; margin-top: .6rem; }
+.asis-url { text-align: center; color: #555; }

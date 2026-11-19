@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Control de asistencia (profesorado) – CCEEscopio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/brand/cceescopio_icono.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e3ae76e5a9f56cab9364510115edeb07.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Control de asistencia (profesorado) – CCEEscopio">
+<meta property="og:description" content="Técnicas Cuantitativas III · Pasa lista con un código que cambia cada 20 segundos y acumula la asistencia en Excel">
+<meta property="og:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta property="og:site_name" content="CCEEscopio">
+<meta property="og:image:height" content="480">
+<meta property="og:image:width" content="1960">
+<meta name="twitter:title" content="Control de asistencia (profesorado) – CCEEscopio">
+<meta name="twitter:description" content="Técnicas Cuantitativas III · Pasa lista con un código que cambia cada 20 segundos y acumula la asistencia en Excel">
+<meta name="twitter:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta name="twitter:image-height" content="480">
+<meta name="twitter:image-width" content="1960">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/brand/cceescopio_navbar.png" alt="Logo de CCEEscopio" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="./precios.html">
+ <span class="dropdown-text">Precios e inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empleo.html">
+ <span class="dropdown-text">Mercado laboral</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./actividad.html">
+ <span class="dropdown-text">Actividad económica y coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresa.html">
+ <span class="dropdown-text">Empresa, innovación y digitalización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./turismo.html">
+ <span class="dropdown-text">Turismo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./publico.html">
+ <span class="dropdown-text">Sector público y mercados financieros</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad.html">
+ <span class="dropdown-text">Desigualdad, pobreza y condiciones de vida</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sostenibilidad.html">
+ <span class="dropdown-text">Energía y sostenibilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./poblacion.html">
+ <span class="dropdown-text">Población, educación y salud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./internacional.html">
+ <span class="dropdown-text">Economía internacional y sector exterior</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">🔎 Buscador de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./andalucia.html">
+ <span class="dropdown-text">Andalucía y las regiones españolas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Paneles temáticos</li>
+        <li>
+    <a class="dropdown-item" href="./turismo-andalucia.html">
+ <span class="dropdown-text">Turismo en Andalucía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresas.html">
+ <span class="dropdown-text">Demografía empresarial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./consumo.html">
+ <span class="dropdown-text">Consumo y confianza</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mercados.html">
+ <span class="dropdown-text">Mercados al día</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Análisis</li>
+        <li>
+    <a class="dropdown-item" href="./extremos.html">
+ <span class="dropdown-text">Datos extremos e inusuales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ciclo.html">
+ <span class="dropdown-text">Ciclo económico y semáforo de coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./convergencia.html">
+ <span class="dropdown-text">¿Convergen las economías? (σ y β)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desfases.html">
+ <span class="dropdown-text">¿Qué indicador se adelanta? (desfases)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prevision.html">
+ <span class="dropdown-text">Previsión sencilla</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-herramientas" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Herramientas</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-herramientas">    
+        <li>
+    <a class="dropdown-item" href="./calculadora.html">
+ <span class="dropdown-text">Calculadora de inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ficha.html">
+ <span class="dropdown-text">Ficha de país o región</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./relaciona.html">
+ <span class="dropdown-text">Relaciona dos indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./comparador.html">
+ <span class="dropdown-text">Comparador de comunidades autónomas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./conversor.html">
+ <span class="dropdown-text">Conversor de unidades económicas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./hipoteca.html">
+ <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad-calc.html">
+ <span class="dropdown-text">Calculadora de desigualdad (Gini, Lorenz, Theil)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./politica-fiscal.html">
+ <span class="dropdown-text">Simulador de política fiscal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prediccion.html">
+ <span class="dropdown-text">Predice el próximo dato</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./graficos.html">
+ <span class="dropdown-text">Generador de gráficos para el TFG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ejercicios.html">
+ <span class="dropdown-text">Ejercicios autocorregibles</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./boletin.html">
+ <span class="dropdown-text">Boletín de coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./calendario.html">
+ <span class="dropdown-text">Datos recientes y calendario</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">Buscador de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./rankings.html"> 
+<span class="menu-text">Rankings</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./juegos.html"> 
+<span class="menu-text">🎮 Juegos</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-datos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-datos">    
+        <li>
+    <a class="dropdown-item" href="./datos.html">
+ <span class="dropdown-text">Datos y fuentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./glosario.html">
+ <span class="dropdown-text">Glosario de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./biblioteca.html">
+ <span class="dropdown-text">Bases de datos de la Biblioteca y fuentes abiertas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-docencia" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Docencia</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-docencia">    
+        <li>
+    <a class="dropdown-item" href="./docencia.html">
+ <span class="dropdown-text">Docencia e investigación: cómo usar CCEEscopio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ejercicios.html">
+ <span class="dropdown-text">Ejercicios autocorregibles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./graficos.html">
+ <span class="dropdown-text">Generador de gráficos para el TFG</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Para el profesorado</li>
+        <li>
+    <a class="dropdown-item" href="./examen.html">
+ <span class="dropdown-text">Generador de exámenes, fichas y preguntas para PRADO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./examen-tc3.html">
+ <span class="dropdown-text">Exámenes de Técnicas Cuantitativas III (GMIM)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./asistencia-profesor.html">
+ <span class="dropdown-text">Control de asistencia (Técnicas Cuantitativas III)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./juegos.html#aula">
+ <span class="dropdown-text">Modo aula: competición en clase</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./presentacion.html">
+ <span class="dropdown-text">Modo presentación</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Por grados y asignaturas</li>
+        <li>
+    <a class="dropdown-item" href="./docencia/gade.html">
+ <span class="dropdown-text">GADE · Administración y Dirección de Empresas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/geco.html">
+ <span class="dropdown-text">GECO · Economía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gfico.html">
+ <span class="dropdown-text">GFICO · Finanzas y Contabilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gmim.html">
+ <span class="dropdown-text">GMIM · Marketing e Investigación de Mercados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gtur.html">
+ <span class="dropdown-text">GTUR · Turismo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./contacto.html"> 
+<span class="menu-text">Contacto</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul class="collapse">
+  <li><a href="#configuracion" id="toc-configuracion" class="nav-link active" data-scroll-target="#configuracion">1. Configuración (una sola vez)</a></li>
+  <li><a href="#pasar-lista" id="toc-pasar-lista" class="nav-link" data-scroll-target="#pasar-lista">2. Pasar lista en clase</a></li>
+  <li><a href="#informe" id="toc-informe" class="nav-link" data-scroll-target="#informe">3. Informe y asistencia acumulada en Excel</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Control de asistencia (profesorado)</h1>
+<p class="subtitle lead">Técnicas Cuantitativas III · Pasa lista con un código que cambia cada 20 segundos y acumula la asistencia en Excel</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de modificación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">18 de noviembre de 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Cómo funciona.</strong> En clase proyectas un <strong>código de 4 cifras que cambia cada 20 segundos</strong> y un código QR. Los estudiantes lo escanean y escriben su DNI y el código que ven en ese momento. Así, un código enviado por mensaje a quien no está en el aula caduca en menos de un minuto. Después subes tu Excel con la lista de clase y CCEEscopio añade una columna por sesión y calcula las asistencias acumuladas. Al día siguiente subes ese mismo Excel y se añade la nueva sesión.</p>
+<p>Los registros (DNI, hora y un identificador anónimo del dispositivo) se guardan <strong>solo en una hoja de cálculo de Google que es tuya</strong>. CCEEscopio no guarda nada; solo envía y lee los datos de esa hoja.</p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="14" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 13;"><span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>URL_CONFIG <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>dniValido <span class="op">=</span> (x) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> s <span class="op">=</span> <span class="bu">String</span>(x <span class="op">||</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">[^0-9A-Z]</span><span class="ss">/g</span><span class="op">,</span> <span class="st">""</span>)<span class="op">,</span> L <span class="op">=</span> <span class="st">"TRWAGMYFPDXBNJZSQVHLCKE"</span><span class="op">;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> m <span class="op">=</span> s<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^(\d{8})([A-Z])$</span><span class="ss">/</span>)<span class="op">;</span> <span class="cf">if</span> (m) <span class="cf">return</span> L[<span class="op">+</span>m[<span class="dv">1</span>] <span class="op">%</span> <span class="dv">23</span>] <span class="op">===</span> m[<span class="dv">2</span>] <span class="op">?</span> s <span class="op">:</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  m <span class="op">=</span> s<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^([XYZ])(\d{7})([A-Z])$</span><span class="ss">/</span>)<span class="op">;</span> <span class="cf">if</span> (m) <span class="cf">return</span> L[<span class="op">+</span>(<span class="st">"XYZ"</span><span class="op">.</span><span class="fu">indexOf</span>(m[<span class="dv">1</span>]) <span class="op">+</span> m[<span class="dv">2</span>]) <span class="op">%</span> <span class="dv">23</span>] <span class="op">===</span> m[<span class="dv">3</span>] <span class="op">?</span> s <span class="op">:</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>llamar <span class="op">=</span> <span class="kw">async</span> (url<span class="op">,</span> datos<span class="op">,</span> intentos <span class="op">=</span> <span class="dv">4</span>) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> intentos<span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> {</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(url<span class="op">,</span> {<span class="dt">method</span><span class="op">:</span> <span class="st">"POST"</span><span class="op">,</span> <span class="dt">body</span><span class="op">:</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(datos)})<span class="op">;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="cf">await</span> r<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">catch</span> (e) { <span class="cf">if</span> (i <span class="op">===</span> intentos <span class="op">-</span> <span class="dv">1</span>) <span class="cf">return</span> {<span class="dt">ok</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">error</span><span class="op">:</span> <span class="st">"No se ha podido conectar. Comprueba la conexión e inténtalo de nuevo."</span>}<span class="op">;</span> <span class="cf">await</span> <span class="kw">new</span> <span class="bu">Promise</span>(r <span class="kw">=&gt;</span> <span class="pp">setTimeout</span>(r<span class="op">,</span> <span class="dv">800</span> <span class="op">*</span> (i <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>() <span class="op">*</span> <span class="dv">700</span>))<span class="op">;</span> }</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="33" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 32;"><span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>GS_CODIGO <span class="op">=</span> <span class="st">"/**</span><span class="sc">\n</span><span class="st"> * Control de asistencia de CCEEscopio · servidor en Google Apps Script</span><span class="sc">\n</span><span class="st"> * ---------------------------------------------------------------------</span><span class="sc">\n</span><span class="st"> * Los registros se guardan SOLO en esta hoja de cálculo, que es del profesor.</span><span class="sc">\n</span><span class="st"> * Instalación (una sola vez):</span><span class="sc">\n</span><span class="st"> *  1. Crea una hoja de cálculo de Google (por ejemplo, «Asistencia TC3»).</span><span class="sc">\n</span><span class="st"> *  2. Menú Extensiones → Apps Script. Borra lo que haya y pega este código.</span><span class="sc">\n</span><span class="st"> *  3. Cambia CLAVE_PROFESOR por una clave tuya (no la compartas con los estudiantes).</span><span class="sc">\n</span><span class="st"> *  4. Implementar → Nueva implementación → Tipo: Aplicación web.</span><span class="sc">\n</span><span class="st"> *     Ejecutar como: «Yo». Quién tiene acceso: «Cualquier usuario».</span><span class="sc">\n</span><span class="st"> *  5. Autoriza los permisos y copia la URL que termina en /exec.</span><span class="sc">\n</span><span class="st"> *     Pégala en la página «Control de asistencia (profesorado)» de CCEEscopio.</span><span class="sc">\n</span><span class="st"> */</span><span class="sc">\n</span><span class="st">const CLAVE_PROFESOR = </span><span class="sc">\"</span><span class="st">cambia-esta-clave</span><span class="sc">\"</span><span class="st">;</span><span class="sc">\n</span><span class="st">const VENTANA_SEG = 20;      // el código del proyector cambia cada 20 segundos</span><span class="sc">\n</span><span class="st">const VENTANAS_VALIDAS = 4;  // se acepta el código actual y los 3 anteriores (≈ 1 minuto para escribirlo)</span><span class="sc">\n</span><span class="st">const MAX_INTENTOS = 6;      // intentos fallidos por dispositivo y sesión</span><span class="sc">\n\n</span><span class="st">function hoja_(nombre, cabecera) {</span><span class="sc">\n</span><span class="st">  const ss = SpreadsheetApp.getActiveSpreadsheet();</span><span class="sc">\n</span><span class="st">  let h = ss.getSheetByName(nombre);</span><span class="sc">\n</span><span class="st">  if (!h) { h = ss.insertSheet(nombre); h.appendRow(cabecera); h.setFrozenRows(1); }</span><span class="sc">\n</span><span class="st">  return h;</span><span class="sc">\n</span><span class="st">}</span><span class="sc">\n</span><span class="st">const sesiones_ = () =&gt; hoja_(</span><span class="sc">\"</span><span class="st">Sesiones</span><span class="sc">\"</span><span class="st">, [</span><span class="sc">\"</span><span class="st">Sesión</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">Secreto</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">Asignatura y grupo</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">Modo</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">Creada</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">Abierta hasta</span><span class="sc">\"</span><span class="st">]);</span><span class="sc">\n</span><span class="st">const registros_ = () =&gt; hoja_(</span><span class="sc">\"</span><span class="st">Registros</span><span class="sc">\"</span><span class="st">, [</span><span class="sc">\"</span><span class="st">Fecha y hora</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">Sesión</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">DNI</span><span class="sc">\"</span><span class="st">, </span><span class="sc">\"</span><span class="st">Dispositivo</span><span class="sc">\"</span><span class="st">]);</span><span class="sc">\n</span><span class="st">const json_ = (o) =&gt; ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);</span><span class="sc">\n\n</span><span class="st">function codigo_(secreto, w) {</span><span class="sc">\n</span><span class="st">  const b = Utilities.computeHmacSha256Signature(String(w), secreto);</span><span class="sc">\n</span><span class="st">  const n = (((b[0] &amp; 255) &lt;&lt; 24) | ((b[1] &amp; 255) &lt;&lt; 16) | ((b[2] &amp; 255) &lt;&lt; 8) | (b[3] &amp; 255)) &gt;&gt;&gt; 0;</span><span class="sc">\n</span><span class="st">  return String(n % 10000).padStart(4, </span><span class="sc">\"</span><span class="st">0</span><span class="sc">\"</span><span class="st">);</span><span class="sc">\n</span><span class="st">}</span><span class="sc">\n</span><span class="st">function dni_(x) {</span><span class="sc">\n</span><span class="st">  const s = String(x || </span><span class="sc">\"\"</span><span class="st">).toUpperCase().replace(/[^0-9A-Z]/g, </span><span class="sc">\"\"</span><span class="st">);</span><span class="sc">\n</span><span class="st">  const L = </span><span class="sc">\"</span><span class="st">TRWAGMYFPDXBNJZSQVHLCKE</span><span class="sc">\"</span><span class="st">;</span><span class="sc">\n</span><span class="st">  let m = s.match(/^(</span><span class="sc">\\</span><span class="st">d{8})([A-Z])$/);</span><span class="sc">\n</span><span class="st">  if (m) return L[+m[1] % 23] === m[2] ? s : null;</span><span class="sc">\n</span><span class="st">  m = s.match(/^([XYZ])(</span><span class="sc">\\</span><span class="st">d{7})([A-Z])$/);</span><span class="sc">\n</span><span class="st">  if (m) return L[+(</span><span class="sc">\"</span><span class="st">XYZ</span><span class="sc">\"</span><span class="st">.indexOf(m[1]) + m[2]) % 23] === m[3] ? s : null;</span><span class="sc">\n</span><span class="st">  return null;</span><span class="sc">\n</span><span class="st">}</span><span class="sc">\n</span><span class="st">function buscarSesion_(id) {</span><span class="sc">\n</span><span class="st">  const v = sesiones_().getDataRange().getValues();</span><span class="sc">\n</span><span class="st">  for (let i = 1; i &lt; v.length; i++) if (v[i][0] === id) return {fila: i + 1, id: v[i][0], secreto: v[i][1], grupo: v[i][2], modo: v[i][3], creada: new Date(v[i][4]), hasta: new Date(v[i][5])};</span><span class="sc">\n</span><span class="st">  return null;</span><span class="sc">\n</span><span class="st">}</span><span class="sc">\n</span><span class="st">function nuevoId_() {</span><span class="sc">\n</span><span class="st">  const a = </span><span class="sc">\"</span><span class="st">ABCDEFGHJKLMNPQRSTUVWXYZ23456789</span><span class="sc">\"</span><span class="st">;</span><span class="sc">\n</span><span class="st">  let s = </span><span class="sc">\"\"</span><span class="st">; for (let i = 0; i &lt; 4; i++) s += a[Math.floor(Math.random() * a.length)];</span><span class="sc">\n</span><span class="st">  return </span><span class="sc">\"</span><span class="st">TC3-</span><span class="sc">\"</span><span class="st"> + s;</span><span class="sc">\n</span><span class="st">}</span><span class="sc">\n\n</span><span class="st">function doGet() { return json_({ok: true, servicio: </span><span class="sc">\"</span><span class="st">asistencia CCEEscopio</span><span class="sc">\"</span><span class="st">, hora: Date.now()}); }</span><span class="sc">\n\n</span><span class="st">function doPost(e) {</span><span class="sc">\n</span><span class="st">  let d;</span><span class="sc">\n</span><span class="st">  try { d = JSON.parse(e.postData.contents); } catch (err) { return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">Petición no válida.</span><span class="sc">\"</span><span class="st">}); }</span><span class="sc">\n</span><span class="st">  const ahora = new Date();</span><span class="sc">\n</span><span class="st">  const esProfesor = d.clave === CLAVE_PROFESOR;</span><span class="sc">\n\n</span><span class="st">  if (d.accion === </span><span class="sc">\"</span><span class="st">marcar</span><span class="sc">\"</span><span class="st">) {</span><span class="sc">\n</span><span class="st">    const s = buscarSesion_(String(d.sesion || </span><span class="sc">\"\"</span><span class="st">).toUpperCase().trim());</span><span class="sc">\n</span><span class="st">    if (!s) return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">No existe esa sesión. Revisa el código de sesión.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">    if (ahora &gt;= s.hasta) return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">La sesión ya está cerrada.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">    const dni = dni_(d.dni);</span><span class="sc">\n</span><span class="st">    if (!dni) return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">El DNI o NIE no es válido (revisa los números y la letra).</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">    const disp = String(d.dispositivo || </span><span class="sc">\"\"</span><span class="st">).slice(0, 60);</span><span class="sc">\n</span><span class="st">    const cache = CacheService.getScriptCache();</span><span class="sc">\n</span><span class="st">    const kInt = </span><span class="sc">\"</span><span class="st">int_</span><span class="sc">\"</span><span class="st"> + s.id + </span><span class="sc">\"</span><span class="st">_</span><span class="sc">\"</span><span class="st"> + disp, kDni = </span><span class="sc">\"</span><span class="st">dni_</span><span class="sc">\"</span><span class="st"> + s.id + </span><span class="sc">\"</span><span class="st">_</span><span class="sc">\"</span><span class="st"> + dni, kDisp = </span><span class="sc">\"</span><span class="st">disp_</span><span class="sc">\"</span><span class="st"> + s.id + </span><span class="sc">\"</span><span class="st">_</span><span class="sc">\"</span><span class="st"> + disp;</span><span class="sc">\n</span><span class="st">    const fallos = +(cache.get(kInt) || 0);</span><span class="sc">\n</span><span class="st">    if (fallos &gt;= MAX_INTENTOS) return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">Demasiados intentos fallidos desde este dispositivo.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">    if (cache.get(kDni)) return json_({ok: true, repetido: true, mensaje: </span><span class="sc">\"</span><span class="st">Tu asistencia ya estaba registrada.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">    const otro = cache.get(kDisp);</span><span class="sc">\n</span><span class="st">    if (otro &amp;&amp; otro !== dni) return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">Desde este dispositivo ya se ha registrado otro DNI en esta sesión.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">    const cod = String(d.codigo || </span><span class="sc">\"\"</span><span class="st">).replace(/</span><span class="sc">\\</span><span class="st">D/g, </span><span class="sc">\"\"</span><span class="st">).padStart(4, </span><span class="sc">\"</span><span class="st">0</span><span class="sc">\"</span><span class="st">);</span><span class="sc">\n</span><span class="st">    let valido = false;</span><span class="sc">\n</span><span class="st">    if (s.modo === </span><span class="sc">\"</span><span class="st">fijo</span><span class="sc">\"</span><span class="st">) valido = cod === codigo_(s.secreto, </span><span class="sc">\"</span><span class="st">fijo</span><span class="sc">\"</span><span class="st">);</span><span class="sc">\n</span><span class="st">    else {</span><span class="sc">\n</span><span class="st">      const w = Math.floor(ahora.getTime() / 1000 / VENTANA_SEG);</span><span class="sc">\n</span><span class="st">      for (let k = -1; k &lt; VENTANAS_VALIDAS &amp;&amp; !valido; k++) valido = cod === codigo_(s.secreto, w - k);</span><span class="sc">\n</span><span class="st">    }</span><span class="sc">\n</span><span class="st">    if (!valido) { cache.put(kInt, String(fallos + 1), 21600); return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">El código no es correcto o ha caducado. Escribe el que aparece ahora en la pantalla.</span><span class="sc">\"</span><span class="st">}); }</span><span class="sc">\n</span><span class="st">    registros_().appendRow([ahora, s.id, dni, disp]);</span><span class="sc">\n</span><span class="st">    cache.put(kDni, </span><span class="sc">\"</span><span class="st">1</span><span class="sc">\"</span><span class="st">, 21600); cache.put(kDisp, dni, 21600);</span><span class="sc">\n</span><span class="st">    return json_({ok: true, mensaje: </span><span class="sc">\"</span><span class="st">Asistencia registrada.</span><span class="sc">\"</span><span class="st">, hora: ahora.getTime(), grupo: s.grupo});</span><span class="sc">\n</span><span class="st">  }</span><span class="sc">\n\n</span><span class="st">  if (!esProfesor) return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">Clave de profesor incorrecta.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n\n</span><span class="st">  if (d.accion === </span><span class="sc">\"</span><span class="st">crear</span><span class="sc">\"</span><span class="st">) {</span><span class="sc">\n</span><span class="st">    const min = Math.max(1, Math.min(240, +d.minutos || 15));</span><span class="sc">\n</span><span class="st">    let id; do { id = nuevoId_(); } while (buscarSesion_(id));</span><span class="sc">\n</span><span class="st">    const secreto = Utilities.getUuid(), modo = d.modo === </span><span class="sc">\"</span><span class="st">fijo</span><span class="sc">\"</span><span class="st"> ? </span><span class="sc">\"</span><span class="st">fijo</span><span class="sc">\"</span><span class="st"> : </span><span class="sc">\"</span><span class="st">rotatorio</span><span class="sc">\"</span><span class="st">;</span><span class="sc">\n</span><span class="st">    const hasta = new Date(ahora.getTime() + min * 60000);</span><span class="sc">\n</span><span class="st">    sesiones_().appendRow([id, secreto, String(d.grupo || </span><span class="sc">\"\"</span><span class="st">).slice(0, 80), modo, ahora, hasta]);</span><span class="sc">\n</span><span class="st">    return json_({ok: true, id, secreto, modo, hasta: hasta.getTime(), ahora: ahora.getTime(), ventana: VENTANA_SEG});</span><span class="sc">\n</span><span class="st">  }</span><span class="sc">\n</span><span class="st">  if (d.accion === </span><span class="sc">\"</span><span class="st">cerrar</span><span class="sc">\"</span><span class="st"> || d.accion === </span><span class="sc">\"</span><span class="st">ampliar</span><span class="sc">\"</span><span class="st">) {</span><span class="sc">\n</span><span class="st">    const s = buscarSesion_(d.id); if (!s) return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">Sesión no encontrada.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">    const hasta = d.accion === </span><span class="sc">\"</span><span class="st">cerrar</span><span class="sc">\"</span><span class="st"> ? ahora : new Date(Math.max(ahora.getTime(), s.hasta.getTime()) + (+d.minutos || 5) * 60000);</span><span class="sc">\n</span><span class="st">    sesiones_().getRange(s.fila, 6).setValue(hasta);</span><span class="sc">\n</span><span class="st">    return json_({ok: true, hasta: hasta.getTime()});</span><span class="sc">\n</span><span class="st">  }</span><span class="sc">\n</span><span class="st">  if (d.accion === </span><span class="sc">\"</span><span class="st">sesiones</span><span class="sc">\"</span><span class="st">) {</span><span class="sc">\n</span><span class="st">    const v = sesiones_().getDataRange().getValues().slice(1);</span><span class="sc">\n</span><span class="st">    const n = {}; registros_().getDataRange().getValues().slice(1).forEach(r =&gt; n[r[1]] = (n[r[1]] || 0) + 1);</span><span class="sc">\n</span><span class="st">    return json_({ok: true, sesiones: v.map(r =&gt; ({id: r[0], grupo: r[2], modo: r[3], creada: new Date(r[4]).getTime(), hasta: new Date(r[5]).getTime(), registros: n[r[0]] || 0}))});</span><span class="sc">\n</span><span class="st">  }</span><span class="sc">\n</span><span class="st">  if (d.accion === </span><span class="sc">\"</span><span class="st">lista</span><span class="sc">\"</span><span class="st">) {</span><span class="sc">\n</span><span class="st">    const ids = [].concat(d.ids || []).map(x =&gt; String(x).toUpperCase().trim());</span><span class="sc">\n</span><span class="st">    const ses = ids.map(buscarSesion_).filter(Boolean).map(s =&gt; ({id: s.id, grupo: s.grupo, creada: s.creada.getTime(), hasta: s.hasta.getTime()}));</span><span class="sc">\n</span><span class="st">    const regs = registros_().getDataRange().getValues().slice(1).filter(r =&gt; ids.indexOf(r[1]) &gt;= 0)</span><span class="sc">\n</span><span class="st">      .map(r =&gt; ({hora: new Date(r[0]).getTime(), sesion: r[1], dni: r[2], dispositivo: r[3]}));</span><span class="sc">\n</span><span class="st">    return json_({ok: true, sesiones: ses, registros: regs});</span><span class="sc">\n</span><span class="st">  }</span><span class="sc">\n</span><span class="st">  return json_({ok: false, error: </span><span class="sc">\"</span><span class="st">Acción desconocida.</span><span class="sc">\"</span><span class="st">});</span><span class="sc">\n</span><span class="st">}</span><span class="sc">\n</span><span class="st">"</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>XLSX <span class="op">=</span> { <span class="cf">try</span> { <span class="cf">return</span> <span class="cf">await</span> <span class="im">import</span>(<span class="st">"https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs"</span>)<span class="op">;</span> } <span class="cf">catch</span> (e) { <span class="cf">return</span> <span class="pp">require</span>(<span class="st">"xlsx@0.18.5/dist/xlsx.full.min.js"</span>)<span class="op">;</span> } }</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>qrcodeLib <span class="op">=</span> <span class="pp">require</span>(<span class="st">"qrcode-generator@1.4.4"</span>)<span class="op">.</span><span class="fu">catch</span>(() <span class="kw">=&gt;</span> <span class="kw">null</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>leerConf <span class="op">=</span> () <span class="kw">=&gt;</span> { <span class="cf">try</span> { <span class="cf">return</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">parse</span>(localStorage<span class="op">.</span><span class="fu">getItem</span>(<span class="st">"ccee-asis-conf"</span>) <span class="op">??</span> <span class="st">"{}"</span>)<span class="op">;</span> } <span class="cf">catch</span> (e) { <span class="cf">return</span> {}<span class="op">;</span> } }</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>codigoDe <span class="op">=</span> <span class="kw">async</span> (secreto<span class="op">,</span> w) <span class="kw">=&gt;</span> {</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> k <span class="op">=</span> <span class="cf">await</span> crypto<span class="op">.</span><span class="at">subtle</span><span class="op">.</span><span class="fu">importKey</span>(<span class="st">"raw"</span><span class="op">,</span> <span class="kw">new</span> <span class="fu">TextEncoder</span>()<span class="op">.</span><span class="fu">encode</span>(secreto)<span class="op">,</span> {<span class="dt">name</span><span class="op">:</span> <span class="st">"HMAC"</span><span class="op">,</span> <span class="dt">hash</span><span class="op">:</span> <span class="st">"SHA-256"</span>}<span class="op">,</span> <span class="kw">false</span><span class="op">,</span> [<span class="st">"sign"</span>])<span class="op">;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> <span class="kw">new</span> <span class="bu">Uint8Array</span>(<span class="cf">await</span> crypto<span class="op">.</span><span class="at">subtle</span><span class="op">.</span><span class="fu">sign</span>(<span class="st">"HMAC"</span><span class="op">,</span> k<span class="op">,</span> <span class="kw">new</span> <span class="fu">TextEncoder</span>()<span class="op">.</span><span class="fu">encode</span>(<span class="bu">String</span>(w))))<span class="op">;</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="bu">String</span>((((b[<span class="dv">0</span>] <span class="op">&lt;&lt;</span> <span class="dv">24</span>) <span class="op">|</span> (b[<span class="dv">1</span>] <span class="op">&lt;&lt;</span> <span class="dv">16</span>) <span class="op">|</span> (b[<span class="dv">2</span>] <span class="op">&lt;&lt;</span> <span class="dv">8</span>) <span class="op">|</span> b[<span class="dv">3</span>]) <span class="op">&gt;&gt;&gt;</span> <span class="dv">0</span>) <span class="op">%</span> <span class="dv">10000</span>)<span class="op">.</span><span class="fu">padStart</span>(<span class="dv">4</span><span class="op">,</span> <span class="st">"0"</span>)<span class="op">;</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>claveDni <span class="op">=</span> (x) <span class="kw">=&gt;</span> { <span class="kw">const</span> s <span class="op">=</span> <span class="bu">String</span>(x <span class="op">??</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">[^0-9A-Z]</span><span class="ss">/g</span><span class="op">,</span> <span class="st">""</span>)<span class="op">;</span> <span class="cf">return</span> <span class="ss">/</span><span class="sc">^[0-9XYZ]\d{7}[A-Z]$</span><span class="ss">/</span><span class="op">.</span><span class="fu">test</span>(s) <span class="op">?</span> s<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">8</span>) <span class="op">:</span> <span class="ss">/</span><span class="sc">^\d{1,8}$</span><span class="ss">/</span><span class="op">.</span><span class="fu">test</span>(s) <span class="op">?</span> s<span class="op">.</span><span class="fu">padStart</span>(<span class="dv">8</span><span class="op">,</span> <span class="st">"0"</span>) <span class="op">:</span> s<span class="op">;</span> }</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<section id="configuracion" class="level2">
+<h2 class="anchored" data-anchor-id="configuracion">1. Configuración (una sola vez)</h2>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Instrucciones para crear tu hoja de asistencia (10 minutos)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Crea una hoja de cálculo de Google, por ejemplo «Asistencia TC3».</li>
+<li>En la hoja, abre <strong>Extensiones → Apps Script</strong>, borra el contenido y pega el código que descargas con el botón de abajo.</li>
+<li>En la primera línea, cambia <code>cambia-esta-clave</code> por una <strong>clave de profesor</strong> que solo sepas tú.</li>
+<li>Pulsa <strong>Implementar → Nueva implementación</strong>, tipo <strong>Aplicación web</strong>. «Ejecutar como»: <strong>Yo</strong>. «Quién tiene acceso»: <strong>Cualquier usuario</strong>. Autoriza los permisos que pide Google.</li>
+<li>Copia la <strong>URL de la aplicación web</strong> (termina en <code>/exec</code>) y pégala abajo junto con tu clave.</li>
+</ol>
+<p>Si con tu cuenta de la UGR no aparece la opción «Cualquier usuario», haz la implementación con una cuenta personal de Gmail: los estudiantes tienen que poder acceder sin iniciar sesión. Si más adelante cambias el código, usa <strong>Implementar → Gestionar implementaciones → Editar → Nueva versión</strong> para que la URL no cambie.</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="61" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 60;"><span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>DOM<span class="op">.</span><span class="fu">download</span>(() <span class="kw">=&gt;</span> <span class="kw">new</span> <span class="bu">Blob</span>([GS_CODIGO]<span class="op">,</span> {<span class="dt">type</span><span class="op">:</span> <span class="st">"text/plain;charset=utf-8"</span>})<span class="op">,</span> <span class="st">"asistencia_apps_script.gs"</span><span class="op">,</span> <span class="st">"⬇ Código para Apps Script"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-1" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="62" data-source-offset="-136"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 61;"><span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>viewof conf <span class="op">=</span> {</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> c <span class="op">=</span> <span class="fu">leerConf</span>()<span class="op">;</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> f <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;form class="asis-conf"&gt;</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;label&gt;URL de la aplicación web &lt;input name="url" size="60" placeholder="https://script.google.com/macros/s/…/exec" value="</span><span class="sc">${</span>c<span class="op">.</span><span class="at">url</span> <span class="op">??</span> <span class="st">""</span><span class="sc">}</span><span class="vs">"&gt;&lt;/label&gt;</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;label&gt;Clave de profesor &lt;input name="clave" type="password" value="</span><span class="sc">${</span>c<span class="op">.</span><span class="at">clave</span> <span class="op">??</span> <span class="st">""</span><span class="sc">}</span><span class="vs">"&gt;&lt;/label&gt;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;label class="asis-check"&gt;&lt;input type="checkbox" name="recordar"&gt; Recordar en este navegador&lt;/label&gt;</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;button type="submit" class="copiar"&gt;Guardar y comprobar la conexión&lt;/button&gt; &lt;span class="asis-estado"&gt;&lt;/span&gt;&lt;/form&gt;`</span><span class="op">;</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>  f<span class="op">.</span><span class="at">value</span> <span class="op">=</span> c<span class="op">;</span> f<span class="op">.</span><span class="at">recordar</span><span class="op">.</span><span class="at">checked</span> <span class="op">=</span> <span class="op">!!</span>c<span class="op">.</span><span class="at">url</span><span class="op">;</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>  f<span class="op">.</span><span class="at">onsubmit</span> <span class="op">=</span> <span class="kw">async</span> (e) <span class="kw">=&gt;</span> {</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>    e<span class="op">.</span><span class="fu">preventDefault</span>()<span class="op">;</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> v <span class="op">=</span> {<span class="dt">url</span><span class="op">:</span> f<span class="op">.</span><span class="at">url</span><span class="op">.</span><span class="at">value</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> f<span class="op">.</span><span class="at">clave</span><span class="op">.</span><span class="at">value</span>}<span class="op">;</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> { <span class="cf">if</span> (f<span class="op">.</span><span class="at">recordar</span><span class="op">.</span><span class="at">checked</span>) localStorage<span class="op">.</span><span class="fu">setItem</span>(<span class="st">"ccee-asis-conf"</span><span class="op">,</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(v))<span class="op">;</span> <span class="cf">else</span> localStorage<span class="op">.</span><span class="fu">removeItem</span>(<span class="st">"ccee-asis-conf"</span>)<span class="op">;</span> } <span class="cf">catch</span> (err) {}</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> est <span class="op">=</span> f<span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".asis-estado"</span>)<span class="op">;</span> est<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">"Comprobando…"</span><span class="op">;</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(v<span class="op">.</span><span class="at">url</span><span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"sesiones"</span><span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> v<span class="op">.</span><span class="at">clave</span>}<span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    est<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> r<span class="op">.</span><span class="at">ok</span> <span class="op">?</span> <span class="vs">`✅ Conectado (</span><span class="sc">${</span>r<span class="op">.</span><span class="at">sesiones</span><span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs"> sesiones guardadas).`</span> <span class="op">:</span> <span class="vs">`❌ </span><span class="sc">${</span>r<span class="op">.</span><span class="at">error</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    f<span class="op">.</span><span class="at">value</span> <span class="op">=</span> v<span class="op">;</span> f<span class="op">.</span><span class="fu">dispatchEvent</span>(<span class="kw">new</span> <span class="bu">Event</span>(<span class="st">"input"</span><span class="op">,</span> {<span class="dt">bubbles</span><span class="op">:</span> <span class="kw">true</span>}))<span class="op">;</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> f<span class="op">;</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-3-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="pasar-lista" class="level2">
+<h2 class="anchored" data-anchor-id="pasar-lista">2. Pasar lista en clase</h2>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="86" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 85;"><span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>viewof sesionForm <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">form</span>({</span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>  <span class="dt">grupo</span><span class="op">:</span> Inputs<span class="op">.</span><span class="fu">text</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"Asignatura y grupo"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"Técnicas Cuantitativas III · Grupo A"</span><span class="op">,</span> <span class="dt">width</span><span class="op">:</span> <span class="dv">360</span>})<span class="op">,</span></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>  <span class="dt">minutos</span><span class="op">:</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">2</span><span class="op">,</span> <span class="dv">60</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Minutos abierta"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span>})<span class="op">,</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>  <span class="dt">modo</span><span class="op">:</span> Inputs<span class="op">.</span><span class="fu">radio</span>(<span class="kw">new</span> <span class="bu">Map</span>([[<span class="st">"Código que cambia cada 20 segundos (recomendado)"</span><span class="op">,</span> <span class="st">"rotatorio"</span>]<span class="op">,</span> [<span class="st">"Código fijo (para decirlo en voz alta)"</span><span class="op">,</span> <span class="st">"fijo"</span>]])<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Tipo de código"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"rotatorio"</span>})</span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>}<span class="op">,</span> {<span class="dt">submit</span><span class="op">:</span> <span class="st">"▶ Abrir sesión y proyectar el código"</span>})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="95" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 94;"><span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>sesionForm <span class="op">||</span> <span class="op">!</span>conf<span class="op">?.</span><span class="at">url</span>) <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;p class="pending"&gt;</span><span class="sc">${</span>conf<span class="op">?.</span><span class="at">url</span> <span class="op">?</span> <span class="st">"Elige las opciones y pulsa «Abrir sesión»."</span> <span class="op">:</span> <span class="st">"Primero guarda la configuración (apartado 1)."</span><span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(conf<span class="op">.</span><span class="at">url</span><span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"crear"</span><span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> conf<span class="op">.</span><span class="at">clave</span><span class="op">,</span> <span class="op">...</span>sesionForm}<span class="op">,</span> <span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>r<span class="op">.</span><span class="at">ok</span>) <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;p class="pending"&gt;❌ </span><span class="sc">${</span>r<span class="op">.</span><span class="at">error</span><span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> desfase <span class="op">=</span> r<span class="op">.</span><span class="at">ahora</span> <span class="op">-</span> <span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>()<span class="op">;</span></span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> hasta <span class="op">=</span> r<span class="op">.</span><span class="at">hasta</span><span class="op">;</span></span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> enlace <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>location<span class="op">.</span><span class="at">href</span><span class="op">.</span><span class="fu">replace</span>(<span class="ss">/asistencia-profesor</span><span class="sc">\.</span><span class="ss">html.</span><span class="sc">*$</span><span class="ss">/</span><span class="op">,</span> <span class="st">"asistencia.html"</span>)<span class="sc">}</span><span class="vs">?s=</span><span class="sc">${</span>r<span class="op">.</span><span class="at">id</span><span class="sc">}${</span>URL_CONFIG <span class="op">?</span> <span class="st">""</span> <span class="op">:</span> <span class="st">"&amp;u="</span> <span class="op">+</span> <span class="pp">encodeURIComponent</span>(conf<span class="op">.</span><span class="at">url</span>)<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> panel <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;div class="asis-panel"&gt;</span></span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div class="asis-panel-cab"&gt;&lt;span&gt;</span><span class="sc">${</span>sesionForm<span class="op">.</span><span class="at">grupo</span><span class="sc">}</span><span class="vs">&lt;/span&gt;&lt;span class="asis-reloj"&gt;&lt;/span&gt;&lt;/div&gt;</span></span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div class="asis-panel-cuerpo"&gt;</span></span>
+<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div class="asis-qr"&gt;&lt;/div&gt;</span></span>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div&gt;&lt;p class="asis-et"&gt;Sesión&lt;/p&gt;&lt;p class="asis-sesion"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">id</span><span class="sc">}</span><span class="vs">&lt;/p&gt;</span></span>
+<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;p class="asis-et"&gt;Código&lt;/p&gt;&lt;p class="asis-grande"&gt;····&lt;/p&gt;&lt;div class="asis-barra"&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;</span></span>
+<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;p class="asis-cuenta"&gt;0 registros&lt;/p&gt;&lt;/div&gt;</span></span>
+<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;p class="asis-url"&gt;Escanea el QR o entra en &lt;b&gt;</span><span class="sc">${</span>enlace<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">\?</span><span class="ss">.</span><span class="sc">*$</span><span class="ss">/</span><span class="op">,</span> <span class="st">""</span>)<span class="sc">}</span><span class="vs">&lt;/b&gt; y escribe la sesión, el código y tu DNI.&lt;/p&gt;</span></span>
+<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div class="graf-botones"&gt;&lt;button class="copiar asis-full"&gt;⛶ Pantalla completa&lt;/button&gt;&lt;button class="copiar asis-mas"&gt;+5 minutos&lt;/button&gt;&lt;button class="copiar asis-cerrar"&gt;⏹ Cerrar la sesión&lt;/button&gt;&lt;button class="copiar asis-copiar"&gt;📋 Copiar enlace&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;`</span><span class="op">;</span></span>
+<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> $ <span class="op">=</span> (s) <span class="kw">=&gt;</span> panel<span class="op">.</span><span class="fu">querySelector</span>(s)<span class="op">;</span></span>
+<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (qrcodeLib) { <span class="kw">const</span> qr <span class="op">=</span> <span class="fu">qrcodeLib</span>(<span class="dv">0</span><span class="op">,</span> <span class="st">"M"</span>)<span class="op">;</span> qr<span class="op">.</span><span class="fu">addData</span>(enlace)<span class="op">;</span> qr<span class="op">.</span><span class="fu">make</span>()<span class="op">;</span> <span class="fu">$</span>(<span class="st">".asis-qr"</span>)<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> qr<span class="op">.</span><span class="fu">createSvgTag</span>({<span class="dt">cellSize</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">margin</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">scalable</span><span class="op">:</span> <span class="kw">true</span>})<span class="op">;</span> }</span>
+<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="fu">$</span>(<span class="st">".asis-qr"</span>)<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> <span class="vs">`&lt;p class="nota"&gt;No se ha podido cargar el generador de QR.&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> cerrada <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tic <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>panel<span class="op">.</span><span class="at">isConnected</span>) <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> ahora <span class="op">=</span> <span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>() <span class="op">+</span> desfase<span class="op">,</span> w <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(ahora <span class="op">/</span> <span class="dv">1000</span> <span class="op">/</span> r<span class="op">.</span><span class="at">ventana</span>)<span class="op">;</span></span>
+<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> restante <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> hasta <span class="op">-</span> ahora)<span class="op">;</span></span>
+<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>    <span class="fu">$</span>(<span class="st">".asis-reloj"</span>)<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> restante <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">?</span> <span class="vs">`Abierta: </span><span class="sc">${</span><span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(restante <span class="op">/</span> <span class="dv">60000</span>)<span class="sc">}</span><span class="vs">:</span><span class="sc">${</span><span class="bu">String</span>(<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(restante <span class="op">/</span> <span class="dv">1000</span>) <span class="op">%</span> <span class="dv">60</span>)<span class="op">.</span><span class="fu">padStart</span>(<span class="dv">2</span><span class="op">,</span> <span class="st">"0"</span>)<span class="sc">}</span><span class="vs">`</span> <span class="op">:</span> <span class="st">"Sesión cerrada"</span><span class="op">;</span></span>
+<span id="cb6-121"><a href="#cb6-121" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (restante <span class="op">&lt;=</span> <span class="dv">0</span> <span class="op">||</span> cerrada) { <span class="fu">$</span>(<span class="st">".asis-grande"</span>)<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">"—"</span><span class="op">;</span> <span class="fu">$</span>(<span class="st">".asis-barra div"</span>)<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">width</span> <span class="op">=</span> <span class="st">"0"</span><span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb6-122"><a href="#cb6-122" aria-hidden="true" tabindex="-1"></a>    <span class="fu">$</span>(<span class="st">".asis-grande"</span>)<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="cf">await</span> <span class="fu">codigoDe</span>(r<span class="op">.</span><span class="at">secreto</span><span class="op">,</span> r<span class="op">.</span><span class="at">modo</span> <span class="op">===</span> <span class="st">"fijo"</span> <span class="op">?</span> <span class="st">"fijo"</span> <span class="op">:</span> w)<span class="op">;</span></span>
+<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a>    <span class="fu">$</span>(<span class="st">".asis-barra div"</span>)<span class="op">.</span><span class="at">style</span><span class="op">.</span><span class="at">width</span> <span class="op">=</span> r<span class="op">.</span><span class="at">modo</span> <span class="op">===</span> <span class="st">"fijo"</span> <span class="op">?</span> <span class="st">"100%"</span> <span class="op">:</span> <span class="vs">`</span><span class="sc">${</span><span class="dv">100</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> ((ahora <span class="op">/</span> <span class="dv">1000</span>) <span class="op">%</span> r<span class="op">.</span><span class="at">ventana</span>) <span class="op">/</span> r<span class="op">.</span><span class="at">ventana</span>)<span class="sc">}</span><span class="vs">%`</span><span class="op">;</span></span>
+<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cuenta <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> { <span class="cf">if</span> (<span class="op">!</span>panel<span class="op">.</span><span class="at">isConnected</span>) <span class="cf">return</span><span class="op">;</span> <span class="kw">const</span> l <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(conf<span class="op">.</span><span class="at">url</span><span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"lista"</span><span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> conf<span class="op">.</span><span class="at">clave</span><span class="op">,</span> <span class="dt">ids</span><span class="op">:</span> [r<span class="op">.</span><span class="at">id</span>]}<span class="op">,</span> <span class="dv">1</span>)<span class="op">;</span> <span class="cf">if</span> (l<span class="op">.</span><span class="at">ok</span>) <span class="fu">$</span>(<span class="st">".asis-cuenta"</span>)<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>l<span class="op">.</span><span class="at">registros</span><span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs"> registro</span><span class="sc">${</span>l<span class="op">.</span><span class="at">registros</span><span class="op">.</span><span class="at">length</span> <span class="op">===</span> <span class="dv">1</span> <span class="op">?</span> <span class="st">""</span> <span class="op">:</span> <span class="st">"s"</span><span class="sc">}</span><span class="vs">`</span><span class="op">;</span> }<span class="op">;</span></span>
+<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t1 <span class="op">=</span> <span class="pp">setInterval</span>(tic<span class="op">,</span> <span class="dv">500</span>)<span class="op">,</span> t2 <span class="op">=</span> <span class="pp">setInterval</span>(cuenta<span class="op">,</span> <span class="dv">10000</span>)<span class="op">;</span></span>
+<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a>  invalidation<span class="op">.</span><span class="fu">then</span>(() <span class="kw">=&gt;</span> { <span class="pp">clearInterval</span>(t1)<span class="op">;</span> <span class="pp">clearInterval</span>(t2)<span class="op">;</span> })<span class="op">;</span></span>
+<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tic</span>()<span class="op">;</span></span>
+<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">$</span>(<span class="st">".asis-full"</span>)<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">document</span><span class="op">.</span><span class="at">fullscreenElement</span> <span class="op">?</span> <span class="bu">document</span><span class="op">.</span><span class="fu">exitFullscreen</span>() <span class="op">:</span> panel<span class="op">.</span><span class="at">requestFullscreen</span><span class="op">?.</span>()<span class="op">;</span></span>
+<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">$</span>(<span class="st">".asis-mas"</span>)<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> { <span class="kw">const</span> x <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(conf<span class="op">.</span><span class="at">url</span><span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"ampliar"</span><span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> conf<span class="op">.</span><span class="at">clave</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> r<span class="op">.</span><span class="at">id</span><span class="op">,</span> <span class="dt">minutos</span><span class="op">:</span> <span class="dv">5</span>}<span class="op">,</span> <span class="dv">2</span>)<span class="op">;</span> <span class="cf">if</span> (x<span class="op">.</span><span class="at">ok</span>) { hasta <span class="op">=</span> x<span class="op">.</span><span class="at">hasta</span><span class="op">;</span> cerrada <span class="op">=</span> <span class="kw">false</span><span class="op">;</span> } }<span class="op">;</span></span>
+<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">$</span>(<span class="st">".asis-cerrar"</span>)<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> { <span class="kw">const</span> x <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(conf<span class="op">.</span><span class="at">url</span><span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"cerrar"</span><span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> conf<span class="op">.</span><span class="at">clave</span><span class="op">,</span> <span class="dt">id</span><span class="op">:</span> r<span class="op">.</span><span class="at">id</span>}<span class="op">,</span> <span class="dv">2</span>)<span class="op">;</span> <span class="cf">if</span> (x<span class="op">.</span><span class="at">ok</span>) { hasta <span class="op">=</span> x<span class="op">.</span><span class="at">hasta</span><span class="op">;</span> cerrada <span class="op">=</span> <span class="kw">true</span><span class="op">;</span> <span class="fu">cuenta</span>()<span class="op">;</span> } }<span class="op">;</span></span>
+<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">$</span>(<span class="st">".asis-copiar"</span>)<span class="op">.</span><span class="at">onclick</span> <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="bu">navigator</span><span class="op">.</span><span class="at">clipboard</span><span class="op">.</span><span class="fu">writeText</span>(enlace)<span class="op">.</span><span class="fu">then</span>(() <span class="kw">=&gt;</span> <span class="fu">$</span>(<span class="st">".asis-copiar"</span>)<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">"✔ Copiado"</span>)<span class="op">;</span></span>
+<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a>  <span class="bu">window</span><span class="op">.</span><span class="at">cceeEvento</span> <span class="op">&amp;&amp;</span> <span class="bu">window</span><span class="op">.</span><span class="fu">cceeEvento</span>(<span class="st">"asistencia/sesion"</span><span class="op">,</span> <span class="st">"Sesión de asistencia"</span><span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> panel<span class="op">;</span></span>
+<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</section>
+<section id="informe" class="level2">
+<h2 class="anchored" data-anchor-id="informe">3. Informe y asistencia acumulada en Excel</h2>
+<p>Sube tu Excel con la lista de clase, con una columna llamada <strong>DNI</strong>. Los demás datos (nombre, grupo…) se conservan. Si ya has generado informes otros días, sube el <strong>último Excel que te dio CCEEscopio</strong>: ya tiene las sesiones anteriores, y solo se añaden las nuevas. Sin Excel, obtienes solo la lista de asistentes de las sesiones elegidas.</p>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="145" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 144;"><span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>viewof refrescar <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">button</span>(<span class="st">"↻ Actualizar la lista de sesiones"</span><span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">reduce</span><span class="op">:</span> v <span class="kw">=&gt;</span> v <span class="op">+</span> <span class="dv">1</span>})</span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>sesionesGuardadas <span class="op">=</span> {</span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>  refrescar<span class="op">;</span></span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>conf<span class="op">?.</span><span class="at">url</span>) <span class="cf">return</span> []<span class="op">;</span></span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(conf<span class="op">.</span><span class="at">url</span><span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"sesiones"</span><span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> conf<span class="op">.</span><span class="at">clave</span>}<span class="op">,</span> <span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> r<span class="op">.</span><span class="at">ok</span> <span class="op">?</span> r<span class="op">.</span><span class="at">sesiones</span><span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> b<span class="op">.</span><span class="at">creada</span> <span class="op">-</span> a<span class="op">.</span><span class="at">creada</span>) <span class="op">:</span> []<span class="op">;</span></span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>viewof excelLista <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">file</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"Excel o CSV de la lista de clase"</span><span class="op">,</span> <span class="dt">accept</span><span class="op">:</span> <span class="st">".xlsx,.xls,.csv,.ods"</span>})</span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>viewof sesionesSel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(<span class="kw">new</span> <span class="bu">Map</span>(sesionesGuardadas<span class="op">.</span><span class="fu">map</span>(s <span class="kw">=&gt;</span> [<span class="vs">`</span><span class="sc">${</span><span class="kw">new</span> <span class="bu">Date</span>(s<span class="op">.</span><span class="at">creada</span>)<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"es-ES"</span><span class="op">,</span> {<span class="dt">dateStyle</span><span class="op">:</span> <span class="st">"short"</span><span class="op">,</span> <span class="dt">timeStyle</span><span class="op">:</span> <span class="st">"short"</span>})<span class="sc">}</span><span class="vs"> · </span><span class="sc">${</span>s<span class="op">.</span><span class="at">id</span><span class="sc">}</span><span class="vs"> · </span><span class="sc">${</span>s<span class="op">.</span><span class="at">grupo</span><span class="sc">}</span><span class="vs"> · </span><span class="sc">${</span>s<span class="op">.</span><span class="at">registros</span><span class="sc">}</span><span class="vs"> registros`</span><span class="op">,</span> s<span class="op">.</span><span class="at">id</span>]))<span class="op">,</span></span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">label</span><span class="op">:</span> <span class="st">"Sesiones que quieres añadir (Ctrl o ⌘ para varias)"</span><span class="op">,</span> <span class="dt">multiple</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">size</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">8</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">3</span><span class="op">,</span> sesionesGuardadas<span class="op">.</span><span class="at">length</span>))<span class="op">,</span> <span class="dt">value</span><span class="op">:</span> sesionesGuardadas<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>)<span class="op">.</span><span class="fu">map</span>(s <span class="kw">=&gt;</span> s<span class="op">.</span><span class="at">id</span>)})</span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>viewof sesionesTxt <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">text</span>({<span class="dt">label</span><span class="op">:</span> <span class="st">"…o escribe los códigos de sesión"</span><span class="op">,</span> <span class="dt">placeholder</span><span class="op">:</span> <span class="st">"TC3-K7QM, TC3-P2RD"</span><span class="op">,</span> <span class="dt">width</span><span class="op">:</span> <span class="dv">360</span>})</span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>viewof generarInf <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">button</span>(<span class="st">"📊 Generar el informe"</span><span class="op">,</span> {<span class="dt">value</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">reduce</span><span class="op">:</span> v <span class="kw">=&gt;</span> v <span class="op">+</span> <span class="dv">1</span>})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-6-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="160" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 159;"><span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a>informe <span class="op">=</span> {</span>
+<span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>generarInf) <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>conf<span class="op">?.</span><span class="at">url</span>) <span class="cf">return</span> {<span class="dt">error</span><span class="op">:</span> <span class="st">"Primero guarda la configuración (apartado 1)."</span>}<span class="op">;</span></span>
+<span id="cb8-163"><a href="#cb8-163" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> ids <span class="op">=</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>([<span class="op">...</span>sesionesSel<span class="op">,</span> <span class="op">...</span>sesionesTxt<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">.</span><span class="fu">split</span>(<span class="ss">/</span><span class="sc">[\s,;]+</span><span class="ss">/</span>)<span class="op">.</span><span class="fu">filter</span>(<span class="bu">Boolean</span>)])]<span class="op">;</span></span>
+<span id="cb8-164"><a href="#cb8-164" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>ids<span class="op">.</span><span class="at">length</span>) <span class="cf">return</span> {<span class="dt">error</span><span class="op">:</span> <span class="st">"Elige al menos una sesión."</span>}<span class="op">;</span></span>
+<span id="cb8-165"><a href="#cb8-165" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(conf<span class="op">.</span><span class="at">url</span><span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"lista"</span><span class="op">,</span> <span class="dt">clave</span><span class="op">:</span> conf<span class="op">.</span><span class="at">clave</span><span class="op">,</span> ids}<span class="op">,</span> <span class="dv">3</span>)<span class="op">;</span></span>
+<span id="cb8-166"><a href="#cb8-166" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>r<span class="op">.</span><span class="at">ok</span>) <span class="cf">return</span> {<span class="dt">error</span><span class="op">:</span> r<span class="op">.</span><span class="at">error</span>}<span class="op">;</span></span>
+<span id="cb8-167"><a href="#cb8-167" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> nombreCol <span class="op">=</span> (s) <span class="kw">=&gt;</span> <span class="vs">`</span><span class="sc">${</span><span class="kw">new</span> <span class="bu">Date</span>(s<span class="op">.</span><span class="at">creada</span>)<span class="op">.</span><span class="fu">toLocaleDateString</span>(<span class="st">"es-ES"</span><span class="op">,</span> {<span class="dt">day</span><span class="op">:</span> <span class="st">"2-digit"</span><span class="op">,</span> <span class="dt">month</span><span class="op">:</span> <span class="st">"2-digit"</span><span class="op">,</span> <span class="dt">year</span><span class="op">:</span> <span class="st">"numeric"</span>})<span class="sc">}</span><span class="vs"> (</span><span class="sc">${</span>s<span class="op">.</span><span class="at">id</span><span class="sc">}</span><span class="vs">)`</span><span class="op">;</span></span>
+<span id="cb8-168"><a href="#cb8-168" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> ses <span class="op">=</span> r<span class="op">.</span><span class="at">sesiones</span><span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> a<span class="op">.</span><span class="at">creada</span> <span class="op">-</span> b<span class="op">.</span><span class="at">creada</span>)<span class="op">;</span></span>
+<span id="cb8-169"><a href="#cb8-169" aria-hidden="true" tabindex="-1"></a>  <span class="co">// lista de clase</span></span>
+<span id="cb8-170"><a href="#cb8-170" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> filas <span class="op">=</span> []<span class="op">,</span> colDni <span class="op">=</span> <span class="kw">null</span><span class="op">,</span> cab <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb8-171"><a href="#cb8-171" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (excelLista) {</span>
+<span id="cb8-172"><a href="#cb8-172" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> wb <span class="op">=</span> XLSX<span class="op">.</span><span class="fu">read</span>(<span class="cf">await</span> excelLista<span class="op">.</span><span class="fu">arrayBuffer</span>())<span class="op">;</span></span>
+<span id="cb8-173"><a href="#cb8-173" aria-hidden="true" tabindex="-1"></a>    filas <span class="op">=</span> XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">sheet_to_json</span>(wb<span class="op">.</span><span class="at">Sheets</span>[wb<span class="op">.</span><span class="at">SheetNames</span>[<span class="dv">0</span>]]<span class="op">,</span> {<span class="dt">defval</span><span class="op">:</span> <span class="st">""</span>})<span class="op">;</span></span>
+<span id="cb8-174"><a href="#cb8-174" aria-hidden="true" tabindex="-1"></a>    cab <span class="op">=</span> filas<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">keys</span>(filas[<span class="dv">0</span>]) <span class="op">:</span> []<span class="op">;</span></span>
+<span id="cb8-175"><a href="#cb8-175" aria-hidden="true" tabindex="-1"></a>    colDni <span class="op">=</span> cab<span class="op">.</span><span class="fu">find</span>(c <span class="kw">=&gt;</span> <span class="ss">/</span><span class="sc">\b(</span><span class="ss">dni</span><span class="sc">|</span><span class="ss">nie</span><span class="sc">|</span><span class="ss">nif</span><span class="sc">|</span><span class="ss">documento</span><span class="sc">)\b</span><span class="ss">/i</span><span class="op">.</span><span class="fu">test</span>(c)) <span class="op">??</span> cab<span class="op">.</span><span class="fu">find</span>(c <span class="kw">=&gt;</span> filas<span class="op">.</span><span class="fu">filter</span>(f <span class="kw">=&gt;</span> <span class="ss">/</span><span class="sc">^[0-9XYZ]\d{7}[A-Z]?$</span><span class="ss">/i</span><span class="op">.</span><span class="fu">test</span>(<span class="bu">String</span>(f[c])<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">[\s.-]</span><span class="ss">/g</span><span class="op">,</span> <span class="st">""</span>)))<span class="op">.</span><span class="at">length</span> <span class="op">&gt;</span> filas<span class="op">.</span><span class="at">length</span> <span class="op">/</span> <span class="dv">2</span>)<span class="op">;</span></span>
+<span id="cb8-176"><a href="#cb8-176" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>colDni) <span class="cf">return</span> {<span class="dt">error</span><span class="op">:</span> <span class="st">"No encuentro la columna del DNI en el Excel. Llámala «DNI»."</span>}<span class="op">;</span></span>
+<span id="cb8-177"><a href="#cb8-177" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-178"><a href="#cb8-178" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> patronSes <span class="op">=</span> <span class="ss">/</span><span class="sc">^\d{2}\/\d{2}\/\d{4}</span><span class="ss"> </span><span class="sc">\([A-Z0-9-]+\)$</span><span class="ss">/</span><span class="op">;</span></span>
+<span id="cb8-179"><a href="#cb8-179" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> presentes <span class="op">=</span> <span class="kw">new</span> <span class="bu">Map</span>(ses<span class="op">.</span><span class="fu">map</span>(s <span class="kw">=&gt;</span> [s<span class="op">.</span><span class="at">id</span><span class="op">,</span> <span class="kw">new</span> <span class="bu">Set</span>(r<span class="op">.</span><span class="at">registros</span><span class="op">.</span><span class="fu">filter</span>(x <span class="kw">=&gt;</span> x<span class="op">.</span><span class="at">sesion</span> <span class="op">===</span> s<span class="op">.</span><span class="at">id</span>)<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> <span class="fu">claveDni</span>(x<span class="op">.</span><span class="at">dni</span>)))]))<span class="op">;</span></span>
+<span id="cb8-180"><a href="#cb8-180" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> nuevas <span class="op">=</span> ses<span class="op">.</span><span class="fu">filter</span>(s <span class="kw">=&gt;</span> <span class="op">!</span>cab<span class="op">.</span><span class="fu">includes</span>(<span class="fu">nombreCol</span>(s)))<span class="op">;</span></span>
+<span id="cb8-181"><a href="#cb8-181" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> enLista <span class="op">=</span> <span class="kw">new</span> <span class="bu">Set</span>(filas<span class="op">.</span><span class="fu">map</span>(f <span class="kw">=&gt;</span> <span class="fu">claveDni</span>(f[colDni])))<span class="op">;</span></span>
+<span id="cb8-182"><a href="#cb8-182" aria-hidden="true" tabindex="-1"></a>  filas<span class="op">.</span><span class="fu">forEach</span>(f <span class="kw">=&gt;</span> {</span>
+<span id="cb8-183"><a href="#cb8-183" aria-hidden="true" tabindex="-1"></a>    <span class="kw">delete</span> f[<span class="st">"Total asistencias"</span>]<span class="op">;</span> <span class="kw">delete</span> f[<span class="st">"% asistencia"</span>]<span class="op">;</span></span>
+<span id="cb8-184"><a href="#cb8-184" aria-hidden="true" tabindex="-1"></a>    nuevas<span class="op">.</span><span class="fu">forEach</span>(s <span class="kw">=&gt;</span> f[<span class="fu">nombreCol</span>(s)] <span class="op">=</span> presentes<span class="op">.</span><span class="fu">get</span>(s<span class="op">.</span><span class="at">id</span>)<span class="op">.</span><span class="fu">has</span>(<span class="fu">claveDni</span>(f[colDni])) <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> <span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb8-185"><a href="#cb8-185" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> cols <span class="op">=</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">keys</span>(f)<span class="op">.</span><span class="fu">filter</span>(c <span class="kw">=&gt;</span> patronSes<span class="op">.</span><span class="fu">test</span>(c))<span class="op">;</span></span>
+<span id="cb8-186"><a href="#cb8-186" aria-hidden="true" tabindex="-1"></a>    f[<span class="st">"Total asistencias"</span>] <span class="op">=</span> cols<span class="op">.</span><span class="fu">reduce</span>((a<span class="op">,</span> c) <span class="kw">=&gt;</span> a <span class="op">+</span> (<span class="op">+</span>f[c] <span class="op">||</span> <span class="dv">0</span>)<span class="op">,</span> <span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb8-187"><a href="#cb8-187" aria-hidden="true" tabindex="-1"></a>    f[<span class="st">"% asistencia"</span>] <span class="op">=</span> cols<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">round</span>(<span class="dv">1000</span> <span class="op">*</span> f[<span class="st">"Total asistencias"</span>] <span class="op">/</span> cols<span class="op">.</span><span class="at">length</span>) <span class="op">/</span> <span class="dv">10</span> <span class="op">:</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-188"><a href="#cb8-188" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb8-189"><a href="#cb8-189" aria-hidden="true" tabindex="-1"></a>  <span class="co">// incidencias</span></span>
+<span id="cb8-190"><a href="#cb8-190" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> inc <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb8-191"><a href="#cb8-191" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (excelLista) r<span class="op">.</span><span class="at">registros</span><span class="op">.</span><span class="fu">filter</span>(x <span class="kw">=&gt;</span> <span class="op">!</span>enLista<span class="op">.</span><span class="fu">has</span>(<span class="fu">claveDni</span>(x<span class="op">.</span><span class="at">dni</span>)))<span class="op">.</span><span class="fu">forEach</span>(x <span class="kw">=&gt;</span> inc<span class="op">.</span><span class="fu">push</span>({<span class="dt">Tipo</span><span class="op">:</span> <span class="st">"DNI que no está en la lista de clase"</span><span class="op">,</span> <span class="dt">Sesión</span><span class="op">:</span> x<span class="op">.</span><span class="at">sesion</span><span class="op">,</span> <span class="dt">DNI</span><span class="op">:</span> x<span class="op">.</span><span class="at">dni</span><span class="op">,</span> <span class="dt">Hora</span><span class="op">:</span> <span class="kw">new</span> <span class="bu">Date</span>(x<span class="op">.</span><span class="at">hora</span>)<span class="op">.</span><span class="fu">toLocaleTimeString</span>(<span class="st">"es-ES"</span>)}))<span class="op">;</span></span>
+<span id="cb8-192"><a href="#cb8-192" aria-hidden="true" tabindex="-1"></a>  d3<span class="op">.</span><span class="fu">groups</span>(r<span class="op">.</span><span class="at">registros</span><span class="op">,</span> x <span class="kw">=&gt;</span> x<span class="op">.</span><span class="at">sesion</span><span class="op">,</span> x <span class="kw">=&gt;</span> x<span class="op">.</span><span class="at">dispositivo</span>)<span class="op">.</span><span class="fu">forEach</span>(([s<span class="op">,</span> g]) <span class="kw">=&gt;</span> g<span class="op">.</span><span class="fu">forEach</span>(([d<span class="op">,</span> xs]) <span class="kw">=&gt;</span> { <span class="cf">if</span> (<span class="kw">new</span> <span class="bu">Set</span>(xs<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> x<span class="op">.</span><span class="at">dni</span>))<span class="op">.</span><span class="at">size</span> <span class="op">&gt;</span> <span class="dv">1</span>) xs<span class="op">.</span><span class="fu">forEach</span>(x <span class="kw">=&gt;</span> inc<span class="op">.</span><span class="fu">push</span>({<span class="dt">Tipo</span><span class="op">:</span> <span class="st">"Varios DNI desde el mismo dispositivo"</span><span class="op">,</span> <span class="dt">Sesión</span><span class="op">:</span> s<span class="op">,</span> <span class="dt">DNI</span><span class="op">:</span> x<span class="op">.</span><span class="at">dni</span><span class="op">,</span> <span class="dt">Hora</span><span class="op">:</span> <span class="kw">new</span> <span class="bu">Date</span>(x<span class="op">.</span><span class="at">hora</span>)<span class="op">.</span><span class="fu">toLocaleTimeString</span>(<span class="st">"es-ES"</span>)}))<span class="op">;</span> }))<span class="op">;</span></span>
+<span id="cb8-193"><a href="#cb8-193" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> asistentes <span class="op">=</span> r<span class="op">.</span><span class="at">registros</span><span class="op">.</span><span class="fu">sort</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> a<span class="op">.</span><span class="at">hora</span> <span class="op">-</span> b<span class="op">.</span><span class="at">hora</span>)<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> {</span>
+<span id="cb8-194"><a href="#cb8-194" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> f <span class="op">=</span> filas<span class="op">.</span><span class="fu">find</span>(y <span class="kw">=&gt;</span> <span class="fu">claveDni</span>(y[colDni]) <span class="op">===</span> <span class="fu">claveDni</span>(x<span class="op">.</span><span class="at">dni</span>))<span class="op">;</span></span>
+<span id="cb8-195"><a href="#cb8-195" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="dt">Sesión</span><span class="op">:</span> x<span class="op">.</span><span class="at">sesion</span><span class="op">,</span> <span class="dt">Fecha</span><span class="op">:</span> <span class="kw">new</span> <span class="bu">Date</span>(x<span class="op">.</span><span class="at">hora</span>)<span class="op">.</span><span class="fu">toLocaleDateString</span>(<span class="st">"es-ES"</span>)<span class="op">,</span> <span class="dt">Hora</span><span class="op">:</span> <span class="kw">new</span> <span class="bu">Date</span>(x<span class="op">.</span><span class="at">hora</span>)<span class="op">.</span><span class="fu">toLocaleTimeString</span>(<span class="st">"es-ES"</span>)<span class="op">,</span> <span class="dt">DNI</span><span class="op">:</span> x<span class="op">.</span><span class="at">dni</span><span class="op">,</span> <span class="op">...</span>(f <span class="op">?</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">fromEntries</span>(cab<span class="op">.</span><span class="fu">filter</span>(c <span class="kw">=&gt;</span> c <span class="op">!==</span> colDni <span class="op">&amp;&amp;</span> <span class="op">!</span>patronSes<span class="op">.</span><span class="fu">test</span>(c))<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">.</span><span class="fu">map</span>(c <span class="kw">=&gt;</span> [c<span class="op">,</span> f[c]])) <span class="op">:</span> {})<span class="op">,</span> <span class="st">"En la lista"</span><span class="op">:</span> excelLista <span class="op">?</span> (f <span class="op">?</span> <span class="st">"Sí"</span> <span class="op">:</span> <span class="st">"No"</span>) <span class="op">:</span> <span class="st">""</span>}<span class="op">;</span></span>
+<span id="cb8-196"><a href="#cb8-196" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb8-197"><a href="#cb8-197" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> {filas<span class="op">,</span> asistentes<span class="op">,</span> inc<span class="op">,</span> ses<span class="op">,</span> nuevas<span class="op">,</span> colDni<span class="op">,</span> presentes}<span class="op">;</span></span>
+<span id="cb8-198"><a href="#cb8-198" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="203" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 202;"><span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-204"><a href="#cb9-204" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>informe) <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;p class="pending"&gt;Elige las sesiones y pulsa &lt;b&gt;Generar el informe&lt;/b&gt;.&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb9-205"><a href="#cb9-205" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (informe<span class="op">.</span><span class="at">error</span>) <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;p class="pending"&gt;❌ </span><span class="sc">${</span>informe<span class="op">.</span><span class="at">error</span><span class="sc">}</span><span class="vs">&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb9-206"><a href="#cb9-206" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> {filas<span class="op">,</span> asistentes<span class="op">,</span> inc<span class="op">,</span> ses<span class="op">,</span> nuevas} <span class="op">=</span> informe<span class="op">;</span></span>
+<span id="cb9-207"><a href="#cb9-207" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> hoy <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">.</span><span class="fu">toISOString</span>()<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb9-208"><a href="#cb9-208" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> excel <span class="op">=</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb9-209"><a href="#cb9-209" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> wb <span class="op">=</span> XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">book_new</span>()<span class="op">;</span></span>
+<span id="cb9-210"><a href="#cb9-210" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (filas<span class="op">.</span><span class="at">length</span>) XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">book_append_sheet</span>(wb<span class="op">,</span> XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">json_to_sheet</span>(filas)<span class="op">,</span> <span class="st">"Asistencia acumulada"</span>)<span class="op">;</span></span>
+<span id="cb9-211"><a href="#cb9-211" aria-hidden="true" tabindex="-1"></a>    XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">book_append_sheet</span>(wb<span class="op">,</span> XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">json_to_sheet</span>(asistentes<span class="op">.</span><span class="at">length</span> <span class="op">?</span> asistentes <span class="op">:</span> [{<span class="dt">Aviso</span><span class="op">:</span> <span class="st">"Sin registros"</span>}])<span class="op">,</span> <span class="st">"Asistentes por sesión"</span>)<span class="op">;</span></span>
+<span id="cb9-212"><a href="#cb9-212" aria-hidden="true" tabindex="-1"></a>    XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">book_append_sheet</span>(wb<span class="op">,</span> XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">json_to_sheet</span>(ses<span class="op">.</span><span class="fu">map</span>(s <span class="kw">=&gt;</span> ({<span class="dt">Sesión</span><span class="op">:</span> s<span class="op">.</span><span class="at">id</span><span class="op">,</span> <span class="dt">Grupo</span><span class="op">:</span> s<span class="op">.</span><span class="at">grupo</span><span class="op">,</span> <span class="dt">Abierta</span><span class="op">:</span> <span class="kw">new</span> <span class="bu">Date</span>(s<span class="op">.</span><span class="at">creada</span>)<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"es-ES"</span>)<span class="op">,</span> <span class="dt">Registros</span><span class="op">:</span> informe<span class="op">.</span><span class="at">presentes</span><span class="op">.</span><span class="fu">get</span>(s<span class="op">.</span><span class="at">id</span>)<span class="op">.</span><span class="at">size</span>})))<span class="op">,</span> <span class="st">"Sesiones"</span>)<span class="op">;</span></span>
+<span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (inc<span class="op">.</span><span class="at">length</span>) XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">book_append_sheet</span>(wb<span class="op">,</span> XLSX<span class="op">.</span><span class="at">utils</span><span class="op">.</span><span class="fu">json_to_sheet</span>(inc)<span class="op">,</span> <span class="st">"Incidencias"</span>)<span class="op">;</span></span>
+<span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">new</span> <span class="bu">Blob</span>([XLSX<span class="op">.</span><span class="fu">write</span>(wb<span class="op">,</span> {<span class="dt">bookType</span><span class="op">:</span> <span class="st">"xlsx"</span><span class="op">,</span> <span class="dt">type</span><span class="op">:</span> <span class="st">"array"</span>})]<span class="op">,</span> {<span class="dt">type</span><span class="op">:</span> <span class="st">"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"</span>})<span class="op">;</span></span>
+<span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> resumen <span class="op">=</span> filas<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="fu">html</span><span class="vs">`&lt;p&gt;</span><span class="sc">${</span>nuevas<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="vs">`Se han añadido </span><span class="sc">${</span>nuevas<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs"> sesión(es) nueva(s)`</span> <span class="op">:</span> <span class="st">"Las sesiones elegidas ya estaban en el Excel (no se duplican)"</span><span class="sc">}</span><span class="vs">. Estudiantes en la lista: &lt;b&gt;</span><span class="sc">${</span>filas<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">&lt;/b&gt;. Asistencia media: &lt;b&gt;</span><span class="sc">${</span>d3<span class="op">.</span><span class="fu">format</span>(<span class="st">".1f"</span>)(d3<span class="op">.</span><span class="fu">mean</span>(filas<span class="op">,</span> f <span class="kw">=&gt;</span> f[<span class="st">"% asistencia"</span>]))<span class="op">.</span><span class="fu">replace</span>(<span class="st">"."</span><span class="op">,</span> <span class="st">","</span>)<span class="sc">}</span><span class="vs"> %&lt;/b&gt;.&lt;/p&gt;`</span> <span class="op">:</span> <span class="fu">html</span><span class="vs">`&lt;p&gt;Asistentes: &lt;b&gt;</span><span class="sc">${</span>asistentes<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs">&lt;/b&gt; registros en </span><span class="sc">${</span>ses<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs"> sesión(es).&lt;/p&gt;`</span><span class="op">;</span></span>
+<span id="cb9-217"><a href="#cb9-217" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">html</span><span class="vs">`</span><span class="sc">${</span>resumen<span class="sc">}</span></span>
+<span id="cb9-218"><a href="#cb9-218" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>inc<span class="op">.</span><span class="at">length</span> <span class="op">?</span> <span class="fu">html</span><span class="vs">`&lt;p class="juego-res mal"&gt;⚠️ </span><span class="sc">${</span>inc<span class="op">.</span><span class="at">length</span><span class="sc">}</span><span class="vs"> incidencia(s): DNI que no están en tu lista o varios DNI desde un mismo dispositivo. Revisa la hoja «Incidencias».&lt;/p&gt;`</span> <span class="op">:</span> <span class="st">""</span><span class="sc">}</span></span>
+<span id="cb9-219"><a href="#cb9-219" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div class="graf-botones"&gt;</span><span class="sc">${</span>DOM<span class="op">.</span><span class="fu">download</span>(excel<span class="op">,</span> <span class="vs">`asistencia_TC3_</span><span class="sc">${</span>hoy<span class="sc">}</span><span class="vs">.xlsx`</span><span class="op">,</span> <span class="st">"⬇ Descargar el Excel de asistencia"</span>)<span class="sc">}</span><span class="vs">&lt;/div&gt;</span></span>
+<span id="cb9-220"><a href="#cb9-220" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>Inputs<span class="op">.</span><span class="fu">table</span>(filas<span class="op">.</span><span class="at">length</span> <span class="op">?</span> filas <span class="op">:</span> asistentes<span class="op">,</span> {<span class="dt">rows</span><span class="op">:</span> <span class="dv">14</span><span class="op">,</span> <span class="dt">layout</span><span class="op">:</span> <span class="st">"auto"</span>})<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb9-221"><a href="#cb9-221" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-8" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Consejos.</strong> Abre la sesión al principio de la clase, durante 5 o 10 minutos, y ciérrala después. Si hay dudas, al final del informe puedes llamar en voz alta a dos o tres estudiantes de la lista de asistentes para comprobar que están. El Excel acumulado guarda una columna por sesión (1 = asistió, 0 = no asistió), el total y el porcentaje. Puedes corregir a mano cualquier valor antes de volver a subirlo otro día.</p>
+<p><strong>Protección de datos.</strong> Conviene informar al estudiantado en la guía docente o en PRADO de que la asistencia se registra con el DNI y para qué se usa. Los registros están solo en tu hoja de Google: puedes borrarlos al terminar el curso.</p>
+</div>
+</div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<!--
+  Contador de visitas y de uso (GoatCounter, gratuito y sin cookies).
+  1. Crea el sitio en https://www.goatcounter.com con el código cceescopio.
+  2. En Settings, activa "Allow adding visitor counts on your website".
+  Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+
+  Además de las visitas a cada página, se registran estos eventos de uso
+  (en el panel de GoatCounter aparecen marcados como "event"):
+    uso/<página>            primera vez que se cambia un control (indicador, territorio, año...) en una visita
+    indicador/<id>          cada indicador consultado en los paneles
+    enlace-directo/<id>     visitas que llegan con un enlace directo a un indicador (?i=)
+    descarga/<página>       descargas de datos en CSV
+    mapa/<página>           uso del mapa interactivo (pasar el ratón por él)
+    video/reproducir, video/completo
+    salida/<dominio>        clics en enlaces a otras webs (INE, Eurostat...)
+    encuesta/...            respuestas de la encuesta de satisfacción
+-->
+<script data-goatcounter="https://cceescopio.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<script>
+(function () {
+  const GC_CODE = "cceescopio";
+  const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const offset = (document.querySelector('meta[name="quarto:offset"]') || {}).content || "./";
+
+  // ---------- Contador de visitas en el pie ----------
+  function show(n) {
+    const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
+    if (!box || document.getElementById("visit-counter")) return;
+    const s = document.createElement("span");
+    s.id = "visit-counter";
+    s.className = "visit-counter";
+    s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
+    box.appendChild(s);
+  }
+  function showAll(n) {
+    show(n);
+    document.querySelectorAll(".visitas-ccee").forEach(el => {
+      const num = el.querySelector(".vc-num"); if (num) num.textContent = n;
+      el.hidden = false;
+    });
+  }
+  if (!local) {
+    fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.count) showAll(String(d.count).replace(/\s/g, ".")); })
+      .catch(() => {});
+  }
+
+  // ---------- Eventos de uso ----------
+  const pagina = (() => {
+    const p = location.pathname.replace(/\/$/, "/index.html").split("/").slice(-2);
+    const f = p[1].replace(/\.html$/, "") || "index";
+    return p[0] === "docencia" ? `docencia-${f}` : f;
+  })();
+  const slug = s => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+                     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const cola = [], hechos = new Set();
+  function enviar(path, title) {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title: title || path, event: true});
+    else cola.push([path, title]);
+  }
+  const espera = setInterval(() => {
+    if (window.goatcounter && window.goatcounter.count) { clearInterval(espera); cola.splice(0).forEach(a => enviar(...a)); }
+  }, 500);
+  setTimeout(() => clearInterval(espera), 20000);
+  // Una sola vez por visita a la página (salvo que se pida lo contrario)
+  window.cceeEvento = function (path, title, repetir) {
+    if (local) { console.log("[CCEEscopio evento]", path); return; }
+    if (!repetir && hechos.has(path)) return;
+    hechos.add(path); enviar(path, title);
+  };
+
+  const ini = new URLSearchParams(location.search).get("i");
+  if (ini) cceeEvento(`enlace-directo/${ini}`, `Enlace directo: ${ini}`);
+
+  // Controles de los paneles (selectores, años, cantidades...)
+  document.addEventListener("change", ev => {
+    const el = ev.target;
+    if (!el.closest || !el.closest("form, .cell-output, .observablehq")) return;
+    if (el.closest("#encuesta-ccee")) return;
+    cceeEvento(`uso/${pagina}`, `Uso de controles: ${pagina}`);
+    const form = el.closest("form");
+    const etiqueta = form && form.querySelector("label") ? form.querySelector("label").textContent.trim() : "";
+    if (etiqueta === "Indicador" && el.tagName === "SELECT" && el.selectedOptions[0]) {
+      const id = slug(el.selectedOptions[0].textContent);
+      cceeEvento(`indicador/${id}`, el.selectedOptions[0].textContent);
+    }
+  }, true);
+
+  // Descargas y enlaces externos
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest && ev.target.closest("a");
+    if (!a) return;
+    if (a.hasAttribute("download") || /\.csv(\?|$)/i.test(a.getAttribute("href") || "")) {
+      cceeEvento(`descarga/${pagina}`, `Descarga de datos: ${pagina}`, true);
+      return;
+    }
+    try {
+      const u = new URL(a.href, location.href);
+      if (/^https?:$/.test(u.protocol) && u.hostname !== location.hostname)
+        cceeEvento(`salida/${u.hostname.replace(/^www\./, "")}`, `Enlace externo: ${u.hostname}`, true);
+    } catch (e) {}
+  }, true);
+
+  // Mapa interactivo
+  document.addEventListener("pointerover", ev => {
+    if (ev.target.closest && ev.target.closest(".mapa-ccee")) cceeEvento(`mapa/${pagina}`, `Uso del mapa: ${pagina}`);
+  }, {passive: true});
+
+  // Vídeo de presentación
+  document.addEventListener("play", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/reproducir", "Vídeo: reproducción"); }, true);
+  document.addEventListener("ended", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/completo", "Vídeo: visto completo"); }, true);
+
+  // ---------- Botón flotante de la encuesta de satisfacción ----------
+  function botonEncuesta() {
+    if (pagina === "encuesta" || pagina === "uso") return;
+    const b = document.createElement("a");
+    b.href = offset + "encuesta.html";
+    b.className = "btn-encuesta";
+    b.innerHTML = "⭐ ¿Nos valoras?";
+    b.title = "Encuesta de satisfacción (menos de un minuto)";
+    b.addEventListener("click", () => cceeEvento(`encuesta/boton/${pagina}`, "Clic en el botón de la encuesta"));
+    document.body.appendChild(b);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", botonEncuesta);
+  else botonEncuesta();
+})();
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlVSTF9DT05GSUcgPSBcIlwiXG5kbmlWYWxpZG8gPSAoeCkgPT4ge1xuICBjb25zdCBzID0gU3RyaW5nKHggfHwgXCJcIikudG9VcHBlckNhc2UoKS5yZXBsYWNlKC9bXjAtOUEtWl0vZywgXCJcIiksIEwgPSBcIlRSV0FHTVlGUERYQk5KWlNRVkhMQ0tFXCI7XG4gIGxldCBtID0gcy5tYXRjaCgvXihcXGR7OH0pKFtBLVpdKSQvKTsgaWYgKG0pIHJldHVybiBMWyttWzFdICUgMjNdID09PSBtWzJdID8gcyA6IG51bGw7XG4gIG0gPSBzLm1hdGNoKC9eKFtYWVpdKShcXGR7N30pKFtBLVpdKSQvKTsgaWYgKG0pIHJldHVybiBMWysoXCJYWVpcIi5pbmRleE9mKG1bMV0pICsgbVsyXSkgJSAyM10gPT09IG1bM10gPyBzIDogbnVsbDtcbiAgcmV0dXJuIG51bGw7XG59XG5sbGFtYXIgPSBhc3luYyAodXJsLCBkYXRvcywgaW50ZW50b3MgPSA0KSA9PiB7XG4gIGZvciAobGV0IGkgPSAwOyBpIDwgaW50ZW50b3M7IGkrKykge1xuICAgIHRyeSB7XG4gICAgICBjb25zdCByID0gYXdhaXQgZmV0Y2godXJsLCB7bWV0aG9kOiBcIlBPU1RcIiwgYm9keTogSlNPTi5zdHJpbmdpZnkoZGF0b3MpfSk7XG4gICAgICByZXR1cm4gYXdhaXQgci5qc29uKCk7XG4gICAgfSBjYXRjaCAoZSkgeyBpZiAoaSA9PT0gaW50ZW50b3MgLSAxKSByZXR1cm4ge29rOiBmYWxzZSwgZXJyb3I6IFwiTm8gc2UgaGEgcG9kaWRvIGNvbmVjdGFyLiBDb21wcnVlYmEgbGEgY29uZXhpw7NuIGUgaW50w6ludGFsbyBkZSBudWV2by5cIn07IGF3YWl0IG5ldyBQcm9taXNlKHIgPT4gc2V0VGltZW91dChyLCA4MDAgKiAoaSArIDEpICsgTWF0aC5yYW5kb20oKSAqIDcwMCkpOyB9XG4gIH1cbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IkdTX0NPRElHTyA9IFwiLyoqXFxuICogQ29udHJvbCBkZSBhc2lzdGVuY2lhIGRlIENDRUVzY29waW8gwrcgc2Vydmlkb3IgZW4gR29vZ2xlIEFwcHMgU2NyaXB0XFxuICogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXFxuICogTG9zIHJlZ2lzdHJvcyBzZSBndWFyZGFuIFNPTE8gZW4gZXN0YSBob2phIGRlIGPDoWxjdWxvLCBxdWUgZXMgZGVsIHByb2Zlc29yLlxcbiAqIEluc3RhbGFjacOzbiAodW5hIHNvbGEgdmV6KTpcXG4gKiAgMS4gQ3JlYSB1bmEgaG9qYSBkZSBjw6FsY3VsbyBkZSBHb29nbGUgKHBvciBlamVtcGxvLCDCq0FzaXN0ZW5jaWEgVEMzwrspLlxcbiAqICAyLiBNZW7DuiBFeHRlbnNpb25lcyDihpIgQXBwcyBTY3JpcHQuIEJvcnJhIGxvIHF1ZSBoYXlhIHkgcGVnYSBlc3RlIGPDs2RpZ28uXFxuICogIDMuIENhbWJpYSBDTEFWRV9QUk9GRVNPUiBwb3IgdW5hIGNsYXZlIHR1eWEgKG5vIGxhIGNvbXBhcnRhcyBjb24gbG9zIGVzdHVkaWFudGVzKS5cXG4gKiAgNC4gSW1wbGVtZW50YXIg4oaSIE51ZXZhIGltcGxlbWVudGFjacOzbiDihpIgVGlwbzogQXBsaWNhY2nDs24gd2ViLlxcbiAqICAgICBFamVjdXRhciBjb21vOiDCq1lvwrsuIFF1acOpbiB0aWVuZSBhY2Nlc286IMKrQ3VhbHF1aWVyIHVzdWFyaW/Cuy5cXG4gKiAgNS4gQXV0b3JpemEgbG9zIHBlcm1pc29zIHkgY29waWEgbGEgVVJMIHF1ZSB0ZXJtaW5hIGVuIC9leGVjLlxcbiAqICAgICBQw6lnYWxhIGVuIGxhIHDDoWdpbmEgwqtDb250cm9sIGRlIGFzaXN0ZW5jaWEgKHByb2Zlc29yYWRvKcK7IGRlIENDRUVzY29waW8uXFxuICovXFxuY29uc3QgQ0xBVkVfUFJPRkVTT1IgPSBcXFwiY2FtYmlhLWVzdGEtY2xhdmVcXFwiO1xcbmNvbnN0IFZFTlRBTkFfU0VHID0gMjA7ICAgICAgLy8gZWwgY8OzZGlnbyBkZWwgcHJveWVjdG9yIGNhbWJpYSBjYWRhIDIwIHNlZ3VuZG9zXFxuY29uc3QgVkVOVEFOQVNfVkFMSURBUyA9IDQ7ICAvLyBzZSBhY2VwdGEgZWwgY8OzZGlnbyBhY3R1YWwgeSBsb3MgMyBhbnRlcmlvcmVzICjiiYggMSBtaW51dG8gcGFyYSBlc2NyaWJpcmxvKVxcbmNvbnN0IE1BWF9JTlRFTlRPUyA9IDY7ICAgICAgLy8gaW50ZW50b3MgZmFsbGlkb3MgcG9yIGRpc3Bvc2l0aXZvIHkgc2VzacOzblxcblxcbmZ1bmN0aW9uIGhvamFfKG5vbWJyZSwgY2FiZWNlcmEpIHtcXG4gIGNvbnN0IHNzID0gU3ByZWFkc2hlZXRBcHAuZ2V0QWN0aXZlU3ByZWFkc2hlZXQoKTtcXG4gIGxldCBoID0gc3MuZ2V0U2hlZXRCeU5hbWUobm9tYnJlKTtcXG4gIGlmICghaCkgeyBoID0gc3MuaW5zZXJ0U2hlZXQobm9tYnJlKTsgaC5hcHBlbmRSb3coY2FiZWNlcmEpOyBoLnNldEZyb3plblJvd3MoMSk7IH1cXG4gIHJldHVybiBoO1xcbn1cXG5jb25zdCBzZXNpb25lc18gPSAoKSA9PiBob2phXyhcXFwiU2VzaW9uZXNcXFwiLCBbXFxcIlNlc2nDs25cXFwiLCBcXFwiU2VjcmV0b1xcXCIsIFxcXCJBc2lnbmF0dXJhIHkgZ3J1cG9cXFwiLCBcXFwiTW9kb1xcXCIsIFxcXCJDcmVhZGFcXFwiLCBcXFwiQWJpZXJ0YSBoYXN0YVxcXCJdKTtcXG5jb25zdCByZWdpc3Ryb3NfID0gKCkgPT4gaG9qYV8oXFxcIlJlZ2lzdHJvc1xcXCIsIFtcXFwiRmVjaGEgeSBob3JhXFxcIiwgXFxcIlNlc2nDs25cXFwiLCBcXFwiRE5JXFxcIiwgXFxcIkRpc3Bvc2l0aXZvXFxcIl0pO1xcbmNvbnN0IGpzb25fID0gKG8pID0+IENvbnRlbnRTZXJ2aWNlLmNyZWF0ZVRleHRPdXRwdXQoSlNPTi5zdHJpbmdpZnkobykpLnNldE1pbWVUeXBlKENvbnRlbnRTZXJ2aWNlLk1pbWVUeXBlLkpTT04pO1xcblxcbmZ1bmN0aW9uIGNvZGlnb18oc2VjcmV0bywgdykge1xcbiAgY29uc3QgYiA9IFV0aWxpdGllcy5jb21wdXRlSG1hY1NoYTI1NlNpZ25hdHVyZShTdHJpbmcodyksIHNlY3JldG8pO1xcbiAgY29uc3QgbiA9ICgoKGJbMF0gJiAyNTUpIDw8IDI0KSB8ICgoYlsxXSAmIDI1NSkgPDwgMTYpIHwgKChiWzJdICYgMjU1KSA8PCA4KSB8IChiWzNdICYgMjU1KSkgPj4+IDA7XFxuICByZXR1cm4gU3RyaW5nKG4gJSAxMDAwMCkucGFkU3RhcnQoNCwgXFxcIjBcXFwiKTtcXG59XFxuZnVuY3Rpb24gZG5pXyh4KSB7XFxuICBjb25zdCBzID0gU3RyaW5nKHggfHwgXFxcIlxcXCIpLnRvVXBwZXJDYXNlKCkucmVwbGFjZSgvW14wLTlBLVpdL2csIFxcXCJcXFwiKTtcXG4gIGNvbnN0IEwgPSBcXFwiVFJXQUdNWUZQRFhCTkpaU1FWSExDS0VcXFwiO1xcbiAgbGV0IG0gPSBzLm1hdGNoKC9eKFxcXFxkezh9KShbQS1aXSkkLyk7XFxuICBpZiAobSkgcmV0dXJuIExbK21bMV0gJSAyM10gPT09IG1bMl0gPyBzIDogbnVsbDtcXG4gIG0gPSBzLm1hdGNoKC9eKFtYWVpdKShcXFxcZHs3fSkoW0EtWl0pJC8pO1xcbiAgaWYgKG0pIHJldHVybiBMWysoXFxcIlhZWlxcXCIuaW5kZXhPZihtWzFdKSArIG1bMl0pICUgMjNdID09PSBtWzNdID8gcyA6IG51bGw7XFxuICByZXR1cm4gbnVsbDtcXG59XFxuZnVuY3Rpb24gYnVzY2FyU2VzaW9uXyhpZCkge1xcbiAgY29uc3QgdiA9IHNlc2lvbmVzXygpLmdldERhdGFSYW5nZSgpLmdldFZhbHVlcygpO1xcbiAgZm9yIChsZXQgaSA9IDE7IGkgPCB2Lmxlbmd0aDsgaSsrKSBpZiAodltpXVswXSA9PT0gaWQpIHJldHVybiB7ZmlsYTogaSArIDEsIGlkOiB2W2ldWzBdLCBzZWNyZXRvOiB2W2ldWzFdLCBncnVwbzogdltpXVsyXSwgbW9kbzogdltpXVszXSwgY3JlYWRhOiBuZXcgRGF0ZSh2W2ldWzRdKSwgaGFzdGE6IG5ldyBEYXRlKHZbaV1bNV0pfTtcXG4gIHJldHVybiBudWxsO1xcbn1cXG5mdW5jdGlvbiBudWV2b0lkXygpIHtcXG4gIGNvbnN0IGEgPSBcXFwiQUJDREVGR0hKS0xNTlBRUlNUVVZXWFlaMjM0NTY3ODlcXFwiO1xcbiAgbGV0IHMgPSBcXFwiXFxcIjsgZm9yIChsZXQgaSA9IDA7IGkgPCA0OyBpKyspIHMgKz0gYVtNYXRoLmZsb29yKE1hdGgucmFuZG9tKCkgKiBhLmxlbmd0aCldO1xcbiAgcmV0dXJuIFxcXCJUQzMtXFxcIiArIHM7XFxufVxcblxcbmZ1bmN0aW9uIGRvR2V0KCkgeyByZXR1cm4ganNvbl8oe29rOiB0cnVlLCBzZXJ2aWNpbzogXFxcImFzaXN0ZW5jaWEgQ0NFRXNjb3Bpb1xcXCIsIGhvcmE6IERhdGUubm93KCl9KTsgfVxcblxcbmZ1bmN0aW9uIGRvUG9zdChlKSB7XFxuICBsZXQgZDtcXG4gIHRyeSB7IGQgPSBKU09OLnBhcnNlKGUucG9zdERhdGEuY29udGVudHMpOyB9IGNhdGNoIChlcnIpIHsgcmV0dXJuIGpzb25fKHtvazogZmFsc2UsIGVycm9yOiBcXFwiUGV0aWNpw7NuIG5vIHbDoWxpZGEuXFxcIn0pOyB9XFxuICBjb25zdCBhaG9yYSA9IG5ldyBEYXRlKCk7XFxuICBjb25zdCBlc1Byb2Zlc29yID0gZC5jbGF2ZSA9PT0gQ0xBVkVfUFJPRkVTT1I7XFxuXFxuICBpZiAoZC5hY2Npb24gPT09IFxcXCJtYXJjYXJcXFwiKSB7XFxuICAgIGNvbnN0IHMgPSBidXNjYXJTZXNpb25fKFN0cmluZyhkLnNlc2lvbiB8fCBcXFwiXFxcIikudG9VcHBlckNhc2UoKS50cmltKCkpO1xcbiAgICBpZiAoIXMpIHJldHVybiBqc29uXyh7b2s6IGZhbHNlLCBlcnJvcjogXFxcIk5vIGV4aXN0ZSBlc2Egc2VzacOzbi4gUmV2aXNhIGVsIGPDs2RpZ28gZGUgc2VzacOzbi5cXFwifSk7XFxuICAgIGlmIChhaG9yYSA+PSBzLmhhc3RhKSByZXR1cm4ganNvbl8oe29rOiBmYWxzZSwgZXJyb3I6IFxcXCJMYSBzZXNpw7NuIHlhIGVzdMOhIGNlcnJhZGEuXFxcIn0pO1xcbiAgICBjb25zdCBkbmkgPSBkbmlfKGQuZG5pKTtcXG4gICAgaWYgKCFkbmkpIHJldHVybiBqc29uXyh7b2s6IGZhbHNlLCBlcnJvcjogXFxcIkVsIEROSSBvIE5JRSBubyBlcyB2w6FsaWRvIChyZXZpc2EgbG9zIG7Dum1lcm9zIHkgbGEgbGV0cmEpLlxcXCJ9KTtcXG4gICAgY29uc3QgZGlzcCA9IFN0cmluZyhkLmRpc3Bvc2l0aXZvIHx8IFxcXCJcXFwiKS5zbGljZSgwLCA2MCk7XFxuICAgIGNvbnN0IGNhY2hlID0gQ2FjaGVTZXJ2aWNlLmdldFNjcmlwdENhY2hlKCk7XFxuICAgIGNvbnN0IGtJbnQgPSBcXFwiaW50X1xcXCIgKyBzLmlkICsgXFxcIl9cXFwiICsgZGlzcCwga0RuaSA9IFxcXCJkbmlfXFxcIiArIHMuaWQgKyBcXFwiX1xcXCIgKyBkbmksIGtEaXNwID0gXFxcImRpc3BfXFxcIiArIHMuaWQgKyBcXFwiX1xcXCIgKyBkaXNwO1xcbiAgICBjb25zdCBmYWxsb3MgPSArKGNhY2hlLmdldChrSW50KSB8fCAwKTtcXG4gICAgaWYgKGZhbGxvcyA+PSBNQVhfSU5URU5UT1MpIHJldHVybiBqc29uXyh7b2s6IGZhbHNlLCBlcnJvcjogXFxcIkRlbWFzaWFkb3MgaW50ZW50b3MgZmFsbGlkb3MgZGVzZGUgZXN0ZSBkaXNwb3NpdGl2by5cXFwifSk7XFxuICAgIGlmIChjYWNoZS5nZXQoa0RuaSkpIHJldHVybiBqc29uXyh7b2s6IHRydWUsIHJlcGV0aWRvOiB0cnVlLCBtZW5zYWplOiBcXFwiVHUgYXNpc3RlbmNpYSB5YSBlc3RhYmEgcmVnaXN0cmFkYS5cXFwifSk7XFxuICAgIGNvbnN0IG90cm8gPSBjYWNoZS5nZXQoa0Rpc3ApO1xcbiAgICBpZiAob3RybyAmJiBvdHJvICE9PSBkbmkpIHJldHVybiBqc29uXyh7b2s6IGZhbHNlLCBlcnJvcjogXFxcIkRlc2RlIGVzdGUgZGlzcG9zaXRpdm8geWEgc2UgaGEgcmVnaXN0cmFkbyBvdHJvIEROSSBlbiBlc3RhIHNlc2nDs24uXFxcIn0pO1xcbiAgICBjb25zdCBjb2QgPSBTdHJpbmcoZC5jb2RpZ28gfHwgXFxcIlxcXCIpLnJlcGxhY2UoL1xcXFxEL2csIFxcXCJcXFwiKS5wYWRTdGFydCg0LCBcXFwiMFxcXCIpO1xcbiAgICBsZXQgdmFsaWRvID0gZmFsc2U7XFxuICAgIGlmIChzLm1vZG8gPT09IFxcXCJmaWpvXFxcIikgdmFsaWRvID0gY29kID09PSBjb2RpZ29fKHMuc2VjcmV0bywgXFxcImZpam9cXFwiKTtcXG4gICAgZWxzZSB7XFxuICAgICAgY29uc3QgdyA9IE1hdGguZmxvb3IoYWhvcmEuZ2V0VGltZSgpIC8gMTAwMCAvIFZFTlRBTkFfU0VHKTtcXG4gICAgICBmb3IgKGxldCBrID0gLTE7IGsgPCBWRU5UQU5BU19WQUxJREFTICYmICF2YWxpZG87IGsrKykgdmFsaWRvID0gY29kID09PSBjb2RpZ29fKHMuc2VjcmV0bywgdyAtIGspO1xcbiAgICB9XFxuICAgIGlmICghdmFsaWRvKSB7IGNhY2hlLnB1dChrSW50LCBTdHJpbmcoZmFsbG9zICsgMSksIDIxNjAwKTsgcmV0dXJuIGpzb25fKHtvazogZmFsc2UsIGVycm9yOiBcXFwiRWwgY8OzZGlnbyBubyBlcyBjb3JyZWN0byBvIGhhIGNhZHVjYWRvLiBFc2NyaWJlIGVsIHF1ZSBhcGFyZWNlIGFob3JhIGVuIGxhIHBhbnRhbGxhLlxcXCJ9KTsgfVxcbiAgICByZWdpc3Ryb3NfKCkuYXBwZW5kUm93KFthaG9yYSwgcy5pZCwgZG5pLCBkaXNwXSk7XFxuICAgIGNhY2hlLnB1dChrRG5pLCBcXFwiMVxcXCIsIDIxNjAwKTsgY2FjaGUucHV0KGtEaXNwLCBkbmksIDIxNjAwKTtcXG4gICAgcmV0dXJuIGpzb25fKHtvazogdHJ1ZSwgbWVuc2FqZTogXFxcIkFzaXN0ZW5jaWEgcmVnaXN0cmFkYS5cXFwiLCBob3JhOiBhaG9yYS5nZXRUaW1lKCksIGdydXBvOiBzLmdydXBvfSk7XFxuICB9XFxuXFxuICBpZiAoIWVzUHJvZmVzb3IpIHJldHVybiBqc29uXyh7b2s6IGZhbHNlLCBlcnJvcjogXFxcIkNsYXZlIGRlIHByb2Zlc29yIGluY29ycmVjdGEuXFxcIn0pO1xcblxcbiAgaWYgKGQuYWNjaW9uID09PSBcXFwiY3JlYXJcXFwiKSB7XFxuICAgIGNvbnN0IG1pbiA9IE1hdGgubWF4KDEsIE1hdGgubWluKDI0MCwgK2QubWludXRvcyB8fCAxNSkpO1xcbiAgICBsZXQgaWQ7IGRvIHsgaWQgPSBudWV2b0lkXygpOyB9IHdoaWxlIChidXNjYXJTZXNpb25fKGlkKSk7XFxuICAgIGNvbnN0IHNlY3JldG8gPSBVdGlsaXRpZXMuZ2V0VXVpZCgpLCBtb2RvID0gZC5tb2RvID09PSBcXFwiZmlqb1xcXCIgPyBcXFwiZmlqb1xcXCIgOiBcXFwicm90YXRvcmlvXFxcIjtcXG4gICAgY29uc3QgaGFzdGEgPSBuZXcgRGF0ZShhaG9yYS5nZXRUaW1lKCkgKyBtaW4gKiA2MDAwMCk7XFxuICAgIHNlc2lvbmVzXygpLmFwcGVuZFJvdyhbaWQsIHNlY3JldG8sIFN0cmluZyhkLmdydXBvIHx8IFxcXCJcXFwiKS5zbGljZSgwLCA4MCksIG1vZG8sIGFob3JhLCBoYXN0YV0pO1xcbiAgICByZXR1cm4ganNvbl8oe29rOiB0cnVlLCBpZCwgc2VjcmV0bywgbW9kbywgaGFzdGE6IGhhc3RhLmdldFRpbWUoKSwgYWhvcmE6IGFob3JhLmdldFRpbWUoKSwgdmVudGFuYTogVkVOVEFOQV9TRUd9KTtcXG4gIH1cXG4gIGlmIChkLmFjY2lvbiA9PT0gXFxcImNlcnJhclxcXCIgfHwgZC5hY2Npb24gPT09IFxcXCJhbXBsaWFyXFxcIikge1xcbiAgICBjb25zdCBzID0gYnVzY2FyU2VzaW9uXyhkLmlkKTsgaWYgKCFzKSByZXR1cm4ganNvbl8oe29rOiBmYWxzZSwgZXJyb3I6IFxcXCJTZXNpw7NuIG5vIGVuY29udHJhZGEuXFxcIn0pO1xcbiAgICBjb25zdCBoYXN0YSA9IGQuYWNjaW9uID09PSBcXFwiY2VycmFyXFxcIiA/IGFob3JhIDogbmV3IERhdGUoTWF0aC5tYXgoYWhvcmEuZ2V0VGltZSgpLCBzLmhhc3RhLmdldFRpbWUoKSkgKyAoK2QubWludXRvcyB8fCA1KSAqIDYwMDAwKTtcXG4gICAgc2VzaW9uZXNfKCkuZ2V0UmFuZ2Uocy5maWxhLCA2KS5zZXRWYWx1ZShoYXN0YSk7XFxuICAgIHJldHVybiBqc29uXyh7b2s6IHRydWUsIGhhc3RhOiBoYXN0YS5nZXRUaW1lKCl9KTtcXG4gIH1cXG4gIGlmIChkLmFjY2lvbiA9PT0gXFxcInNlc2lvbmVzXFxcIikge1xcbiAgICBjb25zdCB2ID0gc2VzaW9uZXNfKCkuZ2V0RGF0YVJhbmdlKCkuZ2V0VmFsdWVzKCkuc2xpY2UoMSk7XFxuICAgIGNvbnN0IG4gPSB7fTsgcmVnaXN0cm9zXygpLmdldERhdGFSYW5nZSgpLmdldFZhbHVlcygpLnNsaWNlKDEpLmZvckVhY2gociA9PiBuW3JbMV1dID0gKG5bclsxXV0gfHwgMCkgKyAxKTtcXG4gICAgcmV0dXJuIGpzb25fKHtvazogdHJ1ZSwgc2VzaW9uZXM6IHYubWFwKHIgPT4gKHtpZDogclswXSwgZ3J1cG86IHJbMl0sIG1vZG86IHJbM10sIGNyZWFkYTogbmV3IERhdGUocls0XSkuZ2V0VGltZSgpLCBoYXN0YTogbmV3IERhdGUocls1XSkuZ2V0VGltZSgpLCByZWdpc3Ryb3M6IG5bclswXV0gfHwgMH0pKX0pO1xcbiAgfVxcbiAgaWYgKGQuYWNjaW9uID09PSBcXFwibGlzdGFcXFwiKSB7XFxuICAgIGNvbnN0IGlkcyA9IFtdLmNvbmNhdChkLmlkcyB8fCBbXSkubWFwKHggPT4gU3RyaW5nKHgpLnRvVXBwZXJDYXNlKCkudHJpbSgpKTtcXG4gICAgY29uc3Qgc2VzID0gaWRzLm1hcChidXNjYXJTZXNpb25fKS5maWx0ZXIoQm9vbGVhbikubWFwKHMgPT4gKHtpZDogcy5pZCwgZ3J1cG86IHMuZ3J1cG8sIGNyZWFkYTogcy5jcmVhZGEuZ2V0VGltZSgpLCBoYXN0YTogcy5oYXN0YS5nZXRUaW1lKCl9KSk7XFxuICAgIGNvbnN0IHJlZ3MgPSByZWdpc3Ryb3NfKCkuZ2V0RGF0YVJhbmdlKCkuZ2V0VmFsdWVzKCkuc2xpY2UoMSkuZmlsdGVyKHIgPT4gaWRzLmluZGV4T2YoclsxXSkgPj0gMClcXG4gICAgICAubWFwKHIgPT4gKHtob3JhOiBuZXcgRGF0ZShyWzBdKS5nZXRUaW1lKCksIHNlc2lvbjogclsxXSwgZG5pOiByWzJdLCBkaXNwb3NpdGl2bzogclszXX0pKTtcXG4gICAgcmV0dXJuIGpzb25fKHtvazogdHJ1ZSwgc2VzaW9uZXM6IHNlcywgcmVnaXN0cm9zOiByZWdzfSk7XFxuICB9XFxuICByZXR1cm4ganNvbl8oe29rOiBmYWxzZSwgZXJyb3I6IFxcXCJBY2Npw7NuIGRlc2Nvbm9jaWRhLlxcXCJ9KTtcXG59XFxuXCJcblhMU1ggPSB7IHRyeSB7IHJldHVybiBhd2FpdCBpbXBvcnQoXCJodHRwczovL2Nkbi5zaGVldGpzLmNvbS94bHN4LTAuMjAuMy9wYWNrYWdlL3hsc3gubWpzXCIpOyB9IGNhdGNoIChlKSB7IHJldHVybiByZXF1aXJlKFwieGxzeEAwLjE4LjUvZGlzdC94bHN4LmZ1bGwubWluLmpzXCIpOyB9IH1cbnFyY29kZUxpYiA9IHJlcXVpcmUoXCJxcmNvZGUtZ2VuZXJhdG9yQDEuNC40XCIpLmNhdGNoKCgpID0+IG51bGwpXG5sZWVyQ29uZiA9ICgpID0+IHsgdHJ5IHsgcmV0dXJuIEpTT04ucGFyc2UobG9jYWxTdG9yYWdlLmdldEl0ZW0oXCJjY2VlLWFzaXMtY29uZlwiKSA/PyBcInt9XCIpOyB9IGNhdGNoIChlKSB7IHJldHVybiB7fTsgfSB9XG5jb2RpZ29EZSA9IGFzeW5jIChzZWNyZXRvLCB3KSA9PiB7XG4gIGNvbnN0IGsgPSBhd2FpdCBjcnlwdG8uc3VidGxlLmltcG9ydEtleShcInJhd1wiLCBuZXcgVGV4dEVuY29kZXIoKS5lbmNvZGUoc2VjcmV0byksIHtuYW1lOiBcIkhNQUNcIiwgaGFzaDogXCJTSEEtMjU2XCJ9LCBmYWxzZSwgW1wic2lnblwiXSk7XG4gIGNvbnN0IGIgPSBuZXcgVWludDhBcnJheShhd2FpdCBjcnlwdG8uc3VidGxlLnNpZ24oXCJITUFDXCIsIGssIG5ldyBUZXh0RW5jb2RlcigpLmVuY29kZShTdHJpbmcodykpKSk7XG4gIHJldHVybiBTdHJpbmcoKCgoYlswXSA8PCAyNCkgfCAoYlsxXSA8PCAxNikgfCAoYlsyXSA8PCA4KSB8IGJbM10pID4+PiAwKSAlIDEwMDAwKS5wYWRTdGFydCg0LCBcIjBcIik7XG59XG5jbGF2ZURuaSA9ICh4KSA9PiB7IGNvbnN0IHMgPSBTdHJpbmcoeCA/PyBcIlwiKS50b1VwcGVyQ2FzZSgpLnJlcGxhY2UoL1teMC05QS1aXS9nLCBcIlwiKTsgcmV0dXJuIC9eWzAtOVhZWl1cXGR7N31bQS1aXSQvLnRlc3QocykgPyBzLnNsaWNlKDAsIDgpIDogL15cXGR7MSw4fSQvLnRlc3QocykgPyBzLnBhZFN0YXJ0KDgsIFwiMFwiKSA6IHM7IH1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IkRPTS5kb3dubG9hZCgoKSA9PiBuZXcgQmxvYihbR1NfQ09ESUdPXSwge3R5cGU6IFwidGV4dC9wbGFpbjtjaGFyc2V0PXV0Zi04XCJ9KSwgXCJhc2lzdGVuY2lhX2FwcHNfc2NyaXB0LmdzXCIsIFwi4qyHIEPDs2RpZ28gcGFyYSBBcHBzIFNjcmlwdFwiKVxudmlld29mIGNvbmYgPSB7XG4gIGNvbnN0IGMgPSBsZWVyQ29uZigpO1xuICBjb25zdCBmID0gaHRtbGA8Zm9ybSBjbGFzcz1cImFzaXMtY29uZlwiPlxuICAgIDxsYWJlbD5VUkwgZGUgbGEgYXBsaWNhY2nDs24gd2ViIDxpbnB1dCBuYW1lPVwidXJsXCIgc2l6ZT1cIjYwXCIgcGxhY2Vob2xkZXI9XCJodHRwczovL3NjcmlwdC5nb29nbGUuY29tL21hY3Jvcy9zL+KApi9leGVjXCIgdmFsdWU9XCIke2MudXJsID8/IFwiXCJ9XCI+PC9sYWJlbD5cbiAgICA8bGFiZWw+Q2xhdmUgZGUgcHJvZmVzb3IgPGlucHV0IG5hbWU9XCJjbGF2ZVwiIHR5cGU9XCJwYXNzd29yZFwiIHZhbHVlPVwiJHtjLmNsYXZlID8/IFwiXCJ9XCI+PC9sYWJlbD5cbiAgICA8bGFiZWwgY2xhc3M9XCJhc2lzLWNoZWNrXCI+PGlucHV0IHR5cGU9XCJjaGVja2JveFwiIG5hbWU9XCJyZWNvcmRhclwiPiBSZWNvcmRhciBlbiBlc3RlIG5hdmVnYWRvcjwvbGFiZWw+XG4gICAgPGJ1dHRvbiB0eXBlPVwic3VibWl0XCIgY2xhc3M9XCJjb3BpYXJcIj5HdWFyZGFyIHkgY29tcHJvYmFyIGxhIGNvbmV4acOzbjwvYnV0dG9uPiA8c3BhbiBjbGFzcz1cImFzaXMtZXN0YWRvXCI+PC9zcGFuPjwvZm9ybT5gO1xuICBmLnZhbHVlID0gYzsgZi5yZWNvcmRhci5jaGVja2VkID0gISFjLnVybDtcbiAgZi5vbnN1Ym1pdCA9IGFzeW5jIChlKSA9PiB7XG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xuICAgIGNvbnN0IHYgPSB7dXJsOiBmLnVybC52YWx1ZS50cmltKCksIGNsYXZlOiBmLmNsYXZlLnZhbHVlfTtcbiAgICB0cnkgeyBpZiAoZi5yZWNvcmRhci5jaGVja2VkKSBsb2NhbFN0b3JhZ2Uuc2V0SXRlbShcImNjZWUtYXNpcy1jb25mXCIsIEpTT04uc3RyaW5naWZ5KHYpKTsgZWxzZSBsb2NhbFN0b3JhZ2UucmVtb3ZlSXRlbShcImNjZWUtYXNpcy1jb25mXCIpOyB9IGNhdGNoIChlcnIpIHt9XG4gICAgY29uc3QgZXN0ID0gZi5xdWVyeVNlbGVjdG9yKFwiLmFzaXMtZXN0YWRvXCIpOyBlc3QudGV4dENvbnRlbnQgPSBcIkNvbXByb2JhbmRv4oCmXCI7XG4gICAgY29uc3QgciA9IGF3YWl0IGxsYW1hcih2LnVybCwge2FjY2lvbjogXCJzZXNpb25lc1wiLCBjbGF2ZTogdi5jbGF2ZX0sIDEpO1xuICAgIGVzdC50ZXh0Q29udGVudCA9IHIub2sgPyBg4pyFIENvbmVjdGFkbyAoJHtyLnNlc2lvbmVzLmxlbmd0aH0gc2VzaW9uZXMgZ3VhcmRhZGFzKS5gIDogYOKdjCAke3IuZXJyb3J9YDtcbiAgICBmLnZhbHVlID0gdjsgZi5kaXNwYXRjaEV2ZW50KG5ldyBFdmVudChcImlucHV0XCIsIHtidWJibGVzOiB0cnVlfSkpO1xuICB9O1xuICByZXR1cm4gZjtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBzZXNpb25Gb3JtID0gSW5wdXRzLmZvcm0oe1xuICBncnVwbzogSW5wdXRzLnRleHQoe2xhYmVsOiBcIkFzaWduYXR1cmEgeSBncnVwb1wiLCB2YWx1ZTogXCJUw6ljbmljYXMgQ3VhbnRpdGF0aXZhcyBJSUkgwrcgR3J1cG8gQVwiLCB3aWR0aDogMzYwfSksXG4gIG1pbnV0b3M6IElucHV0cy5yYW5nZShbMiwgNjBdLCB7bGFiZWw6IFwiTWludXRvcyBhYmllcnRhXCIsIHZhbHVlOiAxMCwgc3RlcDogMX0pLFxuICBtb2RvOiBJbnB1dHMucmFkaW8obmV3IE1hcChbW1wiQ8OzZGlnbyBxdWUgY2FtYmlhIGNhZGEgMjAgc2VndW5kb3MgKHJlY29tZW5kYWRvKVwiLCBcInJvdGF0b3Jpb1wiXSwgW1wiQ8OzZGlnbyBmaWpvIChwYXJhIGRlY2lybG8gZW4gdm96IGFsdGEpXCIsIFwiZmlqb1wiXV0pLCB7bGFiZWw6IFwiVGlwbyBkZSBjw7NkaWdvXCIsIHZhbHVlOiBcInJvdGF0b3Jpb1wifSlcbn0sIHtzdWJtaXQ6IFwi4pa2IEFicmlyIHNlc2nDs24geSBwcm95ZWN0YXIgZWwgY8OzZGlnb1wifSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IntcbiAgaWYgKCFzZXNpb25Gb3JtIHx8ICFjb25mPy51cmwpIHJldHVybiBodG1sYDxwIGNsYXNzPVwicGVuZGluZ1wiPiR7Y29uZj8udXJsID8gXCJFbGlnZSBsYXMgb3BjaW9uZXMgeSBwdWxzYSDCq0FicmlyIHNlc2nDs27Cuy5cIiA6IFwiUHJpbWVybyBndWFyZGEgbGEgY29uZmlndXJhY2nDs24gKGFwYXJ0YWRvIDEpLlwifTwvcD5gO1xuICBjb25zdCByID0gYXdhaXQgbGxhbWFyKGNvbmYudXJsLCB7YWNjaW9uOiBcImNyZWFyXCIsIGNsYXZlOiBjb25mLmNsYXZlLCAuLi5zZXNpb25Gb3JtfSwgMik7XG4gIGlmICghci5vaykgcmV0dXJuIGh0bWxgPHAgY2xhc3M9XCJwZW5kaW5nXCI+4p2MICR7ci5lcnJvcn08L3A+YDtcbiAgY29uc3QgZGVzZmFzZSA9IHIuYWhvcmEgLSBEYXRlLm5vdygpO1xuICBsZXQgaGFzdGEgPSByLmhhc3RhO1xuICBjb25zdCBlbmxhY2UgPSBgJHtsb2NhdGlvbi5ocmVmLnJlcGxhY2UoL2FzaXN0ZW5jaWEtcHJvZmVzb3JcXC5odG1sLiokLywgXCJhc2lzdGVuY2lhLmh0bWxcIil9P3M9JHtyLmlkfSR7VVJMX0NPTkZJRyA/IFwiXCIgOiBcIiZ1PVwiICsgZW5jb2RlVVJJQ29tcG9uZW50KGNvbmYudXJsKX1gO1xuICBjb25zdCBwYW5lbCA9IGh0bWxgPGRpdiBjbGFzcz1cImFzaXMtcGFuZWxcIj5cbiAgICA8ZGl2IGNsYXNzPVwiYXNpcy1wYW5lbC1jYWJcIj48c3Bhbj4ke3Nlc2lvbkZvcm0uZ3J1cG99PC9zcGFuPjxzcGFuIGNsYXNzPVwiYXNpcy1yZWxvalwiPjwvc3Bhbj48L2Rpdj5cbiAgICA8ZGl2IGNsYXNzPVwiYXNpcy1wYW5lbC1jdWVycG9cIj5cbiAgICAgIDxkaXYgY2xhc3M9XCJhc2lzLXFyXCI+PC9kaXY+XG4gICAgICA8ZGl2PjxwIGNsYXNzPVwiYXNpcy1ldFwiPlNlc2nDs248L3A+PHAgY2xhc3M9XCJhc2lzLXNlc2lvblwiPiR7ci5pZH08L3A+XG4gICAgICAgIDxwIGNsYXNzPVwiYXNpcy1ldFwiPkPDs2RpZ288L3A+PHAgY2xhc3M9XCJhc2lzLWdyYW5kZVwiPsK3wrfCt8K3PC9wPjxkaXYgY2xhc3M9XCJhc2lzLWJhcnJhXCI+PGRpdj48L2Rpdj48L2Rpdj5cbiAgICAgICAgPHAgY2xhc3M9XCJhc2lzLWN1ZW50YVwiPjAgcmVnaXN0cm9zPC9wPjwvZGl2PlxuICAgIDwvZGl2PlxuICAgIDxwIGNsYXNzPVwiYXNpcy11cmxcIj5Fc2NhbmVhIGVsIFFSIG8gZW50cmEgZW4gPGI+JHtlbmxhY2UucmVwbGFjZSgvXFw/LiokLywgXCJcIil9PC9iPiB5IGVzY3JpYmUgbGEgc2VzacOzbiwgZWwgY8OzZGlnbyB5IHR1IEROSS48L3A+XG4gICAgPGRpdiBjbGFzcz1cImdyYWYtYm90b25lc1wiPjxidXR0b24gY2xhc3M9XCJjb3BpYXIgYXNpcy1mdWxsXCI+4pu2IFBhbnRhbGxhIGNvbXBsZXRhPC9idXR0b24+PGJ1dHRvbiBjbGFzcz1cImNvcGlhciBhc2lzLW1hc1wiPis1IG1pbnV0b3M8L2J1dHRvbj48YnV0dG9uIGNsYXNzPVwiY29waWFyIGFzaXMtY2VycmFyXCI+4o+5IENlcnJhciBsYSBzZXNpw7NuPC9idXR0b24+PGJ1dHRvbiBjbGFzcz1cImNvcGlhciBhc2lzLWNvcGlhclwiPvCfk4sgQ29waWFyIGVubGFjZTwvYnV0dG9uPjwvZGl2PjwvZGl2PmA7XG4gIGNvbnN0ICQgPSAocykgPT4gcGFuZWwucXVlcnlTZWxlY3RvcihzKTtcbiAgaWYgKHFyY29kZUxpYikgeyBjb25zdCBxciA9IHFyY29kZUxpYigwLCBcIk1cIik7IHFyLmFkZERhdGEoZW5sYWNlKTsgcXIubWFrZSgpOyAkKFwiLmFzaXMtcXJcIikuaW5uZXJIVE1MID0gcXIuY3JlYXRlU3ZnVGFnKHtjZWxsU2l6ZTogNiwgbWFyZ2luOiAyLCBzY2FsYWJsZTogdHJ1ZX0pOyB9XG4gIGVsc2UgJChcIi5hc2lzLXFyXCIpLmlubmVySFRNTCA9IGA8cCBjbGFzcz1cIm5vdGFcIj5ObyBzZSBoYSBwb2RpZG8gY2FyZ2FyIGVsIGdlbmVyYWRvciBkZSBRUi48L3A+YDtcbiAgbGV0IGNlcnJhZGEgPSBmYWxzZTtcbiAgY29uc3QgdGljID0gYXN5bmMgKCkgPT4ge1xuICAgIGlmICghcGFuZWwuaXNDb25uZWN0ZWQpIHJldHVybjtcbiAgICBjb25zdCBhaG9yYSA9IERhdGUubm93KCkgKyBkZXNmYXNlLCB3ID0gTWF0aC5mbG9vcihhaG9yYSAvIDEwMDAgLyByLnZlbnRhbmEpO1xuICAgIGNvbnN0IHJlc3RhbnRlID0gTWF0aC5tYXgoMCwgaGFzdGEgLSBhaG9yYSk7XG4gICAgJChcIi5hc2lzLXJlbG9qXCIpLnRleHRDb250ZW50ID0gcmVzdGFudGUgPiAwID8gYEFiaWVydGE6ICR7TWF0aC5mbG9vcihyZXN0YW50ZSAvIDYwMDAwKX06JHtTdHJpbmcoTWF0aC5mbG9vcihyZXN0YW50ZSAvIDEwMDApICUgNjApLnBhZFN0YXJ0KDIsIFwiMFwiKX1gIDogXCJTZXNpw7NuIGNlcnJhZGFcIjtcbiAgICBpZiAocmVzdGFudGUgPD0gMCB8fCBjZXJyYWRhKSB7ICQoXCIuYXNpcy1ncmFuZGVcIikudGV4dENvbnRlbnQgPSBcIuKAlFwiOyAkKFwiLmFzaXMtYmFycmEgZGl2XCIpLnN0eWxlLndpZHRoID0gXCIwXCI7IHJldHVybjsgfVxuICAgICQoXCIuYXNpcy1ncmFuZGVcIikudGV4dENvbnRlbnQgPSBhd2FpdCBjb2RpZ29EZShyLnNlY3JldG8sIHIubW9kbyA9PT0gXCJmaWpvXCIgPyBcImZpam9cIiA6IHcpO1xuICAgICQoXCIuYXNpcy1iYXJyYSBkaXZcIikuc3R5bGUud2lkdGggPSByLm1vZG8gPT09IFwiZmlqb1wiID8gXCIxMDAlXCIgOiBgJHsxMDAgKiAoMSAtICgoYWhvcmEgLyAxMDAwKSAlIHIudmVudGFuYSkgLyByLnZlbnRhbmEpfSVgO1xuICB9O1xuICBjb25zdCBjdWVudGEgPSBhc3luYyAoKSA9PiB7IGlmICghcGFuZWwuaXNDb25uZWN0ZWQpIHJldHVybjsgY29uc3QgbCA9IGF3YWl0IGxsYW1hcihjb25mLnVybCwge2FjY2lvbjogXCJsaXN0YVwiLCBjbGF2ZTogY29uZi5jbGF2ZSwgaWRzOiBbci5pZF19LCAxKTsgaWYgKGwub2spICQoXCIuYXNpcy1jdWVudGFcIikudGV4dENvbnRlbnQgPSBgJHtsLnJlZ2lzdHJvcy5sZW5ndGh9IHJlZ2lzdHJvJHtsLnJlZ2lzdHJvcy5sZW5ndGggPT09IDEgPyBcIlwiIDogXCJzXCJ9YDsgfTtcbiAgY29uc3QgdDEgPSBzZXRJbnRlcnZhbCh0aWMsIDUwMCksIHQyID0gc2V0SW50ZXJ2YWwoY3VlbnRhLCAxMDAwMCk7XG4gIGludmFsaWRhdGlvbi50aGVuKCgpID0+IHsgY2xlYXJJbnRlcnZhbCh0MSk7IGNsZWFySW50ZXJ2YWwodDIpOyB9KTtcbiAgdGljKCk7XG4gICQoXCIuYXNpcy1mdWxsXCIpLm9uY2xpY2sgPSAoKSA9PiBkb2N1bWVudC5mdWxsc2NyZWVuRWxlbWVudCA/IGRvY3VtZW50LmV4aXRGdWxsc2NyZWVuKCkgOiBwYW5lbC5yZXF1ZXN0RnVsbHNjcmVlbj8uKCk7XG4gICQoXCIuYXNpcy1tYXNcIikub25jbGljayA9IGFzeW5jICgpID0+IHsgY29uc3QgeCA9IGF3YWl0IGxsYW1hcihjb25mLnVybCwge2FjY2lvbjogXCJhbXBsaWFyXCIsIGNsYXZlOiBjb25mLmNsYXZlLCBpZDogci5pZCwgbWludXRvczogNX0sIDIpOyBpZiAoeC5vaykgeyBoYXN0YSA9IHguaGFzdGE7IGNlcnJhZGEgPSBmYWxzZTsgfSB9O1xuICAkKFwiLmFzaXMtY2VycmFyXCIpLm9uY2xpY2sgPSBhc3luYyAoKSA9PiB7IGNvbnN0IHggPSBhd2FpdCBsbGFtYXIoY29uZi51cmwsIHthY2Npb246IFwiY2VycmFyXCIsIGNsYXZlOiBjb25mLmNsYXZlLCBpZDogci5pZH0sIDIpOyBpZiAoeC5vaykgeyBoYXN0YSA9IHguaGFzdGE7IGNlcnJhZGEgPSB0cnVlOyBjdWVudGEoKTsgfSB9O1xuICAkKFwiLmFzaXMtY29waWFyXCIpLm9uY2xpY2sgPSAoKSA9PiBuYXZpZ2F0b3IuY2xpcGJvYXJkLndyaXRlVGV4dChlbmxhY2UpLnRoZW4oKCkgPT4gJChcIi5hc2lzLWNvcGlhclwiKS50ZXh0Q29udGVudCA9IFwi4pyUIENvcGlhZG9cIik7XG4gIHdpbmRvdy5jY2VlRXZlbnRvICYmIHdpbmRvdy5jY2VlRXZlbnRvKFwiYXNpc3RlbmNpYS9zZXNpb25cIiwgXCJTZXNpw7NuIGRlIGFzaXN0ZW5jaWFcIiwgdHJ1ZSk7XG4gIHJldHVybiBwYW5lbDtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiByZWZyZXNjYXIgPSBJbnB1dHMuYnV0dG9uKFwi4oa7IEFjdHVhbGl6YXIgbGEgbGlzdGEgZGUgc2VzaW9uZXNcIiwge3ZhbHVlOiAwLCByZWR1Y2U6IHYgPT4gdiArIDF9KVxuc2VzaW9uZXNHdWFyZGFkYXMgPSB7XG4gIHJlZnJlc2NhcjtcbiAgaWYgKCFjb25mPy51cmwpIHJldHVybiBbXTtcbiAgY29uc3QgciA9IGF3YWl0IGxsYW1hcihjb25mLnVybCwge2FjY2lvbjogXCJzZXNpb25lc1wiLCBjbGF2ZTogY29uZi5jbGF2ZX0sIDIpO1xuICByZXR1cm4gci5vayA/IHIuc2VzaW9uZXMuc29ydCgoYSwgYikgPT4gYi5jcmVhZGEgLSBhLmNyZWFkYSkgOiBbXTtcbn1cbnZpZXdvZiBleGNlbExpc3RhID0gSW5wdXRzLmZpbGUoe2xhYmVsOiBcIkV4Y2VsIG8gQ1NWIGRlIGxhIGxpc3RhIGRlIGNsYXNlXCIsIGFjY2VwdDogXCIueGxzeCwueGxzLC5jc3YsLm9kc1wifSlcbnZpZXdvZiBzZXNpb25lc1NlbCA9IElucHV0cy5zZWxlY3QobmV3IE1hcChzZXNpb25lc0d1YXJkYWRhcy5tYXAocyA9PiBbYCR7bmV3IERhdGUocy5jcmVhZGEpLnRvTG9jYWxlU3RyaW5nKFwiZXMtRVNcIiwge2RhdGVTdHlsZTogXCJzaG9ydFwiLCB0aW1lU3R5bGU6IFwic2hvcnRcIn0pfSDCtyAke3MuaWR9IMK3ICR7cy5ncnVwb30gwrcgJHtzLnJlZ2lzdHJvc30gcmVnaXN0cm9zYCwgcy5pZF0pKSxcbiAge2xhYmVsOiBcIlNlc2lvbmVzIHF1ZSBxdWllcmVzIGHDsWFkaXIgKEN0cmwgbyDijJggcGFyYSB2YXJpYXMpXCIsIG11bHRpcGxlOiB0cnVlLCBzaXplOiBNYXRoLm1pbig4LCBNYXRoLm1heCgzLCBzZXNpb25lc0d1YXJkYWRhcy5sZW5ndGgpKSwgdmFsdWU6IHNlc2lvbmVzR3VhcmRhZGFzLnNsaWNlKDAsIDEpLm1hcChzID0+IHMuaWQpfSlcbnZpZXdvZiBzZXNpb25lc1R4dCA9IElucHV0cy50ZXh0KHtsYWJlbDogXCLigKZvIGVzY3JpYmUgbG9zIGPDs2RpZ29zIGRlIHNlc2nDs25cIiwgcGxhY2Vob2xkZXI6IFwiVEMzLUs3UU0sIFRDMy1QMlJEXCIsIHdpZHRoOiAzNjB9KVxudmlld29mIGdlbmVyYXJJbmYgPSBJbnB1dHMuYnV0dG9uKFwi8J+TiiBHZW5lcmFyIGVsIGluZm9ybWVcIiwge3ZhbHVlOiAwLCByZWR1Y2U6IHYgPT4gdiArIDF9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaW5mb3JtZSA9IHtcbiAgaWYgKCFnZW5lcmFySW5mKSByZXR1cm4gbnVsbDtcbiAgaWYgKCFjb25mPy51cmwpIHJldHVybiB7ZXJyb3I6IFwiUHJpbWVybyBndWFyZGEgbGEgY29uZmlndXJhY2nDs24gKGFwYXJ0YWRvIDEpLlwifTtcbiAgY29uc3QgaWRzID0gWy4uLm5ldyBTZXQoWy4uLnNlc2lvbmVzU2VsLCAuLi5zZXNpb25lc1R4dC50b1VwcGVyQ2FzZSgpLnNwbGl0KC9bXFxzLDtdKy8pLmZpbHRlcihCb29sZWFuKV0pXTtcbiAgaWYgKCFpZHMubGVuZ3RoKSByZXR1cm4ge2Vycm9yOiBcIkVsaWdlIGFsIG1lbm9zIHVuYSBzZXNpw7NuLlwifTtcbiAgY29uc3QgciA9IGF3YWl0IGxsYW1hcihjb25mLnVybCwge2FjY2lvbjogXCJsaXN0YVwiLCBjbGF2ZTogY29uZi5jbGF2ZSwgaWRzfSwgMyk7XG4gIGlmICghci5vaykgcmV0dXJuIHtlcnJvcjogci5lcnJvcn07XG4gIGNvbnN0IG5vbWJyZUNvbCA9IChzKSA9PiBgJHtuZXcgRGF0ZShzLmNyZWFkYSkudG9Mb2NhbGVEYXRlU3RyaW5nKFwiZXMtRVNcIiwge2RheTogXCIyLWRpZ2l0XCIsIG1vbnRoOiBcIjItZGlnaXRcIiwgeWVhcjogXCJudW1lcmljXCJ9KX0gKCR7cy5pZH0pYDtcbiAgY29uc3Qgc2VzID0gci5zZXNpb25lcy5zb3J0KChhLCBiKSA9PiBhLmNyZWFkYSAtIGIuY3JlYWRhKTtcbiAgLy8gbGlzdGEgZGUgY2xhc2VcbiAgbGV0IGZpbGFzID0gW10sIGNvbERuaSA9IG51bGwsIGNhYiA9IFtdO1xuICBpZiAoZXhjZWxMaXN0YSkge1xuICAgIGNvbnN0IHdiID0gWExTWC5yZWFkKGF3YWl0IGV4Y2VsTGlzdGEuYXJyYXlCdWZmZXIoKSk7XG4gICAgZmlsYXMgPSBYTFNYLnV0aWxzLnNoZWV0X3RvX2pzb24od2IuU2hlZXRzW3diLlNoZWV0TmFtZXNbMF1dLCB7ZGVmdmFsOiBcIlwifSk7XG4gICAgY2FiID0gZmlsYXMubGVuZ3RoID8gT2JqZWN0LmtleXMoZmlsYXNbMF0pIDogW107XG4gICAgY29sRG5pID0gY2FiLmZpbmQoYyA9PiAvXFxiKGRuaXxuaWV8bmlmfGRvY3VtZW50bylcXGIvaS50ZXN0KGMpKSA/PyBjYWIuZmluZChjID0+IGZpbGFzLmZpbHRlcihmID0+IC9eWzAtOVhZWl1cXGR7N31bQS1aXT8kL2kudGVzdChTdHJpbmcoZltjXSkucmVwbGFjZSgvW1xccy4tXS9nLCBcIlwiKSkpLmxlbmd0aCA+IGZpbGFzLmxlbmd0aCAvIDIpO1xuICAgIGlmICghY29sRG5pKSByZXR1cm4ge2Vycm9yOiBcIk5vIGVuY3VlbnRybyBsYSBjb2x1bW5hIGRlbCBETkkgZW4gZWwgRXhjZWwuIExsw6FtYWxhIMKrRE5JwrsuXCJ9O1xuICB9XG4gIGNvbnN0IHBhdHJvblNlcyA9IC9eXFxkezJ9XFwvXFxkezJ9XFwvXFxkezR9IFxcKFtBLVowLTktXStcXCkkLztcbiAgY29uc3QgcHJlc2VudGVzID0gbmV3IE1hcChzZXMubWFwKHMgPT4gW3MuaWQsIG5ldyBTZXQoci5yZWdpc3Ryb3MuZmlsdGVyKHggPT4geC5zZXNpb24gPT09IHMuaWQpLm1hcCh4ID0+IGNsYXZlRG5pKHguZG5pKSkpXSkpO1xuICBjb25zdCBudWV2YXMgPSBzZXMuZmlsdGVyKHMgPT4gIWNhYi5pbmNsdWRlcyhub21icmVDb2wocykpKTtcbiAgY29uc3QgZW5MaXN0YSA9IG5ldyBTZXQoZmlsYXMubWFwKGYgPT4gY2xhdmVEbmkoZltjb2xEbmldKSkpO1xuICBmaWxhcy5mb3JFYWNoKGYgPT4ge1xuICAgIGRlbGV0ZSBmW1wiVG90YWwgYXNpc3RlbmNpYXNcIl07IGRlbGV0ZSBmW1wiJSBhc2lzdGVuY2lhXCJdO1xuICAgIG51ZXZhcy5mb3JFYWNoKHMgPT4gZltub21icmVDb2wocyldID0gcHJlc2VudGVzLmdldChzLmlkKS5oYXMoY2xhdmVEbmkoZltjb2xEbmldKSkgPyAxIDogMCk7XG4gICAgY29uc3QgY29scyA9IE9iamVjdC5rZXlzKGYpLmZpbHRlcihjID0+IHBhdHJvblNlcy50ZXN0KGMpKTtcbiAgICBmW1wiVG90YWwgYXNpc3RlbmNpYXNcIl0gPSBjb2xzLnJlZHVjZSgoYSwgYykgPT4gYSArICgrZltjXSB8fCAwKSwgMCk7XG4gICAgZltcIiUgYXNpc3RlbmNpYVwiXSA9IGNvbHMubGVuZ3RoID8gTWF0aC5yb3VuZCgxMDAwICogZltcIlRvdGFsIGFzaXN0ZW5jaWFzXCJdIC8gY29scy5sZW5ndGgpIC8gMTAgOiAwO1xuICB9KTtcbiAgLy8gaW5jaWRlbmNpYXNcbiAgY29uc3QgaW5jID0gW107XG4gIGlmIChleGNlbExpc3RhKSByLnJlZ2lzdHJvcy5maWx0ZXIoeCA9PiAhZW5MaXN0YS5oYXMoY2xhdmVEbmkoeC5kbmkpKSkuZm9yRWFjaCh4ID0+IGluYy5wdXNoKHtUaXBvOiBcIkROSSBxdWUgbm8gZXN0w6EgZW4gbGEgbGlzdGEgZGUgY2xhc2VcIiwgU2VzacOzbjogeC5zZXNpb24sIEROSTogeC5kbmksIEhvcmE6IG5ldyBEYXRlKHguaG9yYSkudG9Mb2NhbGVUaW1lU3RyaW5nKFwiZXMtRVNcIil9KSk7XG4gIGQzLmdyb3VwcyhyLnJlZ2lzdHJvcywgeCA9PiB4LnNlc2lvbiwgeCA9PiB4LmRpc3Bvc2l0aXZvKS5mb3JFYWNoKChbcywgZ10pID0+IGcuZm9yRWFjaCgoW2QsIHhzXSkgPT4geyBpZiAobmV3IFNldCh4cy5tYXAoeCA9PiB4LmRuaSkpLnNpemUgPiAxKSB4cy5mb3JFYWNoKHggPT4gaW5jLnB1c2goe1RpcG86IFwiVmFyaW9zIEROSSBkZXNkZSBlbCBtaXNtbyBkaXNwb3NpdGl2b1wiLCBTZXNpw7NuOiBzLCBETkk6IHguZG5pLCBIb3JhOiBuZXcgRGF0ZSh4LmhvcmEpLnRvTG9jYWxlVGltZVN0cmluZyhcImVzLUVTXCIpfSkpOyB9KSk7XG4gIGNvbnN0IGFzaXN0ZW50ZXMgPSByLnJlZ2lzdHJvcy5zb3J0KChhLCBiKSA9PiBhLmhvcmEgLSBiLmhvcmEpLm1hcCh4ID0+IHtcbiAgICBjb25zdCBmID0gZmlsYXMuZmluZCh5ID0+IGNsYXZlRG5pKHlbY29sRG5pXSkgPT09IGNsYXZlRG5pKHguZG5pKSk7XG4gICAgcmV0dXJuIHtTZXNpw7NuOiB4LnNlc2lvbiwgRmVjaGE6IG5ldyBEYXRlKHguaG9yYSkudG9Mb2NhbGVEYXRlU3RyaW5nKFwiZXMtRVNcIiksIEhvcmE6IG5ldyBEYXRlKHguaG9yYSkudG9Mb2NhbGVUaW1lU3RyaW5nKFwiZXMtRVNcIiksIEROSTogeC5kbmksIC4uLihmID8gT2JqZWN0LmZyb21FbnRyaWVzKGNhYi5maWx0ZXIoYyA9PiBjICE9PSBjb2xEbmkgJiYgIXBhdHJvblNlcy50ZXN0KGMpKS5zbGljZSgwLCAzKS5tYXAoYyA9PiBbYywgZltjXV0pKSA6IHt9KSwgXCJFbiBsYSBsaXN0YVwiOiBleGNlbExpc3RhID8gKGYgPyBcIlPDrVwiIDogXCJOb1wiKSA6IFwiXCJ9O1xuICB9KTtcbiAgcmV0dXJuIHtmaWxhcywgYXNpc3RlbnRlcywgaW5jLCBzZXMsIG51ZXZhcywgY29sRG5pLCBwcmVzZW50ZXN9O1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC04IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoie1xuICBpZiAoIWluZm9ybWUpIHJldHVybiBodG1sYDxwIGNsYXNzPVwicGVuZGluZ1wiPkVsaWdlIGxhcyBzZXNpb25lcyB5IHB1bHNhIDxiPkdlbmVyYXIgZWwgaW5mb3JtZTwvYj4uPC9wPmA7XG4gIGlmIChpbmZvcm1lLmVycm9yKSByZXR1cm4gaHRtbGA8cCBjbGFzcz1cInBlbmRpbmdcIj7inYwgJHtpbmZvcm1lLmVycm9yfTwvcD5gO1xuICBjb25zdCB7ZmlsYXMsIGFzaXN0ZW50ZXMsIGluYywgc2VzLCBudWV2YXN9ID0gaW5mb3JtZTtcbiAgY29uc3QgaG95ID0gbmV3IERhdGUoKS50b0lTT1N0cmluZygpLnNsaWNlKDAsIDEwKTtcbiAgY29uc3QgZXhjZWwgPSAoKSA9PiB7XG4gICAgY29uc3Qgd2IgPSBYTFNYLnV0aWxzLmJvb2tfbmV3KCk7XG4gICAgaWYgKGZpbGFzLmxlbmd0aCkgWExTWC51dGlscy5ib29rX2FwcGVuZF9zaGVldCh3YiwgWExTWC51dGlscy5qc29uX3RvX3NoZWV0KGZpbGFzKSwgXCJBc2lzdGVuY2lhIGFjdW11bGFkYVwiKTtcbiAgICBYTFNYLnV0aWxzLmJvb2tfYXBwZW5kX3NoZWV0KHdiLCBYTFNYLnV0aWxzLmpzb25fdG9fc2hlZXQoYXNpc3RlbnRlcy5sZW5ndGggPyBhc2lzdGVudGVzIDogW3tBdmlzbzogXCJTaW4gcmVnaXN0cm9zXCJ9XSksIFwiQXNpc3RlbnRlcyBwb3Igc2VzacOzblwiKTtcbiAgICBYTFNYLnV0aWxzLmJvb2tfYXBwZW5kX3NoZWV0KHdiLCBYTFNYLnV0aWxzLmpzb25fdG9fc2hlZXQoc2VzLm1hcChzID0+ICh7U2VzacOzbjogcy5pZCwgR3J1cG86IHMuZ3J1cG8sIEFiaWVydGE6IG5ldyBEYXRlKHMuY3JlYWRhKS50b0xvY2FsZVN0cmluZyhcImVzLUVTXCIpLCBSZWdpc3Ryb3M6IGluZm9ybWUucHJlc2VudGVzLmdldChzLmlkKS5zaXplfSkpKSwgXCJTZXNpb25lc1wiKTtcbiAgICBpZiAoaW5jLmxlbmd0aCkgWExTWC51dGlscy5ib29rX2FwcGVuZF9zaGVldCh3YiwgWExTWC51dGlscy5qc29uX3RvX3NoZWV0KGluYyksIFwiSW5jaWRlbmNpYXNcIik7XG4gICAgcmV0dXJuIG5ldyBCbG9iKFtYTFNYLndyaXRlKHdiLCB7Ym9va1R5cGU6IFwieGxzeFwiLCB0eXBlOiBcImFycmF5XCJ9KV0sIHt0eXBlOiBcImFwcGxpY2F0aW9uL3ZuZC5vcGVueG1sZm9ybWF0cy1vZmZpY2Vkb2N1bWVudC5zcHJlYWRzaGVldG1sLnNoZWV0XCJ9KTtcbiAgfTtcbiAgY29uc3QgcmVzdW1lbiA9IGZpbGFzLmxlbmd0aCA/IGh0bWxgPHA+JHtudWV2YXMubGVuZ3RoID8gYFNlIGhhbiBhw7FhZGlkbyAke251ZXZhcy5sZW5ndGh9IHNlc2nDs24oZXMpIG51ZXZhKHMpYCA6IFwiTGFzIHNlc2lvbmVzIGVsZWdpZGFzIHlhIGVzdGFiYW4gZW4gZWwgRXhjZWwgKG5vIHNlIGR1cGxpY2FuKVwifS4gRXN0dWRpYW50ZXMgZW4gbGEgbGlzdGE6IDxiPiR7ZmlsYXMubGVuZ3RofTwvYj4uIEFzaXN0ZW5jaWEgbWVkaWE6IDxiPiR7ZDMuZm9ybWF0KFwiLjFmXCIpKGQzLm1lYW4oZmlsYXMsIGYgPT4gZltcIiUgYXNpc3RlbmNpYVwiXSkpLnJlcGxhY2UoXCIuXCIsIFwiLFwiKX0gJTwvYj4uPC9wPmAgOiBodG1sYDxwPkFzaXN0ZW50ZXM6IDxiPiR7YXNpc3RlbnRlcy5sZW5ndGh9PC9iPiByZWdpc3Ryb3MgZW4gJHtzZXMubGVuZ3RofSBzZXNpw7NuKGVzKS48L3A+YDtcbiAgcmV0dXJuIGh0bWxgJHtyZXN1bWVufVxuICAgICR7aW5jLmxlbmd0aCA/IGh0bWxgPHAgY2xhc3M9XCJqdWVnby1yZXMgbWFsXCI+4pqg77iPICR7aW5jLmxlbmd0aH0gaW5jaWRlbmNpYShzKTogRE5JIHF1ZSBubyBlc3TDoW4gZW4gdHUgbGlzdGEgbyB2YXJpb3MgRE5JIGRlc2RlIHVuIG1pc21vIGRpc3Bvc2l0aXZvLiBSZXZpc2EgbGEgaG9qYSDCq0luY2lkZW5jaWFzwrsuPC9wPmAgOiBcIlwifVxuICAgIDxkaXYgY2xhc3M9XCJncmFmLWJvdG9uZXNcIj4ke0RPTS5kb3dubG9hZChleGNlbCwgYGFzaXN0ZW5jaWFfVEMzXyR7aG95fS54bHN4YCwgXCLirIcgRGVzY2FyZ2FyIGVsIEV4Y2VsIGRlIGFzaXN0ZW5jaWFcIil9PC9kaXY+XG4gICAgJHtJbnB1dHMudGFibGUoZmlsYXMubGVuZ3RoID8gZmlsYXMgOiBhc2lzdGVudGVzLCB7cm93czogMTQsIGxheW91dDogXCJhdXRvXCJ9KX1gO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdjb25mJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3Nlc2lvbkZvcm0nKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgncmVmcmVzY2FyJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2V4Y2VsTGlzdGEnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2VzaW9uZXNTZWwnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2VzaW9uZXNUeHQnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnZ2VuZXJhckluZicpIn1dfQ==
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jfmunozrosas\.github\.io\/cceescopio");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>CCEEscopio · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="images/logos_ugr_fccee.jpg" alt="Universidad de Granada y Facultad de Ciencias Económicas y Empresariales" height="38"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

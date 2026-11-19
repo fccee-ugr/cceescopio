@@ -132,6 +132,8 @@ website:
             text: "Generador de exámenes, fichas y preguntas para PRADO"
           - href: examen-tc3.qmd
             text: "Exámenes de Técnicas Cuantitativas III (GMIM)"
+          - href: asistencia-profesor.qmd
+            text: "Control de asistencia (Técnicas Cuantitativas III)"
           - href: juegos.qmd#aula
             text: "Modo aula: competición en clase"
           - href: presentacion.qmd

@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Pasar lista – CCEEscopio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/brand/cceescopio_icono.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e3ae76e5a9f56cab9364510115edeb07.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+
+<meta property="og:title" content="Pasar lista – CCEEscopio">
+<meta property="og:description" content="Técnicas Cuantitativas III · Registra tu asistencia a clase">
+<meta property="og:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta property="og:site_name" content="CCEEscopio">
+<meta property="og:image:height" content="480">
+<meta property="og:image:width" content="1960">
+<meta name="twitter:title" content="Pasar lista – CCEEscopio">
+<meta name="twitter:description" content="Técnicas Cuantitativas III · Registra tu asistencia a clase">
+<meta name="twitter:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo.png">
+<meta name="twitter:image-height" content="480">
+<meta name="twitter:image-width" content="1960">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/brand/cceescopio_navbar.png" alt="Logo de CCEEscopio" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li>
+    <a class="dropdown-item" href="./precios.html">
+ <span class="dropdown-text">Precios e inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empleo.html">
+ <span class="dropdown-text">Mercado laboral</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./actividad.html">
+ <span class="dropdown-text">Actividad económica y coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresa.html">
+ <span class="dropdown-text">Empresa, innovación y digitalización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./turismo.html">
+ <span class="dropdown-text">Turismo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./publico.html">
+ <span class="dropdown-text">Sector público y mercados financieros</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad.html">
+ <span class="dropdown-text">Desigualdad, pobreza y condiciones de vida</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sostenibilidad.html">
+ <span class="dropdown-text">Energía y sostenibilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./poblacion.html">
+ <span class="dropdown-text">Población, educación y salud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./internacional.html">
+ <span class="dropdown-text">Economía internacional y sector exterior</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">🔎 Buscador de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./andalucia.html">
+ <span class="dropdown-text">Andalucía y las regiones españolas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Paneles temáticos</li>
+        <li>
+    <a class="dropdown-item" href="./turismo-andalucia.html">
+ <span class="dropdown-text">Turismo en Andalucía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresas.html">
+ <span class="dropdown-text">Demografía empresarial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./consumo.html">
+ <span class="dropdown-text">Consumo y confianza</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mercados.html">
+ <span class="dropdown-text">Mercados al día</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Análisis</li>
+        <li>
+    <a class="dropdown-item" href="./extremos.html">
+ <span class="dropdown-text">Datos extremos e inusuales</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ciclo.html">
+ <span class="dropdown-text">Ciclo económico y semáforo de coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./convergencia.html">
+ <span class="dropdown-text">¿Convergen las economías? (σ y β)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desfases.html">
+ <span class="dropdown-text">¿Qué indicador se adelanta? (desfases)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prevision.html">
+ <span class="dropdown-text">Previsión sencilla</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-herramientas" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Herramientas</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-herramientas">    
+        <li>
+    <a class="dropdown-item" href="./calculadora.html">
+ <span class="dropdown-text">Calculadora de inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ficha.html">
+ <span class="dropdown-text">Ficha de país o región</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./relaciona.html">
+ <span class="dropdown-text">Relaciona dos indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./comparador.html">
+ <span class="dropdown-text">Comparador de comunidades autónomas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./conversor.html">
+ <span class="dropdown-text">Conversor de unidades económicas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./hipoteca.html">
+ <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad-calc.html">
+ <span class="dropdown-text">Calculadora de desigualdad (Gini, Lorenz, Theil)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./politica-fiscal.html">
+ <span class="dropdown-text">Simulador de política fiscal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prediccion.html">
+ <span class="dropdown-text">Predice el próximo dato</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./graficos.html">
+ <span class="dropdown-text">Generador de gráficos para el TFG</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ejercicios.html">
+ <span class="dropdown-text">Ejercicios autocorregibles</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./boletin.html">
+ <span class="dropdown-text">Boletín de coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./calendario.html">
+ <span class="dropdown-text">Datos recientes y calendario</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">Buscador de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./rankings.html"> 
+<span class="menu-text">Rankings</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./juegos.html"> 
+<span class="menu-text">🎮 Juegos</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-datos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Datos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-datos">    
+        <li>
+    <a class="dropdown-item" href="./datos.html">
+ <span class="dropdown-text">Datos y fuentes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./glosario.html">
+ <span class="dropdown-text">Glosario de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./biblioteca.html">
+ <span class="dropdown-text">Bases de datos de la Biblioteca y fuentes abiertas</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-docencia" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Docencia</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-docencia">    
+        <li>
+    <a class="dropdown-item" href="./docencia.html">
+ <span class="dropdown-text">Docencia e investigación: cómo usar CCEEscopio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ejercicios.html">
+ <span class="dropdown-text">Ejercicios autocorregibles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./graficos.html">
+ <span class="dropdown-text">Generador de gráficos para el TFG</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Para el profesorado</li>
+        <li>
+    <a class="dropdown-item" href="./examen.html">
+ <span class="dropdown-text">Generador de exámenes, fichas y preguntas para PRADO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./examen-tc3.html">
+ <span class="dropdown-text">Exámenes de Técnicas Cuantitativas III (GMIM)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./asistencia-profesor.html">
+ <span class="dropdown-text">Control de asistencia (Técnicas Cuantitativas III)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./juegos.html#aula">
+ <span class="dropdown-text">Modo aula: competición en clase</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./presentacion.html">
+ <span class="dropdown-text">Modo presentación</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Por grados y asignaturas</li>
+        <li>
+    <a class="dropdown-item" href="./docencia/gade.html">
+ <span class="dropdown-text">GADE · Administración y Dirección de Empresas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/geco.html">
+ <span class="dropdown-text">GECO · Economía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gfico.html">
+ <span class="dropdown-text">GFICO · Finanzas y Contabilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gmim.html">
+ <span class="dropdown-text">GMIM · Marketing e Investigación de Mercados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gtur.html">
+ <span class="dropdown-text">GTUR · Turismo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./contacto.html"> 
+<span class="menu-text">Contacto</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Pasar lista</h1>
+<p class="subtitle lead">Técnicas Cuantitativas III · Registra tu asistencia a clase</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de modificación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">18 de noviembre de 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="9" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 8;"><span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>URL_CONFIG <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>dniValido <span class="op">=</span> (x) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> s <span class="op">=</span> <span class="bu">String</span>(x <span class="op">||</span> <span class="st">""</span>)<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">.</span><span class="fu">replace</span>(<span class="ss">/</span><span class="sc">[^0-9A-Z]</span><span class="ss">/g</span><span class="op">,</span> <span class="st">""</span>)<span class="op">,</span> L <span class="op">=</span> <span class="st">"TRWAGMYFPDXBNJZSQVHLCKE"</span><span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> m <span class="op">=</span> s<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^(\d{8})([A-Z])$</span><span class="ss">/</span>)<span class="op">;</span> <span class="cf">if</span> (m) <span class="cf">return</span> L[<span class="op">+</span>m[<span class="dv">1</span>] <span class="op">%</span> <span class="dv">23</span>] <span class="op">===</span> m[<span class="dv">2</span>] <span class="op">?</span> s <span class="op">:</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  m <span class="op">=</span> s<span class="op">.</span><span class="fu">match</span>(<span class="ss">/</span><span class="sc">^([XYZ])(\d{7})([A-Z])$</span><span class="ss">/</span>)<span class="op">;</span> <span class="cf">if</span> (m) <span class="cf">return</span> L[<span class="op">+</span>(<span class="st">"XYZ"</span><span class="op">.</span><span class="fu">indexOf</span>(m[<span class="dv">1</span>]) <span class="op">+</span> m[<span class="dv">2</span>]) <span class="op">%</span> <span class="dv">23</span>] <span class="op">===</span> m[<span class="dv">3</span>] <span class="op">?</span> s <span class="op">:</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>llamar <span class="op">=</span> <span class="kw">async</span> (url<span class="op">,</span> datos<span class="op">,</span> intentos <span class="op">=</span> <span class="dv">4</span>) <span class="kw">=&gt;</span> {</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> intentos<span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> {</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(url<span class="op">,</span> {<span class="dt">method</span><span class="op">:</span> <span class="st">"POST"</span><span class="op">,</span> <span class="dt">body</span><span class="op">:</span> <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(datos)})<span class="op">;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="cf">await</span> r<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">catch</span> (e) { <span class="cf">if</span> (i <span class="op">===</span> intentos <span class="op">-</span> <span class="dv">1</span>) <span class="cf">return</span> {<span class="dt">ok</span><span class="op">:</span> <span class="kw">false</span><span class="op">,</span> <span class="dt">error</span><span class="op">:</span> <span class="st">"No se ha podido conectar. Comprueba la conexión e inténtalo de nuevo."</span>}<span class="op">;</span> <span class="cf">await</span> <span class="kw">new</span> <span class="bu">Promise</span>(r <span class="kw">=&gt;</span> <span class="pp">setTimeout</span>(r<span class="op">,</span> <span class="dv">800</span> <span class="op">*</span> (i <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>() <span class="op">*</span> <span class="dv">700</span>))<span class="op">;</span> }</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="27" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 26;"><span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> q <span class="op">=</span> <span class="kw">new</span> <span class="fu">URLSearchParams</span>(location<span class="op">.</span><span class="at">search</span>)<span class="op">;</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> url <span class="op">=</span> q<span class="op">.</span><span class="fu">get</span>(<span class="st">"u"</span>) <span class="op">||</span> URL_CONFIG<span class="op">;</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> disp<span class="op">;</span> <span class="cf">try</span> { disp <span class="op">=</span> localStorage<span class="op">.</span><span class="fu">getItem</span>(<span class="st">"ccee-dispositivo"</span>)<span class="op">;</span> <span class="cf">if</span> (<span class="op">!</span>disp) { disp <span class="op">=</span> crypto<span class="op">.</span><span class="fu">randomUUID</span>()<span class="op">;</span> localStorage<span class="op">.</span><span class="fu">setItem</span>(<span class="st">"ccee-dispositivo"</span><span class="op">,</span> disp)<span class="op">;</span> } } <span class="cf">catch</span> (e) { disp <span class="op">=</span> <span class="st">"sin-almacenamiento-"</span> <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>()<span class="op">.</span><span class="fu">toString</span>(<span class="dv">36</span>)<span class="op">.</span><span class="fu">slice</span>(<span class="dv">2</span>)<span class="op">;</span> }</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> guardado <span class="op">=</span> <span class="st">""</span><span class="op">;</span> <span class="cf">try</span> { guardado <span class="op">=</span> localStorage<span class="op">.</span><span class="fu">getItem</span>(<span class="st">"ccee-dni"</span>) <span class="op">||</span> <span class="st">""</span><span class="op">;</span> } <span class="cf">catch</span> (e) {}</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>url) <span class="cf">return</span> <span class="fu">html</span><span class="vs">`&lt;div class="asis-caja"&gt;&lt;p&gt;Para pasar lista, escanea el &lt;b&gt;código QR&lt;/b&gt; que muestra el profesor en la pantalla o abre el enlace que te ha dado.&lt;/p&gt;&lt;/div&gt;`</span><span class="op">;</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> f <span class="op">=</span> <span class="fu">html</span><span class="vs">`&lt;form class="asis-caja"&gt;</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;label&gt;Código de sesión&lt;input name="sesion" required autocomplete="off" placeholder="TC3-XXXX" value="</span><span class="sc">${</span>q<span class="op">.</span><span class="fu">get</span>(<span class="st">"s"</span>) <span class="op">||</span> <span class="st">""</span><span class="sc">}</span><span class="vs">" style="text-transform:uppercase"&gt;&lt;/label&gt;</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;label&gt;Código que aparece ahora en la pantalla&lt;input name="codigo" required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" placeholder="0000" class="asis-codigo"&gt;&lt;/label&gt;</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;label&gt;Tu DNI o NIE (con letra)&lt;input name="dni" required autocomplete="off" placeholder="12345678Z" value="</span><span class="sc">${</span>guardado<span class="sc">}</span><span class="vs">" style="text-transform:uppercase"&gt;&lt;/label&gt;</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;label class="asis-check"&gt;&lt;input type="checkbox" name="recordar" checked&gt; Recordar mi DNI en este dispositivo&lt;/label&gt;</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;button type="submit" class="asis-boton"&gt;✋ Registrar mi asistencia&lt;/button&gt;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;p class="asis-msg" role="status"&gt;&lt;/p&gt;</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;p class="asis-nota"&gt;Tu DNI y la hora se guardan solo en la hoja de control de asistencia del profesor de la asignatura. Desde un mismo dispositivo solo se puede registrar un DNI por sesión.&lt;/p&gt;</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/form&gt;`</span><span class="op">;</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> msg <span class="op">=</span> f<span class="op">.</span><span class="fu">querySelector</span>(<span class="st">".asis-msg"</span>)<span class="op">;</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (q<span class="op">.</span><span class="fu">get</span>(<span class="st">"s"</span>)) f<span class="op">.</span><span class="at">codigo</span><span class="op">.</span><span class="fu">focus</span>()<span class="op">;</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  f<span class="op">.</span><span class="at">onsubmit</span> <span class="op">=</span> <span class="kw">async</span> (ev) <span class="kw">=&gt;</span> {</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    ev<span class="op">.</span><span class="fu">preventDefault</span>()<span class="op">;</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> dni <span class="op">=</span> <span class="fu">dniValido</span>(f<span class="op">.</span><span class="at">dni</span><span class="op">.</span><span class="at">value</span>)<span class="op">;</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>dni) { msg<span class="op">.</span><span class="at">className</span> <span class="op">=</span> <span class="st">"asis-msg mal"</span><span class="op">;</span> msg<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">"El DNI o NIE no es válido: revisa los números y la letra."</span><span class="op">;</span> <span class="cf">return</span><span class="op">;</span> }</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> b <span class="op">=</span> f<span class="op">.</span><span class="fu">querySelector</span>(<span class="st">"button"</span>)<span class="op">;</span> b<span class="op">.</span><span class="at">disabled</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span> msg<span class="op">.</span><span class="at">className</span> <span class="op">=</span> <span class="st">"asis-msg"</span><span class="op">;</span> msg<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">"Enviando…"</span><span class="op">;</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> r <span class="op">=</span> <span class="cf">await</span> <span class="fu">llamar</span>(url<span class="op">,</span> {<span class="dt">accion</span><span class="op">:</span> <span class="st">"marcar"</span><span class="op">,</span> <span class="dt">sesion</span><span class="op">:</span> f<span class="op">.</span><span class="at">sesion</span><span class="op">.</span><span class="at">value</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">.</span><span class="fu">toUpperCase</span>()<span class="op">,</span> <span class="dt">codigo</span><span class="op">:</span> f<span class="op">.</span><span class="at">codigo</span><span class="op">.</span><span class="at">value</span><span class="op">.</span><span class="fu">trim</span>()<span class="op">,</span> dni<span class="op">,</span> <span class="dt">dispositivo</span><span class="op">:</span> disp})<span class="op">;</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    b<span class="op">.</span><span class="at">disabled</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> { <span class="cf">if</span> (f<span class="op">.</span><span class="at">recordar</span><span class="op">.</span><span class="at">checked</span>) localStorage<span class="op">.</span><span class="fu">setItem</span>(<span class="st">"ccee-dni"</span><span class="op">,</span> dni)<span class="op">;</span> <span class="cf">else</span> localStorage<span class="op">.</span><span class="fu">removeItem</span>(<span class="st">"ccee-dni"</span>)<span class="op">;</span> } <span class="cf">catch</span> (e) {}</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (r<span class="op">.</span><span class="at">ok</span>) {</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>      msg<span class="op">.</span><span class="at">className</span> <span class="op">=</span> <span class="st">"asis-msg bien"</span><span class="op">;</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>      msg<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> <span class="vs">`✅ </span><span class="sc">${</span>r<span class="op">.</span><span class="at">mensaje</span><span class="sc">}</span><span class="vs">&lt;br&gt;&lt;small&gt;</span><span class="sc">${</span>dni<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">2</span>)<span class="sc">}</span><span class="vs">******</span><span class="sc">${</span>dni<span class="op">.</span><span class="fu">slice</span>(<span class="op">-</span><span class="dv">2</span>)<span class="sc">}</span><span class="vs"> · sesión </span><span class="sc">${</span>f<span class="op">.</span><span class="at">sesion</span><span class="op">.</span><span class="at">value</span><span class="op">.</span><span class="fu">toUpperCase</span>()<span class="sc">}</span><span class="vs"> · </span><span class="sc">${</span><span class="kw">new</span> <span class="bu">Date</span>(r<span class="op">.</span><span class="at">hora</span> <span class="op">??</span> <span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>())<span class="op">.</span><span class="fu">toLocaleTimeString</span>(<span class="st">"es-ES"</span>)<span class="sc">}</span><span class="vs">&lt;/small&gt;`</span><span class="op">;</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>      f<span class="op">.</span><span class="at">codigo</span><span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="st">""</span><span class="op">;</span> <span class="bu">window</span><span class="op">.</span><span class="at">cceeEvento</span> <span class="op">&amp;&amp;</span> <span class="bu">window</span><span class="op">.</span><span class="fu">cceeEvento</span>(<span class="st">"asistencia/registro"</span><span class="op">,</span> <span class="st">"Asistencia registrada"</span><span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> { msg<span class="op">.</span><span class="at">className</span> <span class="op">=</span> <span class="st">"asis-msg mal"</span><span class="op">;</span> msg<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">"❌ "</span> <span class="op">+</span> r<span class="op">.</span><span class="at">error</span><span class="op">;</span> f<span class="op">.</span><span class="at">codigo</span><span class="op">.</span><span class="fu">select</span>()<span class="op">;</span> }</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> f<span class="op">;</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<!--
+  Contador de visitas y de uso (GoatCounter, gratuito y sin cookies).
+  1. Crea el sitio en https://www.goatcounter.com con el código cceescopio.
+  2. En Settings, activa "Allow adding visitor counts on your website".
+  Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+
+  Además de las visitas a cada página, se registran estos eventos de uso
+  (en el panel de GoatCounter aparecen marcados como "event"):
+    uso/<página>            primera vez que se cambia un control (indicador, territorio, año...) en una visita
+    indicador/<id>          cada indicador consultado en los paneles
+    enlace-directo/<id>     visitas que llegan con un enlace directo a un indicador (?i=)
+    descarga/<página>       descargas de datos en CSV
+    mapa/<página>           uso del mapa interactivo (pasar el ratón por él)
+    video/reproducir, video/completo
+    salida/<dominio>        clics en enlaces a otras webs (INE, Eurostat...)
+    encuesta/...            respuestas de la encuesta de satisfacción
+-->
+<script data-goatcounter="https://cceescopio.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<script>
+(function () {
+  const GC_CODE = "cceescopio";
+  const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const offset = (document.querySelector('meta[name="quarto:offset"]') || {}).content || "./";
+
+  // ---------- Contador de visitas en el pie ----------
+  function show(n) {
+    const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
+    if (!box || document.getElementById("visit-counter")) return;
+    const s = document.createElement("span");
+    s.id = "visit-counter";
+    s.className = "visit-counter";
+    s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
+    box.appendChild(s);
+  }
+  function showAll(n) {
+    show(n);
+    document.querySelectorAll(".visitas-ccee").forEach(el => {
+      const num = el.querySelector(".vc-num"); if (num) num.textContent = n;
+      el.hidden = false;
+    });
+  }
+  if (!local) {
+    fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.count) showAll(String(d.count).replace(/\s/g, ".")); })
+      .catch(() => {});
+  }
+
+  // ---------- Eventos de uso ----------
+  const pagina = (() => {
+    const p = location.pathname.replace(/\/$/, "/index.html").split("/").slice(-2);
+    const f = p[1].replace(/\.html$/, "") || "index";
+    return p[0] === "docencia" ? `docencia-${f}` : f;
+  })();
+  const slug = s => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+                     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const cola = [], hechos = new Set();
+  function enviar(path, title) {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title: title || path, event: true});
+    else cola.push([path, title]);
+  }
+  const espera = setInterval(() => {
+    if (window.goatcounter && window.goatcounter.count) { clearInterval(espera); cola.splice(0).forEach(a => enviar(...a)); }
+  }, 500);
+  setTimeout(() => clearInterval(espera), 20000);
+  // Una sola vez por visita a la página (salvo que se pida lo contrario)
+  window.cceeEvento = function (path, title, repetir) {
+    if (local) { console.log("[CCEEscopio evento]", path); return; }
+    if (!repetir && hechos.has(path)) return;
+    hechos.add(path); enviar(path, title);
+  };
+
+  const ini = new URLSearchParams(location.search).get("i");
+  if (ini) cceeEvento(`enlace-directo/${ini}`, `Enlace directo: ${ini}`);
+
+  // Controles de los paneles (selectores, años, cantidades...)
+  document.addEventListener("change", ev => {
+    const el = ev.target;
+    if (!el.closest || !el.closest("form, .cell-output, .observablehq")) return;
+    if (el.closest("#encuesta-ccee")) return;
+    cceeEvento(`uso/${pagina}`, `Uso de controles: ${pagina}`);
+    const form = el.closest("form");
+    const etiqueta = form && form.querySelector("label") ? form.querySelector("label").textContent.trim() : "";
+    if (etiqueta === "Indicador" && el.tagName === "SELECT" && el.selectedOptions[0]) {
+      const id = slug(el.selectedOptions[0].textContent);
+      cceeEvento(`indicador/${id}`, el.selectedOptions[0].textContent);
+    }
+  }, true);
+
+  // Descargas y enlaces externos
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest && ev.target.closest("a");
+    if (!a) return;
+    if (a.hasAttribute("download") || /\.csv(\?|$)/i.test(a.getAttribute("href") || "")) {
+      cceeEvento(`descarga/${pagina}`, `Descarga de datos: ${pagina}`, true);
+      return;
+    }
+    try {
+      const u = new URL(a.href, location.href);
+      if (/^https?:$/.test(u.protocol) && u.hostname !== location.hostname)
+        cceeEvento(`salida/${u.hostname.replace(/^www\./, "")}`, `Enlace externo: ${u.hostname}`, true);
+    } catch (e) {}
+  }, true);
+
+  // Mapa interactivo
+  document.addEventListener("pointerover", ev => {
+    if (ev.target.closest && ev.target.closest(".mapa-ccee")) cceeEvento(`mapa/${pagina}`, `Uso del mapa: ${pagina}`);
+  }, {passive: true});
+
+  // Vídeo de presentación
+  document.addEventListener("play", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/reproducir", "Vídeo: reproducción"); }, true);
+  document.addEventListener("ended", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/completo", "Vídeo: visto completo"); }, true);
+
+  // ---------- Botón flotante de la encuesta de satisfacción ----------
+  function botonEncuesta() {
+    if (pagina === "encuesta" || pagina === "uso") return;
+    const b = document.createElement("a");
+    b.href = offset + "encuesta.html";
+    b.className = "btn-encuesta";
+    b.innerHTML = "⭐ ¿Nos valoras?";
+    b.title = "Encuesta de satisfacción (menos de un minuto)";
+    b.addEventListener("click", () => cceeEvento(`encuesta/boton/${pagina}`, "Clic en el botón de la encuesta"));
+    document.body.appendChild(b);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", botonEncuesta);
+  else botonEncuesta();
+})();
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlVSTF9DT05GSUcgPSBcIlwiXG5kbmlWYWxpZG8gPSAoeCkgPT4ge1xuICBjb25zdCBzID0gU3RyaW5nKHggfHwgXCJcIikudG9VcHBlckNhc2UoKS5yZXBsYWNlKC9bXjAtOUEtWl0vZywgXCJcIiksIEwgPSBcIlRSV0FHTVlGUERYQk5KWlNRVkhMQ0tFXCI7XG4gIGxldCBtID0gcy5tYXRjaCgvXihcXGR7OH0pKFtBLVpdKSQvKTsgaWYgKG0pIHJldHVybiBMWyttWzFdICUgMjNdID09PSBtWzJdID8gcyA6IG51bGw7XG4gIG0gPSBzLm1hdGNoKC9eKFtYWVpdKShcXGR7N30pKFtBLVpdKSQvKTsgaWYgKG0pIHJldHVybiBMWysoXCJYWVpcIi5pbmRleE9mKG1bMV0pICsgbVsyXSkgJSAyM10gPT09IG1bM10gPyBzIDogbnVsbDtcbiAgcmV0dXJuIG51bGw7XG59XG5sbGFtYXIgPSBhc3luYyAodXJsLCBkYXRvcywgaW50ZW50b3MgPSA0KSA9PiB7XG4gIGZvciAobGV0IGkgPSAwOyBpIDwgaW50ZW50b3M7IGkrKykge1xuICAgIHRyeSB7XG4gICAgICBjb25zdCByID0gYXdhaXQgZmV0Y2godXJsLCB7bWV0aG9kOiBcIlBPU1RcIiwgYm9keTogSlNPTi5zdHJpbmdpZnkoZGF0b3MpfSk7XG4gICAgICByZXR1cm4gYXdhaXQgci5qc29uKCk7XG4gICAgfSBjYXRjaCAoZSkgeyBpZiAoaSA9PT0gaW50ZW50b3MgLSAxKSByZXR1cm4ge29rOiBmYWxzZSwgZXJyb3I6IFwiTm8gc2UgaGEgcG9kaWRvIGNvbmVjdGFyLiBDb21wcnVlYmEgbGEgY29uZXhpw7NuIGUgaW50w6ludGFsbyBkZSBudWV2by5cIn07IGF3YWl0IG5ldyBQcm9taXNlKHIgPT4gc2V0VGltZW91dChyLCA4MDAgKiAoaSArIDEpICsgTWF0aC5yYW5kb20oKSAqIDcwMCkpOyB9XG4gIH1cbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IntcbiAgY29uc3QgcSA9IG5ldyBVUkxTZWFyY2hQYXJhbXMobG9jYXRpb24uc2VhcmNoKTtcbiAgY29uc3QgdXJsID0gcS5nZXQoXCJ1XCIpIHx8IFVSTF9DT05GSUc7XG4gIGxldCBkaXNwOyB0cnkgeyBkaXNwID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oXCJjY2VlLWRpc3Bvc2l0aXZvXCIpOyBpZiAoIWRpc3ApIHsgZGlzcCA9IGNyeXB0by5yYW5kb21VVUlEKCk7IGxvY2FsU3RvcmFnZS5zZXRJdGVtKFwiY2NlZS1kaXNwb3NpdGl2b1wiLCBkaXNwKTsgfSB9IGNhdGNoIChlKSB7IGRpc3AgPSBcInNpbi1hbG1hY2VuYW1pZW50by1cIiArIE1hdGgucmFuZG9tKCkudG9TdHJpbmcoMzYpLnNsaWNlKDIpOyB9XG4gIGxldCBndWFyZGFkbyA9IFwiXCI7IHRyeSB7IGd1YXJkYWRvID0gbG9jYWxTdG9yYWdlLmdldEl0ZW0oXCJjY2VlLWRuaVwiKSB8fCBcIlwiOyB9IGNhdGNoIChlKSB7fVxuICBpZiAoIXVybCkgcmV0dXJuIGh0bWxgPGRpdiBjbGFzcz1cImFzaXMtY2FqYVwiPjxwPlBhcmEgcGFzYXIgbGlzdGEsIGVzY2FuZWEgZWwgPGI+Y8OzZGlnbyBRUjwvYj4gcXVlIG11ZXN0cmEgZWwgcHJvZmVzb3IgZW4gbGEgcGFudGFsbGEgbyBhYnJlIGVsIGVubGFjZSBxdWUgdGUgaGEgZGFkby48L3A+PC9kaXY+YDtcbiAgY29uc3QgZiA9IGh0bWxgPGZvcm0gY2xhc3M9XCJhc2lzLWNhamFcIj5cbiAgICA8bGFiZWw+Q8OzZGlnbyBkZSBzZXNpw7NuPGlucHV0IG5hbWU9XCJzZXNpb25cIiByZXF1aXJlZCBhdXRvY29tcGxldGU9XCJvZmZcIiBwbGFjZWhvbGRlcj1cIlRDMy1YWFhYXCIgdmFsdWU9XCIke3EuZ2V0KFwic1wiKSB8fCBcIlwifVwiIHN0eWxlPVwidGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlXCI+PC9sYWJlbD5cbiAgICA8bGFiZWw+Q8OzZGlnbyBxdWUgYXBhcmVjZSBhaG9yYSBlbiBsYSBwYW50YWxsYTxpbnB1dCBuYW1lPVwiY29kaWdvXCIgcmVxdWlyZWQgaW5wdXRtb2RlPVwibnVtZXJpY1wiIHBhdHRlcm49XCJbMC05XXs0fVwiIG1heGxlbmd0aD1cIjRcIiBhdXRvY29tcGxldGU9XCJvZmZcIiBwbGFjZWhvbGRlcj1cIjAwMDBcIiBjbGFzcz1cImFzaXMtY29kaWdvXCI+PC9sYWJlbD5cbiAgICA8bGFiZWw+VHUgRE5JIG8gTklFIChjb24gbGV0cmEpPGlucHV0IG5hbWU9XCJkbmlcIiByZXF1aXJlZCBhdXRvY29tcGxldGU9XCJvZmZcIiBwbGFjZWhvbGRlcj1cIjEyMzQ1Njc4WlwiIHZhbHVlPVwiJHtndWFyZGFkb31cIiBzdHlsZT1cInRleHQtdHJhbnNmb3JtOnVwcGVyY2FzZVwiPjwvbGFiZWw+XG4gICAgPGxhYmVsIGNsYXNzPVwiYXNpcy1jaGVja1wiPjxpbnB1dCB0eXBlPVwiY2hlY2tib3hcIiBuYW1lPVwicmVjb3JkYXJcIiBjaGVja2VkPiBSZWNvcmRhciBtaSBETkkgZW4gZXN0ZSBkaXNwb3NpdGl2bzwvbGFiZWw+XG4gICAgPGJ1dHRvbiB0eXBlPVwic3VibWl0XCIgY2xhc3M9XCJhc2lzLWJvdG9uXCI+4pyLIFJlZ2lzdHJhciBtaSBhc2lzdGVuY2lhPC9idXR0b24+XG4gICAgPHAgY2xhc3M9XCJhc2lzLW1zZ1wiIHJvbGU9XCJzdGF0dXNcIj48L3A+XG4gICAgPHAgY2xhc3M9XCJhc2lzLW5vdGFcIj5UdSBETkkgeSBsYSBob3JhIHNlIGd1YXJkYW4gc29sbyBlbiBsYSBob2phIGRlIGNvbnRyb2wgZGUgYXNpc3RlbmNpYSBkZWwgcHJvZmVzb3IgZGUgbGEgYXNpZ25hdHVyYS4gRGVzZGUgdW4gbWlzbW8gZGlzcG9zaXRpdm8gc29sbyBzZSBwdWVkZSByZWdpc3RyYXIgdW4gRE5JIHBvciBzZXNpw7NuLjwvcD5cbiAgPC9mb3JtPmA7XG4gIGNvbnN0IG1zZyA9IGYucXVlcnlTZWxlY3RvcihcIi5hc2lzLW1zZ1wiKTtcbiAgaWYgKHEuZ2V0KFwic1wiKSkgZi5jb2RpZ28uZm9jdXMoKTtcbiAgZi5vbnN1Ym1pdCA9IGFzeW5jIChldikgPT4ge1xuICAgIGV2LnByZXZlbnREZWZhdWx0KCk7XG4gICAgY29uc3QgZG5pID0gZG5pVmFsaWRvKGYuZG5pLnZhbHVlKTtcbiAgICBpZiAoIWRuaSkgeyBtc2cuY2xhc3NOYW1lID0gXCJhc2lzLW1zZyBtYWxcIjsgbXNnLnRleHRDb250ZW50ID0gXCJFbCBETkkgbyBOSUUgbm8gZXMgdsOhbGlkbzogcmV2aXNhIGxvcyBuw7ptZXJvcyB5IGxhIGxldHJhLlwiOyByZXR1cm47IH1cbiAgICBjb25zdCBiID0gZi5xdWVyeVNlbGVjdG9yKFwiYnV0dG9uXCIpOyBiLmRpc2FibGVkID0gdHJ1ZTsgbXNnLmNsYXNzTmFtZSA9IFwiYXNpcy1tc2dcIjsgbXNnLnRleHRDb250ZW50ID0gXCJFbnZpYW5kb+KAplwiO1xuICAgIGNvbnN0IHIgPSBhd2FpdCBsbGFtYXIodXJsLCB7YWNjaW9uOiBcIm1hcmNhclwiLCBzZXNpb246IGYuc2VzaW9uLnZhbHVlLnRyaW0oKS50b1VwcGVyQ2FzZSgpLCBjb2RpZ286IGYuY29kaWdvLnZhbHVlLnRyaW0oKSwgZG5pLCBkaXNwb3NpdGl2bzogZGlzcH0pO1xuICAgIGIuZGlzYWJsZWQgPSBmYWxzZTtcbiAgICB0cnkgeyBpZiAoZi5yZWNvcmRhci5jaGVja2VkKSBsb2NhbFN0b3JhZ2Uuc2V0SXRlbShcImNjZWUtZG5pXCIsIGRuaSk7IGVsc2UgbG9jYWxTdG9yYWdlLnJlbW92ZUl0ZW0oXCJjY2VlLWRuaVwiKTsgfSBjYXRjaCAoZSkge31cbiAgICBpZiAoci5vaykge1xuICAgICAgbXNnLmNsYXNzTmFtZSA9IFwiYXNpcy1tc2cgYmllblwiO1xuICAgICAgbXNnLmlubmVySFRNTCA9IGDinIUgJHtyLm1lbnNhamV9PGJyPjxzbWFsbD4ke2RuaS5zbGljZSgwLCAyKX0qKioqKioke2RuaS5zbGljZSgtMil9IMK3IHNlc2nDs24gJHtmLnNlc2lvbi52YWx1ZS50b1VwcGVyQ2FzZSgpfSDCtyAke25ldyBEYXRlKHIuaG9yYSA/PyBEYXRlLm5vdygpKS50b0xvY2FsZVRpbWVTdHJpbmcoXCJlcy1FU1wiKX08L3NtYWxsPmA7XG4gICAgICBmLmNvZGlnby52YWx1ZSA9IFwiXCI7IHdpbmRvdy5jY2VlRXZlbnRvICYmIHdpbmRvdy5jY2VlRXZlbnRvKFwiYXNpc3RlbmNpYS9yZWdpc3Ryb1wiLCBcIkFzaXN0ZW5jaWEgcmVnaXN0cmFkYVwiLCB0cnVlKTtcbiAgICB9IGVsc2UgeyBtc2cuY2xhc3NOYW1lID0gXCJhc2lzLW1zZyBtYWxcIjsgbXNnLnRleHRDb250ZW50ID0gXCLinYwgXCIgKyByLmVycm9yOyBmLmNvZGlnby5zZWxlY3QoKTsgfVxuICB9O1xuICByZXR1cm4gZjtcbn1cbiJ9XX0=
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jfmunozrosas\.github\.io\/cceescopio");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>CCEEscopio · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="images/logos_ugr_fccee.jpg" alt="Universidad de Granada y Facultad de Ciencias Económicas y Empresariales" height="38"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

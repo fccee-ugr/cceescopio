@@ -1,0 +1,61 @@
+---
+title: "Pasar lista"
+subtitle: "Técnicas Cuantitativas III · Registra tu asistencia a clase"
+toc: false
+---
+
+```{ojs}
+//| echo: false
+URL_CONFIG = ""
+dniValido = (x) => {
+  const s = String(x || "").toUpperCase().replace(/[^0-9A-Z]/g, ""), L = "TRWAGMYFPDXBNJZSQVHLCKE";
+  let m = s.match(/^(\d{8})([A-Z])$/); if (m) return L[+m[1] % 23] === m[2] ? s : null;
+  m = s.match(/^([XYZ])(\d{7})([A-Z])$/); if (m) return L[+("XYZ".indexOf(m[1]) + m[2]) % 23] === m[3] ? s : null;
+  return null;
+}
+llamar = async (url, datos, intentos = 4) => {
+  for (let i = 0; i < intentos; i++) {
+    try {
+      const r = await fetch(url, {method: "POST", body: JSON.stringify(datos)});
+      return await r.json();
+    } catch (e) { if (i === intentos - 1) return {ok: false, error: "No se ha podido conectar. Comprueba la conexión e inténtalo de nuevo."}; await new Promise(r => setTimeout(r, 800 * (i + 1) + Math.random() * 700)); }
+  }
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  const q = new URLSearchParams(location.search);
+  const url = q.get("u") || URL_CONFIG;
+  let disp; try { disp = localStorage.getItem("ccee-dispositivo"); if (!disp) { disp = crypto.randomUUID(); localStorage.setItem("ccee-dispositivo", disp); } } catch (e) { disp = "sin-almacenamiento-" + Math.random().toString(36).slice(2); }
+  let guardado = ""; try { guardado = localStorage.getItem("ccee-dni") || ""; } catch (e) {}
+  if (!url) return html`<div class="asis-caja"><p>Para pasar lista, escanea el <b>código QR</b> que muestra el profesor en la pantalla o abre el enlace que te ha dado.</p></div>`;
+  const f = html`<form class="asis-caja">
+    <label>Código de sesión<input name="sesion" required autocomplete="off" placeholder="TC3-XXXX" value="${q.get("s") || ""}" style="text-transform:uppercase"></label>
+    <label>Código que aparece ahora en la pantalla<input name="codigo" required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" placeholder="0000" class="asis-codigo"></label>
+    <label>Tu DNI o NIE (con letra)<input name="dni" required autocomplete="off" placeholder="12345678Z" value="${guardado}" style="text-transform:uppercase"></label>
+    <label class="asis-check"><input type="checkbox" name="recordar" checked> Recordar mi DNI en este dispositivo</label>
+    <button type="submit" class="asis-boton">✋ Registrar mi asistencia</button>
+    <p class="asis-msg" role="status"></p>
+    <p class="asis-nota">Tu DNI y la hora se guardan solo en la hoja de control de asistencia del profesor de la asignatura. Desde un mismo dispositivo solo se puede registrar un DNI por sesión.</p>
+  </form>`;
+  const msg = f.querySelector(".asis-msg");
+  if (q.get("s")) f.codigo.focus();
+  f.onsubmit = async (ev) => {
+    ev.preventDefault();
+    const dni = dniValido(f.dni.value);
+    if (!dni) { msg.className = "asis-msg mal"; msg.textContent = "El DNI o NIE no es válido: revisa los números y la letra."; return; }
+    const b = f.querySelector("button"); b.disabled = true; msg.className = "asis-msg"; msg.textContent = "Enviando…";
+    const r = await llamar(url, {accion: "marcar", sesion: f.sesion.value.trim().toUpperCase(), codigo: f.codigo.value.trim(), dni, dispositivo: disp});
+    b.disabled = false;
+    try { if (f.recordar.checked) localStorage.setItem("ccee-dni", dni); else localStorage.removeItem("ccee-dni"); } catch (e) {}
+    if (r.ok) {
+      msg.className = "asis-msg bien";
+      msg.innerHTML = `✅ ${r.mensaje}<br><small>${dni.slice(0, 2)}******${dni.slice(-2)} · sesión ${f.sesion.value.toUpperCase()} · ${new Date(r.hora ?? Date.now()).toLocaleTimeString("es-ES")}</small>`;
+      f.codigo.value = ""; window.cceeEvento && window.cceeEvento("asistencia/registro", "Asistencia registrada", true);
+    } else { msg.className = "asis-msg mal"; msg.textContent = "❌ " + r.error; f.codigo.select(); }
+  };
+  return f;
+}
+```
