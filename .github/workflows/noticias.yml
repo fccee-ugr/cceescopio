@@ -1,12 +1,19 @@
-# Actualiza cada día las noticias del buscador de CCEEscopio.
-# Publica noticias.json en la rama «noticias» (no toca la rama principal ni la carpeta docs/).
+# Actualiza las noticias del buscador de CCEEscopio (página «Noticias e indicadores»).
+# Guarda noticias.json en la rama «noticias»: no toca la rama principal ni la carpeta docs/.
+# Se ejecuta dos veces al día, cada vez que se suben cambios a la rama main y cuando se lanza a mano (Actions → Run workflow).
 name: Noticias de CCEEscopio
 on:
   schedule:
-    - cron: "17 5 * * *"   # todos los días a las 6:17 (hora peninsular en invierno)
-  workflow_dispatch: {}     # permite lanzarla a mano desde la pestaña Actions
+    - cron: "17 5 * * *"
+    - cron: "43 13 * * *"
+  push:
+    branches: [main]
+  workflow_dispatch: {}
 permissions:
   contents: write
+concurrency:
+  group: noticias
+  cancel-in-progress: false
 jobs:
   noticias:
     runs-on: ubuntu-latest
@@ -15,8 +22,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Recuperar las noticias anteriores
+        run: |
+          git fetch --depth 1 origin noticias && git show origin/noticias:noticias.json > /tmp/previas.json || echo '{}' > /tmp/previas.json
       - name: Buscar noticias
-        run: python tools/noticias.py --salida /tmp/noticias.json
+        run: python tools/noticias.py --salida /tmp/noticias.json --previas /tmp/previas.json
       - name: Publicar en la rama noticias
         run: |
           git config user.name "github-actions[bot]"
@@ -24,5 +34,5 @@ jobs:
           git switch --orphan noticias-tmp
           cp /tmp/noticias.json noticias.json
           git add noticias.json
-          git commit -m "Noticias del $(date -u +%F)"
+          git commit -m "Noticias $(date -u '+%F %H:%M')"
           git push -f origin HEAD:noticias

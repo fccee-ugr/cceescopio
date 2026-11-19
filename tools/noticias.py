@@ -62,15 +62,16 @@ def leer_rss(xml_bytes):
             ts = None
         yield {"t": titulo, "fuente": fuente, "url": (it.findtext("link") or "").strip(), "ts": ts}
 
-def buscar(q, dias=7):
+def buscar(q, dias=14):
     url = "https://news.google.com/rss/search?" + urllib.parse.urlencode({"q": f"{q} when:{dias}d", "hl": "es", "gl": "ES", "ceid": "ES:es"})
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (CCEEscopio; Universidad de Granada)"})
     with urllib.request.urlopen(req, timeout=30) as r:
         return list(leer_rss(r.read()))
 
-def main(salida, por_tema=8):
+def main(salida, por_tema=10, previas=None, dias_guardar=30):
     ind = indicadores()
     noticias, vistos = [], set()
+    nuevas = 0
     for tema, q, regex, ids in TEMAS:
         try:
             items = buscar(q)
@@ -92,16 +93,30 @@ def main(salida, por_tema=8):
                 continue
             vistos.add(clave)
             noticias.append({**it, "tema": tema, "ind": rel})
-            n += 1
+            n += 1; nuevas += 1
             if n >= por_tema:
                 break
         time.sleep(1)
+    # se conservan las noticias de días anteriores (hasta 30 días), por si algún día falla la búsqueda
+    if previas:
+        try:
+            ant = json.load(open(previas, encoding="utf-8")).get("noticias", [])
+        except Exception:
+            ant = []
+        limite = time.time() - dias_guardar * 86400
+        for it in ant:
+            clave = sin_tildes(re.sub(r"\W+", " ", it.get("t", "")))[:90]
+            if clave and clave not in vistos and (it.get("ts") or 0) >= limite and all(i in ind for i in it.get("ind", [])):
+                vistos.add(clave); noticias.append(it)
     noticias.sort(key=lambda x: -(x["ts"] or 0))
+    noticias = noticias[:400]
     usados = {i for n in noticias for i in n["ind"]}
     json.dump({"actualizado": int(time.time()), "noticias": noticias, "indicadores": {k: v for k, v in ind.items() if k in usados}},
               open(salida, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    print(f"{len(noticias)} noticias guardadas en {salida}")
+    print(f"{nuevas} noticias nuevas; {len(noticias)} en total guardadas en {salida}")
+    if not noticias:
+        sys.exit("No se ha encontrado ninguna noticia.")
 
 if __name__ == "__main__":
-    salida = sys.argv[sys.argv.index("--salida") + 1] if "--salida" in sys.argv else str(RAIZ / "noticias.json")
-    main(salida)
+    arg = lambda k, d=None: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
+    main(arg("--salida", str(RAIZ / "noticias.json")), previas=arg("--previas"))

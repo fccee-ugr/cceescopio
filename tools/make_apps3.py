@@ -1468,7 +1468,7 @@ subtitle: "Noticias económicas de los últimos días y los indicadores de CCEEs
 toc: false
 ---
 
-Cada día se recogen noticias económicas recientes de medios españoles. Las noticias no muestran los datos: **tu reto es buscar en CCEEscopio los indicadores relacionados** y comprobar qué dicen. Con el **modo reto**, ni siquiera te decimos qué indicador buscar: tienes que descubrirlo tú.
+Dos veces al día se recogen noticias económicas de medios españoles, y se guardan las de los últimos 30 días. Las noticias no muestran los datos: **tu reto es buscar en CCEEscopio los indicadores relacionados** y comprobar qué dicen. Con el **modo reto**, ni siquiera te decimos qué indicador buscar: tienes que descubrirlo tú.
 
 ```{ojs}
 //| echo: false
@@ -1483,15 +1483,18 @@ datosN = {
 }
 viewof textoN = Inputs.search(datosN?.noticias ?? [], {placeholder: "Busca en los titulares: paro, vivienda, turismo…", columns: ["t", "fuente"], label: "Buscar"})
 viewof areaN = Inputs.select(new Map([["Todas", "todas"], ...Object.entries(areasN).map(([k, v]) => [v, k])]), {label: "Área"})
+viewof diasN = Inputs.select(new Map([["Últimos 3 días", 3], ["Última semana", 7], ["Últimas 2 semanas", 14], ["Último mes", 31]]), {label: "Periodo", value: 14})
 viewof retoN = Inputs.toggle({label: "Modo reto (ocultar los indicadores)", value: false})
 ```
 
 ```{ojs}
 //| echo: false
 {
-  if (!datosN) return html`<p class="pending">Las noticias todavía no están disponibles. Se actualizan cada mañana; vuelve a intentarlo más tarde.</p>`;
+  if (!datosN) return html`<div class="pending"><p>Todavía no hay noticias disponibles: no se ha generado el fichero de noticias.</p>
+    <p><small><b>Para quien administra la web:</b> en GitHub, abre el repositorio, pestaña <b>Actions</b> → «Noticias de CCEEscopio» → <b>Run workflow</b>. Si falla al publicar, en <b>Settings → Actions → General → Workflow permissions</b> marca <b>Read and write permissions</b> y vuelve a lanzarla.</small></p></div>`;
   const ind = datosN.indicadores;
-  const lista = textoN.filter(n => areaN === "todas" || n.ind.some(i => ind[i]?.pagina === areaN)).slice(0, 60);
+  const desde = Date.now() / 1000 - diasN * 86400;
+  const lista = textoN.filter(n => (!n.ts || n.ts >= desde) && (areaN === "todas" || n.ind.some(i => ind[i]?.pagina === areaN))).slice(0, 120);
   const hash = (s) => [...s].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0, 2166136261);
   const pregunta = (n) => {
     const i = n.ind[0], x = ind[i], nom = `«${x.nombre}»`;
@@ -1517,7 +1520,7 @@ viewof retoN = Inputs.toggle({label: "Modo reto (ocultar los indicadores)", valu
   };
   const act = new Date(datosN.actualizado * 1000).toLocaleString("es-ES", {dateStyle: "long", timeStyle: "short"});
   return html`<p class="nota">${lista.length} noticias · actualizado el ${act}. Fuente: Google Noticias (medios españoles). Los titulares enlazan a la noticia original.</p>
-    ${lista.length ? lista.map(tarjeta) : html`<p class="pending">No hay noticias con esos filtros.</p>`}`;
+    ${lista.length ? lista.map(tarjeta) : html`<p class="pending">No hay noticias con esos filtros. Prueba con un periodo más largo o con otra área.</p>`}`;
 }
 ```
 ''', AREAS=J(AREAS))
