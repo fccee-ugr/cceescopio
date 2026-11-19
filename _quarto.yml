@@ -116,6 +116,8 @@ website:
             text: "Datos y fuentes"
           - href: glosario.qmd
             text: "Glosario de indicadores"
+          - href: noticias.qmd
+            text: "Noticias e indicadores"
           - href: biblioteca.qmd
             text: "Bases de datos de la Biblioteca y fuentes abiertas"
       - text: "Docencia"
@@ -130,10 +132,12 @@ website:
           - text: "Para el profesorado"
           - href: examen.qmd
             text: "Generador de exámenes, fichas y preguntas para PRADO"
+          - href: noticias.qmd
+            text: "Noticias e indicadores (retos para clase)"
           - href: examen-tc3.qmd
             text: "Exámenes de Técnicas Cuantitativas III (GMIM)"
           - href: asistencia-profesor.qmd
-            text: "Control de asistencia (Técnicas Cuantitativas III)"
+            text: "Control de asistencia con QR"
           - href: juegos.qmd#aula
             text: "Modo aula: competición en clase"
           - href: presentacion.qmd

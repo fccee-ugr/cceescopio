@@ -299,7 +299,7 @@ function crearMotorTC3() {
   // ---------- tema 5: muestreo por conglomerados ----------
   const CTX5 = [
     {prop: true, txt: (N, n) => `Una marca de bebidas quiere estimar el porcentaje de clientes de bares que conocen su nueva bebida sin azúcar. Entre los ${N} bares de la ciudad selecciona al azar ${n} y, en cada uno, pregunta a todos los clientes presentes a una hora concreta.`, m: "clientes presentes", y: "clientes que conocen la bebida", ytot: "el número total de clientes que conocen la bebida", mm: [8, 40], p: [0.2, 0.6]},
-    {prop: true, txt: (N, n) => `Una cadena de academias quiere estimar el porcentaje de alumnos que la conocieron por publicidad en redes sociales. De sus ${N} grupos de clase selecciona al azar ${n} y pregunta a todos los alumnos de cada grupo.`, m: "alumnos del grupo", y: "alumnos que la conocieron por redes sociales", ytot: "el número total de alumnos que la conocieron por redes sociales", mm: [10, 30], p: [0.25, 0.65]},
+    {prop: true, txt: (N, n) => `Una cadena de academias quiere estimar el porcentaje de estudiantes que la conocieron por publicidad en redes sociales. De sus ${N} grupos de clase selecciona al azar ${n} y pregunta a todos los estudiantes de cada grupo.`, m: "estudiantes del grupo", y: "estudiantes que la conocieron por redes sociales", ytot: "el número total de estudiantes que la conocieron por redes sociales", mm: [10, 30], p: [0.25, 0.65]},
     {prop: false, txt: (N, n) => `Una empresa de reparto quiere estimar el gasto medio por hogar en compras online en una ciudad dividida en ${N} manzanas. Selecciona al azar ${n} manzanas y anota el gasto mensual total en compras online de todos los hogares de cada manzana.`, m: "hogares de la manzana", y: "gasto total mensual (euros)", ytot: "el gasto mensual total en compras online de la ciudad", mm: [6, 24], mu: [60, 160], u: "euros por hogar"},
     {prop: false, txt: (N, n) => `Una cadena hotelera quiere estimar el gasto medio por cliente en el bar y la cafetería de sus hoteles. De los ${N} grupos turísticos alojados el último mes selecciona ${n} al azar y anota el gasto total de cada grupo.`, m: "personas del grupo", y: "gasto total del grupo (euros)", ytot: "el gasto total de todos los grupos", mm: [10, 45], mu: [20, 60], u: "euros por persona"},
   ];
@@ -590,7 +590,7 @@ function crearMotorTC3() {
     const fecha = `${f.getDate()}/${f.getMonth() + 1}/${f.getFullYear()}`;
     let h = `<div class="tc3-examen"><p class="tc3-titulo">EXAMEN FINAL ${conv} DE TÉCNICAS CUANTITATIVAS III. ${fecha}.${conSol ? " SOLUCIONES." : ""}</p>
       <p class="tc3-sub">Grado en Marketing e Investigación de Mercados · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada</p>
-      <table class="tc3-nombre"><tr><td>APELLIDOS, NOMBRE:</td><td>D.N.I.:</td></tr></table>
+      <table class="tc3-nombre"><tr><td style="width:58%">APELLIDOS, NOMBRE:</td><td style="width:24%">D.N.I.:</td><td>GRUPO:</td></tr></table>
       <p>Resuelva todos los ejercicios con un nivel de confianza del 95 %, z = 2.</p>
       <p class="tc3-meta">Duración: ${op.tiempo} minutos · Puntuación máxima: ${num(op.puntos)} puntos.${ex.euf ? ` El estudiantado de <b>Evaluación Única Final</b> debe responder además a la pregunta ${ex.preguntas.length + 1} (${num(op.euf.puntos)} puntos; ${op.euf.tiempo} minutos adicionales).` : ""}</p>`;
     h += ex.preguntas.map((q, i) => htmlPregunta(q, i + 1, conSol)).join("");

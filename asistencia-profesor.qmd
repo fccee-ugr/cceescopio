@@ -1,13 +1,16 @@
 ---
-title: "Control de asistencia (profesorado)"
-subtitle: "Técnicas Cuantitativas III · Pasa lista con un código que cambia cada 20 segundos y acumula la asistencia en Excel"
-toc: true
-toc-depth: 2
+title: "Control de asistencia"
+subtitle: "Para el profesorado · Sube tu lista, proyecta el QR y descarga el Excel con la asistencia acumulada"
+toc: false
 ---
 
-**Cómo funciona.** En clase proyectas un **código de 4 cifras que cambia cada 20 segundos** y un código QR. Los estudiantes lo escanean y escriben su DNI y el código que ven en ese momento. Así, un código enviado por mensaje a quien no está en el aula caduca en menos de un minuto. Después subes tu Excel con la lista de clase y CCEEscopio añade una columna por sesión y calcula las asistencias acumuladas. Al día siguiente subes ese mismo Excel y se añade la nueva sesión.
+**Cómo se usa, cada día de clase:**
 
-Los registros (DNI, hora y un identificador anónimo del dispositivo) se guardan **solo en una hoja de cálculo de Google que es tuya**. CCEEscopio no guarda nada; solo envía y lee los datos de esa hoja.
+1. **Sube tu Excel.** El primer día, tu lista de clase con una columna **DNI** (y, si quieres, el nombre y otros datos). Los demás días, **el último Excel de asistencia que te dio esta página**.
+2. Pulsa **Empezar a pasar lista** y proyecta la pantalla. Los estudiantes escanean el código QR con el móvil y escriben su DNI. Verás cómo se van marcando en la lista.
+3. Pulsa **Terminar y descargar el Excel**. Se añade una columna con la fecha de hoy (1 = asistió, 0 = no asistió) y se actualizan el total y el porcentaje de asistencia de cada estudiante.
+
+El código QR cambia cada 20 segundos, así que una foto del QR enviada a quien no está en clase deja de funcionar en unos 2 minutos. Tu Excel no sale de tu ordenador: solo se envían los DNI de los estudiantes que pasan lista.
 
 ```{ojs}
 //| echo: false
@@ -20,210 +23,163 @@ dniValido = (x) => {
 }
 llamar = async (url, datos, intentos = 4) => {
   for (let i = 0; i < intentos; i++) {
-    try {
-      const r = await fetch(url, {method: "POST", body: JSON.stringify(datos)});
-      return await r.json();
-    } catch (e) { if (i === intentos - 1) return {ok: false, error: "No se ha podido conectar. Comprueba la conexión e inténtalo de nuevo."}; await new Promise(r => setTimeout(r, 800 * (i + 1) + Math.random() * 700)); }
+    try { const r = await fetch(url, {method: "POST", body: JSON.stringify(datos)}); return await r.json(); }
+    catch (e) { if (i === intentos - 1) return {ok: false, error: "No se ha podido conectar. Comprueba la conexión e inténtalo de nuevo."}; await new Promise(r => setTimeout(r, 800 * (i + 1) + Math.random() * 700)); }
   }
 }
 ```
 
 ```{ojs}
 //| echo: false
-GS_CODIGO = "/**\n * Control de asistencia de CCEEscopio · servidor en Google Apps Script\n * ---------------------------------------------------------------------\n * Los registros se guardan SOLO en esta hoja de cálculo, que es del profesor.\n * Instalación (una sola vez):\n *  1. Crea una hoja de cálculo de Google (por ejemplo, «Asistencia TC3»).\n *  2. Menú Extensiones → Apps Script. Borra lo que haya y pega este código.\n *  3. Cambia CLAVE_PROFESOR por una clave tuya (no la compartas con los estudiantes).\n *  4. Implementar → Nueva implementación → Tipo: Aplicación web.\n *     Ejecutar como: «Yo». Quién tiene acceso: «Cualquier usuario».\n *  5. Autoriza los permisos y copia la URL que termina en /exec.\n *     Pégala en la página «Control de asistencia (profesorado)» de CCEEscopio.\n */\nconst CLAVE_PROFESOR = \"cambia-esta-clave\";\nconst VENTANA_SEG = 20;      // el código del proyector cambia cada 20 segundos\nconst VENTANAS_VALIDAS = 4;  // se acepta el código actual y los 3 anteriores (≈ 1 minuto para escribirlo)\nconst MAX_INTENTOS = 6;      // intentos fallidos por dispositivo y sesión\n\nfunction hoja_(nombre, cabecera) {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  let h = ss.getSheetByName(nombre);\n  if (!h) { h = ss.insertSheet(nombre); h.appendRow(cabecera); h.setFrozenRows(1); }\n  return h;\n}\nconst sesiones_ = () => hoja_(\"Sesiones\", [\"Sesión\", \"Secreto\", \"Asignatura y grupo\", \"Modo\", \"Creada\", \"Abierta hasta\"]);\nconst registros_ = () => hoja_(\"Registros\", [\"Fecha y hora\", \"Sesión\", \"DNI\", \"Dispositivo\"]);\nconst json_ = (o) => ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);\n\nfunction codigo_(secreto, w) {\n  const b = Utilities.computeHmacSha256Signature(String(w), secreto);\n  const n = (((b[0] & 255) << 24) | ((b[1] & 255) << 16) | ((b[2] & 255) << 8) | (b[3] & 255)) >>> 0;\n  return String(n % 10000).padStart(4, \"0\");\n}\nfunction dni_(x) {\n  const s = String(x || \"\").toUpperCase().replace(/[^0-9A-Z]/g, \"\");\n  const L = \"TRWAGMYFPDXBNJZSQVHLCKE\";\n  let m = s.match(/^(\\d{8})([A-Z])$/);\n  if (m) return L[+m[1] % 23] === m[2] ? s : null;\n  m = s.match(/^([XYZ])(\\d{7})([A-Z])$/);\n  if (m) return L[+(\"XYZ\".indexOf(m[1]) + m[2]) % 23] === m[3] ? s : null;\n  return null;\n}\nfunction buscarSesion_(id) {\n  const v = sesiones_().getDataRange().getValues();\n  for (let i = 1; i < v.length; i++) if (v[i][0] === id) return {fila: i + 1, id: v[i][0], secreto: v[i][1], grupo: v[i][2], modo: v[i][3], creada: new Date(v[i][4]), hasta: new Date(v[i][5])};\n  return null;\n}\nfunction nuevoId_() {\n  const a = \"ABCDEFGHJKLMNPQRSTUVWXYZ23456789\";\n  let s = \"\"; for (let i = 0; i < 4; i++) s += a[Math.floor(Math.random() * a.length)];\n  return \"TC3-\" + s;\n}\n\nfunction doGet() { return json_({ok: true, servicio: \"asistencia CCEEscopio\", hora: Date.now()}); }\n\nfunction doPost(e) {\n  let d;\n  try { d = JSON.parse(e.postData.contents); } catch (err) { return json_({ok: false, error: \"Petición no válida.\"}); }\n  const ahora = new Date();\n  const esProfesor = d.clave === CLAVE_PROFESOR;\n\n  if (d.accion === \"marcar\") {\n    const s = buscarSesion_(String(d.sesion || \"\").toUpperCase().trim());\n    if (!s) return json_({ok: false, error: \"No existe esa sesión. Revisa el código de sesión.\"});\n    if (ahora >= s.hasta) return json_({ok: false, error: \"La sesión ya está cerrada.\"});\n    const dni = dni_(d.dni);\n    if (!dni) return json_({ok: false, error: \"El DNI o NIE no es válido (revisa los números y la letra).\"});\n    const disp = String(d.dispositivo || \"\").slice(0, 60);\n    const cache = CacheService.getScriptCache();\n    const kInt = \"int_\" + s.id + \"_\" + disp, kDni = \"dni_\" + s.id + \"_\" + dni, kDisp = \"disp_\" + s.id + \"_\" + disp;\n    const fallos = +(cache.get(kInt) || 0);\n    if (fallos >= MAX_INTENTOS) return json_({ok: false, error: \"Demasiados intentos fallidos desde este dispositivo.\"});\n    if (cache.get(kDni)) return json_({ok: true, repetido: true, mensaje: \"Tu asistencia ya estaba registrada.\"});\n    const otro = cache.get(kDisp);\n    if (otro && otro !== dni) return json_({ok: false, error: \"Desde este dispositivo ya se ha registrado otro DNI en esta sesión.\"});\n    const cod = String(d.codigo || \"\").replace(/\\D/g, \"\").padStart(4, \"0\");\n    let valido = false;\n    if (s.modo === \"fijo\") valido = cod === codigo_(s.secreto, \"fijo\");\n    else {\n      const w = Math.floor(ahora.getTime() / 1000 / VENTANA_SEG);\n      for (let k = -1; k < VENTANAS_VALIDAS && !valido; k++) valido = cod === codigo_(s.secreto, w - k);\n    }\n    if (!valido) { cache.put(kInt, String(fallos + 1), 21600); return json_({ok: false, error: \"El código no es correcto o ha caducado. Escribe el que aparece ahora en la pantalla.\"}); }\n    registros_().appendRow([ahora, s.id, dni, disp]);\n    cache.put(kDni, \"1\", 21600); cache.put(kDisp, dni, 21600);\n    return json_({ok: true, mensaje: \"Asistencia registrada.\", hora: ahora.getTime(), grupo: s.grupo});\n  }\n\n  if (!esProfesor) return json_({ok: false, error: \"Clave de profesor incorrecta.\"});\n\n  if (d.accion === \"crear\") {\n    const min = Math.max(1, Math.min(240, +d.minutos || 15));\n    let id; do { id = nuevoId_(); } while (buscarSesion_(id));\n    const secreto = Utilities.getUuid(), modo = d.modo === \"fijo\" ? \"fijo\" : \"rotatorio\";\n    const hasta = new Date(ahora.getTime() + min * 60000);\n    sesiones_().appendRow([id, secreto, String(d.grupo || \"\").slice(0, 80), modo, ahora, hasta]);\n    return json_({ok: true, id, secreto, modo, hasta: hasta.getTime(), ahora: ahora.getTime(), ventana: VENTANA_SEG});\n  }\n  if (d.accion === \"cerrar\" || d.accion === \"ampliar\") {\n    const s = buscarSesion_(d.id); if (!s) return json_({ok: false, error: \"Sesión no encontrada.\"});\n    const hasta = d.accion === \"cerrar\" ? ahora : new Date(Math.max(ahora.getTime(), s.hasta.getTime()) + (+d.minutos || 5) * 60000);\n    sesiones_().getRange(s.fila, 6).setValue(hasta);\n    return json_({ok: true, hasta: hasta.getTime()});\n  }\n  if (d.accion === \"sesiones\") {\n    const v = sesiones_().getDataRange().getValues().slice(1);\n    const n = {}; registros_().getDataRange().getValues().slice(1).forEach(r => n[r[1]] = (n[r[1]] || 0) + 1);\n    return json_({ok: true, sesiones: v.map(r => ({id: r[0], grupo: r[2], modo: r[3], creada: new Date(r[4]).getTime(), hasta: new Date(r[5]).getTime(), registros: n[r[0]] || 0}))});\n  }\n  if (d.accion === \"lista\") {\n    const ids = [].concat(d.ids || []).map(x => String(x).toUpperCase().trim());\n    const ses = ids.map(buscarSesion_).filter(Boolean).map(s => ({id: s.id, grupo: s.grupo, creada: s.creada.getTime(), hasta: s.hasta.getTime()}));\n    const regs = registros_().getDataRange().getValues().slice(1).filter(r => ids.indexOf(r[1]) >= 0)\n      .map(r => ({hora: new Date(r[0]).getTime(), sesion: r[1], dni: r[2], dispositivo: r[3]}));\n    return json_({ok: true, sesiones: ses, registros: regs});\n  }\n  return json_({ok: false, error: \"Acción desconocida.\"});\n}\n"
+GS_CODIGO = "/**\n * Control de asistencia de CCEEscopio · almacén de registros en Google Apps Script\n * --------------------------------------------------------------------------------\n * Solo hace falta instalarlo UNA VEZ (lo hace quien administra CCEEscopio):\n *  1. Crea una hoja de cálculo de Google (por ejemplo, «Asistencia CCEEscopio»).\n *  2. Menú Extensiones → Apps Script. Borra lo que haya, pega este código y guarda.\n *  3. Implementar → Nueva implementación → Tipo: Aplicación web.\n *     Ejecutar como: «Yo». Quién tiene acceso: «Cualquier usuario».\n *  4. Copia la URL que termina en /exec y pégala en tools/make_asistencia.py (ASISTENCIA_URL).\n * Cada sesión tiene un secreto que solo conoce el ordenador del profesor que la abrió:\n * sin él no se puede ver la lista de asistentes.\n */\nconst VENTANA_SEG = 20;       // el QR del proyector cambia cada 20 segundos\nconst VALIDEZ_VENTANAS = 6;   // un QR sirve durante unos 2 minutos después de escanearlo\nconst DURACION_MAX_H = 4;     // una sesión se cierra sola a las 4 horas\n\nfunction hoja_(nombre, cabecera) {\n  const ss = SpreadsheetApp.getActiveSpreadsheet();\n  let h = ss.getSheetByName(nombre);\n  if (!h) { h = ss.insertSheet(nombre); h.appendRow(cabecera); h.setFrozenRows(1); }\n  return h;\n}\nconst sesiones_ = () => hoja_(\"Sesiones\", [\"Sesión\", \"Secreto\", \"Grupo\", \"Creada\", \"Abierta hasta\"]);\nconst registros_ = () => hoja_(\"Registros\", [\"Fecha y hora\", \"Sesión\", \"DNI\", \"Dispositivo\"]);\nconst json_ = (o) => ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);\n\nfunction codigo_(secreto, w) {\n  const b = Utilities.computeHmacSha256Signature(String(w), secreto);\n  const n = (((b[0] & 255) << 24) | ((b[1] & 255) << 16) | ((b[2] & 255) << 8) | (b[3] & 255)) >>> 0;\n  return String(n % 1000000).padStart(6, \"0\");\n}\nfunction dni_(x) {\n  const s = String(x || \"\").toUpperCase().replace(/[^0-9A-Z]/g, \"\");\n  const L = \"TRWAGMYFPDXBNJZSQVHLCKE\";\n  let m = s.match(/^(\\d{8})([A-Z])$/);\n  if (m) return L[+m[1] % 23] === m[2] ? s : null;\n  m = s.match(/^([XYZ])(\\d{7})([A-Z])$/);\n  if (m) return L[+(\"XYZ\".indexOf(m[1]) + m[2]) % 23] === m[3] ? s : null;\n  return null;\n}\nfunction buscarSesion_(id) {\n  const v = sesiones_().getDataRange().getValues();\n  for (let i = v.length - 1; i >= 1; i--) if (v[i][0] === id) return {fila: i + 1, id: v[i][0], secreto: v[i][1], grupo: v[i][2], creada: new Date(v[i][3]), hasta: new Date(v[i][4])};\n  return null;\n}\nfunction nuevoId_() {\n  const a = \"ABCDEFGHJKLMNPQRSTUVWXYZ23456789\";\n  let s = \"\"; for (let i = 0; i < 8; i++) s += a[Math.floor(Math.random() * a.length)];\n  return s;\n}\n\nfunction doGet() { return json_({ok: true, servicio: \"asistencia CCEEscopio\", hora: Date.now()}); }\n\nfunction doPost(e) {\n  let d;\n  try { d = JSON.parse(e.postData.contents); } catch (err) { return json_({ok: false, error: \"Petición no válida.\"}); }\n  const ahora = new Date();\n\n  if (d.accion === \"marcar\") {\n    const s = buscarSesion_(String(d.sesion || \"\"));\n    if (!s) return json_({ok: false, error: \"Este código QR no es válido. Vuelve a escanear el de la pantalla.\"});\n    if (ahora >= s.hasta) return json_({ok: false, error: \"El profesor ya ha terminado de pasar lista.\"});\n    const dni = dni_(d.dni);\n    if (!dni) return json_({ok: false, error: \"El DNI o NIE no es válido (revisa los números y la letra).\"});\n    const w = Math.floor(ahora.getTime() / 1000 / VENTANA_SEG), cod = String(d.codigo || \"\");\n    let valido = false;\n    for (let k = -1; k < VALIDEZ_VENTANAS && !valido; k++) valido = cod === codigo_(s.secreto, w - k);\n    if (!valido) return json_({ok: false, caducado: true, error: \"El código QR ha caducado. Vuelve a escanear el que aparece ahora en la pantalla.\"});\n    const disp = String(d.dispositivo || \"\").slice(0, 60);\n    const cache = CacheService.getScriptCache();\n    if (cache.get(\"dni_\" + s.id + \"_\" + dni)) return json_({ok: true, mensaje: \"Tu asistencia ya estaba registrada.\"});\n    const otro = cache.get(\"disp_\" + s.id + \"_\" + disp);\n    if (otro && otro !== dni) return json_({ok: false, error: \"Desde este móvil ya se ha registrado otro DNI en esta clase.\"});\n    registros_().appendRow([ahora, s.id, dni, disp]);\n    cache.put(\"dni_\" + s.id + \"_\" + dni, \"1\", 21600); cache.put(\"disp_\" + s.id + \"_\" + disp, dni, 21600);\n    return json_({ok: true, mensaje: \"Asistencia registrada.\", hora: ahora.getTime(), grupo: s.grupo});\n  }\n\n  if (d.accion === \"crear\") {\n    let id; do { id = nuevoId_(); } while (buscarSesion_(id));\n    const secreto = Utilities.getUuid(), hasta = new Date(ahora.getTime() + DURACION_MAX_H * 3600000);\n    sesiones_().appendRow([id, secreto, String(d.grupo || \"\").slice(0, 80), ahora, hasta]);\n    return json_({ok: true, id, secreto, ahora: ahora.getTime(), ventana: VENTANA_SEG});\n  }\n\n  // Ver la lista o cerrar la sesión: solo con el secreto de la sesión\n  const s = buscarSesion_(String(d.id || \"\"));\n  if (!s || s.secreto !== d.secreto) return json_({ok: false, error: \"Sesión no encontrada.\"});\n  if (d.accion === \"cerrar\") sesiones_().getRange(s.fila, 5).setValue(ahora);\n  if (d.accion === \"lista\" || d.accion === \"cerrar\") {\n    const regs = registros_().getDataRange().getValues().slice(1).filter(r => r[1] === s.id)\n      .map(r => ({hora: new Date(r[0]).getTime(), dni: r[2], dispositivo: r[3]}));\n    return json_({ok: true, registros: regs, creada: s.creada.getTime()});\n  }\n  return json_({ok: false, error: \"Acción desconocida.\"});\n}\n"
 XLSX = { try { return await import("https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs"); } catch (e) { return require("xlsx@0.18.5/dist/xlsx.full.min.js"); } }
 qrcodeLib = require("qrcode-generator@1.4.4").catch(() => null)
-leerConf = () => { try { return JSON.parse(localStorage.getItem("ccee-asis-conf") ?? "{}"); } catch (e) { return {}; } }
+urlServicio = { let u = URL_CONFIG; try { u = u || localStorage.getItem("ccee-asis-url") || ""; } catch (e) {} return u; }
 codigoDe = async (secreto, w) => {
   const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(secreto), {name: "HMAC", hash: "SHA-256"}, false, ["sign"]);
   const b = new Uint8Array(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(String(w))));
-  return String((((b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]) >>> 0) % 10000).padStart(4, "0");
+  return String((((b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]) >>> 0) % 1000000).padStart(6, "0");
 }
 claveDni = (x) => { const s = String(x ?? "").toUpperCase().replace(/[^0-9A-Z]/g, ""); return /^[0-9XYZ]\d{7}[A-Z]$/.test(s) ? s.slice(0, 8) : /^\d{1,8}$/.test(s) ? s.padStart(8, "0") : s; }
+esColFecha = (c) => /^\d{2}\/\d{2}\/\d{4}( \(\d+\))?$/.test(c)
 ```
-
-## 1. Configuración (una sola vez) {#configuracion}
-
-::: {.callout-note collapse="true" appearance="simple"}
-## Instrucciones para crear tu hoja de asistencia (10 minutos)
-
-1. Crea una hoja de cálculo de Google, por ejemplo «Asistencia TC3».
-2. En la hoja, abre **Extensiones → Apps Script**, borra el contenido y pega el código que descargas con el botón de abajo.
-3. En la primera línea, cambia `cambia-esta-clave` por una **clave de profesor** que solo sepas tú.
-4. Pulsa **Implementar → Nueva implementación**, tipo **Aplicación web**. «Ejecutar como»: **Yo**. «Quién tiene acceso»: **Cualquier usuario**. Autoriza los permisos que pide Google.
-5. Copia la **URL de la aplicación web** (termina en `/exec`) y pégala abajo junto con tu clave.
-
-Si con tu cuenta de la UGR no aparece la opción «Cualquier usuario», haz la implementación con una cuenta personal de Gmail: los estudiantes tienen que poder acceder sin iniciar sesión. Si más adelante cambias el código, usa **Implementar → Gestionar implementaciones → Editar → Nueva versión** para que la URL no cambie.
-:::
 
 ```{ojs}
 //| echo: false
-DOM.download(() => new Blob([GS_CODIGO], {type: "text/plain;charset=utf-8"}), "asistencia_apps_script.gs", "⬇ Código para Apps Script")
-viewof conf = {
-  const c = leerConf();
-  const f = html`<form class="asis-conf">
-    <label>URL de la aplicación web <input name="url" size="60" placeholder="https://script.google.com/macros/s/…/exec" value="${c.url ?? ""}"></label>
-    <label>Clave de profesor <input name="clave" type="password" value="${c.clave ?? ""}"></label>
-    <label class="asis-check"><input type="checkbox" name="recordar"> Recordar en este navegador</label>
-    <button type="submit" class="copiar">Guardar y comprobar la conexión</button> <span class="asis-estado"></span></form>`;
-  f.value = c; f.recordar.checked = !!c.url;
-  f.onsubmit = async (e) => {
-    e.preventDefault();
-    const v = {url: f.url.value.trim(), clave: f.clave.value};
-    try { if (f.recordar.checked) localStorage.setItem("ccee-asis-conf", JSON.stringify(v)); else localStorage.removeItem("ccee-asis-conf"); } catch (err) {}
-    const est = f.querySelector(".asis-estado"); est.textContent = "Comprobando…";
-    const r = await llamar(v.url, {accion: "sesiones", clave: v.clave}, 1);
-    est.textContent = r.ok ? `✅ Conectado (${r.sesiones.length} sesiones guardadas).` : `❌ ${r.error}`;
-    f.value = v; f.dispatchEvent(new Event("input", {bubbles: true}));
-  };
-  return f;
+viewof excelLista = Inputs.file({label: "1. Tu Excel (lista de clase o último Excel de asistencia)", accept: ".xlsx,.xls,.csv,.ods"})
+viewof grupoAs = Inputs.text({label: "Asignatura y grupo (opcional)", value: "Técnicas Cuantitativas III", width: 360})
+```
+
+```{ojs}
+//| echo: false
+lista = {
+  if (!excelLista) return null;
+  const wb = XLSX.read(await excelLista.arrayBuffer(), {type: "array"});
+  const filas = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval: ""});
+  const cab = filas.length ? Object.keys(filas[0]) : [];
+  const colDni = cab.find(c => /\b(dni|nie|nif|documento)\b/i.test(c)) ?? cab.find(c => filas.filter(f => /^[0-9XYZ]\d{7}[A-Z]?$/i.test(String(f[c]).replace(/[\s.-]/g, ""))).length > filas.length / 2);
+  const colNombre = cab.filter(c => /nombre|apellido|estudiante/i.test(c));
+  return {filas, cab, colDni, colNombre, sesiones: cab.filter(esColFecha).length};
+}
+{
+  if (!lista) return html`<p class="pending">Sube tu Excel para empezar. Si aún no tienes ninguno, prepara uno con una columna <b>DNI</b> y otra con el nombre.</p>`;
+  if (!lista.colDni) return html`<p class="pending">❌ No encuentro la columna del DNI en tu Excel. Ponle de título «DNI».</p>`;
+  return html`<p>✅ <b>${lista.filas.length} estudiantes</b> en la lista${lista.sesiones ? `, con ${lista.sesiones} día(s) de asistencia anteriores` : ""}.</p>${urlServicio ? "" : html`<p class="pending">Falta la configuración inicial del servicio (al final de esta página).</p>`}`;
 }
 ```
 
-## 2. Pasar lista en clase {#pasar-lista}
-
 ```{ojs}
 //| echo: false
-viewof sesionForm = Inputs.form({
-  grupo: Inputs.text({label: "Asignatura y grupo", value: "Técnicas Cuantitativas III · Grupo A", width: 360}),
-  minutos: Inputs.range([2, 60], {label: "Minutos abierta", value: 10, step: 1}),
-  modo: Inputs.radio(new Map([["Código que cambia cada 20 segundos (recomendado)", "rotatorio"], ["Código fijo (para decirlo en voz alta)", "fijo"]]), {label: "Tipo de código", value: "rotatorio"})
-}, {submit: "▶ Abrir sesión y proyectar el código"})
+viewof empezar = Inputs.button("▶ 2. Empezar a pasar lista", {value: 0, reduce: v => v + 1, disabled: !lista?.colDni || !urlServicio})
 ```
 
 ```{ojs}
 //| echo: false
 {
-  if (!sesionForm || !conf?.url) return html`<p class="pending">${conf?.url ? "Elige las opciones y pulsa «Abrir sesión»." : "Primero guarda la configuración (apartado 1)."}</p>`;
-  const r = await llamar(conf.url, {accion: "crear", clave: conf.clave, ...sesionForm}, 2);
-  if (!r.ok) return html`<p class="pending">❌ ${r.error}</p>`;
-  const desfase = r.ahora - Date.now();
-  let hasta = r.hasta;
-  const enlace = `${location.href.replace(/asistencia-profesor\.html.*$/, "asistencia.html")}?s=${r.id}${URL_CONFIG ? "" : "&u=" + encodeURIComponent(conf.url)}`;
+  if (!empezar || !lista?.colDni) return html``;
+  // Recupera la sesión si se ha recargado la página a mitad de clase
+  let ses = null; try { ses = JSON.parse(localStorage.getItem("ccee-asis-sesion") ?? "null"); } catch (e) {}
+  if (!ses || Date.now() - ses.local > 4 * 3600000) {
+    const r = await llamar(urlServicio, {accion: "crear", grupo: grupoAs}, 3);
+    if (!r.ok) return html`<p class="pending">❌ ${r.error}</p>`;
+    ses = {...r, local: Date.now(), desfase: r.ahora - Date.now()};
+    try { localStorage.setItem("ccee-asis-sesion", JSON.stringify(ses)); } catch (e) {}
+  }
+  const base = location.href.replace(/asistencia-profesor\.html.*$/, "asistencia.html");
+  const nombre = (f) => lista.colNombre.map(c => f[c]).filter(Boolean).join(" ") || f[lista.colDni];
+  const indice = new Map(lista.filas.map(f => [claveDni(f[lista.colDni]), f]));
   const panel = html`<div class="asis-panel">
-    <div class="asis-panel-cab"><span>${sesionForm.grupo}</span><span class="asis-reloj"></span></div>
+    <div class="asis-panel-cab"><span>${grupoAs}</span><span class="asis-cuenta">0 de ${lista.filas.length}</span></div>
     <div class="asis-panel-cuerpo">
-      <div class="asis-qr"></div>
-      <div><p class="asis-et">Sesión</p><p class="asis-sesion">${r.id}</p>
-        <p class="asis-et">Código</p><p class="asis-grande">····</p><div class="asis-barra"><div></div></div>
-        <p class="asis-cuenta">0 registros</p></div>
+      <div><div class="asis-qr"></div><div class="asis-barra"><div></div></div><p class="asis-url">Escanea el código con la cámara del móvil</p></div>
+      <ol class="asis-presentes"></ol>
     </div>
-    <p class="asis-url">Escanea el QR o entra en <b>${enlace.replace(/\?.*$/, "")}</b> y escribe la sesión, el código y tu DNI.</p>
-    <div class="graf-botones"><button class="copiar asis-full">⛶ Pantalla completa</button><button class="copiar asis-mas">+5 minutos</button><button class="copiar asis-cerrar">⏹ Cerrar la sesión</button><button class="copiar asis-copiar">📋 Copiar enlace</button></div></div>`;
+    <div class="graf-botones"><button class="copiar asis-full">⛶ Pantalla completa</button><button class="asis-boton asis-fin">⏹ 3. Terminar y descargar el Excel</button></div>
+    <p class="asis-final"></p></div>`;
   const $ = (s) => panel.querySelector(s);
-  if (qrcodeLib) { const qr = qrcodeLib(0, "M"); qr.addData(enlace); qr.make(); $(".asis-qr").innerHTML = qr.createSvgTag({cellSize: 6, margin: 2, scalable: true}); }
-  else $(".asis-qr").innerHTML = `<p class="nota">No se ha podido cargar el generador de QR.</p>`;
-  let cerrada = false;
-  const tic = async () => {
-    if (!panel.isConnected) return;
-    const ahora = Date.now() + desfase, w = Math.floor(ahora / 1000 / r.ventana);
-    const restante = Math.max(0, hasta - ahora);
-    $(".asis-reloj").textContent = restante > 0 ? `Abierta: ${Math.floor(restante / 60000)}:${String(Math.floor(restante / 1000) % 60).padStart(2, "0")}` : "Sesión cerrada";
-    if (restante <= 0 || cerrada) { $(".asis-grande").textContent = "—"; $(".asis-barra div").style.width = "0"; return; }
-    $(".asis-grande").textContent = await codigoDe(r.secreto, r.modo === "fijo" ? "fijo" : w);
-    $(".asis-barra div").style.width = r.modo === "fijo" ? "100%" : `${100 * (1 - ((ahora / 1000) % r.ventana) / r.ventana)}%`;
+  let regs = [], terminado = false, ultimoW = null;
+  const pintarQR = async () => {
+    if (!panel.isConnected || terminado) return;
+    const ahora = Date.now() + ses.desfase, w = Math.floor(ahora / 1000 / ses.ventana);
+    $(".asis-barra div").style.width = `${100 * (1 - ((ahora / 1000) % ses.ventana) / ses.ventana)}%`;
+    if (w === ultimoW) return; ultimoW = w;
+    const enlace = `${base}?s=${ses.id}&c=${await codigoDe(ses.secreto, w)}${URL_CONFIG ? "" : "&u=" + encodeURIComponent(urlServicio)}`;
+    if (qrcodeLib) { const qr = qrcodeLib(0, "M"); qr.addData(enlace); qr.make(); $(".asis-qr").innerHTML = qr.createSvgTag({cellSize: 6, margin: 2, scalable: true}); }
+    else $(".asis-qr").innerHTML = `<p class="pending">No se ha podido cargar el generador de QR. Comprueba la conexión y recarga la página.</p>`;
   };
-  const cuenta = async () => { if (!panel.isConnected) return; const l = await llamar(conf.url, {accion: "lista", clave: conf.clave, ids: [r.id]}, 1); if (l.ok) $(".asis-cuenta").textContent = `${l.registros.length} registro${l.registros.length === 1 ? "" : "s"}`; };
-  const t1 = setInterval(tic, 500), t2 = setInterval(cuenta, 10000);
+  const pintarLista = () => {
+    const vistos = [...new Map(regs.map(x => [claveDni(x.dni), x])).values()];
+    const enLista = vistos.filter(x => indice.has(claveDni(x.dni)));
+    $(".asis-cuenta").textContent = `${enLista.length} de ${lista.filas.length}`;
+    $(".asis-presentes").innerHTML = vistos.slice().reverse().map(x => { const f = indice.get(claveDni(x.dni)); return `<li class="${f ? "" : "fuera"}">${f ? nombre(f) : `${x.dni} (no está en la lista)`}</li>`; }).join("");
+  };
+  const actualizar = async () => { if (!panel.isConnected || terminado) return; const l = await llamar(urlServicio, {accion: "lista", id: ses.id, secreto: ses.secreto}, 1); if (l.ok) { regs = l.registros; pintarLista(); } };
+  const t1 = setInterval(pintarQR, 500), t2 = setInterval(actualizar, 5000);
   invalidation.then(() => { clearInterval(t1); clearInterval(t2); });
-  tic();
+  pintarQR(); actualizar();
   $(".asis-full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : panel.requestFullscreen?.();
-  $(".asis-mas").onclick = async () => { const x = await llamar(conf.url, {accion: "ampliar", clave: conf.clave, id: r.id, minutos: 5}, 2); if (x.ok) { hasta = x.hasta; cerrada = false; } };
-  $(".asis-cerrar").onclick = async () => { const x = await llamar(conf.url, {accion: "cerrar", clave: conf.clave, id: r.id}, 2); if (x.ok) { hasta = x.hasta; cerrada = true; cuenta(); } };
-  $(".asis-copiar").onclick = () => navigator.clipboard.writeText(enlace).then(() => $(".asis-copiar").textContent = "✔ Copiado");
-  window.cceeEvento && window.cceeEvento("asistencia/sesion", "Sesión de asistencia", true);
+  $(".asis-fin").onclick = async () => {
+    $(".asis-fin").disabled = true; $(".asis-final").textContent = "Cerrando la lista…";
+    const l = await llamar(urlServicio, {accion: "cerrar", id: ses.id, secreto: ses.secreto}, 4);
+    if (!l.ok) { $(".asis-fin").disabled = false; $(".asis-final").textContent = "❌ " + l.error + " Vuelve a pulsar «Terminar»."; return; }
+    terminado = true; regs = l.registros; pintarLista();
+    if (document.fullscreenElement) document.exitFullscreen();
+    try { localStorage.removeItem("ccee-asis-sesion"); } catch (e) {}
+    $(".asis-qr").innerHTML = `<p class="asis-grande">✔</p>`; $(".asis-barra").remove();
+    // Excel acumulado: nueva columna con la fecha de hoy
+    const fecha = new Date(l.creada).toLocaleDateString("es-ES", {day: "2-digit", month: "2-digit", year: "numeric"});
+    let col = fecha, k = 2; while (lista.cab.includes(col)) col = `${fecha} (${k++})`;
+    const presentes = new Set(regs.map(x => claveDni(x.dni)));
+    const filas = lista.filas.map(f => {
+      const g = {...f}; delete g["Total asistencias"]; delete g["% asistencia"];
+      g[col] = presentes.has(claveDni(f[lista.colDni])) ? 1 : 0;
+      const cols = Object.keys(g).filter(esColFecha);
+      g["Total asistencias"] = cols.reduce((a, c) => a + (+g[c] || 0), 0);
+      g["% asistencia"] = Math.round(1000 * g["Total asistencias"] / cols.length) / 10;
+      return g;
+    });
+    const fuera = [...new Set(regs.map(x => x.dni))].filter(d => !lista.filas.some(f => claveDni(f[lista.colDni]) === claveDni(d)));
+    const porDisp = d3.groups(regs, x => x.dispositivo).filter(([, xs]) => new Set(xs.map(x => x.dni)).size > 1);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(filas), "Asistencia");
+    const inc = [...fuera.map(d => ({Aviso: "Ha pasado lista pero no está en tu Excel", DNI: d, Fecha: col})), ...porDisp.flatMap(([, xs]) => xs.map(x => ({Aviso: "Varios DNI desde el mismo móvil", DNI: x.dni, Fecha: col})))];
+    if (inc.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(inc), "Avisos");
+    const blob = new Blob([XLSX.write(wb, {bookType: "xlsx", type: "array"})], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+    const nombreFich = `asistencia_${fecha.split("/").reverse().join("-")}.xlsx`;
+    const a = DOM.download(blob, nombreFich, `⬇ Descargar de nuevo ${nombreFich}`);
+    const enlaceAuto = document.createElement("a"); enlaceAuto.href = URL.createObjectURL(blob); enlaceAuto.download = nombreFich; enlaceAuto.click();
+    $(".asis-final").innerHTML = `✅ Asistencia del ${fecha}: <b>${presentes.size - fuera.length}</b> de ${lista.filas.length} estudiantes. Se ha descargado <b>${nombreFich}</b>: súbelo el próximo día de clase.${inc.length ? ` ⚠️ Revisa la hoja «Avisos» (${inc.length}).` : ""} `;
+    $(".asis-final").append(a);
+    window.cceeEvento && window.cceeEvento("asistencia/terminar", "Asistencia terminada", true);
+  };
   return panel;
 }
 ```
 
-## 3. Informe y asistencia acumulada en Excel {#informe}
+::: {.callout-note collapse="true" appearance="simple"}
+## Configuración (solo la primera vez, la hace quien administra la web)
 
-Sube tu Excel con la lista de clase, con una columna llamada **DNI**. Los demás datos (nombre, grupo…) se conservan. Si ya has generado informes otros días, sube el **último Excel que te dio CCEEscopio**: ya tiene las sesiones anteriores, y solo se añaden las nuevas. Sin Excel, obtienes solo la lista de asistentes de las sesiones elegidas.
+Los registros se guardan en una hoja de cálculo de Google. Para crearla:
 
-```{ojs}
-//| echo: false
-viewof refrescar = Inputs.button("↻ Actualizar la lista de sesiones", {value: 0, reduce: v => v + 1})
-sesionesGuardadas = {
-  refrescar;
-  if (!conf?.url) return [];
-  const r = await llamar(conf.url, {accion: "sesiones", clave: conf.clave}, 2);
-  return r.ok ? r.sesiones.sort((a, b) => b.creada - a.creada) : [];
-}
-viewof excelLista = Inputs.file({label: "Excel o CSV de la lista de clase", accept: ".xlsx,.xls,.csv,.ods"})
-viewof sesionesSel = Inputs.select(new Map(sesionesGuardadas.map(s => [`${new Date(s.creada).toLocaleString("es-ES", {dateStyle: "short", timeStyle: "short"})} · ${s.id} · ${s.grupo} · ${s.registros} registros`, s.id])),
-  {label: "Sesiones que quieres añadir (Ctrl o ⌘ para varias)", multiple: true, size: Math.min(8, Math.max(3, sesionesGuardadas.length)), value: sesionesGuardadas.slice(0, 1).map(s => s.id)})
-viewof sesionesTxt = Inputs.text({label: "…o escribe los códigos de sesión", placeholder: "TC3-K7QM, TC3-P2RD", width: 360})
-viewof generarInf = Inputs.button("📊 Generar el informe", {value: 0, reduce: v => v + 1})
-```
+1. Crea una hoja de cálculo de Google y abre **Extensiones → Apps Script**.
+2. Borra lo que haya, pega el código que descargas con el botón de abajo y guarda.
+3. **Implementar → Nueva implementación**, tipo **Aplicación web**, «Ejecutar como»: **Yo**, «Quién tiene acceso»: **Cualquier usuario**. Autoriza los permisos.
+4. Copia la URL que termina en `/exec` y pégala aquí. Para que nadie más tenga que hacerlo, ponla también en `tools/make_asistencia.py` (`ASISTENCIA_URL`) y vuelve a generar la web.
 
 ```{ojs}
 //| echo: false
-informe = {
-  if (!generarInf) return null;
-  if (!conf?.url) return {error: "Primero guarda la configuración (apartado 1)."};
-  const ids = [...new Set([...sesionesSel, ...sesionesTxt.toUpperCase().split(/[\s,;]+/).filter(Boolean)])];
-  if (!ids.length) return {error: "Elige al menos una sesión."};
-  const r = await llamar(conf.url, {accion: "lista", clave: conf.clave, ids}, 3);
-  if (!r.ok) return {error: r.error};
-  const nombreCol = (s) => `${new Date(s.creada).toLocaleDateString("es-ES", {day: "2-digit", month: "2-digit", year: "numeric"})} (${s.id})`;
-  const ses = r.sesiones.sort((a, b) => a.creada - b.creada);
-  // lista de clase
-  let filas = [], colDni = null, cab = [];
-  if (excelLista) {
-    const wb = XLSX.read(await excelLista.arrayBuffer());
-    filas = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval: ""});
-    cab = filas.length ? Object.keys(filas[0]) : [];
-    colDni = cab.find(c => /\b(dni|nie|nif|documento)\b/i.test(c)) ?? cab.find(c => filas.filter(f => /^[0-9XYZ]\d{7}[A-Z]?$/i.test(String(f[c]).replace(/[\s.-]/g, ""))).length > filas.length / 2);
-    if (!colDni) return {error: "No encuentro la columna del DNI en el Excel. Llámala «DNI»."};
-  }
-  const patronSes = /^\d{2}\/\d{2}\/\d{4} \([A-Z0-9-]+\)$/;
-  const presentes = new Map(ses.map(s => [s.id, new Set(r.registros.filter(x => x.sesion === s.id).map(x => claveDni(x.dni)))]));
-  const nuevas = ses.filter(s => !cab.includes(nombreCol(s)));
-  const enLista = new Set(filas.map(f => claveDni(f[colDni])));
-  filas.forEach(f => {
-    delete f["Total asistencias"]; delete f["% asistencia"];
-    nuevas.forEach(s => f[nombreCol(s)] = presentes.get(s.id).has(claveDni(f[colDni])) ? 1 : 0);
-    const cols = Object.keys(f).filter(c => patronSes.test(c));
-    f["Total asistencias"] = cols.reduce((a, c) => a + (+f[c] || 0), 0);
-    f["% asistencia"] = cols.length ? Math.round(1000 * f["Total asistencias"] / cols.length) / 10 : 0;
-  });
-  // incidencias
-  const inc = [];
-  if (excelLista) r.registros.filter(x => !enLista.has(claveDni(x.dni))).forEach(x => inc.push({Tipo: "DNI que no está en la lista de clase", Sesión: x.sesion, DNI: x.dni, Hora: new Date(x.hora).toLocaleTimeString("es-ES")}));
-  d3.groups(r.registros, x => x.sesion, x => x.dispositivo).forEach(([s, g]) => g.forEach(([d, xs]) => { if (new Set(xs.map(x => x.dni)).size > 1) xs.forEach(x => inc.push({Tipo: "Varios DNI desde el mismo dispositivo", Sesión: s, DNI: x.dni, Hora: new Date(x.hora).toLocaleTimeString("es-ES")})); }));
-  const asistentes = r.registros.sort((a, b) => a.hora - b.hora).map(x => {
-    const f = filas.find(y => claveDni(y[colDni]) === claveDni(x.dni));
-    return {Sesión: x.sesion, Fecha: new Date(x.hora).toLocaleDateString("es-ES"), Hora: new Date(x.hora).toLocaleTimeString("es-ES"), DNI: x.dni, ...(f ? Object.fromEntries(cab.filter(c => c !== colDni && !patronSes.test(c)).slice(0, 3).map(c => [c, f[c]])) : {}), "En la lista": excelLista ? (f ? "Sí" : "No") : ""};
-  });
-  return {filas, asistentes, inc, ses, nuevas, colDni, presentes};
-}
-```
-
-```{ojs}
-//| echo: false
+DOM.download(() => new Blob([GS_CODIGO], {type: "text/plain;charset=utf-8"}), "asistencia_apps_script.gs", "⬇ Código para Apps Script")
 {
-  if (!informe) return html`<p class="pending">Elige las sesiones y pulsa <b>Generar el informe</b>.</p>`;
-  if (informe.error) return html`<p class="pending">❌ ${informe.error}</p>`;
-  const {filas, asistentes, inc, ses, nuevas} = informe;
-  const hoy = new Date().toISOString().slice(0, 10);
-  const excel = () => {
-    const wb = XLSX.utils.book_new();
-    if (filas.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(filas), "Asistencia acumulada");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(asistentes.length ? asistentes : [{Aviso: "Sin registros"}]), "Asistentes por sesión");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(ses.map(s => ({Sesión: s.id, Grupo: s.grupo, Abierta: new Date(s.creada).toLocaleString("es-ES"), Registros: informe.presentes.get(s.id).size}))), "Sesiones");
-    if (inc.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(inc), "Incidencias");
-    return new Blob([XLSX.write(wb, {bookType: "xlsx", type: "array"})], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+  const f = html`<form class="asis-conf"><label>URL del servicio <input name="url" size="60" placeholder="https://script.google.com/macros/s/…/exec" value="${urlServicio}"></label>
+    <button class="copiar" type="submit">Guardar</button> <span></span></form>`;
+  f.onsubmit = async (e) => {
+    e.preventDefault(); const u = f.url.value.trim();
+    try { localStorage.setItem("ccee-asis-url", u); } catch (err) {}
+    f.querySelector("span").textContent = "Comprobando…";
+    try { const r = await (await fetch(u)).json(); f.querySelector("span").textContent = r.ok ? "✅ Conectado. Recarga la página." : "❌ La URL no responde bien."; }
+    catch (err) { f.querySelector("span").textContent = "❌ No se puede conectar con esa URL."; }
   };
-  const resumen = filas.length ? html`<p>${nuevas.length ? `Se han añadido ${nuevas.length} sesión(es) nueva(s)` : "Las sesiones elegidas ya estaban en el Excel (no se duplican)"}. Estudiantes en la lista: <b>${filas.length}</b>. Asistencia media: <b>${d3.format(".1f")(d3.mean(filas, f => f["% asistencia"])).replace(".", ",")} %</b>.</p>` : html`<p>Asistentes: <b>${asistentes.length}</b> registros en ${ses.length} sesión(es).</p>`;
-  return html`${resumen}
-    ${inc.length ? html`<p class="juego-res mal">⚠️ ${inc.length} incidencia(s): DNI que no están en tu lista o varios DNI desde un mismo dispositivo. Revisa la hoja «Incidencias».</p>` : ""}
-    <div class="graf-botones">${DOM.download(excel, `asistencia_TC3_${hoy}.xlsx`, "⬇ Descargar el Excel de asistencia")}</div>
-    ${Inputs.table(filas.length ? filas : asistentes, {rows: 14, layout: "auto"})}`;
+  return f;
 }
 ```
-
-::: {.callout-tip appearance="simple"}
-**Consejos.** Abre la sesión al principio de la clase, durante 5 o 10 minutos, y ciérrala después. Si hay dudas, al final del informe puedes llamar en voz alta a dos o tres estudiantes de la lista de asistentes para comprobar que están. El Excel acumulado guarda una columna por sesión (1 = asistió, 0 = no asistió), el total y el porcentaje. Puedes corregir a mano cualquier valor antes de volver a subirlo otro día.
-
-**Protección de datos.** Conviene informar al estudiantado en la guía docente o en PRADO de que la asistencia se registra con el DNI y para qué se usa. Los registros están solo en tu hoja de Google: puedes borrarlos al terminar el curso.
 :::

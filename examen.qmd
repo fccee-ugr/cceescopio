@@ -387,7 +387,7 @@ docEx = {
   const solucion = (q, i) => `<li><b>${q.opciones ? `${"abcd"[q.respuesta]}) ${q.opciones[q.respuesta]}` : q.abierta ? "Respuesta orientativa" : `${fmt(q.respuesta)} ${q.unidadResp}`}</b>. ${q.solucion}</li>`;
   const cab = (letra) => `<div class="ex-cab"><h1>${tituloEx}${letra ? ` · Versión ${letra}` : ""}</h1>
     <p>${cursoEx || ""}${cursoEx ? " · " : ""}${fechaTxt}${tiempoEx ? ` · ${tiempoEx}` : ""}</p>
-    ${ficha ? "" : `<p class="ex-nombre">Apellidos y nombre: ____________________________________________ DNI: ______________</p>`}
+    ${ficha ? "" : `<p class="ex-nombre">Apellidos y nombre: ______________________________________ DNI: ____________ Grupo: ________</p>`}
     <p class="ex-instr">${instrEx}</p></div>`;
   const pie = `<p class="ex-pie">Datos de Eurostat consultados el ${docEx.consultado.toLocaleDateString("es-ES")} con CCEEscopio (FCCEE, Universidad de Granada).</p>`;
   const html1 = docEx.versiones.map((qs, v) => `<section class="ex-pagina">${cab(docEx.versiones.length > 1 ? letras[v] : "")}${qs.map((q, i) => cuerpo(q, i, qs.length)).join("")}${pie}</section>`).join("");

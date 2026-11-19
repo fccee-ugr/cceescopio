@@ -243,7 +243,7 @@ docEx = {
   const solucion = (q, i) => `<li><b>${q.opciones ? `${"abcd"[q.respuesta]}) ${q.opciones[q.respuesta]}` : q.abierta ? "Respuesta orientativa" : `${fmt(q.respuesta)} ${q.unidadResp}`}</b>. ${q.solucion}</li>`;
   const cab = (letra) => `<div class="ex-cab"><h1>${tituloEx}${letra ? ` · Versión ${letra}` : ""}</h1>
     <p>${cursoEx || ""}${cursoEx ? " · " : ""}${fechaTxt}${tiempoEx ? ` · ${tiempoEx}` : ""}</p>
-    ${ficha ? "" : `<p class="ex-nombre">Apellidos y nombre: ____________________________________________ DNI: ______________</p>`}
+    ${ficha ? "" : `<p class="ex-nombre">Apellidos y nombre: ______________________________________ DNI: ____________ Grupo: ________</p>`}
     <p class="ex-instr">${instrEx}</p></div>`;
   const pie = `<p class="ex-pie">Datos de Eurostat consultados el ${docEx.consultado.toLocaleDateString("es-ES")} con CCEEscopio (FCCEE, Universidad de Granada).</p>`;
   const html1 = docEx.versiones.map((qs, v) => `<section class="ex-pagina">${cab(docEx.versiones.length > 1 ? letras[v] : "")}${qs.map((q, i) => cuerpo(q, i, qs.length)).join("")}${pie}</section>`).join("");
@@ -1458,3 +1458,66 @@ examenTC3 = {
 **Antes de usar el examen**, revísalo: los datos se generan al azar y algún enunciado puede necesitar retoques. El documento de Word se puede editar con Word o LibreOffice. Para el PDF, elige «Guardar como PDF» en la ventana de impresión. Las soluciones siguen el formulario de los apuntes de la asignatura.
 :::
 ''', MOTOR=MOTOR, ESPECS=J([porid[i] for i in ("personas-que-compran-por-internet", "poblacion-por-regiones", "pib-crecimiento-interanual-trimestral")]), CSS=J(CSS_TC3))
+
+# =====================================================================================
+# Buscador de noticias con indicadores (las noticias las actualiza cada día .github/workflows/noticias.yml)
+# =====================================================================================
+pagina("noticias.qmd", r'''---
+title: "Noticias e indicadores"
+subtitle: "Noticias económicas de los últimos días y los indicadores de CCEEscopio con los que puedes comprobarlas"
+toc: false
+---
+
+Cada día se recogen noticias económicas recientes de medios españoles. Las noticias no muestran los datos: **tu reto es buscar en CCEEscopio los indicadores relacionados** y comprobar qué dicen. Con el **modo reto**, ni siquiera te decimos qué indicador buscar: tienes que descubrirlo tú.
+
+```{ojs}
+//| echo: false
+areasN = (__AREAS__)
+datosN = {
+  const h = location.hostname, seg = location.pathname.split("/").filter(Boolean)[0];
+  const urls = [];
+  if (h.endsWith("github.io") && seg) urls.push(`https://raw.githubusercontent.com/${h.split(".")[0]}/${seg}/noticias/noticias.json`);
+  urls.push("noticias.json");
+  for (const u of urls) { try { const r = await fetch(u, {cache: "no-store"}); if (r.ok) return await r.json(); } catch (e) {} }
+  return null;
+}
+viewof textoN = Inputs.search(datosN?.noticias ?? [], {placeholder: "Busca en los titulares: paro, vivienda, turismo…", columns: ["t", "fuente"], label: "Buscar"})
+viewof areaN = Inputs.select(new Map([["Todas", "todas"], ...Object.entries(areasN).map(([k, v]) => [v, k])]), {label: "Área"})
+viewof retoN = Inputs.toggle({label: "Modo reto (ocultar los indicadores)", value: false})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!datosN) return html`<p class="pending">Las noticias todavía no están disponibles. Se actualizan cada mañana; vuelve a intentarlo más tarde.</p>`;
+  const ind = datosN.indicadores;
+  const lista = textoN.filter(n => areaN === "todas" || n.ind.some(i => ind[i]?.pagina === areaN)).slice(0, 60);
+  const hash = (s) => [...s].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0, 2166136261);
+  const pregunta = (n) => {
+    const i = n.ind[0], x = ind[i], nom = `«${x.nombre}»`;
+    if (x.regional) return `¿Qué posición ocupa Andalucía entre las comunidades autónomas en ${nom}? ¿Está por encima o por debajo de la media de España?`;
+    if (x.sinGeo) return `Busca el último valor de ${nom}. ¿Cuánto ha cambiado en el último año? ¿Encaja con lo que cuenta la noticia?`;
+    return [`Busca el último dato de ${nom} para España. ¿Ha mejorado o empeorado respecto al año anterior?`,
+      `Compara el último dato de ${nom} de España con la media de la UE-27. ¿Está España por encima o por debajo?`,
+      `¿Confirma el último dato de ${nom} lo que cuenta la noticia? Justifica tu respuesta con los datos.`][hash(n.t) % 3];
+  };
+  const fecha = (ts) => { if (!ts) return ""; const d = (Date.now() / 1000 - ts) / 86400; return d < 1 ? "hoy" : d < 2 ? "ayer" : `hace ${Math.floor(d)} días`; };
+  const chips = (n) => html`<div class="not-ind">${n.ind.map(i => html`<a class="not-chip" href="${ind[i].pagina}.html?i=${i}">📊 ${ind[i].nombre}</a>`)}</div>`;
+  const tarjeta = (n) => {
+    const caja = html`<div class="not-tarjeta">
+      <a class="not-titulo" href="${n.url}" target="_blank" rel="noopener">${n.t}</a>
+      <p class="not-meta">${n.fuente}${n.ts ? ` · ${fecha(n.ts)}` : ""}</p></div>`;
+    if (retoN) {
+      const b = html`<button class="copiar">🔎 Ver qué indicadores buscar</button>`;
+      const p = html`<p class="not-reto">🎯 <b>Reto:</b> ¿qué indicadores de CCEEscopio te ayudarían a entender esta noticia? Búscalos en el menú Indicadores antes de ver la respuesta.</p>`;
+      b.onclick = () => { b.replaceWith(chips(n), html`<p class="not-reto">${pregunta(n)}</p>`); window.cceeEvento && window.cceeEvento("noticias/reto", "Noticias: reto", true); };
+      caja.append(p, b);
+    } else caja.append(chips(n), html`<p class="not-reto">🎯 <b>Reto:</b> ${pregunta(n)}</p>`);
+    return caja;
+  };
+  const act = new Date(datosN.actualizado * 1000).toLocaleString("es-ES", {dateStyle: "long", timeStyle: "short"});
+  return html`<p class="nota">${lista.length} noticias · actualizado el ${act}. Fuente: Google Noticias (medios españoles). Los titulares enlazan a la noticia original.</p>
+    ${lista.length ? lista.map(tarjeta) : html`<p class="pending">No hay noticias con esos filtros.</p>`}`;
+}
+```
+''', AREAS=J(AREAS))

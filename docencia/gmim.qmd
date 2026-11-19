@@ -14,7 +14,7 @@ No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de 
 **Indicadores recomendados:** [PIB: crecimiento interanual (trimestral)](../actividad.html?i=pib-crecimiento-interanual-trimestral) · [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [Tasa de paro](../empleo.html?i=tasa-de-paro) · [Deuda pública (% del PIB)](../publico.html?i=deuda-publica-del-pib)
 
 ::: {.uso-box}
-**Ejemplo de uso.** Primer contacto con los grandes agregados: el alumnado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.
+**Ejemplo de uso.** Primer contacto con los grandes agregados: el estudiantado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.
 :::
 
 **Herramientas útiles:** [Ficha de país o región](../ficha.qmd)
@@ -276,7 +276,7 @@ No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de 
 **Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
 
 ::: {.uso-box}
-**Para el profesorado:** [generador de exámenes de Técnicas Cuantitativas III](../examen-tc3.qmd), con muestreo y decisión, versiones aleatorias, soluciones y datos de Eurostat. [Control de asistencia](../asistencia-profesor.qmd) con código cambiante en el proyector y asistencia acumulada en Excel.
+**Para el profesorado:** [generador de exámenes de Técnicas Cuantitativas III](../examen-tc3.qmd), con muestreo y decisión, versiones aleatorias, soluciones y datos de Eurostat. [Control de asistencia](../asistencia-profesor.qmd): los estudiantes escanean un QR y descargas el Excel con la asistencia acumulada.
 :::
 
 ## Cuarto curso {#curso-4}

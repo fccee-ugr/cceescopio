@@ -1,0 +1,28 @@
+# Actualiza cada día las noticias del buscador de CCEEscopio.
+# Publica noticias.json en la rama «noticias» (no toca la rama principal ni la carpeta docs/).
+name: Noticias de CCEEscopio
+on:
+  schedule:
+    - cron: "17 5 * * *"   # todos los días a las 6:17 (hora peninsular en invierno)
+  workflow_dispatch: {}     # permite lanzarla a mano desde la pestaña Actions
+permissions:
+  contents: write
+jobs:
+  noticias:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Buscar noticias
+        run: python tools/noticias.py --salida /tmp/noticias.json
+      - name: Publicar en la rama noticias
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan noticias-tmp
+          cp /tmp/noticias.json noticias.json
+          git add noticias.json
+          git commit -m "Noticias del $(date -u +%F)"
+          git push -f origin HEAD:noticias

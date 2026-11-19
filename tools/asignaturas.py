@@ -63,7 +63,7 @@ dict(slug="teoria-historia-economica", nombre="Departamento de Teoría e Histori
   intro="Microeconomía, macroeconomía, historia económica e historia del pensamiento: CCEEscopio aporta los datos para ilustrar los modelos y contrastarlos con la evolución reciente de la economía.",
   asig=[
   S("Economía Política", "ADE, Economía, Finanzas y Contabilidad, Marketing (1.º)", ["pib", "ipc", "paro", "deuda"],
-    "Primer contacto con los grandes agregados: el alumnado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.", ["ficha"]),
+    "Primer contacto con los grandes agregados: el estudiantado sigue durante el curso el PIB, la inflación y el paro de España y la UE, y los relaciona con los conceptos de oferta y demanda agregadas.", ["ficha"]),
   S("Principios de Economía I y II", "Turismo (1.º)", ["pib", "ipc", "paro", "pern", "pibpc"],
     "Explicar los conceptos básicos de la economía con el sector turístico como hilo conductor: peso del turismo, empleo y precios en España y Andalucía.", ["ficha"]),
   S("Microeconomía (I, II, III y IV)", "Economía (1.º-3.º); Microeconomía en ADE, Finanzas y Contabilidad y Marketing (1.º)", ["ipc_ene", "ipc_ali", "luz", "gas", "smi", "coste_lab"],
