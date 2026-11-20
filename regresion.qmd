@@ -1,0 +1,562 @@
+---
+title: "Regresión lineal con análisis de supuestos"
+subtitle: "Estima una regresión por mínimos cuadrados ordinarios con series de CCEEscopio o con tus datos, y comprueba si se cumplen los supuestos"
+toc: true
+toc-depth: 2
+---
+
+Elige una **variable dependiente (Y)** y hasta **cuatro variables explicativas (X)**, de los indicadores de CCEEscopio o de tus propios datos. La calculadora estima el modelo $Y = \beta_0 + \beta_1 X_1 + \dots + \beta_k X_k + u$, interpreta los coeficientes y contrasta los supuestos básicos: **linealidad, normalidad, homocedasticidad, ausencia de autocorrelación y de multicolinealidad**.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+EST = {
+  // Funciones estadísticas de CCEEscopio: distribuciones, regresión MCO y contrastes de supuestos.
+  // Lo incrusta tools/make_apps4.py en las páginas de calculadoras; también se puede probar con Node.
+  function crearEstadistica() {
+    // ---------- distribuciones ----------
+    const lgamma = (x) => {
+      const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+      let y = x, tmp = x + 5.5; tmp -= (x + 0.5) * Math.log(tmp);
+      let ser = 1.000000000190015; for (const ci of c) ser += ci / ++y;
+      return -tmp + Math.log(2.5066282746310005 * ser / x);
+    };
+    const betacf = (a, b, x) => {
+      const MAXIT = 300, EPS = 3e-16, FPMIN = 1e-300;
+      let qab = a + b, qap = a + 1, qam = a - 1, c = 1, d = 1 - qab * x / qap;
+      if (Math.abs(d) < FPMIN) d = FPMIN; d = 1 / d; let h = d;
+      for (let m = 1; m <= MAXIT; m++) {
+        const m2 = 2 * m;
+        let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN; c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN; d = 1 / d; h *= d * c;
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN; c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN; d = 1 / d;
+        const del = d * c; h *= del; if (Math.abs(del - 1) < EPS) break;
+      }
+      return h;
+    };
+    // Beta incompleta regularizada I_x(a, b)
+    const ibeta = (x, a, b) => {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      const bt = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+      return x < (a + 1) / (a + b + 2) ? bt * betacf(a, b, x) / a : 1 - bt * betacf(b, a, 1 - x) / b;
+    };
+    // Gamma incompleta regularizada inferior P(a, x)
+    const gammainc = (a, x) => {
+      if (x <= 0) return 0;
+      if (x < a + 1) { let ap = a, sum = 1 / a, del = sum; for (let n = 0; n < 500; n++) { ap++; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-15) break; } return sum * Math.exp(-x + a * Math.log(x) - lgamma(a)); }
+      let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+      for (let i = 1; i < 500; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300; c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-15) break; }
+      return 1 - Math.exp(-x + a * Math.log(x) - lgamma(a)) * h;
+    };
+    const pT = (t, df) => ibeta(df / (df + t * t), df / 2, 0.5);           // p-valor bilateral de la t de Student
+    const pF = (f, d1, d2) => f <= 0 ? 1 : ibeta(d2 / (d2 + d1 * f), d2 / 2, d1 / 2); // p-valor de la F de Snedecor
+    const pChi = (x, k) => x <= 0 ? 1 : 1 - gammainc(k / 2, x / 2);       // p-valor de la chi-cuadrado
+    const normCdf = (z) => { const t = 1 / (1 + 0.2316419 * Math.abs(z)), d = 0.3989422804014327 * Math.exp(-z * z / 2);
+      const p = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429)))); return z > 0 ? 1 - p : p; };
+    const normInv = (p) => { // Acklam
+      const a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.3577518672690, -30.66479806614716, 2.506628277459239];
+      const b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+      const c = [-7.784894002430293e-3, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+      const d = [7.784695709041462e-3, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+      const q = Math.min(p, 1 - p);
+      let x;
+      if (q < 0.02425) { const r = Math.sqrt(-2 * Math.log(q)); x = (((((c[0] * r + c[1]) * r + c[2]) * r + c[3]) * r + c[4]) * r + c[5]) / ((((d[0] * r + d[1]) * r + d[2]) * r + d[3]) * r + 1); x = p < 0.5 ? x : -x; }
+      else { const r = (p - 0.5), s = r * r; x = (((((a[0] * s + a[1]) * s + a[2]) * s + a[3]) * s + a[4]) * s + a[5]) * r / (((((b[0] * s + b[1]) * s + b[2]) * s + b[3]) * s + b[4]) * s + 1); }
+      return x;
+    };
+    const tInv = (p, df) => { // cuantil bilateral: t tal que P(|T| > t) = p
+      let lo = 0, hi = 1000; for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (pT(m, df) > p) lo = m; else hi = m; } return (lo + hi) / 2;
+    };
+  
+    // ---------- álgebra ----------
+    const invertir = (A) => {
+      const n = A.length, M = A.map((r, i) => [...r, ...Array.from({length: n}, (_, j) => +(i === j))]);
+      for (let c = 0; c < n; c++) {
+        let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+        if (Math.abs(M[p][c]) < 1e-12) return null;
+        [M[c], M[p]] = [M[p], M[c]];
+        const piv = M[c][c]; for (let j = 0; j < 2 * n; j++) M[c][j] /= piv;
+        for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c]; if (f) for (let j = 0; j < 2 * n; j++) M[r][j] -= f * M[c][j]; }
+      }
+      return M.map(r => r.slice(n));
+    };
+    const media = (a) => a.reduce((s, x) => s + x, 0) / a.length;
+  
+    // ---------- regresión MCO ----------
+    // y: vector; X: matriz n×k SIN columna de unos (se añade la constante)
+    function mco(y, X, conConstante = true) {
+      const n = y.length, Z = X.map(r => conConstante ? [1, ...r] : r.slice()), k = Z[0].length;
+      const ZtZ = Array.from({length: k}, (_, i) => Array.from({length: k}, (_, j) => Z.reduce((s, r) => s + r[i] * r[j], 0)));
+      const inv = invertir(ZtZ); if (!inv) return null;
+      const Zty = Array.from({length: k}, (_, i) => Z.reduce((s, r, t) => s + r[i] * y[t], 0));
+      const b = inv.map(r => r.reduce((s, v, j) => s + v * Zty[j], 0));
+      const ajuste = Z.map(r => r.reduce((s, v, j) => s + v * b[j], 0)), e = y.map((v, t) => v - ajuste[t]);
+      const scr = e.reduce((s, v) => s + v * v, 0), ym = media(y), sct = y.reduce((s, v) => s + (v - ym) ** 2, 0);
+      const gl = n - k, s2 = scr / gl, se = inv.map((r, i) => Math.sqrt(s2 * r[i]));
+      const r2 = conConstante ? 1 - scr / sct : 1 - scr / y.reduce((s, v) => s + v * v, 0);
+      const r2a = 1 - (1 - r2) * (n - 1) / gl, q = k - (conConstante ? 1 : 0);
+      const F = q > 0 ? (r2 / q) / ((1 - r2) / gl) : NaN;
+      const ll = -n / 2 * (Math.log(2 * Math.PI) + Math.log(scr / n) + 1);
+      return {n, k, b, se, t: b.map((v, i) => v / se[i]), p: b.map((v, i) => pT(v / se[i], gl)), ajuste, e, scr, sct, s2, gl, r2, r2a, F, pFv: q > 0 ? pF(F, q, gl) : NaN,
+        aic: -2 * ll + 2 * k, bic: -2 * ll + k * Math.log(n), inv, Z};
+    }
+  
+    // ---------- contrastes de supuestos ----------
+    function supuestos(y, X, m) {
+      const n = m.n, e = m.e, out = {};
+      // Normalidad: Jarque-Bera
+      const em = media(e), m2 = media(e.map(v => (v - em) ** 2)), m3 = media(e.map(v => (v - em) ** 3)), m4 = media(e.map(v => (v - em) ** 4));
+      const S = m3 / m2 ** 1.5, K = m4 / m2 ** 2, JB = n / 6 * (S * S + (K - 3) ** 2 / 4);
+      out.normalidad = {nombre: "Normalidad de los residuos (Jarque-Bera)", est: JB, p: pChi(JB, 2), asimetria: S, curtosis: K};
+      // Homocedasticidad: Breusch-Pagan (versión de Koenker, n·R²)
+      const e2 = e.map(v => v * v), bp = mco(e2, X);
+      if (bp) { const LM = n * bp.r2; out.homocedasticidad = {nombre: "Homocedasticidad (Breusch-Pagan)", est: LM, p: pChi(LM, X[0].length)}; }
+      // Autocorrelación: Durbin-Watson y Breusch-Godfrey de orden 1
+      let num = 0; for (let t = 1; t < n; t++) num += (e[t] - e[t - 1]) ** 2;
+      const DW = num / m.scr;
+      const Xbg = X.map((r, t) => [...r, t ? e[t - 1] : 0]), bg = mco(e, Xbg);
+      out.autocorrelacion = {nombre: "Ausencia de autocorrelación (Breusch-Godfrey, orden 1)", est: bg ? n * bg.r2 : NaN, p: bg ? pChi(n * bg.r2, 1) : NaN, dw: DW};
+      // Forma funcional: RESET de Ramsey (ŷ² y ŷ³)
+      const yh = m.ajuste, sd = Math.sqrt(media(yh.map(v => (v - media(yh)) ** 2))) || 1, c = media(yh);
+      const Xr = X.map((r, t) => [...r, ((yh[t] - c) / sd) ** 2, ((yh[t] - c) / sd) ** 3]), rr = mco(y, Xr);
+      if (rr && rr.gl > 0) { const Fr = ((m.scr - rr.scr) / 2) / (rr.scr / rr.gl); out.linealidad = {nombre: "Forma funcional lineal (RESET de Ramsey)", est: Fr, p: pF(Fr, 2, rr.gl)}; }
+      // Multicolinealidad: factores de inflación de la varianza
+      if (X[0].length >= 2) out.vif = X[0].map((_, j) => { const xj = X.map(r => r[j]), otras = X.map(r => r.filter((_, i) => i !== j)), a = mco(xj, otras); return a ? 1 / (1 - a.r2) : NaN; });
+      return out;
+    }
+  
+    // ---------- estadística descriptiva ----------
+    function cuantil(ordenados, q) { const h = (ordenados.length - 1) * q, l = Math.floor(h); return ordenados[l] + (h - l) * ((ordenados[l + 1] ?? ordenados[l]) - ordenados[l]); }
+    function describir(v) {
+      const a = v.filter(Number.isFinite), n = a.length; if (!n) return null;
+      const o = a.slice().sort((x, y) => x - y), m = media(a);
+      const s2 = n > 1 ? a.reduce((s, x) => s + (x - m) ** 2, 0) / (n - 1) : NaN, s = Math.sqrt(s2);
+      const m2 = a.reduce((s, x) => s + (x - m) ** 2, 0) / n, m3 = a.reduce((s, x) => s + (x - m) ** 3, 0) / n, m4 = a.reduce((s, x) => s + (x - m) ** 4, 0) / n;
+      return {n, media: m, mediana: cuantil(o, 0.5), sd: s, var: s2, cv: m !== 0 ? 100 * s / Math.abs(m) : NaN, min: o[0], max: o[n - 1], q1: cuantil(o, 0.25), q3: cuantil(o, 0.75),
+        iqr: cuantil(o, 0.75) - cuantil(o, 0.25), asimetria: m3 / m2 ** 1.5, curtosis: m4 / m2 ** 2 - 3, suma: a.reduce((s, x) => s + x, 0)};
+    }
+    function correlacion(a, b) { const p = a.map((x, i) => [x, b[i]]).filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y)); if (p.length < 3) return {r: NaN, n: p.length, p: NaN};
+      const mx = media(p.map(q => q[0])), my = media(p.map(q => q[1]));
+      const r = p.reduce((s, [x, y]) => s + (x - mx) * (y - my), 0) / Math.sqrt(p.reduce((s, [x]) => s + (x - mx) ** 2, 0) * p.reduce((s, [, y]) => s + (y - my) ** 2, 0));
+      const t = r * Math.sqrt((p.length - 2) / (1 - r * r)); return {r, n: p.length, p: pT(t, p.length - 2)}; }
+  
+    return {lgamma, ibeta, gammainc, pT, pF, pChi, normCdf, normInv, tInv, invertir, mco, supuestos, describir, cuantil, correlacion, media};
+  }
+  return crearEstadistica();
+}
+especW = [{"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOTAL", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP00"}, {"code": "prc_hicp_manr", "query": "&coicop=CP00"}], "pagina": "precios"}, {"id": "ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual", "nombre": "IPCA: alimentos y bebidas no alcohólicas (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP01", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de los alimentos y bebidas no alcohólicas.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP01"}, {"code": "prc_hicp_manr", "query": "&coicop=CP01"}], "pagina": "precios"}, {"id": "ipca-energia-tasa-anual", "nombre": "IPCA: energía (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=NRG", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de la energía (electricidad, gas, combustibles).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=NRG"}, {"code": "prc_hicp_manr", "query": "&coicop=NRG"}], "pagina": "precios"}, {"id": "ipca-servicios-tasa-anual", "nombre": "IPCA: servicios (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=SERV", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de los servicios.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=SERV"}, {"code": "prc_hicp_manr", "query": "&coicop=SERV"}], "pagina": "precios"}, {"id": "precio-de-la-vivienda-tasa-anual", "nombre": "Precio de la vivienda (tasa anual)", "code": "prc_hpi_q", "query": "&purchase=TOTAL&unit=RCH_A", "unidad": "%", "frecuencia": "Trimestral", "descripcion": "Tasa de variación anual del índice de precios de la vivienda (nueva y de segunda mano).", "cero": true, "desde": 2008, "pagina": "precios"}, {"id": "ipca-inflacion-subyacente-sin-energia-ni-alimentos", "nombre": "IPCA: inflación subyacente (sin energía ni alimentos)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del IPCA excluidos la energía y los alimentos: aproxima la tendencia de fondo de los precios.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD"}, {"code": "prc_hicp_manr", "query": "&coicop=TOT_X_NRG_FOOD"}], "pagina": "precios"}, {"id": "precios-industriales-tasa-anual", "nombre": "Precios industriales (tasa anual)", "code": "sts_inppd_m", "query": "&nace_r2=B-E36&s_adj=NSA&unit=PCH_SM", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Variación anual de los precios de producción industrial en el mercado interior (anticipa la inflación de consumo).", "cero": true, "desde": 2005, "pagina": "precios"}, {"id": "nivel-de-precios-comparado-ue-27-100", "nombre": "Nivel de precios comparado (UE-27 = 100)", "code": "prc_ppp_ind", "query": "&na_item=PLI_EU27_2020&ppp_cat=GDP", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Nivel general de precios de cada país respecto a la media de la UE, a partir de las paridades de poder de compra.", "desde": 2000, "pagina": "precios"}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Porcentaje de personas desempleadas sobre la población activa (15-74 años), desestacionalizado.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-paro-juvenil-menores-de-25-anos", "nombre": "Tasa de paro juvenil (menores de 25 años)", "code": "une_rt_m", "query": "&s_adj=SA&age=Y_LT25&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Paro de las personas menores de 25 años, desestacionalizado.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-paro-de-las-mujeres", "nombre": "Tasa de paro de las mujeres", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=F&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Tasa de paro femenina, desestacionalizada.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "code": "lfsi_emp_a", "query": "&indic_em=EMP_LFS&sex=T&age=Y20-64&unit=PC_POP", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Porcentaje de personas ocupadas de 20 a 64 años; el objetivo de la UE para 2030 es el 78 %.", "desde": 2005, "pagina": "empleo"}, {"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "code": "lfst_r_lfu3rt", "query": "&sex=T&age=Y15-74&unit=PC", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Tasa de paro de las comunidades autónomas (NUTS 2).", "regional": true, "desde": 2005, "pagina": "empleo"}, {"id": "paro-de-larga-duracion", "nombre": "Paro de larga duración", "code": "une_ltu_a", "query": "&sex=T&age=Y15-74&indic_em=LTU&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Personas que llevan 12 meses o más buscando empleo, en porcentaje de la población activa.", "desde": 2005, "pagina": "empleo"}, {"id": "jovenes-que-ni-estudian-ni-trabajan-15-29-anos", "nombre": "Jóvenes que ni estudian ni trabajan (15-29 años)", "code": "sdg_08_20", "query": "&sex=T&age=Y15-29&unit=PC", "unidad": "% de la población de 15-29 años", "frecuencia": "Anual", "descripcion": "Jóvenes que no tienen empleo ni siguen ningún tipo de educación o formación (indicador NEET).", "desde": 2005, "pagina": "empleo"}, {"id": "coste-laboral-por-hora", "nombre": "Coste laboral por hora", "code": "lc_lci_lev", "query": "&nace_r2=B-S_X_O&lcstruct=D1_D4_MD5&unit=EUR", "unidad": "€ por hora", "frecuencia": "Anual", "descripcion": "Coste laboral medio por hora trabajada (salarios y cotizaciones sociales) en la industria, la construcción y los servicios.", "desde": 2008, "pagina": "empleo"}, {"id": "salario-minimo-mensual", "nombre": "Salario mínimo mensual", "code": "earn_mw_cur", "query": "&currency=EUR", "unidad": "€ al mes", "frecuencia": "Semestral", "descripcion": "Salario mínimo legal mensual bruto en los países que lo tienen establecido.", "desde": 2005, "pagina": "empleo"}, {"id": "brecha-salarial-de-genero", "nombre": "Brecha salarial de género", "code": "sdg_05_20", "query": "&unit=PC", "unidad": "% del salario medio de los hombres", "frecuencia": "Anual", "descripcion": "Diferencia entre la ganancia media por hora de hombres y mujeres, en porcentaje de la de los hombres.", "desde": 2007, "pagina": "empleo"}, {"id": "tasa-de-empleo-por-regiones-20-64-anos", "nombre": "Tasa de empleo por regiones (20-64 años)", "code": "lfst_r_lfe2emprt", "query": "&sex=T&age=Y20-64&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de empleo de las comunidades autónomas.", "regional": true, "desde": 2005, "pagina": "empleo"}, {"id": "pib-crecimiento-interanual-trimestral", "nombre": "PIB: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=B1GQ&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Tasa de variación del PIB en volumen respecto al mismo trimestre del año anterior.", "cero": true, "desde": 2005, "pagina": "actividad"}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "code": "nama_10r_2gdp", "query": "&unit=PPS_EU27_2020_HAB", "unidad": "PPC por habitante", "frecuencia": "Anual", "descripcion": "PIB por habitante en paridad de poder de compra; permite comparar el nivel de vida entre regiones y países.", "regional": true, "desde": 2005, "pagina": "actividad"}, {"id": "indice-de-produccion-industrial", "nombre": "Índice de producción industrial", "code": "sts_inpr_m", "query": "&nace_r2=B-D&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción de la industria (extractiva, manufacturera y energía), corregido de estacionalidad y calendario.", "desde": 2008, "pagina": "actividad"}, {"id": "indice-de-comercio-minorista", "nombre": "Índice de comercio minorista", "code": "sts_trtu_m", "query": "&nace_r2=G47&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de ventas del comercio minorista, corregido de estacionalidad y calendario.", "desde": 2008, "pagina": "actividad"}, {"id": "indicador-de-sentimiento-economico", "nombre": "Indicador de sentimiento económico", "code": "ei_bssi_m_r2", "query": "&indic=BS-ESI-I&s_adj=SA", "unidad": "Índice (media a largo plazo = 100)", "frecuencia": "Mensual", "descripcion": "Indicador compuesto de confianza de industria, servicios, consumidores, construcción y comercio (Comisión Europea).", "desde": 2008, "pagina": "actividad"}, {"id": "consumo-de-los-hogares-crecimiento-interanual", "nombre": "Consumo de los hogares: crecimiento interanual", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P31_S14_S15&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Gasto en consumo final de los hogares y las ISFLSH, en volumen.", "cero": true, "desde": 2005, "pagina": "actividad"}, {"id": "inversion-formacion-bruta-de-capital-fijo-crecimiento-intera", "nombre": "Inversión (formación bruta de capital fijo): crecimiento interanual", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P51G&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Inversión en bienes de equipo, construcción y activos intangibles, en volumen.", "cero": true, "desde": 2005, "pagina": "actividad"}, {"id": "produccion-en-la-construccion", "nombre": "Producción en la construcción", "code": "sts_copr_m", "query": "&nace_r2=F&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción del sector de la construcción, corregido de estacionalidad y calendario.", "desde": 2008, "pagina": "actividad"}, {"id": "productividad-del-trabajo-por-hora-variacion-anual", "nombre": "Productividad del trabajo por hora: variación anual", "code": "nama_10_lp_ulc", "query": "&na_item=RLPR_HW&unit=PCH_PRE", "unidad": "% de variación anual", "frecuencia": "Anual", "descripcion": "Crecimiento del PIB real por hora trabajada.", "cero": true, "desde": 2000, "pagina": "actividad"}, {"id": "costes-laborales-unitarios-nominales-variacion-anual", "nombre": "Costes laborales unitarios nominales: variación anual", "code": "nama_10_lp_ulc", "query": "&na_item=NULC_PER&unit=PCH_PRE", "unidad": "% de variación anual", "frecuencia": "Anual", "descripcion": "Coste laboral por unidad producida; indicador de competitividad-precio.", "cero": true, "desde": 2000, "pagina": "actividad"}, {"id": "confianza-del-consumidor", "nombre": "Confianza del consumidor", "code": "ei_bsco_m", "query": "&indic=BS-CSMCI&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de los consumidores de la Comisión Europea (expectativas sobre su situación financiera, la economía y las compras importantes).", "cero": true, "desde": 2008, "pagina": "actividad"}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "code": "rd_e_gerdtot", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno total en investigación y desarrollo; el objetivo europeo es el 3 % del PIB.", "desde": 2005, "pagina": "empresa"}, {"id": "gasto-en-i-d-por-regiones-del-pib", "nombre": "Gasto en I+D por regiones (% del PIB)", "code": "rd_e_gerdreg", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno en I+D de las comunidades autónomas.", "regional": true, "desde": 2005, "pagina": "empresa"}, {"id": "empresas-que-usan-inteligencia-artificial", "nombre": "Empresas que usan inteligencia artificial", "code": "isoc_eb_ai", "query": "&indic_is=E_AI_TANY&size_emp=GE10&unit=PC_ENT", "unidad": "% de empresas", "frecuencia": "Anual", "descripcion": "Porcentaje de empresas de 10 o más personas empleadas que usan al menos una tecnología de inteligencia artificial.", "desde": 2021, "pagina": "empresa"}, {"id": "personas-que-compran-por-internet", "nombre": "Personas que compran por internet", "code": "isoc_ec_ibuy", "query": "&indic_is=I_BUY3&ind_type=IND_TOTAL&unit=PC_IND", "unidad": "% de personas", "frecuencia": "Anual", "descripcion": "Porcentaje de personas de 16 a 74 años que han comprado bienes o servicios por internet en los últimos 12 meses.", "desde": 2008, "pagina": "empresa"}, {"id": "confianza-de-la-industria", "nombre": "Confianza de la industria", "code": "ei_bsin_m_r2", "query": "&indic=BS-ICI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza industrial: diferencia entre respuestas positivas y negativas sobre pedidos, existencias y producción esperada.", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "declaraciones-de-quiebra-de-empresas-indice", "nombre": "Declaraciones de quiebra de empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=BKRT&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas declaradas en quiebra o concurso.", "desde": 2015, "pagina": "empresa"}, {"id": "registros-de-nuevas-empresas-indice", "nombre": "Registros de nuevas empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=REG&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas de nueva creación inscritas en los registros.", "desde": 2015, "pagina": "empresa"}, {"id": "confianza-en-los-servicios", "nombre": "Confianza en los servicios", "code": "ei_bsse_m_r2", "query": "&indic=BS-SCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de las empresas de servicios (Comisión Europea).", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "confianza-del-comercio-minorista", "nombre": "Confianza del comercio minorista", "code": "ei_bsrt_m_r2", "query": "&indic=BS-RCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza del comercio minorista (Comisión Europea).", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "confianza-de-la-construccion", "nombre": "Confianza de la construcción", "code": "ei_bsbu_m_r2", "query": "&indic=BS-CCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de las empresas de construcción (Comisión Europea).", "cero": true, "desde": 2008, "pagina": "empresa"}, {"id": "hogares-con-acceso-a-internet", "nombre": "Hogares con acceso a internet", "code": "isoc_ci_in_h", "query": "&unit=PC_HH&hhtyp=TOTAL&indic_is=H_IACC", "unidad": "% de hogares", "frecuencia": "Anual", "descripcion": "Porcentaje de hogares con acceso a internet en casa.", "desde": 2008, "pagina": "empresa"}, {"id": "pernoctaciones-en-hoteles", "nombre": "Pernoctaciones en hoteles", "code": "tour_occ_nim", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas por residentes y no residentes en hoteles y alojamientos similares.", "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-de-no-residentes-en-hoteles", "nombre": "Pernoctaciones de no residentes en hoteles", "code": "tour_occ_nim", "query": "&c_resid=FOR&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas por viajeros residentes en el extranjero.", "desde": 2008, "pagina": "turismo"}, {"id": "llegadas-de-viajeros-a-hoteles", "nombre": "Llegadas de viajeros a hoteles", "code": "tour_occ_arm", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551", "unidad": "Número de viajeros", "frecuencia": "Mensual", "descripcion": "Viajeros que se alojan en hoteles y alojamientos similares.", "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-por-regiones", "nombre": "Pernoctaciones por regiones", "code": "tour_occ_nin2", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553", "unidad": "Número de pernoctaciones", "frecuencia": "Anual", "descripcion": "Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas.", "regional": true, "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-de-residentes-en-hoteles", "nombre": "Pernoctaciones de residentes en hoteles", "code": "tour_occ_nim", "query": "&c_resid=NAT&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas en hoteles por viajeros residentes en el propio país (turismo interno).", "desde": 2008, "pagina": "turismo"}, {"id": "pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan", "nombre": "Pernoctaciones en apartamentos y alojamientos de corta estancia", "code": "tour_occ_nim", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I552", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas en apartamentos turísticos, casas rurales y otros alojamientos de corta estancia.", "desde": 2008, "pagina": "turismo"}, {"id": "tasa-de-ocupacion-de-las-plazas-hoteleras", "nombre": "Tasa de ocupación de las plazas hoteleras", "code": "tour_occ_mnor", "query": "&accomunit=BEDPL&nace_r2=I551", "unidad": "% de plazas ocupadas", "frecuencia": "Mensual", "descripcion": "Porcentaje de plazas en hoteles ocupadas en el mes.", "desde": 2010, "pagina": "turismo"}, {"id": "deuda-publica-del-pib", "nombre": "Deuda pública (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=GD", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Deuda bruta consolidada de las administraciones públicas (criterio de Maastricht).", "desde": 2000, "pagina": "publico"}, {"id": "deficit-o-superavit-publico-del-pib", "nombre": "Déficit (−) o superávit (+) público (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=B9", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Capacidad o necesidad de financiación de las administraciones públicas.", "cero": true, "desde": 2000, "pagina": "publico"}, {"id": "rentabilidad-del-bono-a-10-anos", "nombre": "Rentabilidad del bono a 10 años", "code": "irt_lt_mcby_m", "query": "&int_rt=MCBY", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Rendimiento de la deuda pública a largo plazo (criterio de convergencia de Maastricht).", "desde": 2000, "pagina": "publico"}, {"id": "tipo-de-cambio-euro-dolar", "nombre": "Tipo de cambio euro / dólar", "code": "ert_bil_eur_m", "query": "&currency=USD&statinfo=AVG", "unidad": "Dólares por euro", "frecuencia": "Mensual", "descripcion": "Media mensual del tipo de cambio de referencia del euro frente al dólar estadounidense.", "sinGeo": true, "serie": "Euro / dólar", "desde": 2000, "pagina": "publico"}, {"id": "ingresos-fiscales-del-pib", "nombre": "Ingresos fiscales (% del PIB)", "code": "gov_10a_taxag", "query": "&unit=PC_GDP&sector=S13_S212&na_item=D2_D5_D91_D61_M_D995", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Impuestos y cotizaciones sociales recaudados por las administraciones públicas y las instituciones de la UE (presión fiscal).", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-total-del-pib", "nombre": "Gasto público total (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=TOTAL", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto total de las administraciones públicas.", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-en-sanidad-del-pib", "nombre": "Gasto público en sanidad (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF07", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto de las administraciones públicas en sanidad (clasificación COFOG).", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-en-educacion-del-pib", "nombre": "Gasto público en educación (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF09", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto de las administraciones públicas en educación (clasificación COFOG).", "desde": 2000, "pagina": "publico"}, {"id": "gasto-publico-en-proteccion-social-del-pib", "nombre": "Gasto público en protección social (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF10", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto en pensiones, desempleo, familia, vivienda y exclusión social (clasificación COFOG).", "desde": 2000, "pagina": "publico"}, {"id": "euribor-a-3-meses", "nombre": "Euríbor a 3 meses", "code": "irt_st_m", "query": "&int_rt=IRT_M3&geo=EA", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tipo de interés del mercado interbancario de la zona euro a tres meses, referencia de muchos préstamos.", "sinGeo": true, "serie": "Euríbor a 3 meses", "cero": true, "desde": 2000, "pagina": "publico"}, {"id": "indice-de-gini", "nombre": "Índice de Gini", "code": "ilc_di12", "query": "", "unidad": "Coeficiente (0-100)", "frecuencia": "Anual", "descripcion": "Coeficiente de Gini de la renta disponible equivalente (0 = igualdad perfecta; 100 = máxima desigualdad).", "desde": 2005, "pagina": "desigualdad"}, {"id": "ratio-s80-s20", "nombre": "Ratio S80/S20", "code": "ilc_di11", "query": "", "unidad": "Ratio", "frecuencia": "Anual", "descripcion": "Renta del 20 % más rico dividida entre la del 20 % más pobre.", "desde": 2005, "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "code": "ilc_peps01n", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas en riesgo de pobreza, con carencia material y social severa o en hogares con baja intensidad de empleo.", "desde": 2015, "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "code": "ilc_peps11n", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa AROPE de las comunidades autónomas.", "regional": true, "desde": 2015, "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-60-de-la-mediana", "nombre": "Tasa de riesgo de pobreza (60 % de la mediana)", "code": "ilc_li02", "query": "&indic_il=LI_R_MD60&age=TOTAL&sex=T&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas con una renta disponible equivalente inferior al 60 % de la mediana nacional.", "desde": 2005, "pagina": "desigualdad"}, {"id": "umbral-de-pobreza-hogar-de-una-persona", "nombre": "Umbral de pobreza (hogar de una persona)", "code": "ilc_li01", "query": "&hhtyp=A1&indic_il=LI_C_MD60&currency=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta anual por debajo de la cual una persona que vive sola se considera en riesgo de pobreza.", "desde": 2005, "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos", "nombre": "Riesgo de pobreza o exclusión social: menores de 18 años", "code": "ilc_peps01n", "query": "&unit=PC&age=Y_LT18&sex=T", "unidad": "% de la población menor de 18 años", "frecuencia": "Anual", "descripcion": "Tasa AROPE infantil.", "desde": 2015, "pagina": "desigualdad"}, {"id": "carencia-material-y-social-severa", "nombre": "Carencia material y social severa", "code": "ilc_mdsd11", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas que no pueden permitirse al menos 7 de 13 elementos básicos (pagar facturas, calefacción, imprevistos, etc.).", "desde": 2015, "pagina": "desigualdad"}, {"id": "pobreza-de-las-personas-que-trabajan", "nombre": "Pobreza de las personas que trabajan", "code": "ilc_iw01", "query": "&wstatus=EMP&sex=T&age=Y18-64&unit=PC", "unidad": "% de las personas ocupadas", "frecuencia": "Anual", "descripcion": "Personas ocupadas de 18 a 64 años en riesgo de pobreza (pobreza laboral).", "desde": 2005, "pagina": "desigualdad"}, {"id": "sobrecarga-del-coste-de-la-vivienda", "nombre": "Sobrecarga del coste de la vivienda", "code": "ilc_lvho07a", "query": "&age=TOTAL&sex=T&incgrp=TOTAL&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas que destinan más del 40 % de su renta disponible a la vivienda.", "desde": 2005, "pagina": "desigualdad"}, {"id": "renta-mediana-equivalente", "nombre": "Renta mediana equivalente", "code": "ilc_di03", "query": "&age=TOTAL&sex=T&indic_il=MED_E&unit=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta disponible equivalente mediana por persona.", "desde": 2005, "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-por-regiones", "nombre": "Tasa de riesgo de pobreza por regiones", "code": "ilc_li41", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de riesgo de pobreza de las comunidades autónomas.", "regional": true, "desde": 2008, "pagina": "desigualdad"}, {"id": "cuota-de-energias-renovables", "nombre": "Cuota de energías renovables", "code": "nrg_ind_ren", "query": "&nrg_bal=REN&unit=PC", "unidad": "% del consumo final bruto de energía", "frecuencia": "Anual", "descripcion": "Porcentaje de energía procedente de fuentes renovables; el objetivo europeo para 2030 es el 42,5 %.", "desde": 2005, "pagina": "sostenibilidad"}, {"id": "precio-de-la-electricidad-para-hogares", "nombre": "Precio de la electricidad para hogares", "code": "nrg_pc_204", "query": "&product=6000&nrg_cons=KWH2500-4999&unit=KWH&tax=I_TAX&currency=EUR", "unidad": "€ por kWh (con impuestos)", "frecuencia": "Semestral", "descripcion": "Precio medio de la electricidad para consumidores domésticos con un consumo anual de 2.500-5.000 kWh.", "desde": 2008, "pagina": "sostenibilidad"}, {"id": "emisiones-netas-de-gases-de-efecto-invernadero", "nombre": "Emisiones netas de gases de efecto invernadero", "code": "sdg_13_10", "query": "&unit=I90", "unidad": "Índice (1990 = 100)", "frecuencia": "Anual", "descripcion": "Emisiones netas de gases de efecto invernadero, incluido el uso del suelo, respecto a 1990.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "emisiones-de-gases-de-efecto-invernadero-por-habitante", "nombre": "Emisiones de gases de efecto invernadero por habitante", "code": "sdg_13_10", "query": "&unit=T_HAB", "unidad": "Toneladas de CO₂ equivalente por habitante", "frecuencia": "Anual", "descripcion": "Emisiones netas de gases de efecto invernadero por habitante.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "dependencia-energetica", "nombre": "Dependencia energética", "code": "nrg_ind_id", "query": "&siec=TOTAL&unit=PC", "unidad": "% de las necesidades energéticas", "frecuencia": "Anual", "descripcion": "Parte de la energía que un país necesita y que tiene que importar.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "precio-del-gas-natural-para-hogares", "nombre": "Precio del gas natural para hogares", "code": "nrg_pc_202", "query": "&product=4100&nrg_cons=GJ20-199&unit=KWH&tax=I_TAX&currency=EUR", "unidad": "€ por kWh (con impuestos)", "frecuencia": "Semestral", "descripcion": "Precio medio del gas natural para consumidores domésticos con consumo medio.", "desde": 2008, "pagina": "sostenibilidad"}, {"id": "residuos-municipales-por-habitante", "nombre": "Residuos municipales por habitante", "code": "env_wasmun", "query": "&wst_oper=GEN&unit=KG_HAB", "unidad": "kg por habitante", "frecuencia": "Anual", "descripcion": "Residuos urbanos generados por habitante.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "tasa-de-reciclaje-de-residuos-municipales", "nombre": "Tasa de reciclaje de residuos municipales", "code": "sdg_11_60", "query": "&unit=PC", "unidad": "% de los residuos municipales", "frecuencia": "Anual", "descripcion": "Porcentaje de los residuos municipales que se recicla o composta.", "desde": 2000, "pagina": "sostenibilidad"}, {"id": "poblacion", "nombre": "Población", "code": "demo_pjan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero.", "desde": 2000, "pagina": "poblacion"}, {"id": "poblacion-por-regiones", "nombre": "Población por regiones", "code": "demo_r_d2jan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero en las comunidades autónomas.", "regional": true, "desde": 2000, "pagina": "poblacion"}, {"id": "tasa-de-fecundidad", "nombre": "Tasa de fecundidad", "code": "demo_find", "query": "&indic_de=TOTFERRT", "unidad": "Hijos por mujer", "frecuencia": "Anual", "descripcion": "Número medio de hijos por mujer (indicador coyuntural de fecundidad).", "desde": 2000, "pagina": "poblacion"}, {"id": "tasa-de-dependencia-de-las-personas-mayores", "nombre": "Tasa de dependencia de las personas mayores", "code": "demo_pjanind", "query": "&indic_de=OLDDEP1", "unidad": "% de la población de 15-64 años", "frecuencia": "Anual", "descripcion": "Población de 65 años o más en relación con la población en edad de trabajar.", "desde": 2000, "pagina": "poblacion"}, {"id": "esperanza-de-vida-al-nacer", "nombre": "Esperanza de vida al nacer", "code": "demo_mlexpec", "query": "&sex=T&age=Y_LT1&unit=YR", "unidad": "Años", "frecuencia": "Anual", "descripcion": "Número medio de años que se espera que viva una persona recién nacida.", "desde": 2000, "pagina": "poblacion"}, {"id": "poblacion-de-25-34-anos-con-estudios-superiores", "nombre": "Población de 25-34 años con estudios superiores", "code": "sdg_04_20", "query": "&sex=T&unit=PC", "unidad": "% de la población de 25-34 años", "frecuencia": "Anual", "descripcion": "Personas jóvenes con educación terciaria; el objetivo europeo para 2030 es el 45 %.", "desde": 2005, "pagina": "poblacion"}, {"id": "abandono-temprano-de-la-educacion-y-la-formacion", "nombre": "Abandono temprano de la educación y la formación", "code": "sdg_04_10", "query": "&sex=T&unit=PC", "unidad": "% de la población de 18-24 años", "frecuencia": "Anual", "descripcion": "Jóvenes que solo tienen la educación secundaria obligatoria y no siguen estudiando; el objetivo europeo para 2030 es menos del 9 %.", "desde": 2005, "pagina": "poblacion"}, {"id": "exportaciones-de-bienes-y-servicios-del-pib", "nombre": "Exportaciones de bienes y servicios (% del PIB)", "code": "nama_10_gdp", "query": "&unit=PC_GDP&na_item=P6", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Peso de las exportaciones en el PIB: indicador del grado de apertura.", "desde": 2000, "pagina": "internacional"}, {"id": "importaciones-de-bienes-y-servicios-del-pib", "nombre": "Importaciones de bienes y servicios (% del PIB)", "code": "nama_10_gdp", "query": "&unit=PC_GDP&na_item=P7", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Peso de las importaciones en el PIB.", "desde": 2000, "pagina": "internacional"}, {"id": "exportaciones-crecimiento-interanual-trimestral", "nombre": "Exportaciones: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P6&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Exportaciones de bienes y servicios en volumen.", "cero": true, "desde": 2005, "pagina": "internacional"}, {"id": "saldo-por-cuenta-corriente-del-pib", "nombre": "Saldo por cuenta corriente (% del PIB)", "code": "bop_gdp6_q", "query": "&bop_item=CA&stk_flow=BAL&partner=WRL_REST&unit=PC_GDP&s_adj=NSA", "unidad": "% del PIB", "frecuencia": "Trimestral", "descripcion": "Diferencia entre ingresos y pagos por bienes, servicios y rentas con el resto del mundo.", "cero": true, "desde": 2008, "pagina": "internacional"}, {"id": "posicion-de-inversion-internacional-neta-del-pib", "nombre": "Posición de inversión internacional neta (% del PIB)", "code": "tipsii10", "query": "", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Activos financieros frente al exterior menos pasivos; los valores negativos indican endeudamiento exterior neto.", "cero": true, "desde": 2008, "pagina": "internacional"}, {"id": "pib-per-capita-en-ppc-ue-27-100", "nombre": "PIB per cápita en PPC (UE-27 = 100)", "code": "tec00114", "query": "", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Volumen del PIB por habitante en paridad de poder de compra respecto a la media de la UE.", "desde": 2005, "pagina": "internacional"}]
+FREQ_ORDEN = ({Mensual: 1, Trimestral: 2, Semestral: 3, Anual: 4})
+POR_ANIO = ({Mensual: 12, Trimestral: 4, Semestral: 2, Anual: 1})
+// Lee un número escrito a la española o a la inglesa
+numero = (s) => {
+  if (typeof s === "number") return s;
+  let t = String(s ?? "").trim().replace(/\s|%|€/g, "");
+  if (!t) return NaN;
+  if (t.includes(",") && t.includes(".")) t = t.lastIndexOf(",") > t.lastIndexOf(".") ? t.replace(/\./g, "").replace(",", ".") : t.replace(/,/g, "");
+  else if (t.includes(",")) t = t.replace(",", ".");
+  return /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN;
+}
+// Convierte texto pegado (de Excel, CSV…) en una tabla con columnas
+parsearTexto = (txt) => {
+  const lineas = String(txt ?? "").split(/\r?\n/).map(l => l.trimEnd()).filter(l => l.trim());
+  if (!lineas.length) return {cols: [], filas: []};
+  const sep = ["\t", ";", ","].map(s => [s, lineas.slice(0, 10).map(l => l.split(s).length - 1)]).find(([s, c]) => c[0] > 0 && c.every(x => x === c[0]))?.[0] ?? (lineas[0].includes("\t") ? "\t" : lineas[0].includes(";") ? ";" : /\s/.test(lineas[0].trim()) ? /\s+/ : ",");
+  const celdas = lineas.map(l => l.split(sep).map(c => c.trim().replace(/^"|"$/g, "")));
+  const cabecera = celdas[0].some(c => !Number.isFinite(numero(c)));
+  const nc = d3.max(celdas, f => f.length);
+  const cols = cabecera ? Array.from({length: nc}, (_, i) => celdas[0][i] || `Columna ${i + 1}`) : Array.from({length: nc}, (_, i) => `Variable ${i + 1}`);
+  const filas = (cabecera ? celdas.slice(1) : celdas).map(f => Object.fromEntries(cols.map((c, i) => [c, f[i] ?? ""])));
+  return {cols, filas};
+}
+leerFichero = async (f) => {
+  if (!f) return null;
+  if (/\.xlsx?$/i.test(f.name)) { const wb = await f.xlsx(); const filas = wb.sheet(0, {headers: true}); return {cols: filas.columns ?? Object.keys(filas[0] ?? {}), filas}; }
+  return parsearTexto(await f.text());
+}
+// Separa columnas numéricas y una posible columna de etiquetas (fechas, nombres…)
+prepararTabla = (t) => {
+  if (!t || !t.filas.length) return null;
+  const numericas = t.cols.filter(c => t.filas.filter(f => Number.isFinite(numero(f[c]))).length >= Math.max(3, 0.8 * t.filas.filter(f => String(f[c] ?? "").trim() !== "").length));
+  // Columna de etiquetas: la primera no numérica, o una columna de años/fechas aunque sea numérica
+  const esTiempo = (c) => /^(a[ñn]o|anio|year|fecha|periodo|período|mes|trimestre|date)s?\b/i.test(c.trim()) ||
+    (() => { const v = t.filas.map(f => numero(f[c])); return v.length > 2 && v.every(x => Number.isInteger(x) && x >= 1900 && x <= 2100) && v.every((x, i) => !i || x > v[i - 1]); })();
+  let etiqueta = t.cols.find(c => !numericas.includes(c)) ?? t.cols.find(esTiempo);
+  if (etiqueta && numericas.includes(etiqueta) && numericas.length > 1) numericas.splice(numericas.indexOf(etiqueta), 1);
+  else if (etiqueta && numericas.includes(etiqueta)) etiqueta = undefined;
+  return {numericas, etiqueta, filas: t.filas.map((f, i) => ({etq: etiqueta ? String(f[etiqueta]) : String(i + 1), ...Object.fromEntries(numericas.map(c => [c, numero(f[c])]))}))};
+}
+clavePer = (f, freq) => freq === "Anual" ? `${f.getFullYear()}` : freq === "Semestral" ? `${f.getFullYear()}-S${f.getMonth() < 6 ? 1 : 2}` : freq === "Trimestral" ? `${f.getFullYear()}-T${Math.floor(f.getMonth() / 3) + 1}` : `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, "0")}`
+TRANSF = new Map([["Niveles (el dato tal cual)", "nivel"], ["Variación interanual (%)", "tva"], ["Diferencia interanual (puntos)", "dif"], ["Primeras diferencias", "d1"]])
+// Descarga varias series de la web, las lleva a la misma frecuencia y las une por periodo
+alinearSeries = async (series, transf) => {
+  const datos = await Promise.all(series.map(s => cargar(s.spec)));
+  const freq = series.map(s => s.spec.frecuencia).sort((a, b) => FREQ_ORDEN[b] - FREQ_ORDEN[a])[0];
+  const n = POR_ANIO[freq] ?? 1;
+  const avisos = [];
+  const cols = series.map((s, i) => {
+    const d = datos[i];
+    if (!d.ok) { avisos.push(`${s.nombre}: no se han podido cargar los datos.`); return new Map(); }
+    const filas = d.rows.filter(r => s.spec.sinGeo || r.territorio === s.territorio);
+    if (!filas.length) avisos.push(`${s.nombre}: no hay datos para ${s.territorio}.`);
+    let m = [...d3.rollup(filas, v => ({v: d3.mean(v, r => r.valor), f: v[0].fecha}), r => clavePer(r.fecha, freq))].map(([k, o]) => ({k, ...o})).sort((a, b) => a.f - b.f);
+    if (transf !== "nivel") {
+      const lag = transf === "d1" ? 1 : n, idx = new Map(m.map((o, j) => [o.k, j]));
+      m = m.map((o, j) => { const a = m[j - lag]; if (!a) return null;
+        const v = transf === "tva" ? (a.v ? 100 * (o.v / a.v - 1) : NaN) : o.v - a.v; return {...o, v}; }).filter(o => o && Number.isFinite(o.v));
+    }
+    return new Map(m.map(o => [o.k, o]));
+  });
+  const claves = [...new Set(cols.flatMap(c => [...c.keys()]))].sort();
+  const filas = claves.filter(k => cols.every(c => c.has(k))).map(k => ({etq: k, fecha: cols[0].get(k).f, ...Object.fromEntries(series.map((s, i) => [s.nombre, cols[i].get(k).v]))}));
+  return {filas, numericas: series.map(s => s.nombre), etiqueta: "Periodo", freq, avisos, fuente: [...new Set(datos.filter(d => d.ok).map(d => d.code))].join(", ")};
+}
+territoriosW = [...new Set(Object.values(nombresGeo))].sort((a, b) => a.localeCompare(b, "es"))
+f4 = (x) => Number.isFinite(x) ? (Math.abs(x) >= 1e4 || (Math.abs(x) < 1e-3 && x !== 0) ? x.toExponential(3).replace(".", ",") : locES.format(",.4~f")(x)) : "–"
+fp = (p) => !Number.isFinite(p) ? "–" : p < 0.0001 ? "< 0,0001" : locES.format(",.4f")(p)
+```
+
+```{ojs}
+//| echo: false
+viewof fuenteR = Inputs.radio(new Map([["Indicadores de CCEEscopio", "web"], ["Mis datos (pegar o subir un fichero)", "propios"]]), {label: "Datos", value: "web"})
+```
+
+```{ojs}
+//| echo: false
+viewof textoR = fuenteR === "propios" ? Inputs.textarea({label: "Pega aquí tus datos (con una fila de títulos; copia y pega desde Excel)", rows: 8, width: 560, placeholder: "Año;Ventas;Publicidad\n2019;120;15\n2020;98;12\n…", value: "Año;Ventas (miles €);Publicidad (miles €);Precio (€)\n2012;410;32;9,5\n2013;432;35;9,6\n2014;455;37;9,4\n2015;470;40;9,8\n2016;498;44;9,7\n2017;511;45;10,1\n2018;540;49;10,0\n2019;552;50;10,4\n2020;480;41;10,2\n2021;530;47;10,6\n2022;575;53;10,9\n2023;590;56;11,3\n2024;612;58;11,2\n2025;640;62;11,5"}) : Object.assign(html`<span></span>`, {value: ""})
+viewof ficheroR = fuenteR === "propios" ? Inputs.file({label: "…o sube un fichero", accept: ".csv,.txt,.xlsx"}) : Object.assign(html`<span></span>`, {value: null})
+```
+
+
+```{ojs}
+//| echo: false
+viewof yW = fuenteR === "web" ? Inputs.select(new Map(especW.map(s => [`${s.nombre} (${s.frecuencia})`, s])), {label: "Variable dependiente (Y)", value: especW.find(s => s.id === "tasa-de-paro"), width: 520}) : Object.assign(html`<span></span>`, {value: null})
+viewof xW = fuenteR === "web" ? Inputs.select(new Map(especW.map(s => [`${s.nombre} (${s.frecuencia})`, s])), {label: "Variables explicativas (X) · Ctrl o ⌘ para varias", multiple: true, size: 8, value: [especW.find(s => s.id === "pib-crecimiento-interanual-trimestral")].filter(Boolean), width: 520}) : Object.assign(html`<span></span>`, {value: []})
+viewof geoW = fuenteR === "web" ? Inputs.select(territoriosW, {label: "Territorio", value: "España"}) : Object.assign(html`<span></span>`, {value: null})
+viewof transfW = fuenteR === "web" ? Inputs.select(TRANSF, {label: "Transformación de las series", value: "nivel"}) : Object.assign(html`<span></span>`, {value: "nivel"})
+viewof desdeW = fuenteR === "web" ? Inputs.range([2000, new Date().getFullYear() - 2], {label: "Desde el año", value: 2005, step: 1}) : Object.assign(html`<span></span>`, {value: 1900})
+```
+
+```{ojs}
+//| echo: false
+tablaR = {
+  if (fuenteR === "web") {
+    if (!yW || !xW.length) return {error: "Elige la variable dependiente y al menos una variable explicativa."};
+    const xs = xW.filter(s => s.id !== yW.id).slice(0, 4);
+    const r = await alinearSeries([yW, ...xs].map(s => ({spec: s, nombre: s.nombre, territorio: geoW})), transfW);
+    r.filas = r.filas.filter(f => !f.fecha || f.fecha.getFullYear() >= desdeW);
+    return {...r, y: yW.nombre, xs: xs.map(s => s.nombre), temporal: true};
+  }
+  const t = prepararTabla(ficheroR ? await leerFichero(ficheroR) : parsearTexto(textoR));
+  if (!t || t.numericas.length < 2) return {error: "Necesito al menos dos columnas numéricas (una para Y y otra para X)."};
+  return {...t, temporal: !!t.etiqueta && /año|ano|fecha|periodo|year|mes|trim/i.test(t.etiqueta)};
+}
+```
+
+```{ojs}
+//| echo: false
+viewof yP = fuenteR === "propios" && tablaR?.numericas ? Inputs.select(tablaR.numericas, {label: "Variable dependiente (Y)", value: tablaR.numericas[0]}) : Object.assign(html`<span></span>`, {value: null})
+viewof xP = fuenteR === "propios" && tablaR?.numericas ? Inputs.checkbox(tablaR.numericas.filter(c => c !== yP), {label: "Variables explicativas (X)", value: tablaR.numericas.filter(c => c !== yP).slice(0, 1)}) : Object.assign(html`<span></span>`, {value: []})
+viewof tendR = Inputs.toggle({label: "Añadir una tendencia temporal (t = 1, 2, 3…)", value: false})
+```
+
+```{ojs}
+//| echo: false
+modeloR = {
+  if (!tablaR || tablaR.error) return {error: tablaR?.error ?? ""};
+  const yN = fuenteR === "web" ? tablaR.y : yP, xN = [...(fuenteR === "web" ? tablaR.xs : xP).slice(0, 4)];
+  if (!yN || !xN.length) return {error: "Elige al menos una variable explicativa."};
+  const filas = tablaR.filas.filter(f => [yN, ...xN].every(c => Number.isFinite(f[c])));
+  const nombresX = tendR ? [...xN, "Tendencia (t)"] : xN;
+  const y = filas.map(f => f[yN]), X = filas.map((f, i) => [...xN.map(c => f[c]), ...(tendR ? [i + 1] : [])]);
+  if (filas.length < nombresX.length + 4) return {error: `Hay solo ${filas.length} observaciones completas: son pocas para estimar el modelo.`};
+  const m = EST.mco(y, X);
+  if (!m) return {error: "No se puede estimar el modelo: alguna variable es combinación lineal de las demás (multicolinealidad perfecta)."};
+  return {m, s: EST.supuestos(y, X, m), y, X, yN, nombresX, filas};
+}
+```
+
+## Resultados de la estimación
+
+```{ojs}
+//| echo: false
+{
+  if (modeloR.error) return html`<p class="pending">${modeloR.error}</p>`;
+  const {m, yN, nombresX, filas} = modeloR, nom = ["Constante", ...nombresX], tc = EST.tInv(0.05, m.gl);
+  window.cceeEvento && window.cceeEvento("calculadoras/regresion", "Regresión", true);
+  const eq = `${yN} = ${f4(m.b[0])} ${m.b.slice(1).map((b, i) => `${b < 0 ? "−" : "+"} ${f4(Math.abs(b))} · ${nombresX[i]}`).join(" ")}`;
+  const sig = (p) => p < 0.01 ? "***" : p < 0.05 ? "**" : p < 0.1 ? "*" : "";
+  const interp = m.b.slice(1).map((b, i) => {
+    const p = m.p[i + 1];
+    return html`<li><b>${nombresX[i]}</b>: si aumenta en una unidad, ${yN} ${b >= 0 ? "aumenta" : "disminuye"} en promedio ${f4(Math.abs(b))} unidades, manteniendo constante el resto. ${p < 0.05 ? html`El efecto es <b>estadísticamente significativo</b> al 5 % (p = ${fp(p)}).` : html`El efecto <b>no es significativo</b> al 5 % (p = ${fp(p)}).`}</li>`;
+  });
+  return html`${tablaR.avisos?.length ? html`<p class="pending">${tablaR.avisos.join(" ")}</p>` : ""}
+    <p class="reg-ecuacion">${eq}</p>
+    <table class="uso-tabla"><tr><th>Variable</th><th>Coeficiente</th><th>Error típico</th><th>t</th><th>p-valor</th><th>Intervalo de confianza al 95 %</th></tr>
+      ${nom.map((v, i) => html`<tr><td>${v}</td><td><b>${f4(m.b[i])}</b> ${sig(m.p[i])}</td><td>${f4(m.se[i])}</td><td>${f4(m.t[i])}</td><td>${fp(m.p[i])}</td><td>[${f4(m.b[i] - tc * m.se[i])} ; ${f4(m.b[i] + tc * m.se[i])}]</td></tr>`)}</table>
+    <p class="nota">*** p < 0,01; ** p < 0,05; * p < 0,1.</p>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-l">R²</div><div class="kpi-n">${locES.format(",.3f")(m.r2)}</div><div class="kpi-s">el modelo explica el ${locES.format(",.1f")(100 * m.r2)} % de la variabilidad de Y</div></div>
+      <div class="kpi"><div class="kpi-l">R² ajustado</div><div class="kpi-n">${locES.format(",.3f")(m.r2a)}</div></div>
+      <div class="kpi"><div class="kpi-l">F de significación conjunta</div><div class="kpi-n">${f4(m.F)}</div><div class="kpi-s">p = ${fp(m.pFv)} ${m.pFv < 0.05 ? "· el modelo es significativo" : "· el modelo no es significativo"}</div></div>
+      <div class="kpi"><div class="kpi-l">Observaciones</div><div class="kpi-n">${m.n}</div><div class="kpi-s">${tablaR.freq ? `datos ${tablaR.freq.toLowerCase()}es` : ""} ${filas.length ? `· ${filas[0].etq} a ${filas.at(-1).etq}` : ""}</div></div>
+      <div class="kpi"><div class="kpi-l">Error típico de la regresión</div><div class="kpi-n">${f4(Math.sqrt(m.s2))}</div></div>
+      <div class="kpi"><div class="kpi-l">AIC · BIC</div><div class="kpi-n" style="font-size:1.2rem">${locES.format(",.1f")(m.aic)} · ${locES.format(",.1f")(m.bic)}</div></div></div>
+    <h3>Interpretación</h3><ul>${interp}</ul>`;
+}
+```
+
+## Gráficos
+
+```{ojs}
+//| echo: false
+{
+  if (modeloR.error) return html``;
+  const {m, y, X, yN, nombresX, filas} = modeloR;
+  const d = filas.map((f, i) => ({etq: f.etq, fecha: f.fecha, i: i + 1, y: y[i], yh: m.ajuste[i], e: m.e[i], x: X[i][0]}));
+  const sd = Math.sqrt(m.scr / m.n);
+  const ordenados = d.map(r => r.e).sort((a, b) => a - b);
+  const qq = ordenados.map((e, i) => ({teo: EST.normInv((i + 0.5) / ordenados.length) * sd, e}));
+  const ejeT = tablaR.temporal && d[0].fecha ? {x: "fecha"} : {x: "i"};
+  const graf1 = nombresX.length === 1
+    ? Plot.plot({height: 300, marginLeft: 55, x: {label: nombresX[0], grid: true}, y: {label: yN, grid: true}, marks: [Plot.dot(d, {x: "x", y: "y", fill: "#2C6FBB", r: 3.5, title: r => `${r.etq}: (${f4(r.x)}, ${f4(r.y)})`}), Plot.line(d.slice().sort((a, b) => a.x - b.x), {x: "x", y: "yh", stroke: "#A6195E", strokeWidth: 2.5})]})
+    : Plot.plot({height: 300, marginLeft: 55, x: {label: `${yN} estimado`, grid: true}, y: {label: `${yN} observado`, grid: true}, marks: [Plot.line([[d3.min(d, r => r.yh), d3.min(d, r => r.yh)], [d3.max(d, r => r.yh), d3.max(d, r => r.yh)]], {stroke: "#999", strokeDasharray: "4,3"}), Plot.dot(d, {x: "yh", y: "y", fill: "#2C6FBB", r: 3.5, title: r => r.etq})]});
+  return html`<div class="graf-2">
+    <div><h4>${nombresX.length === 1 ? "Nube de puntos y recta de regresión" : "Observado frente a estimado"}</h4>${graf1}</div>
+    <div><h4>Observado y estimado ${tablaR.temporal ? "a lo largo del tiempo" : "por observación"}</h4>${Plot.plot({height: 300, marginLeft: 55, x: {label: null}, y: {label: yN, grid: true}, color: {legend: true, domain: ["Observado", "Estimado"], range: ["#2C6FBB", "#A6195E"]},
+      marks: [Plot.line(d, {...ejeT, y: "y", stroke: () => "Observado", strokeWidth: 2}), Plot.line(d, {...ejeT, y: "yh", stroke: () => "Estimado", strokeWidth: 2, strokeDasharray: "5,3"})]})}</div>
+    <div><h4>Residuos frente a valores estimados</h4>${Plot.plot({height: 260, marginLeft: 55, x: {label: "Valor estimado", grid: true}, y: {label: "Residuo", grid: true}, marks: [Plot.ruleY([0], {stroke: "#A6195E"}), Plot.dot(d, {x: "yh", y: "e", fill: "#555", r: 3, title: r => `${r.etq}: ${f4(r.e)}`})]})}</div>
+    <div><h4>Residuos ${tablaR.temporal ? "en el tiempo" : "por orden de observación"}</h4>${Plot.plot({height: 260, marginLeft: 55, x: {label: null}, y: {label: "Residuo", grid: true}, marks: [Plot.ruleY([0], {stroke: "#A6195E"}), Plot.line(d, {...ejeT, y: "e", stroke: "#555"}), Plot.dot(d, {...ejeT, y: "e", fill: "#555", r: 2.5})]})}</div>
+    <div><h4>Histograma de los residuos</h4>${Plot.plot({height: 260, marginLeft: 45, x: {label: "Residuo"}, y: {label: "Frecuencia", grid: true}, marks: [Plot.rectY(d, Plot.binX({y: "count"}, {x: "e", fill: "#2C6FBB", thresholds: Math.max(5, Math.round(Math.sqrt(d.length)))})), Plot.ruleY([0])]})}</div>
+    <div><h4>Gráfico Q-Q normal de los residuos</h4>${Plot.plot({height: 260, marginLeft: 55, x: {label: "Cuantil teórico (normal)", grid: true}, y: {label: "Residuo", grid: true}, marks: [Plot.line([[d3.min(qq, q => q.teo), d3.min(qq, q => q.teo)], [d3.max(qq, q => q.teo), d3.max(qq, q => q.teo)]], {stroke: "#A6195E"}), Plot.dot(qq, {x: "teo", y: "e", fill: "#555", r: 2.5})]})}</div>
+  </div>
+  ${DOM.download(() => new Blob([csv(d.map(r => ({observacion: r.etq, [yN]: r.y, estimado: r.yh, residuo: r.e})))], {type: "text/csv"}), "regresion_ajuste_residuos.csv", "⬇ Descargar valores estimados y residuos (CSV)")}`;
+}
+```
+
+## Análisis de los supuestos
+
+```{ojs}
+//| echo: false
+{
+  if (modeloR.error) return html``;
+  const {s, m, nombresX} = modeloR;
+  const fila = (o, h0, si, no, nota) => { if (!o) return ""; const ok = o.p >= 0.05;
+    return html`<tr><td><b>${o.nombre}</b><br><small>H₀: ${h0}</small></td><td>${f4(o.est)}</td><td>${fp(o.p)}</td><td class="${ok ? "sup-ok" : "sup-mal"}">${ok ? "✅ " + si : "⚠️ " + no}</td><td><small>${nota ?? ""}</small></td></tr>`; };
+  const dw = s.autocorrelacion.dw;
+  const vifs = s.vif ? s.vif.map((v, i) => ({x: nombresX[i], v})) : null;
+  const vifMax = vifs ? d3.max(vifs, d => d.v) : null;
+  return html`<p>Se usa un nivel de significación del 5 %: si el p-valor es menor que 0,05, se rechaza la hipótesis nula (H₀) y el supuesto <b>no</b> se cumple.</p>
+  <table class="uso-tabla sup-tabla"><tr><th>Supuesto y contraste</th><th>Estadístico</th><th>p-valor</th><th>Conclusión</th><th>Si no se cumple…</th></tr>
+    ${fila(s.linealidad, "la forma funcional lineal es correcta", "Se acepta la linealidad", "Posible error de especificación", "Prueba a transformar las variables (logaritmos, tasas de variación) o a añadir variables omitidas.")}
+    ${fila(s.normalidad, "los residuos siguen una distribución normal", "Se acepta la normalidad", "Los residuos no son normales", `Asimetría ${f4(s.normalidad.asimetria)}, curtosis ${f4(s.normalidad.curtosis)}. Con muestras grandes, los contrastes t y F siguen siendo aproximadamente válidos; revisa si hay datos atípicos.`)}
+    ${fila(s.homocedasticidad, "la varianza de los residuos es constante", "Se acepta la homocedasticidad", "Hay heterocedasticidad", "Los coeficientes siguen siendo insesgados, pero los errores típicos no son fiables: usa errores típicos robustos o transforma las variables.")}
+    ${fila(s.autocorrelacion, "los residuos no están autocorrelacionados", "No hay autocorrelación", "Hay autocorrelación", `Durbin-Watson = ${f4(dw)} (cerca de 2: sin autocorrelación; cerca de 0: positiva; cerca de 4: negativa). Es habitual en series temporales en niveles: prueba con tasas de variación o diferencias.`)}
+    ${vifs ? html`<tr><td><b>Ausencia de multicolinealidad (VIF)</b><br><small>Regla: VIF > 10 indica multicolinealidad grave</small></td><td colspan="2">${vifs.map(d => html`${d.x}: <b>${f4(d.v)}</b><br>`)}</td>
+      <td class="${vifMax <= 10 ? "sup-ok" : "sup-mal"}">${vifMax <= 5 ? "✅ Sin problemas" : vifMax <= 10 ? "✅ Moderada" : "⚠️ Multicolinealidad alta"}</td><td><small>Con multicolinealidad alta, los coeficientes son imprecisos: valora eliminar alguna variable explicativa muy correlacionada con las demás.</small></td></tr>` : html`<tr><td><b>Ausencia de multicolinealidad</b></td><td colspan="4"><small>Con una sola variable explicativa no hay multicolinealidad.</small></td></tr>`}
+  </table>
+  <p class="nota">Contrastes: RESET de Ramsey con ŷ² y ŷ³ (F); Jarque-Bera (χ² con 2 g.l.); Breusch-Pagan en la versión de Koenker (n·R², χ²); Breusch-Godfrey de orden 1 (n·R², χ² con 1 g.l.) y Durbin-Watson; factores de inflación de la varianza (VIF). ${tablaR.temporal ? "Recuerda que una regresión entre series temporales con tendencia puede ser espuria: si R² es alto pero el Durbin-Watson es muy bajo, desconfía del resultado." : ""}</p>`;
+}
+```

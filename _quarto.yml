@@ -62,6 +62,8 @@ website:
             text: "Consumo y confianza"
           - href: mercados.qmd
             text: "Mercados al día"
+          - href: piramides.qmd
+            text: "Pirámides de población"
           - text: "---"
           - text: "Análisis"
           - href: descomposiciones.qmd
@@ -70,30 +72,12 @@ website:
             text: "Datos extremos e inusuales"
           - href: ciclo.qmd
             text: "Ciclo económico y semáforo de coyuntura"
-          - href: convergencia.qmd
-            text: "¿Convergen las economías? (σ y β)"
-          - href: desfases.qmd
-            text: "¿Qué indicador se adelanta? (desfases)"
-          - href: prevision.qmd
-            text: "Previsión sencilla"
       - text: Herramientas
         menu:
-          - href: calculadora.qmd
-            text: "Calculadora de inflación"
           - href: ficha.qmd
             text: "Ficha de país o región"
-          - href: relaciona.qmd
-            text: "Relaciona dos indicadores"
           - href: comparador.qmd
             text: "Comparador de comunidades autónomas"
-          - href: conversor.qmd
-            text: "Conversor de unidades económicas"
-          - href: hipoteca.qmd
-            text: "Simulador de hipotecas y préstamos"
-          - href: desigualdad-calc.qmd
-            text: "Calculadora de desigualdad (Gini, Lorenz, Theil)"
-          - href: politica-fiscal.qmd
-            text: "Simulador de política fiscal"
           - href: prediccion.qmd
             text: "Predice el próximo dato"
           - text: "---"
@@ -108,6 +92,42 @@ website:
             text: "Datos recientes y calendario"
           - href: indicadores.qmd
             text: "Buscador de indicadores"
+      - text: "Calculadoras"
+        menu:
+          - href: calculadoras.qmd
+            text: "🧮 Todas las calculadoras"
+          - text: "---"
+          - text: "Estadística y econometría"
+          - href: regresion.qmd
+            text: "Regresión lineal con análisis de supuestos"
+          - href: estadistica.qmd
+            text: "Análisis estadístico de datos"
+          - href: desfases.qmd
+            text: "¿Qué indicador se adelanta? (desfases)"
+          - href: relaciona.qmd
+            text: "Relaciona dos indicadores"
+          - text: "---"
+          - text: "Series temporales y previsión"
+          - href: prevision.qmd
+            text: "Previsión sencilla"
+          - href: convergencia.qmd
+            text: "Convergencia sigma y beta"
+          - text: "---"
+          - text: "Precios, dinero y finanzas"
+          - href: calculadora.qmd
+            text: "Calculadora de inflación"
+          - href: conversor.qmd
+            text: "Conversor de unidades económicas"
+          - href: hipoteca.qmd
+            text: "Simulador de hipotecas y préstamos"
+          - text: "---"
+          - text: "Desigualdad, política económica y población"
+          - href: desigualdad-calc.qmd
+            text: "Calculadora de desigualdad (Gini, Lorenz, Theil)"
+          - href: politica-fiscal.qmd
+            text: "Simulador de política fiscal"
+          - href: piramides.qmd
+            text: "Pirámides de población"
       - href: rankings.qmd
         text: Rankings
       - href: juegos.qmd

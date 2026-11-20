@@ -1,0 +1,75 @@
+---
+title: "Calculadoras y laboratorio de datos"
+subtitle: "Herramientas para calcular, estimar y analizar con datos oficiales o con tus propios datos"
+toc: false
+---
+
+Todas las calculadoras funcionan en tu navegador: si usas tus propios datos, **no salen de tu ordenador**. Las que usan datos de CCEEscopio los descargan de Eurostat al momento.
+
+## 📊 Estadística y econometría
+
+```{=html}
+<div class="calc-grid">
+
+<a class="calc-card" href="regresion.html"><b>Regresión lineal con análisis de supuestos</b> <span class="badge-nuevo">nuevo</span><span>MCO con hasta cuatro variables explicativas, interpretación y contrastes de linealidad, normalidad, homocedasticidad, autocorrelación y multicolinealidad.</span></a>
+
+<a class="calc-card" href="estadistica.html"><b>Análisis estadístico de datos</b> <span class="badge-nuevo">nuevo</span><span>Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.</span></a>
+
+<a class="calc-card" href="desfases.html"><b>¿Qué indicador se adelanta?</b><span>Correlación con desfase entre dos series para detectar indicadores adelantados y retrasados.</span></a>
+
+<a class="calc-card" href="relaciona.html"><b>Relaciona dos indicadores</b><span>Nube de puntos entre dos indicadores para todos los países o regiones.</span></a>
+
+</div>
+```
+
+## 📈 Series temporales y previsión
+
+```{=html}
+<div class="calc-grid">
+
+<a class="calc-card" href="prevision.html"><b>Previsión sencilla</b><span>Tendencia más estacionalidad con intervalo de confianza y prueba hacia atrás.</span></a>
+
+<a class="calc-card" href="descomposiciones.html"><b>¿Qué explica cada indicador?</b><span>Contribuciones de cada componente a la inflación, al crecimiento del PIB, a la cuenta corriente, a la población y al turismo.</span></a>
+
+<a class="calc-card" href="convergencia.html"><b>Convergencia sigma y beta</b><span>¿Se reducen las diferencias entre países o regiones?</span></a>
+
+<a class="calc-card" href="ciclo.html"><b>Ciclo económico</b><span>Reloj del ciclo y semáforo de coyuntura.</span></a>
+
+</div>
+```
+
+## 💶 Precios, dinero y finanzas
+
+```{=html}
+<div class="calc-grid">
+
+<a class="calc-card" href="calculadora.html"><b>Calculadora de inflación</b><span>¿Cuánto valen hoy los euros de otro año?</span></a>
+
+<a class="calc-card" href="conversor.html"><b>Conversor de unidades económicas</b><span>Euros constantes, paridad de poder de compra, por habitante y cambios de base.</span></a>
+
+<a class="calc-card" href="hipoteca.html"><b>Simulador de hipotecas y préstamos</b><span>Cuota, cuadro de amortización y TAE con el euríbor actual.</span></a>
+
+</div>
+```
+
+## ⚖️ Desigualdad y política económica
+
+```{=html}
+<div class="calc-grid">
+
+<a class="calc-card" href="desigualdad-calc.html"><b>Calculadora de desigualdad</b><span>Gini, curva de Lorenz, S80/S20 e índices de Theil con tus datos, con inferencia jackknife.</span></a>
+
+<a class="calc-card" href="politica-fiscal.html"><b>Simulador de política fiscal</b><span>Dinámica de la deuda pública y efecto de un ajuste fiscal.</span></a>
+
+</div>
+```
+
+## 👥 Población
+
+```{=html}
+<div class="calc-grid">
+
+<a class="calc-card" href="piramides.html"><b>Pirámides de población</b> <span class="badge-nuevo">nuevo</span><span>Países, comunidades autónomas y provincias, con animación y comparación entre años y territorios.</span></a>
+
+</div>
+```

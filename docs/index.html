@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7348fbc5a8768ab07936ef3858a35e01.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7cbf636553388102f599bb310d6afa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -180,6 +180,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./mercados.html">
  <span class="dropdown-text">Mercados al día</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./piramides.html">
+ <span class="dropdown-text">Pirámides de población</span></a>
+  </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Análisis</li>
         <li>
@@ -194,18 +198,6 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./ciclo.html">
  <span class="dropdown-text">Ciclo económico y semáforo de coyuntura</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./convergencia.html">
- <span class="dropdown-text">¿Convergen las economías? (σ y β)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./desfases.html">
- <span class="dropdown-text">¿Qué indicador se adelanta? (desfases)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./prevision.html">
- <span class="dropdown-text">Previsión sencilla</span></a>
-  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -214,36 +206,12 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-herramientas">    
         <li>
-    <a class="dropdown-item" href="./calculadora.html">
- <span class="dropdown-text">Calculadora de inflación</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="./ficha.html">
  <span class="dropdown-text">Ficha de país o región</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./relaciona.html">
- <span class="dropdown-text">Relaciona dos indicadores</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="./comparador.html">
  <span class="dropdown-text">Comparador de comunidades autónomas</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./conversor.html">
- <span class="dropdown-text">Conversor de unidades económicas</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./hipoteca.html">
- <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./desigualdad-calc.html">
- <span class="dropdown-text">Calculadora de desigualdad (Gini, Lorenz, Theil)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./politica-fiscal.html">
- <span class="dropdown-text">Simulador de política fiscal</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./prediccion.html">
@@ -270,6 +238,73 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./indicadores.html">
  <span class="dropdown-text">Buscador de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-calculadoras" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Calculadoras</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-calculadoras">    
+        <li>
+    <a class="dropdown-item" href="./calculadoras.html">
+ <span class="dropdown-text">🧮 Todas las calculadoras</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Estadística y econometría</li>
+        <li>
+    <a class="dropdown-item" href="./regresion.html">
+ <span class="dropdown-text">Regresión lineal con análisis de supuestos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./estadistica.html">
+ <span class="dropdown-text">Análisis estadístico de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desfases.html">
+ <span class="dropdown-text">¿Qué indicador se adelanta? (desfases)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./relaciona.html">
+ <span class="dropdown-text">Relaciona dos indicadores</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Series temporales y previsión</li>
+        <li>
+    <a class="dropdown-item" href="./prevision.html">
+ <span class="dropdown-text">Previsión sencilla</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./convergencia.html">
+ <span class="dropdown-text">Convergencia sigma y beta</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Precios, dinero y finanzas</li>
+        <li>
+    <a class="dropdown-item" href="./calculadora.html">
+ <span class="dropdown-text">Calculadora de inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./conversor.html">
+ <span class="dropdown-text">Conversor de unidades económicas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./hipoteca.html">
+ <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Desigualdad, política económica y población</li>
+        <li>
+    <a class="dropdown-item" href="./desigualdad-calc.html">
+ <span class="dropdown-text">Calculadora de desigualdad (Gini, Lorenz, Theil)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./politica-fiscal.html">
+ <span class="dropdown-text">Simulador de política fiscal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./piramides.html">
+ <span class="dropdown-text">Pirámides de población</span></a>
   </li>  
     </ul>
   </li>
@@ -490,6 +525,8 @@ Datos oficiales, actualizados y descargables, al servicio de la <strong>docencia
 <section id="novedades" class="level2">
 <h2 class="anchored" data-anchor-id="novedades">Novedades</h2>
 <ul>
+<li><strong>Nuevo · <a href="./calculadoras.html">Calculadoras</a></strong> <span class="badge-nuevo">nuevo</span>: un menú con todas las calculadoras y dos nuevas, la <a href="./regresion.html">regresión con análisis de supuestos</a> y el <a href="./estadistica.html">análisis estadístico de datos</a>, que funcionan con las series de CCEEscopio o con tus propios datos.</li>
+<li><strong>Nuevo · <a href="./piramides.html">Pirámides de población</a></strong> <span class="badge-nuevo">nuevo</span>: de los países europeos, las comunidades autónomas y las provincias, con animación desde el año 2000.</li>
 <li><strong>Nuevo · <a href="./descomposiciones.html">¿Qué explica cada indicador?</a></strong> <span class="badge-nuevo">nuevo</span>: descompón la inflación (alimentos, energía, vivienda, transporte, servicios…), el crecimiento del PIB, la cuenta corriente, la población y el turismo, y descubre qué componentes explican cada subida.</li>
 <li><strong>Nuevo · <a href="./noticias.html">Noticias e indicadores</a></strong> <span class="badge-nuevo">nuevo</span>: noticias económicas de los últimos días con el reto de comprobarlas con los indicadores de CCEEscopio.</li>
 <li><strong>Nuevo · 🎮 <a href="./juegos.html">Juegos con datos</a></strong> <span class="badge-nuevo">nuevo</span>: el dato del día, ¿más alto o más bajo?, adivina el país, ¿qué pasó aquí?, ordena los países y un <strong>modo aula</strong> para competir en clase. Y además, <a href="./prediccion.html">predice el próximo dato</a>.</li>

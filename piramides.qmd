@@ -1,0 +1,369 @@
+---
+title: "Pirámides de población"
+subtitle: "Países de Europa, comunidades autónomas y provincias, desde el año 2000 hasta el último dato"
+toc: false
+---
+
+Elige un territorio y un año. Puedes **animar** la pirámide para ver cómo envejece la población, y **compararla** con otro año o con otro territorio (silueta negra). Debajo tienes los principales indicadores demográficos. Fuente: Eurostat, población a 1 de enero por sexo y grupos de edad de cinco años.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+TABLAS_PIR = ["demo_r_pjangroup", "demo_pjangroup"]
+territoriosPir = {
+  for (const t of TABLAS_PIR) {
+    try {
+      const r = await eurostat(t, "&sex=T&age=TOTAL&unit=NR&lastTimePeriod=1");
+      if (r.length) return [...new Map(r.map(x => [x.geo, {code: x.geo, label: nombresGeo[x.geo] ?? x.geoLabel}])).values()];
+    } catch (e) {}
+  }
+  return [];
+}
+paisesPir = territoriosPir.filter(t => t.code.length === 2 || ["EU27_2020", "EA20"].includes(t.code)).sort((a, b) => a.label.localeCompare(b.label, "es"))
+NIVELES = new Map([["El país completo", 2], ["Comunidades autónomas / regiones (NUTS 2)", 4], ["Provincias (NUTS 3)", 5], ["Grandes regiones (NUTS 1)", 3]])
+viewof paisPir = Inputs.select(new Map(paisesPir.map(t => [t.label, t.code])), {label: "País", value: "ES"})
+viewof nivelPir = Inputs.select(NIVELES, {label: "Nivel", value: paisPir === "ES" ? 4 : 2})
+```
+
+```{ojs}
+//| echo: false
+opcionesPir = nivelPir === 2 ? territoriosPir.filter(t => t.code === paisPir) : territoriosPir.filter(t => t.code.startsWith(paisPir) && t.code.length === nivelPir && !/Z+$/.test(t.code)).sort((a, b) => a.label.localeCompare(b.label, "es"))
+viewof geoPir = Inputs.select(new Map(opcionesPir.map(t => [`${t.label} (${t.code})`, t.code])), {label: "Territorio", value: opcionesPir.find(t => t.code === "ES61")?.code ?? opcionesPir[0]?.code})
+viewof modoPir = Inputs.radio(new Map([["Porcentaje de la población", "pct"], ["Número de personas", "abs"]]), {label: "Escala", value: "pct"})
+viewof compPir = Inputs.radio(new Map([["Sin comparar", "no"], ["Con otro año", "anio"], ["Con otro territorio", "geo"]]), {label: "Comparar", value: "anio"})
+```
+
+```{ojs}
+//| echo: false
+// Lee la población por sexo y grupos de edad de un territorio (todos los años)
+parseEdad = (c) => { let m; if (c === "Y_LT5") return [0, 5]; if ((m = /^Y(\d+)-(\d+)$/.exec(c))) return [+m[1], +m[2] + 1]; if ((m = /^Y_GE(\d+)$/.exec(c))) return [+m[1], Infinity]; if ((m = /^Y_LT(\d+)$/.exec(c))) return [0, +m[1]]; return null; }
+// Elige grupos de edad que no se solapen (los más detallados disponibles)
+particion = (codigos) => {
+  const iv = codigos.map(c => ({c, r: parseEdad(c)})).filter(x => x.r);
+  const out = []; let pos = 0;
+  while (true) {
+    const cand = iv.filter(x => x.r[0] === pos).sort((a, b) => a.r[1] - b.r[1]);
+    if (!cand.length) break;
+    out.push(cand[0]); if (cand[0].r[1] === Infinity) break; pos = cand[0].r[1];
+  }
+  return out;
+}
+cargarPir = async (geo) => {
+  for (const t of TABLAS_PIR) {
+    try {
+      const r = await eurostat(t, `&sex=M&sex=F&unit=NR&geo=${geo}`);
+      if (!r.length) continue;
+      const porAnio = d3.group(r, x => +x.time);
+      const res = new Map();
+      for (const [y, rs] of porAnio) {
+        const cods = [...new Set(rs.map(x => x.age))].filter(c => rs.some(x => x.age === c && x.sex === "M") && rs.some(x => x.age === c && x.sex === "F"));
+        const p = particion(cods); if (p.length < 8) continue;
+        res.set(y, p.map(({c, r: [lo, hi]}) => ({lo, hi, label: hi === Infinity ? `${lo}+` : `${lo}-${hi - 1}`, H: rs.find(x => x.age === c && x.sex === "M")?.value ?? 0, M: rs.find(x => x.age === c && x.sex === "F")?.value ?? 0})));
+      }
+      if (res.size) return {tabla: t, anios: res};
+    } catch (e) {}
+  }
+  return null;
+}
+pirA = cargarPir(geoPir)
+```
+
+```{ojs}
+//| echo: false
+aniosPir = pirA ? [...pirA.anios.keys()].sort((a, b) => a - b) : []
+viewof anioPir = Inputs.range(aniosPir.length ? [aniosPir[0], aniosPir.at(-1)] : [2000, 2025], {label: "Año", step: 1, value: aniosPir.at(-1) ?? 2025})
+{
+  const b = html`<button class="copiar">▶ Animar desde ${aniosPir[0] ?? ""}</button>`;
+  let timer = null;
+  b.onclick = () => {
+    if (timer) { clearInterval(timer); timer = null; b.textContent = `▶ Animar desde ${aniosPir[0]}`; return; }
+    let i = 0; b.textContent = "⏸ Parar";
+    timer = setInterval(() => {
+      if (i >= aniosPir.length) { clearInterval(timer); timer = null; b.textContent = `▶ Animar desde ${aniosPir[0]}`; return; }
+      const el = viewof anioPir; el.value = aniosPir[i++]; el.dispatchEvent(new Event("input", {bubbles: true}));
+    }, 450);
+  };
+  invalidation.then(() => clearInterval(timer));
+  return b;
+}
+```
+
+```{ojs}
+//| echo: false
+viewof anioComp = compPir === "anio" ? Inputs.select(aniosPir, {label: "Año para comparar", value: aniosPir[0]}) : Object.assign(html`<span></span>`, {value: null})
+viewof geoComp = compPir === "geo" ? Inputs.select(new Map([...paisesPir, ...territoriosPir.filter(t => t.code.startsWith(paisPir) && t.code.length > 2)].map(t => [`${t.label} (${t.code})`, t.code])), {label: "Territorio para comparar", value: paisPir}) : Object.assign(html`<span></span>`, {value: null})
+pirB = compPir === "geo" && geoComp ? cargarPir(geoComp) : null
+```
+
+```{ojs}
+//| echo: false
+indicadoresPir = (g) => {
+  const tot = d3.sum(g, x => x.H + x.M), suma = (f) => d3.sum(g.filter(f), x => x.H + x.M);
+  const j = suma(x => x.hi <= 15), a = suma(x => x.lo >= 15 && x.hi <= 65), v = suma(x => x.lo >= 65), v80 = suma(x => x.lo >= 80);
+  const mid = (x) => x.hi === Infinity ? x.lo + 5 : (x.lo + x.hi) / 2;
+  let acum = 0, mediana = NaN;
+  for (const x of g) { const n = x.H + x.M; if (acum + n >= tot / 2) { mediana = x.lo + (x.hi === Infinity ? 10 : x.hi - x.lo) * (tot / 2 - acum) / n; break; } acum += n; }
+  return {total: tot, hombres: d3.sum(g, x => x.H), mujeres: d3.sum(g, x => x.M), j: 100 * j / tot, a: 100 * a / tot, v: 100 * v / tot, v80: 100 * v80 / tot,
+    dependencia: 100 * (j + v) / a, envejecimiento: 100 * v / j, media: d3.sum(g, x => mid(x) * (x.H + x.M)) / tot, mediana, masculinidad: 100 * d3.sum(g, x => x.H) / d3.sum(g, x => x.M)};
+}
+armonizar = (g1, g2) => {
+  // Si una pirámide tiene el último grupo abierto antes que la otra, se agrupan las edades altas igual en las dos
+  const corte = Math.min(...[g1, g2].filter(Boolean).map(g => g.at(-1).lo));
+  const ajusta = (g) => { if (!g) return g; const base = g.filter(x => x.lo < corte), alto = g.filter(x => x.lo >= corte);
+    return [...base, {lo: corte, hi: Infinity, label: `${corte}+`, H: d3.sum(alto, x => x.H), M: d3.sum(alto, x => x.M)}]; };
+  return [ajusta(g1), ajusta(g2)];
+}
+{
+  if (!pirA) return html`<p class="pending">No se han podido cargar los datos de Eurostat para este territorio.</p>`;
+  const nombre = (c) => territoriosPir.find(t => t.code === c)?.label ?? c;
+  let gA = pirA.anios.get(anioPir) ?? pirA.anios.get(aniosPir.at(-1)), gB = null, etqB = "";
+  if (compPir === "anio" && anioComp && anioComp !== anioPir) { gB = pirA.anios.get(anioComp); etqB = `${nombre(geoPir)}, ${anioComp}`; }
+  if (compPir === "geo" && pirB) { gB = pirB.anios.get(anioPir) ?? pirB.anios.get([...pirB.anios.keys()].sort().at(-1)); etqB = `${nombre(geoComp)}, ${pirB.anios.has(anioPir) ? anioPir : [...pirB.anios.keys()].sort().at(-1)}`; }
+  [gA, gB] = armonizar(gA, gB);
+  const filas = (g, signo = 1) => { const tot = d3.sum(g, x => x.H + x.M); const k = modoPir === "pct" ? 100 / tot : 1;
+    return g.flatMap(x => [{label: x.label, sexo: "Hombres", v: -x.H * k}, {label: x.label, sexo: "Mujeres", v: x.M * k}]); };
+  const fA = filas(gA), fB = gB ? filas(gB) : [];
+  const etiquetas = gA.map(x => x.label).reverse();
+  const maxV = d3.max([...fA, ...fB], r => Math.abs(r.v));
+  const fmtEje = (v) => modoPir === "pct" ? `${locES.format(",.1~f")(Math.abs(v))} %` : locES.format(",.0f")(Math.abs(v));
+  const iA = indicadoresPir(gA), iB = gB ? indicadoresPir(gB) : null;
+  window.cceeEvento && window.cceeEvento("piramides/ver", "Pirámides de población", false);
+  const fila = (t, k, u = "", d = 1) => html`<tr><td>${t}</td><td><b>${k === "total" || k === "hombres" || k === "mujeres" ? locES.format(",.0f")(iA[k]) : locES.format(`,.${d}f`)(iA[k]) + u}</b></td>${iB ? html`<td>${k === "total" || k === "hombres" || k === "mujeres" ? locES.format(",.0f")(iB[k]) : locES.format(`,.${d}f`)(iB[k]) + u}</td>` : ""}</tr>`;
+  return html`<div class="pir-cab"><h3>${nombre(geoPir)} · ${pirA.anios.has(anioPir) ? anioPir : aniosPir.at(-1)}</h3>${gB ? html`<p class="nota">Silueta negra: ${etqB}</p>` : ""}</div>
+    ${Plot.plot({height: 30 + 22 * etiquetas.length, width: Math.min(900, width), marginLeft: 60,
+      x: {domain: [-maxV * 1.08, maxV * 1.08], tickFormat: fmtEje, label: modoPir === "pct" ? "% de la población total" : "Personas", grid: true},
+      y: {domain: etiquetas, label: "Edad"},
+      color: {domain: ["Hombres", "Mujeres"], range: ["#2C6FBB", "#A6195E"], legend: true},
+      marks: [Plot.barX(fA, {y: "label", x: "v", fill: "sexo", fillOpacity: 0.85, title: r => `${r.sexo}, ${r.label} años: ${fmtEje(r.v)}`}),
+        ...(gB ? [Plot.barX(fB, {y: "label", x: "v", fill: "none", stroke: "#111", strokeWidth: 1.4})] : []),
+        Plot.ruleX([0], {stroke: "#333"}),
+        Plot.text([{x: -maxV * 0.95, t: "Hombres"}, {x: maxV * 0.95, t: "Mujeres"}], {x: "x", y: etiquetas[0], text: "t", fontWeight: 700, fontSize: 13, dy: -4})]})}
+    <h3>Indicadores demográficos</h3>
+    <table class="uso-tabla"><tr><th>Indicador</th><th>${nombre(geoPir)}</th>${iB ? html`<th>${etqB}</th>` : ""}</tr>
+      ${fila("Población total", "total")}${fila("Hombres", "hombres")}${fila("Mujeres", "mujeres")}
+      ${fila("Menores de 15 años", "j", " %")}${fila("De 15 a 64 años", "a", " %")}${fila("De 65 años o más", "v", " %")}${fila("De 80 años o más", "v80", " %")}
+      ${fila("Índice de dependencia (menores de 15 y mayores de 64 por cada 100 de 15 a 64)", "dependencia")}
+      ${fila("Índice de envejecimiento (mayores de 64 por cada 100 menores de 15)", "envejecimiento")}
+      ${fila("Edad media (aprox.)", "media", " años")}${fila("Edad mediana (aprox.)", "mediana", " años")}
+      ${fila("Hombres por cada 100 mujeres", "masculinidad")}</table>
+    <p class="nota">Edad media y mediana aproximadas a partir de grupos de cinco años. Fuente: Eurostat (${pirA.tabla}).</p>
+    ${DOM.download(() => new Blob([csv(gA.map(x => ({territorio: nombre(geoPir), anio: anioPir, edad: x.label, hombres: x.H, mujeres: x.M})))], {type: "text/csv"}), `piramide_${geoPir}_${anioPir}.csv`, "⬇ Descargar los datos (CSV)")}`;
+}
+```
+
+## Evolución del envejecimiento
+
+```{ojs}
+//| echo: false
+{
+  if (!pirA) return html``;
+  const serie = aniosPir.map(y => ({anio: y, ...indicadoresPir(pirA.anios.get(y))}));
+  const largo = serie.flatMap(s => [{anio: s.anio, ind: "Menores de 15 años (%)", v: s.j}, {anio: s.anio, ind: "65 años o más (%)", v: s.v}, {anio: s.anio, ind: "80 años o más (%)", v: s.v80}]);
+  return Plot.plot({height: 280, marginLeft: 45, x: {label: null, tickFormat: d => String(d)}, y: {grid: true, label: "% de la población"},
+    color: {legend: true, range: ["#2C6FBB", "#A6195E", "#E6A400"]},
+    marks: [Plot.line(largo, {x: "anio", y: "v", stroke: "ind", strokeWidth: 2.2}), Plot.ruleX([anioPir], {stroke: "#999", strokeDasharray: "4,3"}),
+      Plot.tip(largo, Plot.pointer({x: "anio", y: "v", title: d => `${d.ind}, ${d.anio}: ${locES.format(",.1f")(d.v)}`}))]});
+}
+```

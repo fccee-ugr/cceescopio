@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7348fbc5a8768ab07936ef3858a35e01.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7cbf636553388102f599bb310d6afa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -178,6 +178,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./mercados.html">
  <span class="dropdown-text">Mercados al día</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./piramides.html">
+ <span class="dropdown-text">Pirámides de población</span></a>
+  </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Análisis</li>
         <li>
@@ -192,18 +196,6 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./ciclo.html">
  <span class="dropdown-text">Ciclo económico y semáforo de coyuntura</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./convergencia.html">
- <span class="dropdown-text">¿Convergen las economías? (σ y β)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./desfases.html">
- <span class="dropdown-text">¿Qué indicador se adelanta? (desfases)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./prevision.html">
- <span class="dropdown-text">Previsión sencilla</span></a>
-  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -212,36 +204,12 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-herramientas">    
         <li>
-    <a class="dropdown-item" href="./calculadora.html">
- <span class="dropdown-text">Calculadora de inflación</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="./ficha.html">
  <span class="dropdown-text">Ficha de país o región</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./relaciona.html">
- <span class="dropdown-text">Relaciona dos indicadores</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="./comparador.html">
  <span class="dropdown-text">Comparador de comunidades autónomas</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./conversor.html">
- <span class="dropdown-text">Conversor de unidades económicas</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./hipoteca.html">
- <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./desigualdad-calc.html">
- <span class="dropdown-text">Calculadora de desigualdad (Gini, Lorenz, Theil)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./politica-fiscal.html">
- <span class="dropdown-text">Simulador de política fiscal</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./prediccion.html">
@@ -268,6 +236,73 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./indicadores.html">
  <span class="dropdown-text">Buscador de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-calculadoras" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Calculadoras</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-calculadoras">    
+        <li>
+    <a class="dropdown-item" href="./calculadoras.html">
+ <span class="dropdown-text">🧮 Todas las calculadoras</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Estadística y econometría</li>
+        <li>
+    <a class="dropdown-item" href="./regresion.html">
+ <span class="dropdown-text">Regresión lineal con análisis de supuestos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./estadistica.html">
+ <span class="dropdown-text">Análisis estadístico de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desfases.html">
+ <span class="dropdown-text">¿Qué indicador se adelanta? (desfases)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./relaciona.html">
+ <span class="dropdown-text">Relaciona dos indicadores</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Series temporales y previsión</li>
+        <li>
+    <a class="dropdown-item" href="./prevision.html">
+ <span class="dropdown-text">Previsión sencilla</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./convergencia.html">
+ <span class="dropdown-text">Convergencia sigma y beta</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Precios, dinero y finanzas</li>
+        <li>
+    <a class="dropdown-item" href="./calculadora.html">
+ <span class="dropdown-text">Calculadora de inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./conversor.html">
+ <span class="dropdown-text">Conversor de unidades económicas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./hipoteca.html">
+ <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Desigualdad, política económica y población</li>
+        <li>
+    <a class="dropdown-item" href="./desigualdad-calc.html">
+ <span class="dropdown-text">Calculadora de desigualdad (Gini, Lorenz, Theil)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./politica-fiscal.html">
+ <span class="dropdown-text">Simulador de política fiscal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./piramides.html">
+ <span class="dropdown-text">Pirámides de población</span></a>
   </li>  
     </ul>
   </li>
@@ -425,7 +460,7 @@ ul.task-list li input[type="checkbox"] {
 <script>
 (function () {
   const GC = "https://cceescopio.goatcounter.com/counter/";
-  const PAGINAS = [{"html": "actividad.html", "clave": "actividad", "titulo": "Actividad económica y coyuntura"}, {"html": "andalucia.html", "clave": "andalucia", "titulo": "Andalucía y las regiones españolas"}, {"html": "biblioteca.html", "clave": "biblioteca", "titulo": "Bases de datos de la Biblioteca y fuentes abiertas"}, {"html": "boletin.html", "clave": "boletin", "titulo": "Boletín de coyuntura"}, {"html": "calculadora.html", "clave": "calculadora", "titulo": "Calculadora de inflación"}, {"html": "calendario.html", "clave": "calendario", "titulo": "Datos recientes y calendario de publicaciones"}, {"html": "ciclo.html", "clave": "ciclo", "titulo": "Ciclo económico y semáforo de coyuntura"}, {"html": "comparador.html", "clave": "comparador", "titulo": "Comparador de comunidades autónomas"}, {"html": "consumo.html", "clave": "consumo", "titulo": "Consumo y confianza"}, {"html": "contacto.html", "clave": "contacto", "titulo": "Contacto"}, {"html": "convergencia.html", "clave": "convergencia", "titulo": "¿Convergen las economías?"}, {"html": "conversor.html", "clave": "conversor", "titulo": "Conversor de unidades económicas"}, {"html": "datos.html", "clave": "datos", "titulo": "Datos y fuentes"}, {"html": "descomposiciones.html", "clave": "descomposiciones", "titulo": "¿Qué explica cada indicador?"}, {"html": "desfases.html", "clave": "desfases", "titulo": "¿Qué indicador se adelanta?"}, {"html": "desigualdad-calc.html", "clave": "desigualdad-calc", "titulo": "Calculadora de desigualdad"}, {"html": "desigualdad.html", "clave": "desigualdad", "titulo": "Desigualdad, pobreza y condiciones de vida"}, {"html": "docencia.html", "clave": "docencia", "titulo": "Docencia e investigación"}, {"html": "ejercicios.html", "clave": "ejercicios", "titulo": "Ejercicios autocorregibles"}, {"html": "empleo.html", "clave": "empleo", "titulo": "Mercado laboral"}, {"html": "empresa.html", "clave": "empresa", "titulo": "Empresa, innovación y digitalización"}, {"html": "empresas.html", "clave": "empresas", "titulo": "Demografía empresarial"}, {"html": "encuesta.html", "clave": "encuesta", "titulo": "Encuesta de satisfacción"}, {"html": "examen-tc3.html", "clave": "examen-tc3", "titulo": "Generador de exámenes de Técnicas Cuantitativas III"}, {"html": "examen.html", "clave": "examen", "titulo": "Generador de exámenes y fichas de práctica"}, {"html": "extremos.html", "clave": "extremos", "titulo": "Datos extremos e inusuales"}, {"html": "ficha.html", "clave": "ficha", "titulo": "Ficha de país o región"}, {"html": "glosario.html", "clave": "glosario", "titulo": "Glosario de indicadores"}, {"html": "graficos.html", "clave": "graficos", "titulo": "Generador de gráficos para el TFG"}, {"html": "hipoteca.html", "clave": "hipoteca", "titulo": "Simulador de hipotecas y préstamos"}, {"html": "index.html", "clave": "index", "titulo": "CCEEscopio"}, {"html": "indicadores.html", "clave": "indicadores", "titulo": "Buscador de indicadores"}, {"html": "internacional.html", "clave": "internacional", "titulo": "Economía internacional y sector exterior"}, {"html": "juegos.html", "clave": "juegos", "titulo": "Juegos con datos"}, {"html": "mercados.html", "clave": "mercados", "titulo": "Mercados al día"}, {"html": "noticias.html", "clave": "noticias", "titulo": "Noticias e indicadores"}, {"html": "poblacion.html", "clave": "poblacion", "titulo": "Población, educación y salud"}, {"html": "politica-fiscal.html", "clave": "politica-fiscal", "titulo": "Simulador de política fiscal"}, {"html": "precios.html", "clave": "precios", "titulo": "Precios e inflación"}, {"html": "prediccion.html", "clave": "prediccion", "titulo": "Predice el próximo dato"}, {"html": "presentacion.html", "clave": "presentacion", "titulo": "Modo presentación"}, {"html": "prevision.html", "clave": "prevision", "titulo": "Previsión sencilla"}, {"html": "publico.html", "clave": "publico", "titulo": "Sector público y mercados financieros"}, {"html": "rankings.html", "clave": "rankings", "titulo": "La Universidad de Granada en los rankings"}, {"html": "relaciona.html", "clave": "relaciona", "titulo": "Relaciona dos indicadores"}, {"html": "sostenibilidad.html", "clave": "sostenibilidad", "titulo": "Energía y sostenibilidad"}, {"html": "turismo-andalucia.html", "clave": "turismo-andalucia", "titulo": "Turismo en Andalucía"}, {"html": "turismo.html", "clave": "turismo", "titulo": "Turismo"}, {"html": "docencia/gade.html", "clave": "docencia-gade", "titulo": "Grado en Administración y Dirección de Empresas (GADE)"}, {"html": "docencia/geco.html", "clave": "docencia-geco", "titulo": "Grado en Economía (GECO)"}, {"html": "docencia/gfico.html", "clave": "docencia-gfico", "titulo": "Grado en Finanzas y Contabilidad (GFICO)"}, {"html": "docencia/gmim.html", "clave": "docencia-gmim", "titulo": "Grado en Marketing e Investigación de Mercados (GMIM)"}, {"html": "docencia/gtur.html", "clave": "docencia-gtur", "titulo": "Grado en Turismo (GTUR)"}];
+  const PAGINAS = [{"html": "actividad.html", "clave": "actividad", "titulo": "Actividad económica y coyuntura"}, {"html": "andalucia.html", "clave": "andalucia", "titulo": "Andalucía y las regiones españolas"}, {"html": "biblioteca.html", "clave": "biblioteca", "titulo": "Bases de datos de la Biblioteca y fuentes abiertas"}, {"html": "boletin.html", "clave": "boletin", "titulo": "Boletín de coyuntura"}, {"html": "calculadora.html", "clave": "calculadora", "titulo": "Calculadora de inflación"}, {"html": "calculadoras.html", "clave": "calculadoras", "titulo": "Calculadoras y laboratorio de datos"}, {"html": "calendario.html", "clave": "calendario", "titulo": "Datos recientes y calendario de publicaciones"}, {"html": "ciclo.html", "clave": "ciclo", "titulo": "Ciclo económico y semáforo de coyuntura"}, {"html": "comparador.html", "clave": "comparador", "titulo": "Comparador de comunidades autónomas"}, {"html": "consumo.html", "clave": "consumo", "titulo": "Consumo y confianza"}, {"html": "contacto.html", "clave": "contacto", "titulo": "Contacto"}, {"html": "convergencia.html", "clave": "convergencia", "titulo": "¿Convergen las economías?"}, {"html": "conversor.html", "clave": "conversor", "titulo": "Conversor de unidades económicas"}, {"html": "datos.html", "clave": "datos", "titulo": "Datos y fuentes"}, {"html": "descomposiciones.html", "clave": "descomposiciones", "titulo": "¿Qué explica cada indicador?"}, {"html": "desfases.html", "clave": "desfases", "titulo": "¿Qué indicador se adelanta?"}, {"html": "desigualdad-calc.html", "clave": "desigualdad-calc", "titulo": "Calculadora de desigualdad"}, {"html": "desigualdad.html", "clave": "desigualdad", "titulo": "Desigualdad, pobreza y condiciones de vida"}, {"html": "docencia.html", "clave": "docencia", "titulo": "Docencia e investigación"}, {"html": "ejercicios.html", "clave": "ejercicios", "titulo": "Ejercicios autocorregibles"}, {"html": "empleo.html", "clave": "empleo", "titulo": "Mercado laboral"}, {"html": "empresa.html", "clave": "empresa", "titulo": "Empresa, innovación y digitalización"}, {"html": "empresas.html", "clave": "empresas", "titulo": "Demografía empresarial"}, {"html": "encuesta.html", "clave": "encuesta", "titulo": "Encuesta de satisfacción"}, {"html": "estadistica.html", "clave": "estadistica", "titulo": "Análisis estadístico de datos"}, {"html": "examen-tc3.html", "clave": "examen-tc3", "titulo": "Generador de exámenes de Técnicas Cuantitativas III"}, {"html": "examen.html", "clave": "examen", "titulo": "Generador de exámenes y fichas de práctica"}, {"html": "extremos.html", "clave": "extremos", "titulo": "Datos extremos e inusuales"}, {"html": "ficha.html", "clave": "ficha", "titulo": "Ficha de país o región"}, {"html": "glosario.html", "clave": "glosario", "titulo": "Glosario de indicadores"}, {"html": "graficos.html", "clave": "graficos", "titulo": "Generador de gráficos para el TFG"}, {"html": "hipoteca.html", "clave": "hipoteca", "titulo": "Simulador de hipotecas y préstamos"}, {"html": "index.html", "clave": "index", "titulo": "CCEEscopio"}, {"html": "indicadores.html", "clave": "indicadores", "titulo": "Buscador de indicadores"}, {"html": "internacional.html", "clave": "internacional", "titulo": "Economía internacional y sector exterior"}, {"html": "juegos.html", "clave": "juegos", "titulo": "Juegos con datos"}, {"html": "mercados.html", "clave": "mercados", "titulo": "Mercados al día"}, {"html": "noticias.html", "clave": "noticias", "titulo": "Noticias e indicadores"}, {"html": "piramides.html", "clave": "piramides", "titulo": "Pirámides de población"}, {"html": "poblacion.html", "clave": "poblacion", "titulo": "Población, educación y salud"}, {"html": "politica-fiscal.html", "clave": "politica-fiscal", "titulo": "Simulador de política fiscal"}, {"html": "precios.html", "clave": "precios", "titulo": "Precios e inflación"}, {"html": "prediccion.html", "clave": "prediccion", "titulo": "Predice el próximo dato"}, {"html": "presentacion.html", "clave": "presentacion", "titulo": "Modo presentación"}, {"html": "prevision.html", "clave": "prevision", "titulo": "Previsión sencilla"}, {"html": "publico.html", "clave": "publico", "titulo": "Sector público y mercados financieros"}, {"html": "rankings.html", "clave": "rankings", "titulo": "La Universidad de Granada en los rankings"}, {"html": "regresion.html", "clave": "regresion", "titulo": "Regresión lineal con análisis de supuestos"}, {"html": "relaciona.html", "clave": "relaciona", "titulo": "Relaciona dos indicadores"}, {"html": "sostenibilidad.html", "clave": "sostenibilidad", "titulo": "Energía y sostenibilidad"}, {"html": "turismo-andalucia.html", "clave": "turismo-andalucia", "titulo": "Turismo en Andalucía"}, {"html": "turismo.html", "clave": "turismo", "titulo": "Turismo"}, {"html": "docencia/gade.html", "clave": "docencia-gade", "titulo": "Grado en Administración y Dirección de Empresas (GADE)"}, {"html": "docencia/geco.html", "clave": "docencia-geco", "titulo": "Grado en Economía (GECO)"}, {"html": "docencia/gfico.html", "clave": "docencia-gfico", "titulo": "Grado en Finanzas y Contabilidad (GFICO)"}, {"html": "docencia/gmim.html", "clave": "docencia-gmim", "titulo": "Grado en Marketing e Investigación de Mercados (GMIM)"}, {"html": "docencia/gtur.html", "clave": "docencia-gtur", "titulo": "Grado en Turismo (GTUR)"}];
   const INDS = [{"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "pagina": "precios"}, {"id": "ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual", "nombre": "IPCA: alimentos y bebidas no alcohólicas (tasa anual)", "pagina": "precios"}, {"id": "ipca-energia-tasa-anual", "nombre": "IPCA: energía (tasa anual)", "pagina": "precios"}, {"id": "ipca-servicios-tasa-anual", "nombre": "IPCA: servicios (tasa anual)", "pagina": "precios"}, {"id": "precio-de-la-vivienda-tasa-anual", "nombre": "Precio de la vivienda (tasa anual)", "pagina": "precios"}, {"id": "ipca-inflacion-subyacente-sin-energia-ni-alimentos", "nombre": "IPCA: inflación subyacente (sin energía ni alimentos)", "pagina": "precios"}, {"id": "precios-industriales-tasa-anual", "nombre": "Precios industriales (tasa anual)", "pagina": "precios"}, {"id": "nivel-de-precios-comparado-ue-27-100", "nombre": "Nivel de precios comparado (UE-27 = 100)", "pagina": "precios"}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "pagina": "empleo"}, {"id": "tasa-de-paro-juvenil-menores-de-25-anos", "nombre": "Tasa de paro juvenil (menores de 25 años)", "pagina": "empleo"}, {"id": "tasa-de-paro-de-las-mujeres", "nombre": "Tasa de paro de las mujeres", "pagina": "empleo"}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "pagina": "empleo"}, {"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "pagina": "empleo"}, {"id": "paro-de-larga-duracion", "nombre": "Paro de larga duración", "pagina": "empleo"}, {"id": "jovenes-que-ni-estudian-ni-trabajan-15-29-anos", "nombre": "Jóvenes que ni estudian ni trabajan (15-29 años)", "pagina": "empleo"}, {"id": "coste-laboral-por-hora", "nombre": "Coste laboral por hora", "pagina": "empleo"}, {"id": "salario-minimo-mensual", "nombre": "Salario mínimo mensual", "pagina": "empleo"}, {"id": "brecha-salarial-de-genero", "nombre": "Brecha salarial de género", "pagina": "empleo"}, {"id": "tasa-de-empleo-por-regiones-20-64-anos", "nombre": "Tasa de empleo por regiones (20-64 años)", "pagina": "empleo"}, {"id": "pib-crecimiento-interanual-trimestral", "nombre": "PIB: crecimiento interanual (trimestral)", "pagina": "actividad"}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "pagina": "actividad"}, {"id": "indice-de-produccion-industrial", "nombre": "Índice de producción industrial", "pagina": "actividad"}, {"id": "indice-de-comercio-minorista", "nombre": "Índice de comercio minorista", "pagina": "actividad"}, {"id": "indicador-de-sentimiento-economico", "nombre": "Indicador de sentimiento económico", "pagina": "actividad"}, {"id": "consumo-de-los-hogares-crecimiento-interanual", "nombre": "Consumo de los hogares: crecimiento interanual", "pagina": "actividad"}, {"id": "inversion-formacion-bruta-de-capital-fijo-crecimiento-intera", "nombre": "Inversión (formación bruta de capital fijo): crecimiento interanual", "pagina": "actividad"}, {"id": "produccion-en-la-construccion", "nombre": "Producción en la construcción", "pagina": "actividad"}, {"id": "productividad-del-trabajo-por-hora-variacion-anual", "nombre": "Productividad del trabajo por hora: variación anual", "pagina": "actividad"}, {"id": "costes-laborales-unitarios-nominales-variacion-anual", "nombre": "Costes laborales unitarios nominales: variación anual", "pagina": "actividad"}, {"id": "confianza-del-consumidor", "nombre": "Confianza del consumidor", "pagina": "actividad"}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "pagina": "empresa"}, {"id": "gasto-en-i-d-por-regiones-del-pib", "nombre": "Gasto en I+D por regiones (% del PIB)", "pagina": "empresa"}, {"id": "empresas-que-usan-inteligencia-artificial", "nombre": "Empresas que usan inteligencia artificial", "pagina": "empresa"}, {"id": "personas-que-compran-por-internet", "nombre": "Personas que compran por internet", "pagina": "empresa"}, {"id": "confianza-de-la-industria", "nombre": "Confianza de la industria", "pagina": "empresa"}, {"id": "declaraciones-de-quiebra-de-empresas-indice", "nombre": "Declaraciones de quiebra de empresas (índice)", "pagina": "empresa"}, {"id": "registros-de-nuevas-empresas-indice", "nombre": "Registros de nuevas empresas (índice)", "pagina": "empresa"}, {"id": "confianza-en-los-servicios", "nombre": "Confianza en los servicios", "pagina": "empresa"}, {"id": "confianza-del-comercio-minorista", "nombre": "Confianza del comercio minorista", "pagina": "empresa"}, {"id": "confianza-de-la-construccion", "nombre": "Confianza de la construcción", "pagina": "empresa"}, {"id": "hogares-con-acceso-a-internet", "nombre": "Hogares con acceso a internet", "pagina": "empresa"}, {"id": "pernoctaciones-en-hoteles", "nombre": "Pernoctaciones en hoteles", "pagina": "turismo"}, {"id": "pernoctaciones-de-no-residentes-en-hoteles", "nombre": "Pernoctaciones de no residentes en hoteles", "pagina": "turismo"}, {"id": "llegadas-de-viajeros-a-hoteles", "nombre": "Llegadas de viajeros a hoteles", "pagina": "turismo"}, {"id": "pernoctaciones-por-regiones", "nombre": "Pernoctaciones por regiones", "pagina": "turismo"}, {"id": "pernoctaciones-de-residentes-en-hoteles", "nombre": "Pernoctaciones de residentes en hoteles", "pagina": "turismo"}, {"id": "pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan", "nombre": "Pernoctaciones en apartamentos y alojamientos de corta estancia", "pagina": "turismo"}, {"id": "tasa-de-ocupacion-de-las-plazas-hoteleras", "nombre": "Tasa de ocupación de las plazas hoteleras", "pagina": "turismo"}, {"id": "deuda-publica-del-pib", "nombre": "Deuda pública (% del PIB)", "pagina": "publico"}, {"id": "deficit-o-superavit-publico-del-pib", "nombre": "Déficit (−) o superávit (+) público (% del PIB)", "pagina": "publico"}, {"id": "rentabilidad-del-bono-a-10-anos", "nombre": "Rentabilidad del bono a 10 años", "pagina": "publico"}, {"id": "tipo-de-cambio-euro-dolar", "nombre": "Tipo de cambio euro / dólar", "pagina": "publico"}, {"id": "ingresos-fiscales-del-pib", "nombre": "Ingresos fiscales (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-total-del-pib", "nombre": "Gasto público total (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-en-sanidad-del-pib", "nombre": "Gasto público en sanidad (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-en-educacion-del-pib", "nombre": "Gasto público en educación (% del PIB)", "pagina": "publico"}, {"id": "gasto-publico-en-proteccion-social-del-pib", "nombre": "Gasto público en protección social (% del PIB)", "pagina": "publico"}, {"id": "euribor-a-3-meses", "nombre": "Euríbor a 3 meses", "pagina": "publico"}, {"id": "indice-de-gini", "nombre": "Índice de Gini", "pagina": "desigualdad"}, {"id": "ratio-s80-s20", "nombre": "Ratio S80/S20", "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-60-de-la-mediana", "nombre": "Tasa de riesgo de pobreza (60 % de la mediana)", "pagina": "desigualdad"}, {"id": "umbral-de-pobreza-hogar-de-una-persona", "nombre": "Umbral de pobreza (hogar de una persona)", "pagina": "desigualdad"}, {"id": "riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos", "nombre": "Riesgo de pobreza o exclusión social: menores de 18 años", "pagina": "desigualdad"}, {"id": "carencia-material-y-social-severa", "nombre": "Carencia material y social severa", "pagina": "desigualdad"}, {"id": "pobreza-de-las-personas-que-trabajan", "nombre": "Pobreza de las personas que trabajan", "pagina": "desigualdad"}, {"id": "sobrecarga-del-coste-de-la-vivienda", "nombre": "Sobrecarga del coste de la vivienda", "pagina": "desigualdad"}, {"id": "renta-mediana-equivalente", "nombre": "Renta mediana equivalente", "pagina": "desigualdad"}, {"id": "tasa-de-riesgo-de-pobreza-por-regiones", "nombre": "Tasa de riesgo de pobreza por regiones", "pagina": "desigualdad"}, {"id": "cuota-de-energias-renovables", "nombre": "Cuota de energías renovables", "pagina": "sostenibilidad"}, {"id": "precio-de-la-electricidad-para-hogares", "nombre": "Precio de la electricidad para hogares", "pagina": "sostenibilidad"}, {"id": "emisiones-netas-de-gases-de-efecto-invernadero", "nombre": "Emisiones netas de gases de efecto invernadero", "pagina": "sostenibilidad"}, {"id": "emisiones-de-gases-de-efecto-invernadero-por-habitante", "nombre": "Emisiones de gases de efecto invernadero por habitante", "pagina": "sostenibilidad"}, {"id": "dependencia-energetica", "nombre": "Dependencia energética", "pagina": "sostenibilidad"}, {"id": "precio-del-gas-natural-para-hogares", "nombre": "Precio del gas natural para hogares", "pagina": "sostenibilidad"}, {"id": "residuos-municipales-por-habitante", "nombre": "Residuos municipales por habitante", "pagina": "sostenibilidad"}, {"id": "tasa-de-reciclaje-de-residuos-municipales", "nombre": "Tasa de reciclaje de residuos municipales", "pagina": "sostenibilidad"}, {"id": "poblacion", "nombre": "Población", "pagina": "poblacion"}, {"id": "poblacion-por-regiones", "nombre": "Población por regiones", "pagina": "poblacion"}, {"id": "tasa-de-fecundidad", "nombre": "Tasa de fecundidad", "pagina": "poblacion"}, {"id": "tasa-de-dependencia-de-las-personas-mayores", "nombre": "Tasa de dependencia de las personas mayores", "pagina": "poblacion"}, {"id": "esperanza-de-vida-al-nacer", "nombre": "Esperanza de vida al nacer", "pagina": "poblacion"}, {"id": "poblacion-de-25-34-anos-con-estudios-superiores", "nombre": "Población de 25-34 años con estudios superiores", "pagina": "poblacion"}, {"id": "abandono-temprano-de-la-educacion-y-la-formacion", "nombre": "Abandono temprano de la educación y la formación", "pagina": "poblacion"}, {"id": "exportaciones-de-bienes-y-servicios-del-pib", "nombre": "Exportaciones de bienes y servicios (% del PIB)", "pagina": "internacional"}, {"id": "importaciones-de-bienes-y-servicios-del-pib", "nombre": "Importaciones de bienes y servicios (% del PIB)", "pagina": "internacional"}, {"id": "exportaciones-crecimiento-interanual-trimestral", "nombre": "Exportaciones: crecimiento interanual (trimestral)", "pagina": "internacional"}, {"id": "saldo-por-cuenta-corriente-del-pib", "nombre": "Saldo por cuenta corriente (% del PIB)", "pagina": "internacional"}, {"id": "posicion-de-inversion-internacional-neta-del-pib", "nombre": "Posición de inversión internacional neta (% del PIB)", "pagina": "internacional"}, {"id": "pib-per-capita-en-ppc-ue-27-100", "nombre": "PIB per cápita en PPC (UE-27 = 100)", "pagina": "internacional"}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "pagina": "andalucia"}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "pagina": "andalucia"}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "pagina": "andalucia"}, {"id": "pernoctaciones-turisticas", "nombre": "Pernoctaciones turísticas", "pagina": "andalucia"}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "pagina": "andalucia"}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "pagina": "andalucia"}, {"id": "tasa-de-riesgo-de-pobreza", "nombre": "Tasa de riesgo de pobreza", "pagina": "andalucia"}, {"id": "poblacion", "nombre": "Población", "pagina": "andalucia"}];
   const ENC = {"perfil": [["estudiante-grado", "Estudiante de grado"], ["estudiante-posgrado", "Estudiante de máster o doctorado"], ["pdi", "Profesorado o PI"], ["ptgas", "PTGAS"], ["otro", "Otro"]], "grado": [["gade", "GADE"], ["geco", "GECO"], ["gfico", "GFICO"], ["gmim", "GMIM"], ["gtur", "GTUR"], ["doble-grado", "Doble grado"], ["ninguno", "Ninguno / otro"]], "para": [["clases", "Clases"], ["estudiar", "Estudiar"], ["tfg-tfm", "TFG o TFM"], ["investigacion", "Investigación"], ["curiosidad", "Curiosidad"]], "recurso": [["graficos", "Gráficos"], ["mapas", "Mapas"], ["descarga-csv", "Descarga CSV"], ["calculadora", "Calculadora"], ["ficha", "Ficha"], ["relaciona", "Relaciona"], ["buscador", "Buscador"], ["docencia-grados", "Grados y asignaturas"], ["rankings", "Rankings"], ["ejercicios", "Ejercicios"], ["graficos-tfg", "Gráficos TFG"], ["hipoteca", "Hipotecas"], ["paneles", "Paneles"], ["boletin", "Boletín"], ["glosario", "Glosario"], ["juegos", "Juegos"], ["examen", "Exámenes"], ["analisis", "Análisis"], ["simuladores", "Simuladores"]], "recomendaria": [["si", "Sí"], ["quiza", "Quizá"], ["no", "No"]]};
   const base = location.pathname.replace(/[^/]*$/, "");

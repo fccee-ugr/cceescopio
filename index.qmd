@@ -97,6 +97,8 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · [Calculadoras](calculadoras.qmd)** <span class="badge-nuevo">nuevo</span>: un menú con todas las calculadoras y dos nuevas, la [regresión con análisis de supuestos](regresion.qmd) y el [análisis estadístico de datos](estadistica.qmd), que funcionan con las series de CCEEscopio o con tus propios datos.
+- **Nuevo · [Pirámides de población](piramides.qmd)** <span class="badge-nuevo">nuevo</span>: de los países europeos, las comunidades autónomas y las provincias, con animación desde el año 2000.
 - **Nuevo · [¿Qué explica cada indicador?](descomposiciones.qmd)** <span class="badge-nuevo">nuevo</span>: descompón la inflación (alimentos, energía, vivienda, transporte, servicios…), el crecimiento del PIB, la cuenta corriente, la población y el turismo, y descubre qué componentes explican cada subida.
 - **Nuevo · [Noticias e indicadores](noticias.qmd)** <span class="badge-nuevo">nuevo</span>: noticias económicas de los últimos días con el reto de comprobarlas con los indicadores de CCEEscopio.
 - **Nuevo · 🎮 [Juegos con datos](juegos.qmd)** <span class="badge-nuevo">nuevo</span>: el dato del día, ¿más alto o más bajo?, adivina el país, ¿qué pasó aquí?, ordena los países y un **modo aula** para competir en clase. Y además, [predice el próximo dato](prediccion.qmd).
