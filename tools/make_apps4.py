@@ -612,3 +612,171 @@ Todas las calculadoras funcionan en tu navegador: si usas tus propios datos, **n
 
 ''' + "\n".join(tarjetas))
 print("   calculadoras.qmd")
+
+# =====================================================================================
+# Concurso en clase con código QR y ranking en directo (tipo Kahoot)
+# Los mensajes viajan por un servidor público de mensajería MQTT: solo alias y puntuaciones.
+# =====================================================================================
+_src3 = open("tools/make_apps3.py", encoding="utf-8").read()
+PREG = _src3[_src3.index("PREG = r'''") + len("PREG = r'''"): _src3.index("'''", _src3.index("PREG = r'''") + 12)]
+
+CONC = r'''```{ojs}
+//| echo: false
+// Utilidades del concurso (sin dependencias del navegador, para poder probarlas)
+CONC = {
+  const ofuscar = (sala, i, c, n) => (c + [...`${sala}|${i}`].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7)) % n;
+  const desofuscar = (sala, i, x, n) => ((x - [...`${sala}|${i}`].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7)) % n + n) % n;
+  const ordenar = (jug) => [...jug.values()].sort((a, b) => (b.aciertos - a.aciertos) || ((b.fin ? 1 : 0) - (a.fin ? 1 : 0)) || (a.tiempo - b.tiempo) || a.alias.localeCompare(b.alias));
+  const nuevaSala = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
+  const segundos = (ms) => `${(ms / 1000).toFixed(1).replace(".", ",")} s`;
+  return {ofuscar, desofuscar, ordenar, nuevaSala, segundos};
+}
+```'''
+
+pagina("concurso.qmd", r'''---
+title: "Concurso en clase"
+subtitle: "Preguntas con datos reales de CCEEscopio: los estudiantes juegan desde el móvil y el ranking aparece en directo en la pantalla"
+toc: false
+---
+
+__HELPERS__
+
+__PREG__
+
+__CONC__
+
+```{ojs}
+//| echo: false
+especC = __ESPECS__
+areasC = (__AREAS__)
+paramsC = new URLSearchParams(location.search)
+SALA = paramsC.get("sala")
+BROKERS = [
+  {id: "h", nombre: "HiveMQ", url: "wss://broker.hivemq.com:8884/mqtt"},
+  {id: "e", nombre: "EMQX", url: "wss://broker.emqx.io:8084/mqtt"},
+  {id: "m", nombre: "Mosquitto", url: "wss://test.mosquitto.org:8081/mqtt"}
+]
+mqttLib = { try { const m = await import("https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.esm.js"); return m.default ?? m; } catch (e) { return null; } }
+conectarBroker = (b) => new Promise((ok, mal) => {
+  if (!mqttLib) return mal(new Error("sin librería"));
+  const c = mqttLib.connect(b.url, {clientId: "ccee_" + Math.random().toString(16).slice(2, 10), connectTimeout: 6000, reconnectPeriod: 2000, clean: true});
+  const t = setTimeout(() => { c.end(true); mal(new Error("tiempo agotado")); }, 7000);
+  c.once("connect", () => { clearTimeout(t); ok(c); });
+})
+temaEstado = (s) => `cceescopio/concurso/${s}/estado`
+temaJug = (s) => `cceescopio/concurso/${s}/jugadores`
+```
+
+```{ojs}
+//| echo: false
+// ============================ PANTALLA DEL PROFESOR ============================
+viewof areaC = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.select(new Map([["Todas las áreas", "todas"], ...Object.entries(areasC).map(([k, v]) => [v, k])]), {label: "Tema de las preguntas"})
+viewof nC = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.range([5, 15], {label: "Número de preguntas", value: 8, step: 1})
+viewof abrirC = SALA ? Object.assign(html`<span></span>`, {value: 0}) : Inputs.button("▶ Abrir concurso", {value: 0, reduce: v => v + 1})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (SALA) return html``;
+  if (!abrirC) return html`<div class="conc-intro">
+    <p><b>Cómo funciona:</b> pulsa «Abrir concurso» y proyecta esta pantalla. Los estudiantes escanean el código QR con el móvil y escriben un <b>alias</b> (no se piden nombres ni DNI). Cuando estén todos, pulsa «Empezar»: cada estudiante responde las preguntas a su ritmo y en la pantalla verás el <b>ranking en directo</b>, ordenado por aciertos y, en caso de empate, por el tiempo empleado.</p>
+    <p class="nota">Los resultados viajan por un servicio público de mensajería en tiempo real y no se guardan en ningún sitio. Antes de usarlo en clase por primera vez, haz una prueba con tu móvil: si la red del aula bloquea la conexión, la página lo indicará.</p></div>`;
+  const caja = html`<div class="conc-panel"><p class="pending">Preparando las preguntas con los datos de Eurostat…</p></div>`;
+  (async () => {
+    const pool = especC.filter(s => !s.sinGeo && !s.regional && (areaC === "todas" || s.pagina === areaC));
+    const sala = CONC.nuevaSala();
+    const qs = await generarSerie(pool, ["test", "vf", "test"], nC, `concurso-${sala}`);
+    if (qs.length < 3) { caja.innerHTML = `<p class="pending">No se han podido preparar las preguntas (¿hay conexión con Eurostat?). Inténtalo de nuevo.</p>`; return; }
+    caja.innerHTML = `<p class="pending">Conectando con el servicio de mensajería…</p>`;
+    let cli = null, broker = null;
+    for (const b of BROKERS) { try { cli = await conectarBroker(b); broker = b; break; } catch (e) {} }
+    if (!cli) { caja.innerHTML = `<p class="pending">❌ No se ha podido conectar con ningún servicio de mensajería. Es posible que la red bloquee estas conexiones: prueba con otra red (por ejemplo, los datos del móvil compartidos).</p>`; return; }
+    const preguntas = qs.map((q, i) => ({e: q.enunciado, o: q.opciones, c: CONC.ofuscar(sala, i, q.respuesta, q.opciones.length), s: q.solucion}));
+    const publicar = (estado) => cli.publish(temaEstado(sala), JSON.stringify(estado), {retain: true, qos: 1});
+    publicar({fase: "espera", preguntas});
+    const jug = new Map();
+    let fase = "espera";
+    cli.subscribe(temaJug(sala), {qos: 1});
+    const enlace = `${location.href.split("?")[0].split("#")[0]}?sala=${sala}&b=${broker.id}`;
+    caja.innerHTML = "";
+    caja.append(html`<div class="conc-cab"><div class="conc-qr"></div><div><p class="asis-et">Escanea el código o entra en</p><p class="conc-url">${enlace.replace(/^https?:\/\//, "")}</p>
+        <p class="conc-cuenta">0 participantes</p>
+        <div class="graf-botones"><button class="asis-boton conc-empezar">▶ Empezar</button><button class="copiar conc-terminar" disabled>🏁 Terminar</button><button class="copiar conc-full">⛶ Pantalla completa</button></div></div></div>
+      <div class="conc-ranking"></div>`);
+    const $ = (s) => caja.querySelector(s);
+    try { const qrlib = await require("qrcode-generator@1.4.4"); const qr = qrlib(0, "M"); qr.addData(enlace); qr.make(); $(".conc-qr").innerHTML = qr.createSvgTag({cellSize: 6, margin: 2, scalable: true}); } catch (e) { $(".conc-qr").textContent = "(no se ha podido crear el QR)"; }
+    const pintar = () => {
+      const r = CONC.ordenar(jug);
+      $(".conc-cuenta").textContent = `${jug.size} participante${jug.size === 1 ? "" : "s"}`;
+      if (fase === "espera") { $(".conc-ranking").innerHTML = `<div class="conc-alias">${r.map(j => `<span>${j.alias}</span>`).join("")}</div>`; return; }
+      const medalla = (i) => fase === "fin" ? ["🥇", "🥈", "🥉"][i] ?? `${i + 1}.` : `${i + 1}.`;
+      $(".conc-ranking").innerHTML = `${fase === "fin" ? `<h2 class="conc-podio">🏆 ${r[0] ? r[0].alias : ""}</h2>` : ""}<table class="uso-tabla conc-tabla"><tr><th></th><th>Alias</th><th>Aciertos</th><th>Pregunta</th><th>Tiempo</th></tr>` +
+        r.slice(0, 15).map((j, i) => `<tr class="${i < 3 && fase === "fin" ? "conc-top" : ""}"><td>${medalla(i)}</td><td>${j.alias}</td><td><b>${j.aciertos}</b> / ${preguntas.length}</td><td>${j.fin ? "✔ terminado" : `${j.resp ?? 0} / ${preguntas.length}`}</td><td>${j.tiempo ? CONC.segundos(j.tiempo) : "–"}</td></tr>`).join("") + "</table>";
+    };
+    cli.on("message", (t, m) => { try { const d = JSON.parse(m.toString()); if (!d.id || !d.alias) return; const prev = jug.get(d.id) ?? {aciertos: 0, resp: 0, tiempo: 0};
+      jug.set(d.id, {...prev, ...d, alias: String(d.alias).slice(0, 20).replace(/[<>&"]/g, "")}); pintar(); } catch (e) {} });
+    $(".conc-empezar").onclick = () => { fase = "juego"; publicar({fase: "juego", preguntas, inicio: Date.now()}); $(".conc-empezar").disabled = true; $(".conc-terminar").disabled = false; pintar();
+      window.cceeEvento && window.cceeEvento("concurso/empezar", "Concurso en clase", true); };
+    $(".conc-terminar").onclick = () => { fase = "fin"; const r = CONC.ordenar(jug).slice(0, 10).map(j => ({alias: j.alias, aciertos: j.aciertos, tiempo: j.tiempo}));
+      publicar({fase: "fin", preguntas, ranking: r}); $(".conc-terminar").disabled = true; pintar();
+      caja.append(DOM.download(() => new Blob([csv(CONC.ordenar(jug).map((j, i) => ({puesto: i + 1, alias: j.alias, aciertos: j.aciertos, preguntas: preguntas.length, tiempo_segundos: Math.round(j.tiempo / 100) / 10, terminado: j.fin ? "sí" : "no"})))], {type: "text/csv"}), `concurso_${sala}.csv`, "⬇ Descargar los resultados (CSV)")); };
+    $(".conc-full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : caja.requestFullscreen?.();
+    invalidation.then(() => { try { cli.end(true); } catch (e) {} });
+    pintar();
+  })();
+  return caja;
+}
+```
+
+```{ojs}
+//| echo: false
+// ============================ MÓVIL DEL ESTUDIANTE ============================
+{
+  if (!SALA) return html``;
+  const broker = BROKERS.find(b => b.id === paramsC.get("b")) ?? BROKERS[0];
+  const caja = html`<div class="conc-movil"><p class="pending">Conectando con el concurso…</p></div>`;
+  (async () => {
+    let cli;
+    try { cli = await conectarBroker(broker); } catch (e) { caja.innerHTML = `<p class="pending">❌ No se ha podido conectar. Comprueba la conexión a internet (si estás en la wifi de la universidad, prueba con los datos del móvil) y recarga la página.</p>`; return; }
+    let id; try { id = localStorage.getItem(`ccee-conc-${SALA}`) || crypto.randomUUID(); localStorage.setItem(`ccee-conc-${SALA}`, id); } catch (e) { id = crypto.randomUUID(); }
+    let alias = ""; try { alias = localStorage.getItem("ccee-conc-alias") || ""; } catch (e) {}
+    let estado = null, unido = false, i = 0, aciertos = 0, t0 = null, jugando = false;
+    const enviar = (extra) => cli.publish(temaJug(SALA), JSON.stringify({id, alias, aciertos, resp: i, tiempo: t0 ? Date.now() - t0 : 0, ...extra}), {qos: 1});
+    const pantalla = () => {
+      caja.innerHTML = "";
+      if (!unido) {
+        const f = html`<form class="asis-caja"><label>Tu alias para el ranking<input name="alias" required maxlength="20" autocomplete="off" placeholder="p. ej. Analista_7" value="${alias}"></label><button class="asis-boton">Entrar al concurso</button><p class="asis-nota">No escribas tu nombre real si no quieres que aparezca en la pantalla de clase.</p></form>`;
+        f.onsubmit = (e) => { e.preventDefault(); alias = f.alias.value.trim().slice(0, 20).replace(/[<>&"]/g, ""); if (!alias) return; try { localStorage.setItem("ccee-conc-alias", alias); } catch (err) {} unido = true; enviar({fin: false}); pantalla(); };
+        caja.append(f); return;
+      }
+      if (!estado || estado.fase === "espera") { caja.append(html`<div class="asis-caja conc-espera"><p class="juego-grande">⏳</p><p>Hola, <b>${alias}</b>. Espera a que el profesor empiece el concurso…</p></div>`); return; }
+      const P = estado.preguntas;
+      if (estado.fase === "fin" || i >= P.length) {
+        const pos = estado.ranking ? estado.ranking.findIndex(r => r.alias === alias) : -1;
+        caja.append(html`<div class="asis-caja conc-espera"><p class="juego-grande">${aciertos} / ${P.length}</p><p>Tiempo: <b>${CONC.segundos(t0 ? Date.now() - t0 : 0)}</b></p>
+          ${estado.fase === "fin" ? html`<p>${pos >= 0 ? html`Has quedado en el puesto <b>${pos + 1}</b> ${["🥇", "🥈", "🥉"][pos] ?? ""}` : "Mira el ranking en la pantalla de clase."}</p>` : html`<p>¡Terminado! Mira el ranking en la pantalla de clase.</p>`}</div>`);
+        return;
+      }
+      if (!t0) t0 = Date.now();
+      const q = P[i], correcta = CONC.desofuscar(SALA, i, q.c, q.o.length);
+      const ops = html`<div class="juego-ops juego-ops-v">`;
+      q.o.forEach((o, k) => { const b = html`<button class="juego-op">${o}</button>`; b.onclick = () => {
+        if (!jugando) return; jugando = false;
+        const bien = k === correcta; if (bien) aciertos++;
+        ops.querySelectorAll("button").forEach((x, j) => { x.disabled = true; if (j === correcta) x.classList.add("ok"); }); if (!bien) b.classList.add("ko");
+        i++; enviar({fin: i >= P.length});
+        setTimeout(pantalla, bien ? 700 : 1500);
+      }; ops.append(b); });
+      jugando = true;
+      caja.append(html`<div class="juego"><p class="juego-ind">Pregunta ${i + 1} de ${P.length} · Aciertos: ${aciertos}</p><p class="juego-p">${q.e.split("**").map((t, j) => j % 2 ? html`<b>${t}</b>` : t)}</p></div>`, ops);
+    };
+    cli.subscribe(temaEstado(SALA), {qos: 1});
+    cli.on("message", (t, m) => { try { const d = JSON.parse(m.toString()); const antes = estado?.fase; estado = d; if (antes !== d.fase || !jugando) pantalla(); } catch (e) {} });
+    invalidation.then(() => { try { cli.end(true); } catch (e) {} });
+    pantalla();
+  })();
+  return caja;
+}
+```
+''', PREG=PREG, CONC=CONC, ESPECS=J(unicos), AREAS=J(AREAS))

@@ -97,6 +97,8 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · [Concurso en clase](concurso.qmd)** <span class="badge-nuevo">nuevo</span>: los estudiantes escanean un QR, responden preguntas con datos reales desde el móvil y el ranking aparece en directo en la pantalla.
+- **Nuevo · Guarda cualquier gráfico** <span class="badge-nuevo">nuevo</span>: todos los gráficos tienen botones para descargarlos en PNG de alta resolución o en SVG, con su leyenda y la fuente, listos para un trabajo, un TFG o un TFM.
 - **Nuevo · [Calculadoras](calculadoras.qmd)** <span class="badge-nuevo">nuevo</span>: un menú con todas las calculadoras y dos nuevas, la [regresión con análisis de supuestos](regresion.qmd) y el [análisis estadístico de datos](estadistica.qmd), que funcionan con las series de CCEEscopio o con tus propios datos.
 - **Nuevo · [Pirámides de población](piramides.qmd)** <span class="badge-nuevo">nuevo</span>: de los países europeos, las comunidades autónomas y las provincias, con animación desde el año 2000.
 - **Nuevo · [¿Qué explica cada indicador?](descomposiciones.qmd)** <span class="badge-nuevo">nuevo</span>: descompón la inflación (alimentos, energía, vivienda, transporte, servicios…), el crecimiento del PIB, la cuenta corriente, la población y el turismo, y descubre qué componentes explican cada subida.

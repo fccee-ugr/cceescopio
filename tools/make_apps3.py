@@ -585,7 +585,7 @@ viewof salaCodigo = Inputs.text({label: "Código de sala", placeholder: "p. ej. 
 ```
 
 ::: {.callout-tip appearance="simple"}
-**Para el profesorado.** Proyecta el código de sala (por ejemplo, el nombre del grupo y la fecha) y pide a los estudiantes que entren desde el móvil. Para preparar preguntas más largas o un examen, usa el [generador de exámenes](examen.qmd).
+**Para el profesorado.** Proyecta el código de sala (por ejemplo, el nombre del grupo y la fecha) y pide a los estudiantes que entren desde el móvil. Para un concurso con ranking en directo en la pantalla, usa el [concurso en clase](concurso.qmd). Para preparar preguntas más largas o un examen, usa el [generador de exámenes](examen.qmd).
 :::
 ''', ESPECS=J(unicos), EPIS=J(EPISODIOS), PERFIL=J(PERFIL), AREAS=J(AREAS))
 

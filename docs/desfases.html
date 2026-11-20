@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7cbf636553388102f599bb310d6afa4c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-fdc19067bc8e6c5ef955d68c055def80.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -404,6 +404,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li>
     <a class="dropdown-item" href="./examen-tc3.html">
  <span class="dropdown-text">Exámenes de Técnicas Cuantitativas III (GMIM)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./concurso.html">
+ <span class="dropdown-text">Concurso en clase con QR y ranking en directo</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./juegos.html#aula">
@@ -1052,6 +1056,103 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", botonEncuesta);
   else botonEncuesta();
+})();
+</script>
+<!-- Botones para guardar cualquier gráfico de CCEEscopio en PNG (alta resolución) o SVG, con leyenda y fuente -->
+<style>
+.ccee-guardar { display: flex; justify-content: flex-end; gap: .4rem; margin: .1rem 0 .8rem; font-size: .78rem; }
+.ccee-guardar button { background: #fff; border: 1px solid #D9CDD3; color: #A6195E; border-radius: 999px; padding: .12rem .65rem; cursor: pointer; }
+.ccee-guardar button:hover { background: #A6195E; color: #fff; }
+@media print { .ccee-guardar { display: none; } }
+</style>
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  // La nota indica Eurostat salvo en las páginas donde se trabaja con datos propios (hay un cuadro para pegarlos)
+  const fuenteTexto = () => "Elaborado con CCEEscopio (Facultad de Ciencias Económicas y Empresariales, Universidad de Granada)" + (document.body.textContent.includes("Eurostat") && !document.querySelector("textarea") ? ". Datos: Eurostat." : ".");
+  const esPlot = (el) => [...el.classList].some(c => /^plot-[0-9a-f]+(-figure)?$/.test(c));
+  const nombre = () => (document.title.split("–")[0].split("|")[0].trim() || "grafico").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w]+/g, "_").replace(/^_|_$/g, "").toLowerCase().slice(0, 50);
+  // Une en un solo SVG el gráfico, su leyenda (aunque sea HTML) y la fuente
+  function componer(el) {
+    const principal = el.tagName.toLowerCase() === "svg" ? el : [...el.querySelectorAll(":scope > svg")].filter(s => !/-ramp$/.test(s.getAttribute("class") || "")).pop();
+    if (!principal) return null;
+    const ancho = Math.round(principal.getBoundingClientRect().width || +principal.getAttribute("width") || 640);
+    const alto = Math.round(principal.getBoundingClientRect().height || +principal.getAttribute("height") || 400);
+    const out = document.createElementNS(NS, "svg");
+    out.setAttribute("xmlns", NS);
+    const fuente = "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
+    let y = 8;
+    // Título y subtítulo de la figura de Plot, si los tiene
+    for (const h of el.tagName.toLowerCase() === "figure" ? el.querySelectorAll(":scope > h2, :scope > h3") : []) {
+      const t = document.createElementNS(NS, "text"); t.textContent = h.textContent; t.setAttribute("x", 4); t.setAttribute("y", y + 16);
+      t.setAttribute("style", `${fuente}; font-size: ${h.tagName === "H2" ? 17 : 13}px; font-weight: ${h.tagName === "H2" ? 700 : 400}; fill: #222`); out.append(t); y += 24;
+    }
+    // Leyendas de color (muestras HTML de Plot) convertidas a SVG
+    const muestras = el.tagName.toLowerCase() === "figure" ? [...el.querySelectorAll("span[class*='-swatch']")] : [];
+    if (muestras.length) {
+      let x = 4; y += 6;
+      for (const m of muestras) {
+        const s = m.querySelector("svg"), color = s?.getAttribute("fill") || s?.querySelector("rect,circle,path")?.getAttribute("fill") || s?.querySelector("rect,circle,path")?.getAttribute("stroke") || "#888";
+        const texto = m.textContent.trim(), w = 22 + texto.length * 6.6;
+        if (x + w > ancho && x > 4) { x = 4; y += 20; }
+        const r = document.createElementNS(NS, "rect"); r.setAttribute("x", x); r.setAttribute("y", y); r.setAttribute("width", 12); r.setAttribute("height", 12); r.setAttribute("fill", color);
+        const t = document.createElementNS(NS, "text"); t.textContent = texto; t.setAttribute("x", x + 17); t.setAttribute("y", y + 10.5); t.setAttribute("style", `${fuente}; font-size: 11.5px; fill: #333`);
+        out.append(r, t); x += w + 12;
+      }
+      y += 22;
+    }
+    // Leyendas en rampa (escalas continuas)
+    for (const rampa of el.tagName.toLowerCase() === "figure" ? el.querySelectorAll(":scope > svg[class$='-ramp'], :scope > div > svg[class$='-ramp']") : []) {
+      const c = rampa.cloneNode(true); c.setAttribute("x", 0); c.setAttribute("y", y); out.append(c); y += +(rampa.getAttribute("height") || 50) + 4;
+    }
+    const g = principal.cloneNode(true);
+    g.querySelectorAll("[aria-label='tip']").forEach(n => n.remove());
+    g.setAttribute("x", 0); g.setAttribute("y", y); g.setAttribute("width", ancho); g.setAttribute("height", alto);
+    out.append(g); y += alto + 8;
+    const pie = document.createElementNS(NS, "text"); pie.textContent = fuenteTexto(); pie.setAttribute("x", 4); pie.setAttribute("y", y + 10);
+    pie.setAttribute("style", `${fuente}; font-size: 10px; fill: #777`); out.append(pie); y += 18;
+    out.setAttribute("width", ancho); out.setAttribute("height", y); out.setAttribute("viewBox", `0 0 ${ancho} ${y}`);
+    // fondo blanco
+    const fondo = document.createElementNS(NS, "rect"); fondo.setAttribute("width", "100%"); fondo.setAttribute("height", "100%"); fondo.setAttribute("fill", "#fff"); out.prepend(fondo);
+    return {svg: new XMLSerializer().serializeToString(out), ancho, alto: y};
+  }
+  function descargar(blob, fichero) {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fichero; document.body.append(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+  function guardar(el, formato) {
+    const c = componer(el); if (!c) return;
+    const base = nombre();
+    if (formato === "svg") descargar(new Blob([c.svg], {type: "image/svg+xml"}), `${base}.svg`);
+    else {
+      const escala = 3, img = new Image();
+      img.onload = () => {
+        const cv = document.createElement("canvas"); cv.width = c.ancho * escala; cv.height = c.alto * escala;
+        const ctx = cv.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height); ctx.drawImage(img, 0, 0, cv.width, cv.height);
+        cv.toBlob(b => descargar(b, `${base}.png`), "image/png");
+      };
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(c.svg);
+    }
+    window.cceeEvento && window.cceeEvento(`descarga/grafico-${formato}`, `Gráfico guardado (${formato})`, true);
+  }
+  function procesar(raiz) {
+    for (const el of raiz.querySelectorAll("figure, svg")) {
+      if (el.dataset.cceeGuardar || !esPlot(el)) continue;
+      if (el.tagName.toLowerCase() === "svg" && el.closest("figure") && esPlot(el.closest("figure"))) continue;
+      if (/-ramp$/.test(el.getAttribute("class") || "") || el.closest("[class*='-swatch']")) continue;
+      const r = el.getBoundingClientRect(); if (r.width && r.width < 200) continue;
+      el.dataset.cceeGuardar = "1";
+      const barra = document.createElement("div"); barra.className = "ccee-guardar";
+      barra.innerHTML = `<button type="button" title="Imagen en alta resolución para documentos y presentaciones">⬇ PNG</button><button type="button" title="Imagen vectorial, editable y sin pérdida de calidad">⬇ SVG</button>`;
+      const [png, svg] = barra.querySelectorAll("button");
+      png.onclick = () => guardar(el, "png"); svg.onclick = () => guardar(el, "svg");
+      // Si el gráfico está dentro de un mapa con información emergente, la barra va detrás del contenedor
+      const ancla = el.closest(".mapa-ccee") ?? el;
+      ancla.after(barra);
+    }
+  }
+  const obs = new MutationObserver(muts => { for (const m of muts) for (const n of m.addedNodes) if (n.nodeType === 1) procesar(n.parentElement || n); });
+  document.addEventListener("DOMContentLoaded", () => { procesar(document.body); obs.observe(document.body, {childList: true, subtree: true}); });
 })();
 </script>
 <script type="ojs-module-contents">

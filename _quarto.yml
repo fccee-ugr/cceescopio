@@ -158,6 +158,8 @@ website:
             text: "Noticias e indicadores (retos para clase)"
           - href: examen-tc3.qmd
             text: "Exámenes de Técnicas Cuantitativas III (GMIM)"
+          - href: concurso.qmd
+            text: "Concurso en clase con QR y ranking en directo"
           - href: juegos.qmd#aula
             text: "Modo aula: competición en clase"
           - href: presentacion.qmd
@@ -191,4 +193,6 @@ format:
     smooth-scroll: true
     html-math-method: katex
     lang: es
-    include-after-body: _goatcounter.html
+    include-after-body:
+      - _goatcounter.html
+      - _guardar.html
