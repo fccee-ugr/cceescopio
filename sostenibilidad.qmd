@@ -347,7 +347,37 @@ datos.ok ? (terr.length ? Plot.plot({
 //| echo: false
 mapaPeriodos = datos.ok ? [...new Set(datos.rows.map(r => r.periodo))].sort().reverse() : []
 viewof mapaP = ind.sinGeo ? html`` : Inputs.select(["Último dato disponible", ...mapaPeriodos], {label: "Periodo del mapa"})
+viewof mapaComun = ind.sinGeo || !datos.ok ? Object.assign(html`<span></span>`, {value: false}) : Inputs.toggle({label: "Misma escala de colores en todos los periodos", value: false})
 mapaGeo = (datos.ok && !ind.sinGeo) ? geoNuts(ind.regional ? 2 : 0) : null
+```
+
+```{ojs}
+//| echo: false
+{
+  // Animación del mapa: recorre los periodos desde el elegido (o desde el primero) hasta el último.
+  // Al pararla, el mapa se queda en el periodo en el que estaba y se puede seguir usando el selector.
+  if (ind.sinGeo || !datos.ok || mapaPeriodos.length < 2) return html``;
+  const asc = [...mapaPeriodos].reverse();
+  const txt = `▶ Animar el mapa (${asc[0]}–${asc.at(-1)})`;
+  const b = html`<button class="copiar">${txt}</button>`;
+  let timer = null;
+  const parar = () => { clearInterval(timer); timer = null; b.textContent = txt; };
+  const poner = (vista, v) => { vista.value = v; vista.dispatchEvent(new Event("input", {bubbles: true})); };
+  b.onclick = () => {
+    if (timer) return parar();
+    const sel = viewof mapaP;
+    let i = asc.indexOf(sel.value);
+    if (i < 0 || i >= asc.length - 1) i = 0;
+    // Con una escala fija los colores son comparables entre fotogramas
+    if (!(viewof mapaComun).value) poner(viewof mapaComun, true);
+    const pasos = asc.length - i, ms = Math.max(180, Math.min(700, Math.round(25000 / pasos)));
+    b.textContent = "⏸ Parar";
+    poner(sel, asc[i++]);
+    timer = setInterval(() => { if (i >= asc.length) return parar(); poner(sel, asc[i++]); }, ms);
+  };
+  invalidation.then(() => clearInterval(timer));
+  return html`<div class="mapa-anim">${b}<span>Empieza en el periodo elegido (o en el primero) y llega hasta el último. Puedes pararla en cualquier momento.</span></div>`;
+}
 ```
 
 ```{ojs}
@@ -360,17 +390,23 @@ mapaVals = {
   return m;
 }
 mapaColor = {
-  const v = [...mapaVals.values()].map(r => r.valor);
-  return (ind.cero && d3.min(v) < 0 && d3.max(v) > 0)
-    ? {type: "diverging", scheme: "RdBu", pivot: 0, legend: true, label: ind.unidad, tickFormat: x => fmt(x)}
-    : {type: "quantile", n: 5, scheme: "PuRd", legend: true, label: ind.unidad, tickFormat: x => fmt(x)};
+  // Escala común: se calcula con todos los periodos y territorios, para comparar fotogramas de la animación
+  const v = mapaComun && datos.ok ? datos.rows.filter(r => r.codigo_territorio).map(r => r.valor) : [...mapaVals.values()].map(r => r.valor);
+  const lim = d3.extent(v);
+  return (ind.cero && lim[0] < 0 && lim[1] > 0)
+    ? {type: "diverging", scheme: "RdBu", pivot: 0, legend: true, label: ind.unidad, tickFormat: x => fmt(x), ...(mapaComun ? {domain: lim} : {})}
+    : {type: "quantile", n: 5, scheme: "PuRd", legend: true, label: ind.unidad, tickFormat: x => fmt(x), ...(mapaComun ? {domain: v} : {})};
 }
+mapaEtiqueta = (mapaP === "Último dato disponible" || !mapaP) ? "Último dato disponible" : mapaP
 mapa = {
   if (ind.sinGeo) return html`<p class="pending">Este indicador no tiene desglose territorial.</p>`;
   if (!datos.ok) return html``;
   if (!mapaGeo) return html`<p class="pending">No se han podido cargar los límites geográficos para el mapa.</p>`;
   const nombre = f => nombresGeo[f.properties.geo] ?? f.properties.NAME_LATN ?? f.properties.NAME ?? f.properties.geo;
   const tit = f => { const r = mapaVals.get(f.properties.geo); return r ? `${nombre(f)} (${r.periodo})\n${fmt(r.valor)} ${ind.unidad}` : `${nombre(f)}\nSin datos`; };
+  // Periodo representado, dentro del propio mapa (se ve en la animación y al guardar la imagen)
+  const etiquetaPeriodo = (ancla) => Plot.text([mapaEtiqueta], {text: d => d, frameAnchor: ancla, dx: ancla.endsWith("left") ? 10 : -10, dy: ancla.startsWith("top") ? 14 : -14,
+    fontSize: mapaEtiqueta.length > 12 ? 16 : 26, fontWeight: 700, fill: "#B5175F", stroke: "white", strokeWidth: 4, paintOrder: "stroke"});
   const marcas = (feats, clip = false) => [
     Plot.geo(feats, {fill: "#ECE7E9", stroke: "white", strokeWidth: 0.6, title: tit, clip}),
     Plot.geo(feats.filter(f => mapaVals.has(f.properties.geo)), {fill: f => mapaVals.get(f.properties.geo).valor, stroke: "white", strokeWidth: 0.6, title: tit, clip}),
@@ -381,7 +417,7 @@ mapa = {
     return tooltipMapa(html`<div class="mapa-ccee">${Plot.plot({
       width: 760, height: 620, color: mapaColor,
       projection: {type: "azimuthal-equal-area", rotate: [-10, -52], domain: {type: "MultiPoint", coordinates: [[-11, 35], [33, 35], [33, 70], [-11, 70], [25, 34]]}},
-      marks: marcas(feats, true)
+      marks: [...marcas(feats, true), etiquetaPeriodo("top-left")]
     })}</div>`);
   }
   const es = mapaGeo.features.filter(f => f.properties.geo?.startsWith("ES"));
@@ -399,7 +435,7 @@ mapa = {
   const can = es.filter(f => f.properties.geo === "ES70");
   const principal = Plot.plot({width: 700, height: 560, color: mapaColor,
     projection: {type: "conic-conformal", rotate: [3.5, 0], parallels: [36, 43], domain: {type: "FeatureCollection", features: pen}},
-    marks: [...marcas(es), ...marcasCiudades]});
+    marks: [...marcas(es), ...marcasCiudades, etiquetaPeriodo("bottom-right")]});
   const islas = can.length ? Plot.plot({width: 220, height: 130, color: {...mapaColor, legend: false},
     projection: {type: "conic-conformal", rotate: [15.5, 0], parallels: [27, 29], domain: {type: "FeatureCollection", features: can}},
     marks: marcas(can)}) : "";
