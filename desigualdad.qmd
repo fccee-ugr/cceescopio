@@ -524,7 +524,7 @@ datos.ok ? html`<div class="descargas">
 ## Ideas para la docencia y la investigación
 
 - Economía aplicada: medición de la desigualdad (Gini, S80/S20, índices de Theil) y su descomposición.
-- Estadística: estimación a partir de encuestas y margen de error de los indicadores.
+- Métodos Cuantitativos: estimación a partir de encuestas y margen de error de los indicadores.
 - TFG/TFM: pobreza y exclusión en las comunidades autónomas.
 
 <p class="source">¿Echas en falta algún indicador? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>

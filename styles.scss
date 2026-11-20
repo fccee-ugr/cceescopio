@@ -311,3 +311,14 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 .asis-boton { display: inline-block; margin-top: .8rem; background: $ccee-magenta; color: #fff; border: 0; border-radius: 999px; padding: .6rem 1.4rem; font-size: 1.05rem; font-weight: 700; cursor: pointer; }
 .asis-boton:disabled { opacity: .5; cursor: default; }
 .asis-nota { font-size: .85rem; color: #666; margin-top: .6rem; }
+
+/* Precios de productos y concurso «¿Cuánto costaba?» */
+.cp-precios { margin: .6rem 0 1rem; summary { cursor: pointer; font-weight: 600; color: $ccee-magenta; } table { margin-top: .5rem; } }
+.cp-pregunta { text-align: center; input[type=text] { text-align: center; font-size: 1.4rem; } }
+.cp-emoji { font-size: 4.5rem; line-height: 1; margin: .4rem 0 .2rem; }
+.cp-prod { font-size: 1.3rem; margin-bottom: .3rem; span { color: #666; font-size: 1rem; } }
+.cp-sol { border-radius: 12px; padding: .6rem .9rem; margin-top: .8rem; }
+.cp-sol.ok { background: #E6F4EA; }
+.cp-sol.medio { background: #FFF4E0; }
+.cp-sol.ko { background: #FDE8EC; }
+.cp-soluciones { margin-top: 1.2rem; }

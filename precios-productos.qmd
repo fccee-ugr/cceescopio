@@ -1,0 +1,627 @@
+---
+title: "Precios de productos"
+subtitle: "Gasolina, gasóleo, luz, gas y la cesta de la compra, comparados con el IPC"
+toc: true
+---
+
+Las fuentes oficiales casi nunca publican **precios medios** de productos concretos: el IPC mide cómo **cambian** los precios, no cuánto cuestan las cosas. Hay dos excepciones importantes que sí aparecen aquí en euros: los **carburantes**, con datos semanales de la Comisión Europea, y la **electricidad y el gas** de los hogares, con datos semestrales de Eurostat. Para el resto de productos (pan, leche, aceite, café…) se usa su **índice de precios** dentro del IPC armonizado, que permite saber cuánto más caros son hoy que en cualquier fecha anterior.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+// Módulo de precios: carburantes (Boletín Petrolero de la Comisión Europea) e índices de precios por producto (IPCA, Eurostat)
+PRECIOS = {
+  const PRODUCTOS = [{"id": "gasolina", "nombre": "Gasolina 95", "emoji": "⛽", "unidad": "litro", "ref": 1.5, "carb": "g95", "pat": ["petrol|gasoline"]}, {"id": "gasoleo", "nombre": "Gasóleo (diésel)", "emoji": "🛻", "unidad": "litro", "ref": 1.45, "carb": "die", "pat": ["diesel"]}, {"id": "luz", "nombre": "Electricidad", "emoji": "💡", "unidad": "kWh (hogares)", "ref": 0.2, "pat": ["^electricity"]}, {"id": "gas", "nombre": "Gas natural", "emoji": "🔥", "unidad": "kWh (hogares)", "ref": 0.09, "pat": ["natural gas", "^gas$"]}, {"id": "pan", "nombre": "Pan", "emoji": "🥖", "unidad": "barra de 250 g", "ref": 1.1, "pat": ["^bread"]}, {"id": "leche", "nombre": "Leche entera", "emoji": "🥛", "unidad": "litro", "ref": 1.05, "pat": ["whole milk", "^(fresh )?milk$", "^raw milk", "^milk"]}, {"id": "huevos", "nombre": "Huevos", "emoji": "🥚", "unidad": "docena", "ref": 2.9, "pat": ["^eggs"]}, {"id": "aceite", "nombre": "Aceite de oliva", "emoji": "🫒", "unidad": "litro", "ref": 5.0, "pat": ["olive oil"]}, {"id": "cafe", "nombre": "Café", "emoji": "☕", "unidad": "paquete de 250 g", "ref": 4.0, "pat": ["^coffee"]}, {"id": "azucar", "nombre": "Azúcar", "emoji": "🍬", "unidad": "kg", "ref": 1.1, "pat": ["^sugar"]}, {"id": "pollo", "nombre": "Pollo", "emoji": "🍗", "unidad": "kg", "ref": 3.8, "pat": ["poultry"]}, {"id": "ternera", "nombre": "Carne de vacuno", "emoji": "🥩", "unidad": "kg", "ref": 16.0, "pat": ["beef|bovine"]}, {"id": "patatas", "nombre": "Patatas", "emoji": "🥔", "unidad": "kg", "ref": 1.4, "pat": ["^potatoes"]}, {"id": "cerveza", "nombre": "Cerveza", "emoji": "🍺", "unidad": "lata de 33 cl", "ref": 0.75, "pat": ["^beer", "lager"]}, {"id": "tabaco", "nombre": "Tabaco", "emoji": "🚬", "unidad": "cajetilla", "ref": 5.5, "pat": ["cigarettes"]}, {"id": "menu", "nombre": "Comer en un restaurante", "emoji": "🍽️", "unidad": "menú del día", "ref": 15.0, "pat": ["restaurant"]}, {"id": "pelo", "nombre": "Peluquería", "emoji": "💇", "unidad": "corte de pelo", "ref": 15.0, "pat": ["^hairdressing salons", "hairdressing"]}, {"id": "libro", "nombre": "Libros", "emoji": "📚", "unidad": "libro", "ref": 20.0, "pat": ["^books"]}, {"id": "ropa", "nombre": "Ropa", "emoji": "👕", "unidad": "camiseta", "ref": 12.0, "pat": ["^garments$", "^garments"]}, {"id": "avion", "nombre": "Billetes de avión", "emoji": "✈️", "unidad": "billete", "ref": 90.0, "pat": ["passenger transport by air"]}, {"id": "alquiler", "nombre": "Alquiler de vivienda", "emoji": "🏠", "unidad": "mes", "ref": 900.0, "pat": ["actual rentals.*main residence", "actual rentals paid by tenants", "actual rental"], "concurso": false}];
+  const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const mesTexto = (p) => { const m = /^(\d{4})-(\d{2})/.exec(p); return m ? `${MESES[+m[2] - 1]} de ${m[1]}` : p; };
+  const nombreP = (c) => c === "EU27_2020" ? "UE-27 (media)" : c === "EA" ? "Zona euro (media)" : (nombresGeo[c] ?? c);
+  async function cargarCarburantes() {
+    const h = location.hostname, seg = location.pathname.split("/").filter(Boolean)[0];
+    const urls = [];
+    if (h.endsWith("github.io") && seg) urls.push(`https://raw.githubusercontent.com/${h.split(".")[0]}/${seg}/carburantes/carburantes.json`);
+    urls.push("carburantes.json", "data/carburantes.json");
+    for (const u of urls) { try { const r = await fetch(u, {cache: "no-store"}); if (r.ok) { const d = await r.json(); if (d.series) return d; } } catch (e) {} }
+    return null;
+  }
+  // Serie semanal de un territorio -> [{fecha, periodo, valor}]
+  function semanal(carb, pais, serie) {
+    const v = carb?.series?.[pais]?.[serie]; if (!v) return [];
+    return carb.fechas.map((f, i) => ({fecha: new Date(f + "T00:00:00"), periodo: f, valor: v[i]})).filter(d => d.valor != null);
+  }
+  // Media mensual de una serie semanal
+  function mensual(sem) {
+    return [...d3.rollup(sem, v => d3.mean(v, d => d.valor), d => d.periodo.slice(0, 7))].sort((a, b) => a[0] < b[0] ? -1 : 1)
+      .map(([p, v]) => ({periodo: p, fecha: fecha(p), valor: v}));
+  }
+  async function eurostatCrudo(code, query) {
+    const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`Eurostat ${code}: HTTP ${r.status}`);
+    const js = await r.json();
+    return {recs: jsonstat(js), labels: Object.fromEntries(js.id.map(d => [d, js.dimension[d].category.label || {}]))};
+  }
+  // Catálogo de subclases del IPCA: primero la tabla nueva (ECOICOP 2, 2025 = 100) y, si falla, la anterior
+  const anioBase = (u) => { const n = +u.slice(1); return n < 50 ? 2000 + n : 1900 + n; };
+  let catalogo = null;
+  async function catalogoIPC() {
+    if (catalogo) return catalogo;
+    for (const tabla of ["prc_hicp_minr", "prc_hicp_minx", "prc_hicp_midx"]) {
+      for (const q of ["&geo=ES&unit=I25", "&geo=ES&unit=I15", "&geo=ES"]) {
+        try {
+          const {recs, labels} = await eurostatCrudo(tabla, q + "&lastTimePeriod=1");
+          if (!recs.length) continue;
+          const dim = Object.keys(recs[0]).find(k => /coicop/i.test(k));
+          const uds = [...new Set(recs.map(r => r.unit))].filter(u => /^I\d\d$/.test(u ?? "")).sort((a, b) => anioBase(b) - anioBase(a));
+          if (!dim || !uds.length) continue;
+          const codigos = new Map();
+          for (const r of recs) if (r.unit === uds[0]) codigos.set(r[dim], labels[dim]?.[r[dim]] ?? r[dim]);
+          const total = ["TOTAL", "CP00"].find(c => codigos.has(c)) ?? "CP00";
+          return (catalogo = {tabla, dim, unidad: uds[0], base: anioBase(uds[0]), codigos, total});
+        } catch (e) {}
+      }
+    }
+    return null;
+  }
+  function emparejar(cat) {
+    const subclases = [...cat.codigos].filter(([k]) => /^CP\d{3,}$/.test(k));
+    const out = [];
+    for (const p of PRODUCTOS) {
+      for (const pat of p.pat) {
+        const re = new RegExp(pat, "i");
+        const c = subclases.filter(([k, l]) => re.test(l)).sort((a, b) => b[0].length - a[0].length || (a[0] < b[0] ? -1 : 1))[0];
+        if (c) { out.push({...p, code: c[0], etiqueta: c[1]}); break; }
+      }
+    }
+    return out;
+  }
+  const cache = new Map();
+  async function seriesIPC(cat, geo, codes, desde = 1996) {
+    const falta = codes.filter(c => !cache.has(`${geo}|${c}`));
+    for (let i = 0; i < falta.length; i += 25) {
+      const lote = falta.slice(i, i + 25);
+      try {
+        const {recs} = await eurostatCrudo(cat.tabla, `&geo=${geo}&unit=${cat.unidad}` + lote.map(c => `&${cat.dim}=${c}`).join("") + `&sinceTimePeriod=${desde}`);
+        for (const c of lote) cache.set(`${geo}|${c}`, recs.filter(r => r[cat.dim] === c && Number.isFinite(r.value))
+          .map(r => ({periodo: r.time, fecha: fecha(r.time), valor: r.value})).filter(r => r.fecha).sort((a, b) => a.fecha - b.fecha));
+      } catch (e) { for (const c of lote) cache.set(`${geo}|${c}`, []); }
+    }
+    return new Map(codes.map(c => [c, cache.get(`${geo}|${c}`) ?? []]));
+  }
+  // Índice con base 100 en la media de un año
+  function base100(serie, anio) {
+    const b = d3.mean(serie.filter(d => d.fecha.getFullYear() === anio), d => d.valor);
+    return b ? serie.map(d => ({...d, valor: 100 * d.valor / b})) : [];
+  }
+  const valorEn = (serie, periodo) => serie.find(d => d.periodo.slice(0, 7) === periodo.slice(0, 7))?.valor;
+  const euros = (v, dec = 2) => Number.isFinite(v) ? locES.format(`,.${dec}f`)(v) + " €" : "–";
+  const pct = (v) => Number.isFinite(v) ? (v > 0 ? "+" : "") + locES.format(",.1f")(v) + " %" : "–";
+  return {PRODUCTOS, MESES, mesTexto, nombreP, cargarCarburantes, semanal, mensual, eurostatCrudo, catalogoIPC, emparejar, seriesIPC, base100, valorEn, euros, pct};
+}
+```
+
+```{ojs}
+//| echo: false
+carb = PRECIOS.cargarCarburantes()
+catIPC = PRECIOS.catalogoIPC()
+productosIPC = catIPC ? PRECIOS.emparejar(catIPC) : []
+paisesCarb = carb ? Object.keys(carb.series).sort((a, b) => a === "ES" ? -1 : b === "ES" ? 1 : PRECIOS.nombreP(a).localeCompare(PRECIOS.nombreP(b), "es")) : []
+anioUltCarb = carb ? +carb.fechas.at(-1).slice(0, 4) : 2026
+```
+
+## Gasolina y gasóleo
+
+Precio de venta al público en euros por litro, cada lunes desde 2005. Fuente: Comisión Europea, *Weekly Oil Bulletin*.
+
+```{ojs}
+//| echo: false
+viewof prodC = Inputs.radio(new Map([["Gasolina 95", "g95"], ["Gasóleo (diésel)", "die"]]), {label: "Carburante", value: "g95"})
+viewof impC = Inputs.radio(new Map([["Con impuestos (lo que se paga en la gasolinera)", "con"], ["Sin impuestos", "sin"]]), {label: "Precio", value: "con"})
+viewof paisesC = Inputs.select(new Map(paisesCarb.map(c => [PRECIOS.nombreP(c), c])), {multiple: true, label: "Territorios (Ctrl/Cmd para elegir varios)", value: ["ES", "EU27_2020", "FR", "DE", "IT", "PT"].filter(c => paisesCarb.includes(c)), size: 8})
+viewof desdeC = Inputs.range([2005, anioUltCarb], {label: "Desde el año", step: 1, value: Math.max(2005, anioUltCarb - 6)})
+```
+
+```{ojs}
+//| echo: false
+nomCarb = prodC === "g95" ? "gasolina 95" : "gasóleo"
+filasC = paisesC.flatMap(p => PRECIOS.semanal(carb, p, `${prodC}_${impC}`).filter(d => d.fecha.getFullYear() >= desdeC).map(d => ({...d, territorio: PRECIOS.nombreP(p)})))
+{
+  if (!carb) return html`<div class="callout callout-warning"><p><b>Los precios de los carburantes todavía no están disponibles.</b> Se descargan cada semana del Boletín Petrolero de la Comisión Europea mediante una tarea automática del repositorio de la web; si acabas de instalar esta página, ejecútala una vez a mano (GitHub → Actions → «Carburantes de CCEEscopio» → Run workflow). Mientras tanto puedes consultar los datos en la <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">web del boletín</a>.</p></div>`;
+  const p0 = paisesC[0] ?? "ES", s = PRECIOS.semanal(carb, p0, `${prodC}_con`), sin = PRECIOS.semanal(carb, p0, `${prodC}_sin`);
+  if (!s.length) return html``;
+  const ult = s.at(-1), hace = (dias) => s.filter(d => d.fecha <= new Date(+ult.fecha - dias * 864e5)).at(-1);
+  const m4 = hace(28), a1 = hace(364), max = d3.greatest(s, d => d.valor);
+  const ultSin = sin.find(d => d.periodo === ult.periodo) ?? sin.at(-1), conMismo = s.find(d => d.periodo === ultSin?.periodo);
+  const imp = ultSin && conMismo ? 100 * (1 - ultSin.valor / conMismo.valor) : NaN;
+  const k = (l, n, sub) => html`<div class="kpi"><div class="kpi-l">${l}</div><div class="kpi-n">${n}</div><div class="kpi-s">${sub}</div></div>`;
+  const fd = (d) => d.fecha.toLocaleDateString("es-ES", {day: "numeric", month: "short", year: "numeric"});
+  return html`<div class="kpi-grid">
+    ${k(`Precio de la ${nomCarb} en ${PRECIOS.nombreP(p0)}`, PRECIOS.euros(ult.valor, 3) + "/l", `Semana del ${fd(ult)}`)}
+    ${k("Variación en un mes", m4 ? PRECIOS.pct(100 * (ult.valor / m4.valor - 1)) : "–", m4 ? `Desde ${PRECIOS.euros(m4.valor, 3)}/l` : "")}
+    ${k("Variación en un año", a1 ? PRECIOS.pct(100 * (ult.valor / a1.valor - 1)) : "–", a1 ? `Desde ${PRECIOS.euros(a1.valor, 3)}/l` : "")}
+    ${k("Máximo desde 2005", PRECIOS.euros(max.valor, 3) + "/l", `Semana del ${fd(max)}`)}
+    ${k("Impuestos sobre el precio", Number.isFinite(imp) ? locES.format(",.0f")(imp) + " %" : "–", "IVA, impuesto especial y otros")}
+  </div>`;
+}
+```
+
+```{ojs}
+//| echo: false
+carb ? (paisesC.length ? Plot.plot({
+  title: `Precio de la ${nomCarb} ${impC === "con" ? "con" : "sin"} impuestos`,
+  height: 440, marginLeft: 55, marginRight: 120,
+  x: {label: null, type: "time"}, y: {label: "€ por litro", grid: true, tickFormat: v => locES.format(",.2f")(v)},
+  color: {domain: paisesC.map(PRECIOS.nombreP), range: colores(paisesC.map(PRECIOS.nombreP))},
+  marks: [
+    Plot.line(filasC, {x: "fecha", y: "valor", stroke: "territorio", strokeWidth: d => d.territorio === "España" ? 2.6 : 1.5}),
+    Plot.text(filasC, Plot.selectLast({x: "fecha", y: "valor", z: "territorio", text: "territorio", fill: "territorio", textAnchor: "start", dx: 6})),
+    Plot.tip(filasC, Plot.pointer({x: "fecha", y: "valor", title: d => `${d.territorio} · semana del ${d.fecha.toLocaleDateString("es-ES")}\n${PRECIOS.euros(d.valor, 3)} por litro`}))
+  ]
+}) : html`<p class="pending">Elige al menos un territorio.</p>`) : html``
+```
+
+### ¿Cuánto son impuestos?
+
+```{ojs}
+//| echo: false
+viewof paisImp = carb ? Inputs.select(new Map(paisesCarb.map(c => [PRECIOS.nombreP(c), c])), {label: "Territorio", value: "ES"}) : Object.assign(html`<span></span>`, {value: "ES"})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!carb) return html``;
+  const con = PRECIOS.semanal(carb, paisImp, `${prodC}_con`), sin = new Map(PRECIOS.semanal(carb, paisImp, `${prodC}_sin`).map(d => [d.periodo, d.valor]));
+  const filas = con.filter(d => d.fecha.getFullYear() >= desdeC && sin.has(d.periodo)).flatMap(d => [
+    {fecha: d.fecha, parte: "Precio sin impuestos", valor: sin.get(d.periodo), total: d.valor},
+    {fecha: d.fecha, parte: "Impuestos", valor: d.valor - sin.get(d.periodo), total: d.valor}]);
+  if (!filas.length) return html`<p class="pending">No hay precios sin impuestos para este territorio.</p>`;
+  return Plot.plot({
+    title: `${nomCarb[0].toUpperCase() + nomCarb.slice(1)} en ${PRECIOS.nombreP(paisImp)}: precio antes de impuestos e impuestos`,
+    height: 380, marginLeft: 55, x: {label: null, type: "time"}, y: {label: "€ por litro", grid: true, tickFormat: v => locES.format(",.2f")(v)},
+    color: {domain: ["Precio sin impuestos", "Impuestos"], range: ["#F29200", "#B5175F"], legend: true},
+    marks: [Plot.areaY(filas, {x: "fecha", y: "valor", fill: "parte", order: ["Precio sin impuestos", "Impuestos"], fillOpacity: 0.85}),
+      Plot.tip(filas.filter(d => d.parte === "Impuestos"), Plot.pointerX({x: "fecha", y: "total", title: d => `Semana del ${d.fecha.toLocaleDateString("es-ES")}\nPrecio final: ${PRECIOS.euros(d.total, 3)}/l\nImpuestos: ${PRECIOS.euros(d.valor, 3)}/l (${locES.format(",.0f")(100 * d.valor / d.total)} %)`}))]
+  });
+}
+```
+
+<p class="source">El precio sin impuestos incluye el coste del petróleo y su refino, el transporte, la distribución y el margen de las estaciones de servicio. Los impuestos son el IVA y el impuesto especial sobre hidrocarburos, que es una cantidad fija por litro: por eso, cuando el petróleo se abarata, los impuestos pesan más en el precio final.</p>
+
+## La gasolina frente al IPC
+
+¿Ha subido la gasolina más o menos que el resto de precios? Para compararlos se pasan las dos series a **índices con base 100** en un mismo año: si en el último dato la gasolina está en 150 y el IPC general en 130, la gasolina se ha encarecido más que la media de los productos. La segunda gráfica responde a otra pregunta: ¿cuánto costaba la gasolina **en euros de hoy**? Se obtiene **deflactando** el precio con el IPC general.
+
+```{ojs}
+//| echo: false
+viewof paisIPC = carb ? Inputs.select(new Map(paisesCarb.filter(c => c !== "EA").map(c => [PRECIOS.nombreP(c), c])), {label: "Territorio", value: "ES"}) : Object.assign(html`<span></span>`, {value: "ES"})
+viewof baseC = Inputs.range([2005, anioUltCarb - 1], {label: "Año base (= 100)", step: 1, value: 2015})
+```
+
+```{ojs}
+//| echo: false
+compIPC = {
+  if (!carb || !catIPC) return null;
+  const prodIPC = productosIPC.find(p => p.carb === prodC);
+  const codes = [catIPC.total, ...(prodIPC ? [prodIPC.code] : [])];
+  const s = await PRECIOS.seriesIPC(catIPC, paisIPC, codes, 2005);
+  const general = s.get(catIPC.total), sub = prodIPC ? s.get(prodIPC.code) : [];
+  const precio = PRECIOS.mensual(PRECIOS.semanal(carb, paisIPC, `${prodC}_con`));
+  if (!general.length || !precio.length) return null;
+  return {general, sub, precio, prodIPC};
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!carb) return html``;
+  if (!catIPC) return html`<p class="pending">No se han podido cargar los datos del IPC de Eurostat. Inténtalo de nuevo más tarde.</p>`;
+  if (!compIPC) return html`<p class="pending">No hay datos del IPC para este territorio.</p>`;
+  const {general, sub, precio} = compIPC;
+  const series = [
+    ...PRECIOS.base100(precio, baseC).map(d => ({...d, serie: `Precio de la ${nomCarb} en surtidor`})),
+    ...PRECIOS.base100(sub, baseC).map(d => ({...d, serie: `IPC de la ${nomCarb}`})),
+    ...PRECIOS.base100(general, baseC).map(d => ({...d, serie: "IPC general"}))
+  ].filter(d => d.fecha.getFullYear() >= Math.min(desdeC, baseC));
+  const dom = [...new Set(series.map(d => d.serie))];
+  return Plot.plot({
+    title: `${nomCarb[0].toUpperCase() + nomCarb.slice(1)} e IPC general en ${PRECIOS.nombreP(paisIPC)} (índices, ${baseC} = 100)`,
+    height: 420, marginLeft: 50, marginRight: 10, x: {label: null, type: "time"}, y: {label: `Índice (${baseC} = 100)`, grid: true},
+    color: {domain: dom, range: ["#B5175F", "#F29200", "#3C3C3B"].slice(0, dom.length), legend: true},
+    marks: [Plot.ruleY([100], {stroke: "#999"}),
+      Plot.line(series, {x: "fecha", y: "valor", stroke: "serie", strokeWidth: d => d.serie === "IPC general" ? 2.6 : 1.8, strokeDasharray: d => d.serie.startsWith("IPC de") ? "5,3" : null}),
+      Plot.tip(series, Plot.pointer({x: "fecha", y: "valor", title: d => `${d.serie} · ${PRECIOS.mesTexto(d.periodo)}\n${locES.format(",.1f")(d.valor)}`}))]
+  });
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!carb || !compIPC) return html``;
+  const {general, precio} = compIPC;
+  const ultI = general.at(-1), mapa = new Map(general.map(d => [d.periodo.slice(0, 7), d.valor]));
+  const filas = precio.filter(d => mapa.has(d.periodo) && d.fecha.getFullYear() >= Math.min(desdeC, baseC)).flatMap(d => [
+    {fecha: d.fecha, periodo: d.periodo, serie: "Precio de cada momento (nominal)", valor: d.valor},
+    {fecha: d.fecha, periodo: d.periodo, serie: `En euros de ${PRECIOS.mesTexto(ultI.periodo)} (real)`, valor: d.valor * ultI.valor / mapa.get(d.periodo)}]);
+  const nom = filas.filter((d, i) => i % 2 === 0), real = filas.filter((d, i) => i % 2 === 1);
+  const mN = d3.greatest(nom, d => d.valor), mR = d3.greatest(real, d => d.valor);
+  const b = precio.filter(d => d.fecha.getFullYear() === baseC), bI = general.filter(d => d.fecha.getFullYear() === baseC);
+  const ultP = precio.filter(d => mapa.has(d.periodo)).at(-1);
+  const subeP = 100 * (ultP.valor / d3.mean(b, d => d.valor) - 1), subeI = 100 * (mapa.get(ultP.periodo) / d3.mean(bI, d => d.valor) - 1);
+  const rel = 100 * ((1 + subeP / 100) / (1 + subeI / 100) - 1);
+  return html`<div class="calc-result"><p class="calc-big">Desde ${baseC}, la ${nomCarb} ha subido un <b>${PRECIOS.pct(subeP)}</b> y el IPC general un <b>${PRECIOS.pct(subeI)}</b>: en términos reales (descontada la inflación), la ${nomCarb} es hoy un <b>${PRECIOS.pct(rel)}</b> ${rel >= 0 ? "más cara" : "más barata"} que en ${baseC}.</p>
+    <p class="calc-small">Máximo en euros de cada momento: ${PRECIOS.euros(mN.valor, 3)}/l (${PRECIOS.mesTexto(mN.periodo)}). Máximo en euros de hoy: ${PRECIOS.euros(mR.valor, 3)}/l (${PRECIOS.mesTexto(mR.periodo)}). Medias mensuales del precio con impuestos en ${PRECIOS.nombreP(paisIPC)}.</p></div>
+  ${Plot.plot({
+    title: `${nomCarb[0].toUpperCase() + nomCarb.slice(1)} en ${PRECIOS.nombreP(paisIPC)}: precio nominal y precio real`,
+    height: 380, marginLeft: 55, x: {label: null, type: "time"}, y: {label: "€ por litro", grid: true, tickFormat: v => locES.format(",.2f")(v)},
+    color: {domain: [...new Set(filas.map(d => d.serie))], range: ["#3C3C3B", "#B5175F"], legend: true},
+    marks: [Plot.line(filas, {x: "fecha", y: "valor", stroke: "serie", strokeWidth: 2}),
+      Plot.tip(filas, Plot.pointer({x: "fecha", y: "valor", title: d => `${d.serie}\n${PRECIOS.mesTexto(d.periodo)}: ${PRECIOS.euros(d.valor, 3)}/l`}))]
+  })}`;
+}
+```
+
+<p class="source">Precio real del mes <i>t</i> = precio del mes <i>t</i> × IPC del último mes ÷ IPC del mes <i>t</i>. El «IPC de la gasolina» es la subclase de carburantes del Índice de Precios de Consumo Armonizado (Eurostat); debe seguir muy de cerca al precio del boletín, porque mide lo mismo con otra fuente.</p>
+
+## Electricidad y gas de los hogares
+
+Precio medio por kWh que pagan los hogares con un consumo medio, impuestos incluidos. Eurostat lo publica cada semestre.
+
+```{ojs}
+//| echo: false
+viewof energiaE = Inputs.radio(new Map([["Electricidad", "luz"], ["Gas natural", "gas"]]), {label: "Energía", value: "luz"})
+viewof paisesE = Inputs.select(new Map(geosPaises.map(c => [nombresGeo[c] ?? c, c])), {multiple: true, label: "Territorios", value: ["ES", "EU27_2020", "FR", "DE", "IT", "PT"], size: 8})
+```
+
+```{ojs}
+//| echo: false
+datosE = {
+  const tabla = energiaE === "luz" ? "nrg_pc_204" : "nrg_pc_202", cons = energiaE === "luz" ? "KWH2500-4999" : "GJ20-199";
+  const geos = paisesE.map(g => `&geo=${g}`).join("");
+  for (const [u, f] of [["KWH", 1], ["GJ", 1 / 277.7778]]) {
+    try {
+      const r = await eurostat(tabla, `&nrg_cons=${cons}&unit=${u}&tax=I_TAX&currency=EUR&sinceTimePeriod=2008${geos}`);
+      const filas = r.filter(d => Number.isFinite(d.value) && d.value > 0).map(d => ({territorio: nombresGeo[d.geo] ?? d.geoLabel, periodo: d.time, fecha: fecha(d.time), valor: d.value * f})).filter(d => d.fecha);
+      if (filas.length) return {filas, tabla};
+    } catch (e) {}
+  }
+  return null;
+}
+```
+
+```{ojs}
+//| echo: false
+datosE ? Plot.plot({
+  title: `${energiaE === "luz" ? "Electricidad" : "Gas natural"}: precio para los hogares con impuestos`,
+  height: 420, marginLeft: 55, marginRight: 120, x: {label: null, type: "time"}, y: {label: "€ por kWh", grid: true, tickFormat: v => locES.format(",.2f")(v)},
+  color: {domain: [...new Set(datosE.filas.map(d => d.territorio))], range: colores([...new Set(datosE.filas.map(d => d.territorio))])},
+  marks: [Plot.line(datosE.filas, {x: "fecha", y: "valor", stroke: "territorio", curve: "step-after", strokeWidth: d => d.territorio === "España" ? 2.6 : 1.5}),
+    Plot.text(datosE.filas, Plot.selectLast({x: "fecha", y: "valor", z: "territorio", text: "territorio", fill: "territorio", textAnchor: "start", dx: 6})),
+    Plot.tip(datosE.filas, Plot.pointer({x: "fecha", y: "valor", title: d => `${d.territorio} · ${d.periodo.replace("-S", ", semestre ")}\n${PRECIOS.euros(d.valor, 3)} por kWh`}))]
+}) : html`<p class="pending">No se han podido cargar los precios de la energía de Eurostat. Inténtalo de nuevo más tarde.</p>`
+```
+
+<p class="source">Fuente: Eurostat (nrg_pc_204 y nrg_pc_202): hogares con un consumo anual de 2.500 a 5.000 kWh de electricidad o de 20 a 200 GJ de gas; todos los impuestos incluidos. Es un precio medio del semestre: no recoge las variaciones diarias del mercado eléctrico.</p>
+
+## La cesta de la compra
+
+Para el resto de productos no hay un precio medio oficial, pero sí su **índice de precios** dentro del IPC armonizado. Con él se puede comparar cada producto con el IPC general y **estimar cuánto costaba** en cualquier fecha a partir de lo que cuesta hoy.
+
+```{ojs}
+//| echo: false
+viewof geoP = Inputs.select(new Map(geosPaises.map(c => [nombresGeo[c] ?? c, c])), {label: "Territorio", value: "ES"})
+opcionesP = {
+  if (!catIPC) return new Map();
+  const cur = productosIPC.map(p => [`${p.emoji} ${p.nombre}`, p]);
+  const usados = new Set(productosIPC.map(p => p.code));
+  const otros = [...catIPC.codigos].filter(([k]) => /^CP\d{3,}$/.test(k) && !usados.has(k)).sort((a, b) => a[0] < b[0] ? -1 : 1)
+    .map(([k, l]) => [`Otras categorías de Eurostat (en inglés) · ${k.replace(/^CP/, "")} ${l}`, {id: k, code: k, nombre: l, emoji: "🏷️", unidad: "unidad", ref: 10, etiqueta: l}]);
+  return new Map([...cur, ...otros]);
+}
+viewof prodP = Inputs.select(opcionesP, {label: "Producto", value: opcionesP.get("🥖 Pan") ?? [...opcionesP.values()][0]})
+viewof baseP = Inputs.range([1996, (new Date()).getFullYear() - 1], {label: "Desde el año (= 100)", step: 1, value: 2019})
+```
+
+```{ojs}
+//| echo: false
+seriesP = {
+  if (!catIPC || !prodP) return null;
+  const codes = [...new Set([catIPC.total, prodP.code, ...productosIPC.map(p => p.code)])];
+  return await PRECIOS.seriesIPC(catIPC, geoP, codes, 1996);
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!catIPC) return html`<p class="pending">No se han podido cargar los índices de precios de Eurostat. Inténtalo de nuevo más tarde.</p>`;
+  if (!seriesP) return html``;
+  const sp = PRECIOS.base100(seriesP.get(prodP.code), baseP), sg = PRECIOS.base100(seriesP.get(catIPC.total), baseP);
+  if (!sp.length) return html`<p class="pending">No hay datos de este producto para ${nombresGeo[geoP] ?? geoP} en ${baseP}. Prueba con un año posterior.</p>`;
+  const filas = [...sp.map(d => ({...d, serie: prodP.nombre})), ...sg.map(d => ({...d, serie: "IPC general"}))].filter(d => d.fecha.getFullYear() >= baseP);
+  return Plot.plot({
+    title: `${prodP.nombre} frente al IPC general en ${nombresGeo[geoP] ?? geoP} (${baseP} = 100)`,
+    height: 400, marginLeft: 50, x: {label: null, type: "time"}, y: {label: `Índice (${baseP} = 100)`, grid: true},
+    color: {domain: [prodP.nombre, "IPC general"], range: ["#B5175F", "#3C3C3B"], legend: true},
+    marks: [Plot.ruleY([100], {stroke: "#999"}), Plot.line(filas, {x: "fecha", y: "valor", stroke: "serie", strokeWidth: 2}),
+      Plot.tip(filas, Plot.pointer({x: "fecha", y: "valor", title: d => `${d.serie} · ${PRECIOS.mesTexto(d.periodo)}\n${locES.format(",.1f")(d.valor)}`}))]
+  });
+}
+```
+
+### ¿Cuánto costaba? {#cuanto-costaba}
+
+```{ojs}
+//| echo: false
+viewof precioHoy = Inputs.number([0.01, 100000], {label: `Precio actual (${prodP?.unidad ?? "unidad"}), en euros`, value: prodP?.ref ?? 1, step: 0.01})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!seriesP || !prodP) return html``;
+  const s = seriesP.get(prodP.code), g = seriesP.get(catIPC.total);
+  if (!s?.length) return html``;
+  const ult = s.at(-1);
+  const est = s.map(d => ({...d, precio: precioHoy * d.valor / ult.valor}));
+  const hitos = [...new Set([baseP, 2000, 2005, 2010, 2015, 2020, ult.fecha.getFullYear() - 1].filter(a => a >= est[0].fecha.getFullYear() && a <= ult.fecha.getFullYear()))].sort();
+  const tabla = hitos.map(a => { const v = est.filter(d => d.fecha.getFullYear() === a); return {a, p: d3.mean(v, d => d.precio)}; }).filter(d => Number.isFinite(d.p));
+  const ini = est.filter(d => d.fecha.getFullYear() === baseP), gi = g.filter(d => d.fecha.getFullYear() === baseP);
+  const subeP = ini.length ? 100 * (ult.valor / d3.mean(ini, d => d.valor) - 1) : NaN, subeG = gi.length ? 100 * (g.at(-1).valor / d3.mean(gi, d => d.valor) - 1) : NaN;
+  return html`<div class="calc-result"><p class="calc-big">Si hoy cuesta <b>${PRECIOS.euros(precioHoy)}</b>, en ${baseP} costaba de media unos <b>${PRECIOS.euros(precioHoy / (1 + subeP / 100))}</b>: ha subido un <b>${PRECIOS.pct(subeP)}</b>, frente al ${PRECIOS.pct(subeG)} del IPC general.</p>
+    <p class="calc-small">${tabla.map(d => `${d.a}: ${PRECIOS.euros(d.p)}`).join(" · ")}. Último dato del índice: ${PRECIOS.mesTexto(ult.periodo)}. El precio actual es orientativo: cámbialo por el que conozcas.</p></div>
+  ${Plot.plot({
+    title: `${prodP.emoji} ${prodP.nombre}: precio estimado si hoy cuesta ${PRECIOS.euros(precioHoy)}`,
+    height: 320, marginLeft: 55, x: {label: null, type: "time"}, y: {label: "€", grid: true, tickFormat: v => locES.format(",.2f")(v)},
+    marks: [Plot.line(est, {x: "fecha", y: "precio", stroke: "#B5175F", strokeWidth: 2}),
+      Plot.tip(est, Plot.pointer({x: "fecha", y: "precio", title: d => `${PRECIOS.mesTexto(d.periodo)}: ${PRECIOS.euros(d.precio)}`}))]
+  })}`;
+}
+```
+
+<p class="source">Precio estimado del mes <i>t</i> = precio actual × índice del mes <i>t</i> ÷ índice del último mes. Refleja la evolución media del precio de ese tipo de producto en el territorio elegido, no la de una marca o una tienda concretas.</p>
+
+### ¿Qué productos han subido más?
+
+```{ojs}
+//| echo: false
+{
+  if (!seriesP) return html``;
+  const sube = (c) => { const s = seriesP.get(c) ?? [], b = s.filter(d => d.fecha.getFullYear() === baseP); return s.length && b.length ? 100 * (s.at(-1).valor / d3.mean(b, d => d.valor) - 1) : NaN; };
+  const g = sube(catIPC.total);
+  const filas = productosIPC.map(p => ({producto: `${p.emoji} ${p.nombre}`, v: sube(p.code)})).filter(d => Number.isFinite(d.v));
+  if (!filas.length) return html``;
+  return Plot.plot({
+    title: `Variación de precios desde ${baseP} en ${nombresGeo[geoP] ?? geoP}, por producto`,
+    height: Math.max(300, 26 * filas.length), marginLeft: 190, marginRight: 60,
+    x: {label: "Variación acumulada (%)", grid: true, tickFormat: v => locES.format(",.0f")(v)}, y: {label: null},
+    marks: [
+      Plot.barX(filas, {y: "producto", x: "v", sort: {y: "-x"}, fill: d => d.v > g ? "#B5175F" : "#D9C2CC", tip: true, title: d => `${d.producto}: ${PRECIOS.pct(d.v)}`}),
+      Plot.text(filas, {y: "producto", x: "v", text: d => PRECIOS.pct(d.v), dx: d => d.v >= 0 ? 4 : -4, textAnchor: d => d.v >= 0 ? "start" : "end", fontSize: 10}),
+      Plot.ruleX([g], {stroke: "#3C3C3B", strokeWidth: 2, strokeDasharray: "4,3"}),
+      Plot.text([g], {x: d => d, frameAnchor: "top", dy: -2, text: d => `IPC general ${PRECIOS.pct(d)}`, fill: "#3C3C3B", fontWeight: 700, textAnchor: "start", dx: 4}),
+      Plot.ruleX([0])
+    ]
+  });
+}
+```
+
+<p class="source">En color intenso, los productos que se han encarecido más que el conjunto de los precios (IPC general, línea discontinua). Fuente: Eurostat, Índice de Precios de Consumo Armonizado por subclases (base 2025 = 100).</p>
+
+## Descargar los datos
+
+```{ojs}
+//| echo: false
+carb ? html`<div class="descargas">
+  ${DOM.download(() => csv(paisesCarb.flatMap(p => ["g95", "die"].flatMap(pr => ["con", "sin"].flatMap(im => PRECIOS.semanal(carb, p, `${pr}_${im}`).map(d => ({territorio: PRECIOS.nombreP(p), codigo: p, carburante: pr === "g95" ? "Gasolina 95" : "Gasóleo", impuestos: im === "con" ? "con impuestos" : "sin impuestos", semana: d.periodo, euros_litro: d.valor})))))), "cceescopio_carburantes.csv", "⬇ Precios semanales de los carburantes (CSV)")}
+  ${seriesP ? DOM.download(() => csv([catIPC.total, ...productosIPC.map(p => p.code)].flatMap(c => (seriesP.get(c) ?? []).map(d => ({territorio: nombresGeo[geoP] ?? geoP, producto: c === catIPC.total ? "IPC general" : productosIPC.find(p => p.code === c).nombre, codigo_ecoicop: c, mes: d.periodo, indice: d.valor})))), `cceescopio_ipc_productos_${geoP}.csv`, "⬇ Índices de precios por producto (CSV)") : ""}
+</div>
+<p class="source">Carburantes: Comisión Europea, Weekly Oil Bulletin (actualizado: ${carb.actualizado}). Índices de precios y energía: Eurostat. Reutilización libre citando la fuente, a través de CCEEscopio, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
+```
+
+::: {.callout-tip appearance="simple"}
+**Para clase.** Juega con tus estudiantes a [«¿Cuánto costaba?»](concurso-precios.qmd): ven un producto con su precio actual y tienen que adivinar cuánto costaba en una fecha del pasado. Y en la [calculadora de inflación](calculadora.qmd) puedes actualizar cualquier cantidad con el IPC general.
+:::

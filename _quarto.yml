@@ -64,6 +64,8 @@ website:
             text: "Mercados al día"
           - href: piramides.qmd
             text: "Pirámides de población"
+          - href: precios-productos.qmd
+            text: "Precios de productos: gasolina, luz y cesta de la compra"
           - text: "---"
           - text: "Análisis"
           - href: descomposiciones.qmd
@@ -97,11 +99,11 @@ website:
           - href: calculadoras.qmd
             text: "🧮 Todas las calculadoras"
           - text: "---"
-          - text: "Estadística y econometría"
+          - text: "Métodos Cuantitativos y econometría"
           - href: regresion.qmd
             text: "Regresión lineal con análisis de supuestos"
           - href: estadistica.qmd
-            text: "Análisis estadístico de datos"
+            text: "Análisis cuantitativo de datos"
           - href: desfases.qmd
             text: "¿Qué indicador se adelanta? (desfases)"
           - href: relaciona.qmd
@@ -116,6 +118,8 @@ website:
           - text: "Precios, dinero y finanzas"
           - href: calculadora.qmd
             text: "Calculadora de inflación"
+          - href: precios-productos.qmd#cuanto-costaba
+            text: "¿Cuánto costaba? Precios de productos en el pasado"
           - href: conversor.qmd
             text: "Conversor de unidades económicas"
           - href: hipoteca.qmd
@@ -160,6 +164,8 @@ website:
             text: "Exámenes de Técnicas Cuantitativas III (GMIM)"
           - href: concurso.qmd
             text: "Concurso en clase con QR y ranking en directo"
+          - href: concurso-precios.qmd
+            text: "Concurso con QR «¿Cuánto costaba?»"
           - href: juegos.qmd#aula
             text: "Modo aula: competición en clase"
           - href: presentacion.qmd

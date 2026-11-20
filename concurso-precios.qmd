@@ -1,0 +1,533 @@
+---
+title: "¿Cuánto costaba?"
+subtitle: "Concurso con código QR: adivina el precio que tenían los productos en una fecha del pasado"
+toc: false
+---
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+// Módulo de precios: carburantes (Boletín Petrolero de la Comisión Europea) e índices de precios por producto (IPCA, Eurostat)
+PRECIOS = {
+  const PRODUCTOS = [{"id": "gasolina", "nombre": "Gasolina 95", "emoji": "⛽", "unidad": "litro", "ref": 1.5, "carb": "g95", "pat": ["petrol|gasoline"]}, {"id": "gasoleo", "nombre": "Gasóleo (diésel)", "emoji": "🛻", "unidad": "litro", "ref": 1.45, "carb": "die", "pat": ["diesel"]}, {"id": "luz", "nombre": "Electricidad", "emoji": "💡", "unidad": "kWh (hogares)", "ref": 0.2, "pat": ["^electricity"]}, {"id": "gas", "nombre": "Gas natural", "emoji": "🔥", "unidad": "kWh (hogares)", "ref": 0.09, "pat": ["natural gas", "^gas$"]}, {"id": "pan", "nombre": "Pan", "emoji": "🥖", "unidad": "barra de 250 g", "ref": 1.1, "pat": ["^bread"]}, {"id": "leche", "nombre": "Leche entera", "emoji": "🥛", "unidad": "litro", "ref": 1.05, "pat": ["whole milk", "^(fresh )?milk$", "^raw milk", "^milk"]}, {"id": "huevos", "nombre": "Huevos", "emoji": "🥚", "unidad": "docena", "ref": 2.9, "pat": ["^eggs"]}, {"id": "aceite", "nombre": "Aceite de oliva", "emoji": "🫒", "unidad": "litro", "ref": 5.0, "pat": ["olive oil"]}, {"id": "cafe", "nombre": "Café", "emoji": "☕", "unidad": "paquete de 250 g", "ref": 4.0, "pat": ["^coffee"]}, {"id": "azucar", "nombre": "Azúcar", "emoji": "🍬", "unidad": "kg", "ref": 1.1, "pat": ["^sugar"]}, {"id": "pollo", "nombre": "Pollo", "emoji": "🍗", "unidad": "kg", "ref": 3.8, "pat": ["poultry"]}, {"id": "ternera", "nombre": "Carne de vacuno", "emoji": "🥩", "unidad": "kg", "ref": 16.0, "pat": ["beef|bovine"]}, {"id": "patatas", "nombre": "Patatas", "emoji": "🥔", "unidad": "kg", "ref": 1.4, "pat": ["^potatoes"]}, {"id": "cerveza", "nombre": "Cerveza", "emoji": "🍺", "unidad": "lata de 33 cl", "ref": 0.75, "pat": ["^beer", "lager"]}, {"id": "tabaco", "nombre": "Tabaco", "emoji": "🚬", "unidad": "cajetilla", "ref": 5.5, "pat": ["cigarettes"]}, {"id": "menu", "nombre": "Comer en un restaurante", "emoji": "🍽️", "unidad": "menú del día", "ref": 15.0, "pat": ["restaurant"]}, {"id": "pelo", "nombre": "Peluquería", "emoji": "💇", "unidad": "corte de pelo", "ref": 15.0, "pat": ["^hairdressing salons", "hairdressing"]}, {"id": "libro", "nombre": "Libros", "emoji": "📚", "unidad": "libro", "ref": 20.0, "pat": ["^books"]}, {"id": "ropa", "nombre": "Ropa", "emoji": "👕", "unidad": "camiseta", "ref": 12.0, "pat": ["^garments$", "^garments"]}, {"id": "avion", "nombre": "Billetes de avión", "emoji": "✈️", "unidad": "billete", "ref": 90.0, "pat": ["passenger transport by air"]}, {"id": "alquiler", "nombre": "Alquiler de vivienda", "emoji": "🏠", "unidad": "mes", "ref": 900.0, "pat": ["actual rentals.*main residence", "actual rentals paid by tenants", "actual rental"], "concurso": false}];
+  const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const mesTexto = (p) => { const m = /^(\d{4})-(\d{2})/.exec(p); return m ? `${MESES[+m[2] - 1]} de ${m[1]}` : p; };
+  const nombreP = (c) => c === "EU27_2020" ? "UE-27 (media)" : c === "EA" ? "Zona euro (media)" : (nombresGeo[c] ?? c);
+  async function cargarCarburantes() {
+    const h = location.hostname, seg = location.pathname.split("/").filter(Boolean)[0];
+    const urls = [];
+    if (h.endsWith("github.io") && seg) urls.push(`https://raw.githubusercontent.com/${h.split(".")[0]}/${seg}/carburantes/carburantes.json`);
+    urls.push("carburantes.json", "data/carburantes.json");
+    for (const u of urls) { try { const r = await fetch(u, {cache: "no-store"}); if (r.ok) { const d = await r.json(); if (d.series) return d; } } catch (e) {} }
+    return null;
+  }
+  // Serie semanal de un territorio -> [{fecha, periodo, valor}]
+  function semanal(carb, pais, serie) {
+    const v = carb?.series?.[pais]?.[serie]; if (!v) return [];
+    return carb.fechas.map((f, i) => ({fecha: new Date(f + "T00:00:00"), periodo: f, valor: v[i]})).filter(d => d.valor != null);
+  }
+  // Media mensual de una serie semanal
+  function mensual(sem) {
+    return [...d3.rollup(sem, v => d3.mean(v, d => d.valor), d => d.periodo.slice(0, 7))].sort((a, b) => a[0] < b[0] ? -1 : 1)
+      .map(([p, v]) => ({periodo: p, fecha: fecha(p), valor: v}));
+  }
+  async function eurostatCrudo(code, query) {
+    const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`Eurostat ${code}: HTTP ${r.status}`);
+    const js = await r.json();
+    return {recs: jsonstat(js), labels: Object.fromEntries(js.id.map(d => [d, js.dimension[d].category.label || {}]))};
+  }
+  // Catálogo de subclases del IPCA: primero la tabla nueva (ECOICOP 2, 2025 = 100) y, si falla, la anterior
+  const anioBase = (u) => { const n = +u.slice(1); return n < 50 ? 2000 + n : 1900 + n; };
+  let catalogo = null;
+  async function catalogoIPC() {
+    if (catalogo) return catalogo;
+    for (const tabla of ["prc_hicp_minr", "prc_hicp_minx", "prc_hicp_midx"]) {
+      for (const q of ["&geo=ES&unit=I25", "&geo=ES&unit=I15", "&geo=ES"]) {
+        try {
+          const {recs, labels} = await eurostatCrudo(tabla, q + "&lastTimePeriod=1");
+          if (!recs.length) continue;
+          const dim = Object.keys(recs[0]).find(k => /coicop/i.test(k));
+          const uds = [...new Set(recs.map(r => r.unit))].filter(u => /^I\d\d$/.test(u ?? "")).sort((a, b) => anioBase(b) - anioBase(a));
+          if (!dim || !uds.length) continue;
+          const codigos = new Map();
+          for (const r of recs) if (r.unit === uds[0]) codigos.set(r[dim], labels[dim]?.[r[dim]] ?? r[dim]);
+          const total = ["TOTAL", "CP00"].find(c => codigos.has(c)) ?? "CP00";
+          return (catalogo = {tabla, dim, unidad: uds[0], base: anioBase(uds[0]), codigos, total});
+        } catch (e) {}
+      }
+    }
+    return null;
+  }
+  function emparejar(cat) {
+    const subclases = [...cat.codigos].filter(([k]) => /^CP\d{3,}$/.test(k));
+    const out = [];
+    for (const p of PRODUCTOS) {
+      for (const pat of p.pat) {
+        const re = new RegExp(pat, "i");
+        const c = subclases.filter(([k, l]) => re.test(l)).sort((a, b) => b[0].length - a[0].length || (a[0] < b[0] ? -1 : 1))[0];
+        if (c) { out.push({...p, code: c[0], etiqueta: c[1]}); break; }
+      }
+    }
+    return out;
+  }
+  const cache = new Map();
+  async function seriesIPC(cat, geo, codes, desde = 1996) {
+    const falta = codes.filter(c => !cache.has(`${geo}|${c}`));
+    for (let i = 0; i < falta.length; i += 25) {
+      const lote = falta.slice(i, i + 25);
+      try {
+        const {recs} = await eurostatCrudo(cat.tabla, `&geo=${geo}&unit=${cat.unidad}` + lote.map(c => `&${cat.dim}=${c}`).join("") + `&sinceTimePeriod=${desde}`);
+        for (const c of lote) cache.set(`${geo}|${c}`, recs.filter(r => r[cat.dim] === c && Number.isFinite(r.value))
+          .map(r => ({periodo: r.time, fecha: fecha(r.time), valor: r.value})).filter(r => r.fecha).sort((a, b) => a.fecha - b.fecha));
+      } catch (e) { for (const c of lote) cache.set(`${geo}|${c}`, []); }
+    }
+    return new Map(codes.map(c => [c, cache.get(`${geo}|${c}`) ?? []]));
+  }
+  // Índice con base 100 en la media de un año
+  function base100(serie, anio) {
+    const b = d3.mean(serie.filter(d => d.fecha.getFullYear() === anio), d => d.valor);
+    return b ? serie.map(d => ({...d, valor: 100 * d.valor / b})) : [];
+  }
+  const valorEn = (serie, periodo) => serie.find(d => d.periodo.slice(0, 7) === periodo.slice(0, 7))?.valor;
+  const euros = (v, dec = 2) => Number.isFinite(v) ? locES.format(`,.${dec}f`)(v) + " €" : "–";
+  const pct = (v) => Number.isFinite(v) ? (v > 0 ? "+" : "") + locES.format(",.1f")(v) + " %" : "–";
+  return {PRODUCTOS, MESES, mesTexto, nombreP, cargarCarburantes, semanal, mensual, eurostatCrudo, catalogoIPC, emparejar, seriesIPC, base100, valorEn, euros, pct};
+}
+```
+
+```{ojs}
+//| echo: false
+paramsP = new URLSearchParams(location.search)
+SALA = paramsP.get("sala")
+BROKERS = [
+  {id: "h", nombre: "HiveMQ", url: "wss://broker.hivemq.com:8884/mqtt"},
+  {id: "e", nombre: "EMQX", url: "wss://broker.emqx.io:8084/mqtt"},
+  {id: "m", nombre: "Mosquitto", url: "wss://test.mosquitto.org:8081/mqtt"}
+]
+mqttLib = { try { const m = await import("https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.esm.js"); return m.default ?? m; } catch (e) { return null; } }
+conectarBroker = (b) => new Promise((ok, mal) => {
+  if (!mqttLib) return mal(new Error("sin librería"));
+  const c = mqttLib.connect(b.url, {clientId: "ccee_" + Math.random().toString(16).slice(2, 10), connectTimeout: 6000, reconnectPeriod: 2000, clean: true});
+  const t = setTimeout(() => { c.end(true); mal(new Error("tiempo agotado")); }, 7000);
+  c.once("connect", () => { clearTimeout(t); ok(c); });
+})
+temaEstado = (s) => `cceescopio/precios/${s}/estado`
+temaJug = (s) => `cceescopio/precios/${s}/jugadores`
+```
+
+```{ojs}
+//| echo: false
+// Utilidades del concurso (sin dependencias del navegador, para poder probarlas)
+CP = {
+  const h = (sala, i) => [...`${sala}|${i}`].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7) % 100000;
+  const ofuscar = (sala, i, v) => Math.round(v * 1000) + h(sala, i);
+  const desofuscar = (sala, i, x) => (x - h(sala, i)) / 1000;
+  // Puntos: 100 si se acierta el precio exacto; 0 si el error es del 50 % o más
+  const puntos = (resp, real) => Number.isFinite(resp) && real > 0 ? Math.max(0, Math.round(100 * (1 - Math.abs(resp - real) / real / 0.5))) : 0;
+  const leer = (t) => { const s = String(t).trim().replace(/\s|€/g, ""); const n = /,/.test(s) ? +s.replace(/\./g, "").replace(",", ".") : +s; return Number.isFinite(n) && n > 0 ? n : NaN; };
+  const ordenar = (jug) => [...jug.values()].sort((a, b) => (b.puntos - a.puntos) || ((b.fin ? 1 : 0) - (a.fin ? 1 : 0)) || (a.tiempo - b.tiempo) || a.alias.localeCompare(b.alias));
+  const nuevaSala = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
+  const segundos = (ms) => `${(ms / 1000).toFixed(1).replace(".", ",")} s`;
+  // Elige n preguntas: productos sin repetir mientras se pueda y meses al azar entre «desde» y un año antes del último dato
+  function sortear(productos, n, desde, ultimo, azar = Math.random) {
+    const out = [], bolsa = [];
+    const [ua, um] = ultimo.split("-").map(Number), fin = ua * 12 + um - 1 - 12, ini = desde * 12;
+    for (let i = 0; i < n; i++) {
+      if (!bolsa.length) bolsa.push(...productos.map((p, k) => k).sort(() => azar() - 0.5));
+      const p = productos[bolsa.pop()];
+      const [pa, pm] = (p.inicio ?? "1996-01").split("-").map(Number), ip = Math.max(ini, pa * 12 + pm - 1);
+      const m = ip + Math.floor(azar() * Math.max(1, fin - ip + 1));
+      out.push({p, periodo: `${Math.floor(m / 12)}-${String(m % 12 + 1).padStart(2, "0")}`});
+    }
+    return out;
+  }
+  return {ofuscar, desofuscar, puntos, leer, ordenar, nuevaSala, segundos, sortear};
+}
+```
+
+```{ojs}
+//| echo: false
+// ============================ PANTALLA DEL PROFESOR ============================
+datosCP = {
+  if (SALA) return null;
+  const [carb, cat] = await Promise.all([PRECIOS.cargarCarburantes(), PRECIOS.catalogoIPC()]);
+  const prods = cat ? PRECIOS.emparejar(cat).filter(p => p.concurso !== false) : [];
+  const series = cat ? await PRECIOS.seriesIPC(cat, "ES", [cat.total, ...prods.map(p => p.code)], 1996) : new Map();
+  // Carburantes: precio real del boletín (media del mes) si está disponible
+  const precioCarb = (p) => carb && p.carb ? PRECIOS.mensual(PRECIOS.semanal(carb, "ES", `${p.carb}_con`)) : null;
+  const lista = prods.map(p => ({...p, serie: series.get(p.code) ?? [], carbM: precioCarb(p)})).filter(p => p.serie.length > 60 || p.carbM?.length > 60)
+    .map(p => ({...p, inicio: d3.min([p.serie[0]?.periodo, p.carbM?.[0]?.periodo].filter(Boolean).map(x => x.slice(0, 7)))}));
+  return {carb, cat, lista, general: series.get(cat?.total) ?? []};
+}
+viewof productosCP = SALA ? Object.assign(html`<span></span>`, {value: []}) : (datosCP.lista.length ? Inputs.checkbox(datosCP.lista, {label: "Productos", format: p => `${p.emoji} ${p.nombre}`, value: datosCP.lista}) : html`<p class="pending">No se han podido cargar los índices de precios de Eurostat. Comprueba la conexión y recarga la página.</p>`)
+```
+
+```{ojs}
+//| echo: false
+// Precios actuales de referencia (editables). Los carburantes usan el último precio del Boletín Petrolero.
+viewof preciosCP = {
+  if (SALA || !datosCP?.lista.length) return Object.assign(html`<span></span>`, {value: new Map()});
+  const val = new Map(), filas = [];
+  for (const p of productosCP) {
+    const carbS = p.carb && datosCP.carb ? PRECIOS.semanal(datosCP.carb, "ES", `${p.carb}_con`) : [];
+    if (carbS.length) { val.set(p.id, carbS.at(-1).valor); filas.push(html`<tr><td>${p.emoji} ${p.nombre}</td><td>${p.unidad}</td><td><b>${PRECIOS.euros(carbS.at(-1).valor, 3)}</b> <span class="kpi-s">(Boletín Petrolero, ${carbS.at(-1).fecha.toLocaleDateString("es-ES")})</span></td></tr>`); continue; }
+    val.set(p.id, p.ref);
+    const inp = html`<input type="number" min="0.01" step="0.01" style="width:7rem">`; inp.value = p.ref;
+    inp.oninput = () => { const v = +inp.value; if (v > 0) { val.set(p.id, v); el.value = new Map(val); el.dispatchEvent(new Event("input", {bubbles: true})); } };
+    filas.push(html`<tr><td>${p.emoji} ${p.nombre}</td><td>${p.unidad}</td><td>${inp} €</td></tr>`);
+  }
+  const el = html`<details class="cp-precios"><summary>Precios actuales de referencia (puedes cambiarlos por los del supermercado de tu barrio)</summary><table class="uso-tabla">${filas}</table></details>`;
+  el.value = new Map(val);
+  return el;
+}
+```
+
+```{ojs}
+//| echo: false
+viewof nCP = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.range([4, 12], {label: "Número de preguntas", value: 6, step: 1})
+viewof desdeCP = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.range([1996, (new Date()).getFullYear() - 3], {label: "Fechas desde el año", value: 2005, step: 1})
+viewof abrirCP = SALA ? Object.assign(html`<span></span>`, {value: 0}) : Inputs.button("▶ Abrir concurso", {value: 0, reduce: v => v + 1})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (SALA) return html``;
+  if (!abrirCP) return html`<div class="conc-intro">
+    <p><b>Cómo funciona:</b> en cada pregunta aparece un producto con su <b>precio actual</b> y los estudiantes tienen que adivinar <b>cuánto costaba en una fecha del pasado</b>. Ganan más puntos cuanto más se acerquen: 100 si aciertan el precio exacto y 0 si se equivocan en un 50 % o más. Pulsa «Abrir concurso», proyecta esta pantalla y que los estudiantes escaneen el código QR con el móvil y escriban un <b>alias</b>.</p>
+    <p>El precio correcto de la gasolina y el gasóleo es la media del mes en el Boletín Petrolero de la Comisión Europea. Para los demás productos se estima a partir del precio actual de referencia y del índice de precios de ese producto en el IPC de España (Eurostat). Al terminar verás todas las soluciones para comentarlas en clase.</p>
+    <p class="nota">Los resultados viajan por un servicio público de mensajería en tiempo real y no se guardan en ningún sitio. Antes de usarlo en clase por primera vez, haz una prueba con tu móvil.</p></div>`;
+  // Los ajustes se leen al pulsar el botón: cambiarlos después no reinicia el concurso abierto
+  const productosSel = (viewof productosCP).value, precios = (viewof preciosCP).value, n = (viewof nCP).value, desde = (viewof desdeCP).value;
+  if (!productosSel.length) return html`<p class="pending">Elige al menos un producto y vuelve a pulsar «Abrir concurso».</p>`;
+  const caja = html`<div class="conc-panel"><p class="pending">Preparando las preguntas…</p></div>`;
+  (async () => {
+    const sala = CP.nuevaSala(), {general} = datosCP;
+    const ultimo = d3.min(productosSel.map(p => (p.carbM?.length ? p.carbM : p.serie).at(-1).periodo.slice(0, 7)));
+    const sorteo = CP.sortear(productosSel, n, desde, ultimo);
+    const soluciones = [];
+    const preguntas = sorteo.map(({p, periodo}, i) => {
+      const hoy = precios.get(p.id) ?? p.ref, dec = p.carb ? 3 : 2;
+      let real;
+      if (p.carbM?.length) real = PRECIOS.valorEn(p.carbM, periodo);
+      if (!Number.isFinite(real) && p.serie.length) { const iu = p.serie.at(-1).valor, it = PRECIOS.valorEn(p.serie, periodo) ?? p.serie.find(d => d.periodo >= periodo)?.valor; real = hoy * it / iu; }
+      if (!Number.isFinite(real) && p.carbM?.length) real = p.carbM.find(d => d.periodo >= periodo)?.valor;
+      real = Math.round(real * 10 ** dec) / 10 ** dec;
+      const gI = PRECIOS.valorEn(general, periodo), gU = general.at(-1)?.valor;
+      const g = gI && gU ? Math.round(1000 * (gU / gI - 1)) / 10 : null;
+      soluciones.push({n: i + 1, producto: `${p.emoji} ${p.nombre}`, unidad: p.unidad, fecha: PRECIOS.mesTexto(periodo), hoy, real, dec, g});
+      return {e: p.emoji, n: p.nombre, u: p.unidad, hoy, f: PRECIOS.mesTexto(periodo), c: CP.ofuscar(sala, i, real), d: dec, g};
+    });
+    caja.innerHTML = `<p class="pending">Conectando con el servicio de mensajería…</p>`;
+    let cli = null, broker = null;
+    for (const b of BROKERS) { try { cli = await conectarBroker(b); broker = b; break; } catch (e) {} }
+    if (!cli) { caja.innerHTML = `<p class="pending">❌ No se ha podido conectar con ningún servicio de mensajería. Es posible que la red bloquee estas conexiones: prueba con otra red (por ejemplo, los datos del móvil compartidos).</p>`; return; }
+    const publicar = (estado) => cli.publish(temaEstado(sala), JSON.stringify(estado), {retain: true, qos: 1});
+    publicar({fase: "espera", preguntas});
+    const jug = new Map();
+    let fase = "espera";
+    cli.subscribe(temaJug(sala), {qos: 1});
+    const enlace = `${location.href.split("?")[0].split("#")[0]}?sala=${sala}&b=${broker.id}`;
+    caja.innerHTML = "";
+    caja.append(html`<div class="conc-cab"><div class="conc-qr"></div><div><p class="asis-et">Escanea el código o entra en</p><p class="conc-url">${enlace.replace(/^https?:\/\//, "")}</p>
+        <p class="conc-cuenta">0 participantes</p>
+        <div class="graf-botones"><button class="asis-boton conc-empezar">▶ Empezar</button><button class="copiar conc-terminar" disabled>🏁 Terminar</button><button class="copiar conc-full">⛶ Pantalla completa</button></div></div></div>
+      <div class="conc-ranking"></div><div class="cp-soluciones"></div>`);
+    const $ = (s) => caja.querySelector(s);
+    try { const qrlib = await require("qrcode-generator@1.4.4"); const qr = qrlib(0, "M"); qr.addData(enlace); qr.make(); $(".conc-qr").innerHTML = qr.createSvgTag({cellSize: 6, margin: 2, scalable: true}); } catch (e) { $(".conc-qr").textContent = "(no se ha podido crear el QR)"; }
+    const N = preguntas.length;
+    const pintar = () => {
+      const r = CP.ordenar(jug);
+      $(".conc-cuenta").textContent = `${jug.size} participante${jug.size === 1 ? "" : "s"}`;
+      if (fase === "espera") { $(".conc-ranking").innerHTML = `<div class="conc-alias">${r.map(j => `<span>${j.alias}</span>`).join("")}</div>`; return; }
+      const medalla = (i) => fase === "fin" ? ["🥇", "🥈", "🥉"][i] ?? `${i + 1}.` : `${i + 1}.`;
+      $(".conc-ranking").innerHTML = `${fase === "fin" ? `<h2 class="conc-podio">🏆 ${r[0] ? r[0].alias : ""}</h2>` : ""}<table class="uso-tabla conc-tabla"><tr><th></th><th>Alias</th><th>Puntos</th><th>Pregunta</th><th>Tiempo</th></tr>` +
+        r.slice(0, 15).map((j, i) => `<tr class="${i < 3 && fase === "fin" ? "conc-top" : ""}"><td>${medalla(i)}</td><td>${j.alias}</td><td><b>${j.puntos}</b> / ${100 * N}</td><td>${j.fin ? "✔ terminado" : `${j.resp ?? 0} / ${N}`}</td><td>${j.tiempo ? CP.segundos(j.tiempo) : "–"}</td></tr>`).join("") + "</table>";
+    };
+    cli.on("message", (t, m) => { try { const d = JSON.parse(m.toString()); if (!d.id || !d.alias) return; const prev = jug.get(d.id) ?? {puntos: 0, resp: 0, tiempo: 0};
+      jug.set(d.id, {...prev, ...d, puntos: Math.min(100 * N, Math.max(0, +d.puntos || 0)), alias: String(d.alias).slice(0, 20).replace(/[<>&"]/g, "")}); pintar(); } catch (e) {} });
+    $(".conc-empezar").onclick = () => { fase = "juego"; publicar({fase: "juego", preguntas, inicio: Date.now()}); $(".conc-empezar").disabled = true; $(".conc-terminar").disabled = false; pintar();
+      window.cceeEvento && window.cceeEvento("concurso-precios/empezar", "¿Cuánto costaba?", true); };
+    $(".conc-terminar").onclick = () => { fase = "fin"; const r = CP.ordenar(jug).slice(0, 10).map(j => ({alias: j.alias, puntos: j.puntos, tiempo: j.tiempo}));
+      publicar({fase: "fin", preguntas, ranking: r}); $(".conc-terminar").disabled = true; pintar();
+      $(".cp-soluciones").innerHTML = `<h3>Soluciones</h3><table class="uso-tabla"><tr><th>#</th><th>Producto</th><th>Precio actual</th><th>Fecha</th><th>Precio entonces</th><th>Variación del producto</th><th>Variación del IPC general</th></tr>` +
+        soluciones.map(s => `<tr><td>${s.n}</td><td>${s.producto} <span class="kpi-s">(${s.unidad})</span></td><td>${PRECIOS.euros(s.hoy, s.dec)}</td><td>${s.fecha}</td><td><b>${PRECIOS.euros(s.real, s.dec)}</b></td><td>${PRECIOS.pct(100 * (s.hoy / s.real - 1))}</td><td>${s.g == null ? "–" : PRECIOS.pct(s.g)}</td></tr>`).join("") + "</table>";
+      caja.append(DOM.download(() => new Blob([csv(CP.ordenar(jug).map((j, i) => ({puesto: i + 1, alias: j.alias, puntos: j.puntos, maximo: 100 * N, tiempo_segundos: Math.round(j.tiempo / 100) / 10, terminado: j.fin ? "sí" : "no"})))], {type: "text/csv"}), `cuanto_costaba_${sala}.csv`, "⬇ Descargar los resultados (CSV)")); };
+    $(".conc-full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : caja.requestFullscreen?.();
+    invalidation.then(() => { try { cli.end(true); } catch (e) {} });
+    pintar();
+  })();
+  return caja;
+}
+```
+
+```{ojs}
+//| echo: false
+// ============================ MÓVIL DEL ESTUDIANTE ============================
+{
+  if (!SALA) return html``;
+  const broker = BROKERS.find(b => b.id === paramsP.get("b")) ?? BROKERS[0];
+  const caja = html`<div class="conc-movil"><p class="pending">Conectando con el concurso…</p></div>`;
+  (async () => {
+    let cli;
+    try { cli = await conectarBroker(broker); } catch (e) { caja.innerHTML = `<p class="pending">❌ No se ha podido conectar. Comprueba la conexión a internet (si estás en la wifi de la universidad, prueba con los datos del móvil) y recarga la página.</p>`; return; }
+    let id; try { id = localStorage.getItem(`ccee-cp-${SALA}`) || crypto.randomUUID(); localStorage.setItem(`ccee-cp-${SALA}`, id); } catch (e) { id = crypto.randomUUID(); }
+    let alias = ""; try { alias = localStorage.getItem("ccee-conc-alias") || ""; } catch (e) {}
+    let estado = null, unido = false, i = 0, puntos = 0, t0 = null, jugando = false;
+    const enviar = (extra) => cli.publish(temaJug(SALA), JSON.stringify({id, alias, puntos, resp: i, tiempo: t0 ? Date.now() - t0 : 0, ...extra}), {qos: 1});
+    const eur = (v, d) => PRECIOS.euros(v, d);
+    const pantalla = () => {
+      caja.innerHTML = "";
+      if (!unido) {
+        const f = html`<form class="asis-caja"><label class="asis-et">Tu alias para el ranking</label><input type="text" name="alias" required maxlength="20" autocomplete="off" placeholder="p. ej. Analista_7"><button class="asis-boton">Entrar al concurso</button><p class="asis-nota">No escribas tu nombre real si no quieres que aparezca en la pantalla de clase.</p></form>`;
+        f.alias.value = alias;
+        f.onsubmit = (e) => { e.preventDefault(); alias = f.alias.value.trim().slice(0, 20).replace(/[<>&"]/g, ""); if (!alias) return; try { localStorage.setItem("ccee-conc-alias", alias); } catch (err) {} unido = true; enviar({fin: false}); pantalla(); };
+        caja.append(f); return;
+      }
+      if (!estado || estado.fase === "espera") { caja.append(html`<div class="asis-caja conc-espera"><p class="juego-grande">⏳</p><p>Hola, <b>${alias}</b>. Espera a que el profesor empiece el concurso…</p></div>`); return; }
+      const P = estado.preguntas;
+      if (estado.fase === "fin" || i >= P.length) {
+        const pos = estado.ranking ? estado.ranking.findIndex(r => r.alias === alias) : -1;
+        caja.append(html`<div class="asis-caja conc-espera"><p class="juego-grande">${puntos} puntos</p><p>de ${100 * P.length} posibles · Tiempo: <b>${CP.segundos(t0 ? Date.now() - t0 : 0)}</b></p>
+          ${estado.fase === "fin" ? html`<p>${pos >= 0 ? html`Has quedado en el puesto <b>${pos + 1}</b> ${["🥇", "🥈", "🥉"][pos] ?? ""}` : "Mira el ranking en la pantalla de clase."}</p>` : html`<p>¡Terminado! Mira el ranking en la pantalla de clase.</p>`}</div>`);
+        return;
+      }
+      if (!t0) t0 = Date.now();
+      const q = P[i], real = CP.desofuscar(SALA, i, q.c);
+      const f = html`<form class="asis-caja cp-pregunta"><p class="juego-ind">Pregunta ${i + 1} de ${P.length} · ${puntos} puntos</p>
+        <p class="cp-emoji">${q.e}</p><p class="cp-prod"><b>${q.n}</b> <span>(${q.u})</span></p>
+        <p>Hoy cuesta <b>${eur(q.hoy, q.d)}</b></p>
+        <label class="asis-et">¿Cuánto costaba en ${q.f}?</label>
+        <input type="text" name="r" inputmode="decimal" autocomplete="off" placeholder="Precio en euros, p. ej. ${locES.format(",.2f")(q.hoy * 0.8)}">
+        <button class="asis-boton">Responder</button><div class="cp-fb"></div></form>`;
+      f.onsubmit = (e) => {
+        e.preventDefault();
+        if (!jugando) return;
+        const r = CP.leer(f.r.value);
+        if (!Number.isFinite(r)) { f.querySelector(".cp-fb").innerHTML = `<p class="asis-nota">Escribe un precio, por ejemplo 1,25.</p>`; return; }
+        jugando = false;
+        const pts = CP.puntos(r, real); puntos += pts; i++; enviar({fin: i >= P.length});
+        f.r.disabled = true; f.querySelector("button").remove();
+        const err = 100 * (r / real - 1);
+        const fb = html`<div class="cp-sol ${pts >= 70 ? "ok" : pts > 0 ? "medio" : "ko"}"><p>Costaba <b>${eur(real, q.d)}</b>. Tu respuesta: ${eur(r, q.d)} (${PRECIOS.pct(err)}).</p><p class="juego-grande">+${pts}</p>
+          <p class="asis-nota">Desde entonces, este producto ha subido un ${PRECIOS.pct(100 * (q.hoy / real - 1))}${q.g == null ? "" : ` y el IPC general un ${PRECIOS.pct(q.g)}`}.</p></div>`;
+        const sig = html`<button type="button" class="asis-boton">${i >= P.length ? "Ver mi resultado" : "Siguiente ▶"}</button>`;
+        sig.onclick = () => pantalla();
+        f.querySelector(".cp-fb").append(fb, sig);
+      };
+      jugando = true;
+      caja.append(f);
+      f.r.focus();
+    };
+    cli.subscribe(temaEstado(SALA), {qos: 1});
+    cli.on("message", (t, m) => { try { const d = JSON.parse(m.toString()); const antes = estado?.fase; estado = d; if (antes !== d.fase) pantalla(); } catch (e) {} });
+    invalidation.then(() => { try { cli.end(true); } catch (e) {} });
+    pantalla();
+  })();
+  return caja;
+}
+```

@@ -533,6 +533,10 @@ datos.ok ? html`<div class="descargas">
 ```
 
 ::: {.callout-tip appearance="simple"}
+**Precios de productos concretos.** La gasolina, el gasóleo, la luz, el gas y los productos de la cesta de la compra, comparados con el IPC, en [Precios de productos](precios-productos.qmd).
+:::
+
+::: {.callout-tip appearance="simple"}
 **IPC nacional y por comunidades autónomas.** El INE publica el IPC general y por grupos, con detalle por comunidades autónomas y provincias: [IPC en INEbase](https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176802&menu=ultiDatos&idp=1254735976607).
 :::
 
@@ -540,6 +544,6 @@ datos.ok ? html`<div class="descargas">
 
 - Macroeconomía y política monetaria: relación entre inflación y tipos de interés (véase la rentabilidad del bono en *Sector público y mercados*).
 - Economía española: episodio inflacionista de 2021-2023 y papel de la energía y los alimentos.
-- Estadística: números índice, tasas de variación interanual y efecto escalón.
+- Métodos Cuantitativos: números índice, tasas de variación interanual y efecto escalón.
 
 <p class="source">¿Echas en falta algún indicador? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>

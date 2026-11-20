@@ -27,7 +27,7 @@ CATS = {
   titulo="Precios e inflación",
   subtitulo="Inflación general y por componentes, y precios de la vivienda",
   intro="La inflación mide el ritmo al que suben los precios y es una variable central para la política monetaria del Banco Central Europeo, la negociación salarial y la evaluación del poder adquisitivo de los hogares. Se utiliza el **Índice de Precios de Consumo Armonizado (IPCA)**, comparable entre países de la UE; en España, el INE publica además el IPC nacional.",
-  docencia=["Macroeconomía y política monetaria: relación entre inflación y tipos de interés (véase la rentabilidad del bono en *Sector público y mercados*).", "Economía española: episodio inflacionista de 2021-2023 y papel de la energía y los alimentos.", "Estadística: números índice, tasas de variación interanual y efecto escalón."],
+  docencia=["Macroeconomía y política monetaria: relación entre inflación y tipos de interés (véase la rentabilidad del bono en *Sector público y mercados*).", "Economía española: episodio inflacionista de 2021-2023 y papel de la energía y los alimentos.", "Métodos Cuantitativos: números índice, tasas de variación interanual y efecto escalón."],
   ind=[
     I("IPCA: inflación general (tasa anual)", "prc_hicp_minr", "&unit=RCH_A&coicop18=TOTAL", "%", "Mensual", "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).", cero=True, desde=2005, alt=HICP("CP00")),
     I("IPCA: alimentos y bebidas no alcohólicas (tasa anual)", "prc_hicp_minr", "&unit=RCH_A&coicop18=CP01", "%", "Mensual", "Tasa de variación anual de los precios de los alimentos y bebidas no alcohólicas.", cero=True, desde=2005, alt=HICP("CP01")),
@@ -96,7 +96,7 @@ CATS = {
   titulo="Turismo",
   subtitulo="Viajeros y pernoctaciones en alojamientos turísticos",
   intro="El turismo es uno de los sectores clave de la economía española y andaluza. Se muestran las **pernoctaciones** (noches que pasan los viajeros en un alojamiento) y las **llegadas de viajeros** a hoteles, para residentes y no residentes, con detalle regional.",
-  docencia=["Economía del turismo: estacionalidad de la demanda hotelera y efecto de la COVID-19.", "Estadística: descomposición de series en tendencia y estacionalidad.", "TFG/TFM: peso del turismo internacional en Andalucía frente a otras comunidades."],
+  docencia=["Economía del turismo: estacionalidad de la demanda hotelera y efecto de la COVID-19.", "Métodos Cuantitativos: descomposición de series en tendencia y estacionalidad.", "TFG/TFM: peso del turismo internacional en Andalucía frente a otras comunidades."],
   ind=[
     I("Pernoctaciones en hoteles", "tour_occ_nim", "&c_resid=TOTAL&unit=NR&nace_r2=I551", "Número de pernoctaciones", "Mensual", "Noches pasadas por residentes y no residentes en hoteles y alojamientos similares.", desde=2008),
     I("Pernoctaciones de no residentes en hoteles", "tour_occ_nim", "&c_resid=FOR&unit=NR&nace_r2=I551", "Número de pernoctaciones", "Mensual", "Noches pasadas por viajeros residentes en el extranjero.", desde=2008),
@@ -127,7 +127,7 @@ CATS = {
   titulo="Desigualdad, pobreza y condiciones de vida",
   subtitulo="Desigualdad de la renta, pobreza, privación material y vivienda",
   intro="La desigualdad y la pobreza son retos estratégicos de la Agenda 2030 (ODS 10 y ODS 1). Los indicadores proceden de la Encuesta de Condiciones de Vida armonizada (EU-SILC).",
-  docencia=["Economía aplicada: medición de la desigualdad (Gini, S80/S20, índices de Theil) y su descomposición.", "Estadística: estimación a partir de encuestas y margen de error de los indicadores.", "TFG/TFM: pobreza y exclusión en las comunidades autónomas."],
+  docencia=["Economía aplicada: medición de la desigualdad (Gini, S80/S20, índices de Theil) y su descomposición.", "Métodos Cuantitativos: estimación a partir de encuestas y margen de error de los indicadores.", "TFG/TFM: pobreza y exclusión en las comunidades autónomas."],
   ind=[
     I("Índice de Gini", "ilc_di12", "", "Coeficiente (0-100)", "Anual", "Coeficiente de Gini de la renta disponible equivalente (0 = igualdad perfecta; 100 = máxima desigualdad).", desde=2005),
     I("Ratio S80/S20", "ilc_di11", "", "Ratio", "Anual", "Renta del 20 % más rico dividida entre la del 20 % más pobre.", desde=2005),
@@ -213,6 +213,10 @@ EXTRA = {
 :::
 """,
 "precios": """
+::: {.callout-tip appearance="simple"}
+**Precios de productos concretos.** La gasolina, el gasóleo, la luz, el gas y los productos de la cesta de la compra, comparados con el IPC, en [Precios de productos](precios-productos.qmd).
+:::
+
 ::: {.callout-tip appearance="simple"}
 **IPC nacional y por comunidades autónomas.** El INE publica el IPC general y por grupos, con detalle por comunidades autónomas y provincias: [IPC en INEbase](https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736176802&menu=ultiDatos&idp=1254735976607).
 :::

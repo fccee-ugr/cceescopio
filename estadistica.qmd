@@ -1,6 +1,6 @@
 ---
-title: "Análisis estadístico de datos"
-subtitle: "Estadística descriptiva, crecimiento, tendencia y correlaciones de tus datos o de las series de CCEEscopio"
+title: "Análisis cuantitativo de datos"
+subtitle: "Análisis descriptivo, crecimiento, tendencia y correlaciones de tus datos o de las series de CCEEscopio"
 toc: true
 toc-depth: 2
 ---
@@ -463,7 +463,7 @@ viewof anualE = temporalE && fuenteE === "propios" ? Inputs.select(new Map([["An
 {
   if (!tablaE || tablaE.error) return html`<p class="pending">${tablaE?.error ?? ""}</p>`;
   if (!tablaE.filas.length) return html`<p class="pending">No hay datos en común para las series elegidas. ${tablaE.avisos?.join(" ") ?? ""}</p>`;
-  window.cceeEvento && window.cceeEvento("calculadoras/estadistica", "Análisis estadístico", true);
+  window.cceeEvento && window.cceeEvento("calculadoras/estadistica", "Análisis cuantitativo", true);
   const vars = tablaE.numericas, D = vars.map(v => ({v, ...EST.describir(tablaE.filas.map(f => f[v]))}));
   const filasT = [["Observaciones", "n", 0], ["Media", "media"], ["Mediana", "mediana"], ["Desviación típica", "sd"], ["Coeficiente de variación (%)", "cv"], ["Mínimo", "min"], ["Primer cuartil (Q1)", "q1"],
     ["Tercer cuartil (Q3)", "q3"], ["Máximo", "max"], ["Recorrido intercuartílico", "iqr"], ["Asimetría (Fisher)", "asimetria"], ["Curtosis (exceso)", "curtosis"]];

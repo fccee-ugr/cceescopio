@@ -136,7 +136,7 @@ No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de 
 **Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
 
 ::: {.uso-box}
-**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+**Ejemplo de uso.** Análisis descriptivo y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
 :::
 
 **Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)
@@ -182,7 +182,7 @@ No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de 
 **Indicadores recomendados:** [IPCA: inflación general (tasa anual)](../precios.html?i=ipca-inflacion-general-tasa-anual) · [IPCA: alimentos y bebidas no alcohólicas (tasa anual)](../precios.html?i=ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual) · [IPCA: energía (tasa anual)](../precios.html?i=ipca-energia-tasa-anual) · [Índice de Gini](../desigualdad.html?i=indice-de-gini) · [Ratio S80/S20](../desigualdad.html?i=ratio-s80-s20) · [Renta mediana equivalente](../desigualdad.html?i=renta-mediana-equivalente) · [Tasa de paro por regiones](../empleo.html?i=tasa-de-paro-por-regiones)
 
 ::: {.uso-box}
-**Ejemplo de uso.** Estadística descriptiva y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
+**Ejemplo de uso.** Análisis descriptivo y números índice: tasas de variación, medidas de desigualdad (Gini, S80/S20), distribución de los datos regionales y muestreo (las encuestas EPA y ECV).
 :::
 
 **Herramientas útiles:** [Calculadora de inflación](../calculadora.qmd)

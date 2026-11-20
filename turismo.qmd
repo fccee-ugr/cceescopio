@@ -473,7 +473,7 @@ datos.ok ? html`<div class="descargas">
 ## Ideas para la docencia y la investigación
 
 - Economía del turismo: estacionalidad de la demanda hotelera y efecto de la COVID-19.
-- Estadística: descomposición de series en tendencia y estacionalidad.
+- Métodos Cuantitativos: descomposición de series en tendencia y estacionalidad.
 - TFG/TFM: peso del turismo internacional en Andalucía frente a otras comunidades.
 
 <p class="source">¿Echas en falta algún indicador? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>

@@ -1,6 +1,6 @@
 """Genera la cuarta tanda de recursos de CCEEscopio (noviembre de 2026):
 piramides.qmd (pirámides de población de países, regiones y provincias), calculadoras.qmd (portada de las calculadoras),
-regresion.qmd (regresión con análisis de supuestos) y estadistica.qmd (análisis estadístico de datos).
+regresion.qmd (regresión con análisis de supuestos) y estadistica.qmd (análisis cuantitativo de datos).
 Uso: python3 tools/make_apps4.py"""
 import json, re
 
@@ -204,7 +204,7 @@ armonizar = (g1, g2) => {
 ''')
 
 # =====================================================================================
-# Bloque común de datos para las calculadoras estadísticas (series de la web o datos propios)
+# Bloque común de datos para las calculadoras de Métodos Cuantitativos (series de la web o datos propios)
 # =====================================================================================
 DATOS = r'''```{ojs}
 //| echo: false
@@ -450,11 +450,11 @@ modeloR = {
 EJ_EST = J("Mes;Ventas tienda A;Ventas tienda B\nene;120;95\nfeb;132;101\nmar;128;99\nabr;141;110\nmay;150;108\njun;162;121\njul;171;118\nago;158;102\nsep;149;112\noct;155;119\nnov;168;125\ndic;190;140")
 
 # =====================================================================================
-# Análisis estadístico de datos
+# Análisis cuantitativo de datos
 # =====================================================================================
 pagina("estadistica.qmd", r'''---
-title: "Análisis estadístico de datos"
-subtitle: "Estadística descriptiva, crecimiento, tendencia y correlaciones de tus datos o de las series de CCEEscopio"
+title: "Análisis cuantitativo de datos"
+subtitle: "Análisis descriptivo, crecimiento, tendencia y correlaciones de tus datos o de las series de CCEEscopio"
 toc: true
 toc-depth: 2
 ---
@@ -500,7 +500,7 @@ viewof anualE = temporalE && fuenteE === "propios" ? Inputs.select(new Map([["An
 {
   if (!tablaE || tablaE.error) return html`<p class="pending">${tablaE?.error ?? ""}</p>`;
   if (!tablaE.filas.length) return html`<p class="pending">No hay datos en común para las series elegidas. ${tablaE.avisos?.join(" ") ?? ""}</p>`;
-  window.cceeEvento && window.cceeEvento("calculadoras/estadistica", "Análisis estadístico", true);
+  window.cceeEvento && window.cceeEvento("calculadoras/estadistica", "Análisis cuantitativo", true);
   const vars = tablaE.numericas, D = vars.map(v => ({v, ...EST.describir(tablaE.filas.map(f => f[v]))}));
   const filasT = [["Observaciones", "n", 0], ["Media", "media"], ["Mediana", "mediana"], ["Desviación típica", "sd"], ["Coeficiente de variación (%)", "cv"], ["Mínimo", "min"], ["Primer cuartil (Q1)", "q1"],
     ["Tercer cuartil (Q3)", "q3"], ["Máximo", "max"], ["Recorrido intercuartílico", "iqr"], ["Asimetría (Fisher)", "asimetria"], ["Curtosis (exceso)", "curtosis"]];
@@ -571,9 +571,9 @@ viewof anualE = temporalE && fuenteE === "propios" ? Inputs.select(new Map([["An
 # Portada de las calculadoras
 # =====================================================================================
 GRUPOS = [
-    ("📊 Estadística y econometría", [
+    ("📊 Métodos Cuantitativos y econometría", [
         ("regresion", "Regresión lineal con análisis de supuestos", "MCO con hasta cuatro variables explicativas, interpretación y contrastes de linealidad, normalidad, homocedasticidad, autocorrelación y multicolinealidad.", True),
-        ("estadistica", "Análisis estadístico de datos", "Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.", True),
+        ("estadistica", "Análisis cuantitativo de datos", "Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.", True),
         ("desfases", "¿Qué indicador se adelanta?", "Correlación con desfase entre dos series para detectar indicadores adelantados y retrasados.", False),
         ("relaciona", "Relaciona dos indicadores", "Nube de puntos entre dos indicadores para todos los países o regiones.", False),
     ]),
@@ -681,6 +681,7 @@ viewof abrirC = SALA ? Object.assign(html`<span></span>`, {value: 0}) : Inputs.b
   if (SALA) return html``;
   if (!abrirC) return html`<div class="conc-intro">
     <p><b>Cómo funciona:</b> pulsa «Abrir concurso» y proyecta esta pantalla. Los estudiantes escanean el código QR con el móvil y escriben un <b>alias</b> (no se piden nombres ni DNI). Cuando estén todos, pulsa «Empezar»: cada estudiante responde las preguntas a su ritmo y en la pantalla verás el <b>ranking en directo</b>, ordenado por aciertos y, en caso de empate, por el tiempo empleado.</p>
+    <p>¿Prefieres un concurso sobre precios? Prueba <a href="concurso-precios.html">«¿Cuánto costaba?»</a>: los estudiantes adivinan cuánto costaban la gasolina, el pan o el café en una fecha del pasado.</p>
     <p class="nota">Los resultados viajan por un servicio público de mensajería en tiempo real y no se guardan en ningún sitio. Antes de usarlo en clase por primera vez, haz una prueba con tu móvil: si la red del aula bloquea la conexión, la página lo indicará.</p></div>`;
   const caja = html`<div class="conc-panel"><p class="pending">Preparando las preguntas con los datos de Eurostat…</p></div>`;
   (async () => {

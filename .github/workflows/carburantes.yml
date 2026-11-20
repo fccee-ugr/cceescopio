@@ -1,0 +1,40 @@
+# Actualiza los precios semanales de los carburantes (Boletín Petrolero de la Comisión Europea)
+# para la página «Precios de productos» y el concurso «¿Cuánto costaba?».
+# Guarda carburantes.json en la rama «carburantes»: no toca la rama principal ni la carpeta docs/.
+# El boletín se publica los jueves; la acción se ejecuta los jueves por la tarde y los viernes por la mañana,
+# cada vez que se suben cambios a main y cuando se lanza a mano (Actions → Run workflow).
+# Si la descarga falla, la rama no se modifica y la web sigue mostrando los últimos datos.
+name: Carburantes de CCEEscopio
+on:
+  schedule:
+    - cron: "37 16 * * 4"
+    - cron: "11 7 * * 5"
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: carburantes
+  cancel-in-progress: false
+jobs:
+  carburantes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar openpyxl
+        run: pip install openpyxl
+      - name: Descargar y procesar el boletín
+        run: python tools/carburantes.py --salida /tmp/carburantes.json
+      - name: Publicar en la rama carburantes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan carburantes-tmp
+          cp /tmp/carburantes.json carburantes.json
+          git add carburantes.json
+          git commit -m "Carburantes $(date -u '+%F %H:%M')"
+          git push -f origin HEAD:carburantes

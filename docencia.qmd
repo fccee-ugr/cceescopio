@@ -25,7 +25,7 @@ Hemos revisado los planes de estudio de los cinco grados de la Facultad y, **cur
 |---|---|
 | Macroeconomía | Ciclo económico (PIB, producción industrial, sentimiento económico); inflación y tipos de interés; reglas fiscales europeas. |
 | Economía española y regional | Convergencia de Andalucía con España y la UE; paro regional; esfuerzo en I+D por comunidades. |
-| Estadística y Econometría | Números índice y tasas de variación; series temporales, estacionalidad y desestacionalización; datos de panel de países y regiones. |
+| Métodos Cuantitativos y Econometría | Números índice y tasas de variación; series temporales, estacionalidad y desestacionalización; datos de panel de países y regiones. |
 | Economía del trabajo | Brechas de paro por edad y sexo; tasa de empleo y objetivos europeos. |
 | Dirección y Organización de Empresas | Digitalización y adopción de la inteligencia artificial; confianza empresarial; comercio electrónico. |
 | Finanzas y Contabilidad | Rentabilidad de la deuda pública y prima de riesgo; tipo de cambio euro/dólar; precios de la vivienda. |
@@ -38,7 +38,7 @@ Hemos revisado los planes de estudio de los cinco grados de la Facultad y, **cur
 ### Ideas de actividades
 
 1. **Comentario de coyuntura.** El estudiantado elige un indicador, compara España con la UE y redacta un informe breve con gráficos de CCEEscopio.
-2. **Práctica de Estadística o Econometría.** Descargar una serie mensual en CSV, calcular tasas de variación y medias móviles, y estimar un modelo sencillo en R, Python o Excel.
+2. **Práctica de Métodos Cuantitativos o Econometría.** Descargar una serie mensual en CSV, calcular tasas de variación y medias móviles, y estimar un modelo sencillo en R, Python o Excel.
 3. **Debate en clase.** ¿Converge Andalucía con la UE? Argumentar con el PIB per cápita, el paro y el gasto en I+D regionales.
 4. **TFG y TFM.** Punto de partida para elegir tema y obtener los primeros datos, antes de pasar a fuentes más detalladas o a microdatos.
 

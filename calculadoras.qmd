@@ -6,14 +6,14 @@ toc: false
 
 Todas las calculadoras funcionan en tu navegador: si usas tus propios datos, **no salen de tu ordenador**. Las que usan datos de CCEEscopio los descargan de Eurostat al momento.
 
-## 📊 Estadística y econometría
+## 📊 Métodos Cuantitativos y econometría
 
 ```{=html}
 <div class="calc-grid">
 
 <a class="calc-card" href="regresion.html"><b>Regresión lineal con análisis de supuestos</b> <span class="badge-nuevo">nuevo</span><span>MCO con hasta cuatro variables explicativas, interpretación y contrastes de linealidad, normalidad, homocedasticidad, autocorrelación y multicolinealidad.</span></a>
 
-<a class="calc-card" href="estadistica.html"><b>Análisis estadístico de datos</b> <span class="badge-nuevo">nuevo</span><span>Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.</span></a>
+<a class="calc-card" href="estadistica.html"><b>Análisis cuantitativo de datos</b> <span class="badge-nuevo">nuevo</span><span>Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.</span></a>
 
 <a class="calc-card" href="desfases.html"><b>¿Qué indicador se adelanta?</b><span>Correlación con desfase entre dos series para detectar indicadores adelantados y retrasados.</span></a>
 
