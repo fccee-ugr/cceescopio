@@ -1,0 +1,465 @@
+---
+title: "Memoria de datos"
+subtitle: "Juego para clase con código QR: memoriza la malla de datos y desbloquea las nueve casillas"
+toc: false
+---
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+paramsM = new URLSearchParams(location.search)
+SALA = paramsM.get("sala")
+BROKERS = [
+  {id: "h", nombre: "HiveMQ", url: "wss://broker.hivemq.com:8884/mqtt"},
+  {id: "e", nombre: "EMQX", url: "wss://broker.emqx.io:8084/mqtt"},
+  {id: "m", nombre: "Mosquitto", url: "wss://test.mosquitto.org:8081/mqtt"}
+]
+mqttLib = { try { const m = await import("https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.esm.js"); return m.default ?? m; } catch (e) { return null; } }
+conectarBroker = (b) => new Promise((ok, mal) => {
+  if (!mqttLib) return mal(new Error("sin librería"));
+  const c = mqttLib.connect(b.url, {clientId: "ccee_" + Math.random().toString(16).slice(2, 10), connectTimeout: 6000, reconnectPeriod: 2000, clean: true});
+  const t = setTimeout(() => { c.end(true); mal(new Error("tiempo agotado")); }, 7000);
+  c.once("connect", () => { clearTimeout(t); ok(c); });
+})
+temaEstado = (s) => `cceescopio/memoria/${s}/estado`
+temaJug = (s) => `cceescopio/memoria/${s}/jugadores`
+```
+
+```{ojs}
+//| echo: false
+// Lógica del juego (sin dependencias del navegador, para poder probarla)
+MEM = {
+  // Último periodo con dato para al menos 9 territorios
+  function periodoMalla(rows, validos) {
+    const por = d3.group(rows.filter(r => validos.includes(r.codigo_territorio)), r => r.periodo);
+    return [...por.keys()].sort().reverse().find(p => new Set(por.get(p).map(r => r.codigo_territorio)).size >= 9) ?? null;
+  }
+  // Nueve territorios al azar (España siempre, si se pide y tiene dato)
+  function elegir(rows, periodo, validos, conEspana, azar = Math.random) {
+    const datos = new Map(rows.filter(r => r.periodo === periodo && validos.includes(r.codigo_territorio)).map(r => [r.codigo_territorio, r]));
+    let cods = [...datos.keys()].sort(() => azar() - 0.5);
+    if (conEspana && datos.has("ES")) cods = ["ES", ...cods.filter(c => c !== "ES")];
+    return cods.slice(0, 9).sort(() => azar() - 0.5).map(c => datos.get(c));
+  }
+  const orden = (n = 9, azar = Math.random) => Array.from({length: n}, (_, i) => i).sort(() => azar() - 0.5);
+  // Una respuesta es correcta si el texto del valor coincide (dos casillas pueden mostrar el mismo valor)
+  const correcta = (celdas, pedida, elegida) => celdas[elegida]?.v === celdas[pedida]?.v;
+  // Opciones para «¿Qué dato tenía…?»: el correcto y tres valores distintos de la malla
+  function opciones(celdas, pedida, azar = Math.random) {
+    const otros = [...new Set(celdas.map(c => c.v))].filter(v => v !== celdas[pedida].v).sort(() => azar() - 0.5).slice(0, 3);
+    return [celdas[pedida].v, ...otros].sort(() => azar() - 0.5);
+  }
+  // Ranking: primero quien ha terminado (por tiempo); después, más casillas seguidas y menos fallos
+  const ordenar = (jug) => [...jug.values()].sort((a, b) => ((b.fin ? 1 : 0) - (a.fin ? 1 : 0)) || (a.fin && b.fin ? a.tiempo - b.tiempo : 0) ||
+    (b.mejor - a.mejor) || (b.actual - a.actual) || (a.fallos - b.fallos) || (a.tiempo - b.tiempo) || a.alias.localeCompare(b.alias));
+  const nuevaSala = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
+  const segundos = (ms) => `${(ms / 1000).toFixed(1).replace(".", ",")} s`;
+  return {periodoMalla, elegir, orden, correcta, opciones, ordenar, nuevaSala, segundos};
+}
+```
+
+```{ojs}
+//| echo: false
+// Bandera (países) y dibujo de la malla
+bandera = (c) => {
+  const iso = c === "EU27_2020" ? "eu" : c === "EL" ? "gr" : c === "UK" ? "gb" : (/^[A-Z]{2}$/.test(c) ? c.toLowerCase() : null);
+  if (!iso) return null;
+  const img = html`<img class="mem-bandera" alt="" loading="lazy">`;
+  img.src = `https://flagcdn.com/w80/${iso}.png`;
+  img.onerror = () => img.remove();
+  return img;
+}
+dibujarMalla = (celdas, {visibles = null, destacar = null, alPulsar = null, grande = false} = {}) => {
+  const g = html`<div class="mem-malla${grande ? " mem-grande" : ""}"></div>`;
+  celdas.forEach((c, i) => {
+    const ver = visibles === true || (visibles instanceof Set && visibles.has(i));
+    const b = html`<button type="button" class="mem-celda${ver ? " mem-ver" : ""}${destacar === i ? " mem-destacada" : ""}"></button>`;
+    const f = bandera(c.c);
+    if (f) b.append(f);
+    b.append(html`<span class="mem-nombre">${c.n}</span>`, html`<span class="mem-valor">${ver ? c.v : "?"}</span>`);
+    if (alPulsar) b.onclick = () => alPulsar(i, b); else b.disabled = true;
+    g.append(b);
+  });
+  return g;
+}
+```
+
+```{ojs}
+//| echo: false
+// ============================ PANTALLA DEL PROFESOR ============================
+INDS_M = ({"precios": [{"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOTAL", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP00"}, {"code": "prc_hicp_manr", "query": "&coicop=CP00"}]}, {"id": "ipca-alimentos-y-bebidas-no-alcoholicas-tasa-anual", "nombre": "IPCA: alimentos y bebidas no alcohólicas (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP01", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de los alimentos y bebidas no alcohólicas.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP01"}, {"code": "prc_hicp_manr", "query": "&coicop=CP01"}]}, {"id": "ipca-energia-tasa-anual", "nombre": "IPCA: energía (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=NRG", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de la energía (electricidad, gas, combustibles).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=NRG"}, {"code": "prc_hicp_manr", "query": "&coicop=NRG"}]}, {"id": "ipca-servicios-tasa-anual", "nombre": "IPCA: servicios (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=SERV", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual de los precios de los servicios.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=SERV"}, {"code": "prc_hicp_manr", "query": "&coicop=SERV"}]}, {"id": "precio-de-la-vivienda-tasa-anual", "nombre": "Precio de la vivienda (tasa anual)", "code": "prc_hpi_q", "query": "&purchase=TOTAL&unit=RCH_A", "unidad": "%", "frecuencia": "Trimestral", "descripcion": "Tasa de variación anual del índice de precios de la vivienda (nueva y de segunda mano).", "cero": true, "desde": 2008}, {"id": "ipca-inflacion-subyacente-sin-energia-ni-alimentos", "nombre": "IPCA: inflación subyacente (sin energía ni alimentos)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del IPCA excluidos la energía y los alimentos: aproxima la tendencia de fondo de los precios.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD"}, {"code": "prc_hicp_manr", "query": "&coicop=TOT_X_NRG_FOOD"}]}, {"id": "precios-industriales-tasa-anual", "nombre": "Precios industriales (tasa anual)", "code": "sts_inppd_m", "query": "&nace_r2=B-E36&s_adj=NSA&unit=PCH_SM", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Variación anual de los precios de producción industrial en el mercado interior (anticipa la inflación de consumo).", "cero": true, "desde": 2005}, {"id": "nivel-de-precios-comparado-ue-27-100", "nombre": "Nivel de precios comparado (UE-27 = 100)", "code": "prc_ppp_ind", "query": "&na_item=PLI_EU27_2020&ppp_cat=GDP", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Nivel general de precios de cada país respecto a la media de la UE, a partir de las paridades de poder de compra.", "desde": 2000}], "empleo": [{"id": "tasa-de-paro", "nombre": "Tasa de paro", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Porcentaje de personas desempleadas sobre la población activa (15-74 años), desestacionalizado.", "desde": 2005}, {"id": "tasa-de-paro-juvenil-menores-de-25-anos", "nombre": "Tasa de paro juvenil (menores de 25 años)", "code": "une_rt_m", "query": "&s_adj=SA&age=Y_LT25&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Paro de las personas menores de 25 años, desestacionalizado.", "desde": 2005}, {"id": "tasa-de-paro-de-las-mujeres", "nombre": "Tasa de paro de las mujeres", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=F&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Tasa de paro femenina, desestacionalizada.", "desde": 2005}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "code": "lfsi_emp_a", "query": "&indic_em=EMP_LFS&sex=T&age=Y20-64&unit=PC_POP", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Porcentaje de personas ocupadas de 20 a 64 años; el objetivo de la UE para 2030 es el 78 %.", "desde": 2005}, {"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "code": "lfst_r_lfu3rt", "query": "&sex=T&age=Y15-74&unit=PC", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Tasa de paro de las comunidades autónomas (NUTS 2).", "regional": true, "desde": 2005}, {"id": "paro-de-larga-duracion", "nombre": "Paro de larga duración", "code": "une_ltu_a", "query": "&sex=T&age=Y15-74&indic_em=LTU&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Personas que llevan 12 meses o más buscando empleo, en porcentaje de la población activa.", "desde": 2005}, {"id": "jovenes-que-ni-estudian-ni-trabajan-15-29-anos", "nombre": "Jóvenes que ni estudian ni trabajan (15-29 años)", "code": "sdg_08_20", "query": "&sex=T&age=Y15-29&unit=PC", "unidad": "% de la población de 15-29 años", "frecuencia": "Anual", "descripcion": "Jóvenes que no tienen empleo ni siguen ningún tipo de educación o formación (indicador NEET).", "desde": 2005}, {"id": "coste-laboral-por-hora", "nombre": "Coste laboral por hora", "code": "lc_lci_lev", "query": "&nace_r2=B-S_X_O&lcstruct=D1_D4_MD5&unit=EUR", "unidad": "€ por hora", "frecuencia": "Anual", "descripcion": "Coste laboral medio por hora trabajada (salarios y cotizaciones sociales) en la industria, la construcción y los servicios.", "desde": 2008}, {"id": "salario-minimo-mensual", "nombre": "Salario mínimo mensual", "code": "earn_mw_cur", "query": "&currency=EUR", "unidad": "€ al mes", "frecuencia": "Semestral", "descripcion": "Salario mínimo legal mensual bruto en los países que lo tienen establecido.", "desde": 2005}, {"id": "brecha-salarial-de-genero", "nombre": "Brecha salarial de género", "code": "sdg_05_20", "query": "&unit=PC", "unidad": "% del salario medio de los hombres", "frecuencia": "Anual", "descripcion": "Diferencia entre la ganancia media por hora de hombres y mujeres, en porcentaje de la de los hombres.", "desde": 2007}, {"id": "tasa-de-empleo-por-regiones-20-64-anos", "nombre": "Tasa de empleo por regiones (20-64 años)", "code": "lfst_r_lfe2emprt", "query": "&sex=T&age=Y20-64&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de empleo de las comunidades autónomas.", "regional": true, "desde": 2005}], "actividad": [{"id": "pib-crecimiento-interanual-trimestral", "nombre": "PIB: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=B1GQ&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Tasa de variación del PIB en volumen respecto al mismo trimestre del año anterior.", "cero": true, "desde": 2005}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "code": "nama_10r_2gdp", "query": "&unit=PPS_EU27_2020_HAB", "unidad": "PPC por habitante", "frecuencia": "Anual", "descripcion": "PIB por habitante en paridad de poder de compra; permite comparar el nivel de vida entre regiones y países.", "regional": true, "desde": 2005}, {"id": "indice-de-produccion-industrial", "nombre": "Índice de producción industrial", "code": "sts_inpr_m", "query": "&nace_r2=B-D&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción de la industria (extractiva, manufacturera y energía), corregido de estacionalidad y calendario.", "desde": 2008}, {"id": "indice-de-comercio-minorista", "nombre": "Índice de comercio minorista", "code": "sts_trtu_m", "query": "&nace_r2=G47&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de ventas del comercio minorista, corregido de estacionalidad y calendario.", "desde": 2008}, {"id": "indicador-de-sentimiento-economico", "nombre": "Indicador de sentimiento económico", "code": "ei_bssi_m_r2", "query": "&indic=BS-ESI-I&s_adj=SA", "unidad": "Índice (media a largo plazo = 100)", "frecuencia": "Mensual", "descripcion": "Indicador compuesto de confianza de industria, servicios, consumidores, construcción y comercio (Comisión Europea).", "desde": 2008}, {"id": "consumo-de-los-hogares-crecimiento-interanual", "nombre": "Consumo de los hogares: crecimiento interanual", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P31_S14_S15&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Gasto en consumo final de los hogares y las ISFLSH, en volumen.", "cero": true, "desde": 2005}, {"id": "inversion-formacion-bruta-de-capital-fijo-crecimiento-intera", "nombre": "Inversión (formación bruta de capital fijo): crecimiento interanual", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P51G&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Inversión en bienes de equipo, construcción y activos intangibles, en volumen.", "cero": true, "desde": 2005}, {"id": "produccion-en-la-construccion", "nombre": "Producción en la construcción", "code": "sts_copr_m", "query": "&nace_r2=F&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción del sector de la construcción, corregido de estacionalidad y calendario.", "desde": 2008}, {"id": "productividad-del-trabajo-por-hora-variacion-anual", "nombre": "Productividad del trabajo por hora: variación anual", "code": "nama_10_lp_ulc", "query": "&na_item=RLPR_HW&unit=PCH_PRE", "unidad": "% de variación anual", "frecuencia": "Anual", "descripcion": "Crecimiento del PIB real por hora trabajada.", "cero": true, "desde": 2000}, {"id": "costes-laborales-unitarios-nominales-variacion-anual", "nombre": "Costes laborales unitarios nominales: variación anual", "code": "nama_10_lp_ulc", "query": "&na_item=NULC_PER&unit=PCH_PRE", "unidad": "% de variación anual", "frecuencia": "Anual", "descripcion": "Coste laboral por unidad producida; indicador de competitividad-precio.", "cero": true, "desde": 2000}, {"id": "confianza-del-consumidor", "nombre": "Confianza del consumidor", "code": "ei_bsco_m", "query": "&indic=BS-CSMCI&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de los consumidores de la Comisión Europea (expectativas sobre su situación financiera, la economía y las compras importantes).", "cero": true, "desde": 2008}], "empresa": [{"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "code": "rd_e_gerdtot", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno total en investigación y desarrollo; el objetivo europeo es el 3 % del PIB.", "desde": 2005}, {"id": "gasto-en-i-d-por-regiones-del-pib", "nombre": "Gasto en I+D por regiones (% del PIB)", "code": "rd_e_gerdreg", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno en I+D de las comunidades autónomas.", "regional": true, "desde": 2005}, {"id": "empresas-que-usan-inteligencia-artificial", "nombre": "Empresas que usan inteligencia artificial", "code": "isoc_eb_ai", "query": "&indic_is=E_AI_TANY&size_emp=GE10&unit=PC_ENT", "unidad": "% de empresas", "frecuencia": "Anual", "descripcion": "Porcentaje de empresas de 10 o más personas empleadas que usan al menos una tecnología de inteligencia artificial.", "desde": 2021}, {"id": "personas-que-compran-por-internet", "nombre": "Personas que compran por internet", "code": "isoc_ec_ibuy", "query": "&indic_is=I_BUY3&ind_type=IND_TOTAL&unit=PC_IND", "unidad": "% de personas", "frecuencia": "Anual", "descripcion": "Porcentaje de personas de 16 a 74 años que han comprado bienes o servicios por internet en los últimos 12 meses.", "desde": 2008}, {"id": "confianza-de-la-industria", "nombre": "Confianza de la industria", "code": "ei_bsin_m_r2", "query": "&indic=BS-ICI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza industrial: diferencia entre respuestas positivas y negativas sobre pedidos, existencias y producción esperada.", "cero": true, "desde": 2008}, {"id": "declaraciones-de-quiebra-de-empresas-indice", "nombre": "Declaraciones de quiebra de empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=BKRT&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas declaradas en quiebra o concurso.", "desde": 2015}, {"id": "registros-de-nuevas-empresas-indice", "nombre": "Registros de nuevas empresas (índice)", "code": "sts_rb_q", "query": "&indic_bt=REG&nace_r2=B-S_X_O_S94&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Trimestral", "descripcion": "Evolución del número de empresas de nueva creación inscritas en los registros.", "desde": 2015}, {"id": "confianza-en-los-servicios", "nombre": "Confianza en los servicios", "code": "ei_bsse_m_r2", "query": "&indic=BS-SCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de las empresas de servicios (Comisión Europea).", "cero": true, "desde": 2008}, {"id": "confianza-del-comercio-minorista", "nombre": "Confianza del comercio minorista", "code": "ei_bsrt_m_r2", "query": "&indic=BS-RCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza del comercio minorista (Comisión Europea).", "cero": true, "desde": 2008}, {"id": "confianza-de-la-construccion", "nombre": "Confianza de la construcción", "code": "ei_bsbu_m_r2", "query": "&indic=BS-CCI-BAL&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de las empresas de construcción (Comisión Europea).", "cero": true, "desde": 2008}, {"id": "hogares-con-acceso-a-internet", "nombre": "Hogares con acceso a internet", "code": "isoc_ci_in_h", "query": "&unit=PC_HH&hhtyp=TOTAL&indic_is=H_IACC", "unidad": "% de hogares", "frecuencia": "Anual", "descripcion": "Porcentaje de hogares con acceso a internet en casa.", "desde": 2008}], "turismo": [{"id": "pernoctaciones-en-hoteles", "nombre": "Pernoctaciones en hoteles", "code": "tour_occ_nim", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas por residentes y no residentes en hoteles y alojamientos similares.", "desde": 2008}, {"id": "pernoctaciones-de-no-residentes-en-hoteles", "nombre": "Pernoctaciones de no residentes en hoteles", "code": "tour_occ_nim", "query": "&c_resid=FOR&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas por viajeros residentes en el extranjero.", "desde": 2008}, {"id": "llegadas-de-viajeros-a-hoteles", "nombre": "Llegadas de viajeros a hoteles", "code": "tour_occ_arm", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551", "unidad": "Número de viajeros", "frecuencia": "Mensual", "descripcion": "Viajeros que se alojan en hoteles y alojamientos similares.", "desde": 2008}, {"id": "pernoctaciones-por-regiones", "nombre": "Pernoctaciones por regiones", "code": "tour_occ_nin2", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553", "unidad": "Número de pernoctaciones", "frecuencia": "Anual", "descripcion": "Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas.", "regional": true, "desde": 2008}, {"id": "pernoctaciones-de-residentes-en-hoteles", "nombre": "Pernoctaciones de residentes en hoteles", "code": "tour_occ_nim", "query": "&c_resid=NAT&unit=NR&nace_r2=I551", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas en hoteles por viajeros residentes en el propio país (turismo interno).", "desde": 2008}, {"id": "pernoctaciones-en-apartamentos-y-alojamientos-de-corta-estan", "nombre": "Pernoctaciones en apartamentos y alojamientos de corta estancia", "code": "tour_occ_nim", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I552", "unidad": "Número de pernoctaciones", "frecuencia": "Mensual", "descripcion": "Noches pasadas en apartamentos turísticos, casas rurales y otros alojamientos de corta estancia.", "desde": 2008}, {"id": "tasa-de-ocupacion-de-las-plazas-hoteleras", "nombre": "Tasa de ocupación de las plazas hoteleras", "code": "tour_occ_mnor", "query": "&accomunit=BEDPL&nace_r2=I551", "unidad": "% de plazas ocupadas", "frecuencia": "Mensual", "descripcion": "Porcentaje de plazas en hoteles ocupadas en el mes.", "desde": 2010}], "publico": [{"id": "deuda-publica-del-pib", "nombre": "Deuda pública (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=GD", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Deuda bruta consolidada de las administraciones públicas (criterio de Maastricht).", "desde": 2000}, {"id": "deficit-o-superavit-publico-del-pib", "nombre": "Déficit (−) o superávit (+) público (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=B9", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Capacidad o necesidad de financiación de las administraciones públicas.", "cero": true, "desde": 2000}, {"id": "rentabilidad-del-bono-a-10-anos", "nombre": "Rentabilidad del bono a 10 años", "code": "irt_lt_mcby_m", "query": "&int_rt=MCBY", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Rendimiento de la deuda pública a largo plazo (criterio de convergencia de Maastricht).", "desde": 2000}, {"id": "ingresos-fiscales-del-pib", "nombre": "Ingresos fiscales (% del PIB)", "code": "gov_10a_taxag", "query": "&unit=PC_GDP&sector=S13_S212&na_item=D2_D5_D91_D61_M_D995", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Impuestos y cotizaciones sociales recaudados por las administraciones públicas y las instituciones de la UE (presión fiscal).", "desde": 2000}, {"id": "gasto-publico-total-del-pib", "nombre": "Gasto público total (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=TOTAL", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto total de las administraciones públicas.", "desde": 2000}, {"id": "gasto-publico-en-sanidad-del-pib", "nombre": "Gasto público en sanidad (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF07", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto de las administraciones públicas en sanidad (clasificación COFOG).", "desde": 2000}, {"id": "gasto-publico-en-educacion-del-pib", "nombre": "Gasto público en educación (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF09", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto de las administraciones públicas en educación (clasificación COFOG).", "desde": 2000}, {"id": "gasto-publico-en-proteccion-social-del-pib", "nombre": "Gasto público en protección social (% del PIB)", "code": "gov_10a_exp", "query": "&unit=PC_GDP&sector=S13&na_item=TE&cofog99=GF10", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto en pensiones, desempleo, familia, vivienda y exclusión social (clasificación COFOG).", "desde": 2000}], "desigualdad": [{"id": "indice-de-gini", "nombre": "Índice de Gini", "code": "ilc_di12", "query": "", "unidad": "Coeficiente (0-100)", "frecuencia": "Anual", "descripcion": "Coeficiente de Gini de la renta disponible equivalente (0 = igualdad perfecta; 100 = máxima desigualdad).", "desde": 2005}, {"id": "ratio-s80-s20", "nombre": "Ratio S80/S20", "code": "ilc_di11", "query": "", "unidad": "Ratio", "frecuencia": "Anual", "descripcion": "Renta del 20 % más rico dividida entre la del 20 % más pobre.", "desde": 2005}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "code": "ilc_peps01n", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas en riesgo de pobreza, con carencia material y social severa o en hogares con baja intensidad de empleo.", "desde": 2015}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "code": "ilc_peps11n", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa AROPE de las comunidades autónomas.", "regional": true, "desde": 2015}, {"id": "tasa-de-riesgo-de-pobreza-60-de-la-mediana", "nombre": "Tasa de riesgo de pobreza (60 % de la mediana)", "code": "ilc_li02", "query": "&indic_il=LI_R_MD60&age=TOTAL&sex=T&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas con una renta disponible equivalente inferior al 60 % de la mediana nacional.", "desde": 2005}, {"id": "umbral-de-pobreza-hogar-de-una-persona", "nombre": "Umbral de pobreza (hogar de una persona)", "code": "ilc_li01", "query": "&hhtyp=A1&indic_il=LI_C_MD60&currency=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta anual por debajo de la cual una persona que vive sola se considera en riesgo de pobreza.", "desde": 2005}, {"id": "riesgo-de-pobreza-o-exclusion-social-menores-de-18-anos", "nombre": "Riesgo de pobreza o exclusión social: menores de 18 años", "code": "ilc_peps01n", "query": "&unit=PC&age=Y_LT18&sex=T", "unidad": "% de la población menor de 18 años", "frecuencia": "Anual", "descripcion": "Tasa AROPE infantil.", "desde": 2015}, {"id": "carencia-material-y-social-severa", "nombre": "Carencia material y social severa", "code": "ilc_mdsd11", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas que no pueden permitirse al menos 7 de 13 elementos básicos (pagar facturas, calefacción, imprevistos, etc.).", "desde": 2015}, {"id": "pobreza-de-las-personas-que-trabajan", "nombre": "Pobreza de las personas que trabajan", "code": "ilc_iw01", "query": "&wstatus=EMP&sex=T&age=Y18-64&unit=PC", "unidad": "% de las personas ocupadas", "frecuencia": "Anual", "descripcion": "Personas ocupadas de 18 a 64 años en riesgo de pobreza (pobreza laboral).", "desde": 2005}, {"id": "sobrecarga-del-coste-de-la-vivienda", "nombre": "Sobrecarga del coste de la vivienda", "code": "ilc_lvho07a", "query": "&age=TOTAL&sex=T&incgrp=TOTAL&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas que destinan más del 40 % de su renta disponible a la vivienda.", "desde": 2005}, {"id": "renta-mediana-equivalente", "nombre": "Renta mediana equivalente", "code": "ilc_di03", "query": "&age=TOTAL&sex=T&indic_il=MED_E&unit=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta disponible equivalente mediana por persona.", "desde": 2005}, {"id": "tasa-de-riesgo-de-pobreza-por-regiones", "nombre": "Tasa de riesgo de pobreza por regiones", "code": "ilc_li41", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de riesgo de pobreza de las comunidades autónomas.", "regional": true, "desde": 2008}], "sostenibilidad": [{"id": "cuota-de-energias-renovables", "nombre": "Cuota de energías renovables", "code": "nrg_ind_ren", "query": "&nrg_bal=REN&unit=PC", "unidad": "% del consumo final bruto de energía", "frecuencia": "Anual", "descripcion": "Porcentaje de energía procedente de fuentes renovables; el objetivo europeo para 2030 es el 42,5 %.", "desde": 2005}, {"id": "precio-de-la-electricidad-para-hogares", "nombre": "Precio de la electricidad para hogares", "code": "nrg_pc_204", "query": "&product=6000&nrg_cons=KWH2500-4999&unit=KWH&tax=I_TAX&currency=EUR", "unidad": "€ por kWh (con impuestos)", "frecuencia": "Semestral", "descripcion": "Precio medio de la electricidad para consumidores domésticos con un consumo anual de 2.500-5.000 kWh.", "desde": 2008}, {"id": "emisiones-netas-de-gases-de-efecto-invernadero", "nombre": "Emisiones netas de gases de efecto invernadero", "code": "sdg_13_10", "query": "&unit=I90", "unidad": "Índice (1990 = 100)", "frecuencia": "Anual", "descripcion": "Emisiones netas de gases de efecto invernadero, incluido el uso del suelo, respecto a 1990.", "desde": 2000}, {"id": "emisiones-de-gases-de-efecto-invernadero-por-habitante", "nombre": "Emisiones de gases de efecto invernadero por habitante", "code": "sdg_13_10", "query": "&unit=T_HAB", "unidad": "Toneladas de CO₂ equivalente por habitante", "frecuencia": "Anual", "descripcion": "Emisiones netas de gases de efecto invernadero por habitante.", "desde": 2000}, {"id": "dependencia-energetica", "nombre": "Dependencia energética", "code": "nrg_ind_id", "query": "&siec=TOTAL&unit=PC", "unidad": "% de las necesidades energéticas", "frecuencia": "Anual", "descripcion": "Parte de la energía que un país necesita y que tiene que importar.", "desde": 2000}, {"id": "precio-del-gas-natural-para-hogares", "nombre": "Precio del gas natural para hogares", "code": "nrg_pc_202", "query": "&product=4100&nrg_cons=GJ20-199&unit=KWH&tax=I_TAX&currency=EUR", "unidad": "€ por kWh (con impuestos)", "frecuencia": "Semestral", "descripcion": "Precio medio del gas natural para consumidores domésticos con consumo medio.", "desde": 2008}, {"id": "residuos-municipales-por-habitante", "nombre": "Residuos municipales por habitante", "code": "env_wasmun", "query": "&wst_oper=GEN&unit=KG_HAB", "unidad": "kg por habitante", "frecuencia": "Anual", "descripcion": "Residuos urbanos generados por habitante.", "desde": 2000}, {"id": "tasa-de-reciclaje-de-residuos-municipales", "nombre": "Tasa de reciclaje de residuos municipales", "code": "sdg_11_60", "query": "&unit=PC", "unidad": "% de los residuos municipales", "frecuencia": "Anual", "descripcion": "Porcentaje de los residuos municipales que se recicla o composta.", "desde": 2000}], "poblacion": [{"id": "poblacion", "nombre": "Población", "code": "demo_pjan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero.", "desde": 2000}, {"id": "poblacion-por-regiones", "nombre": "Población por regiones", "code": "demo_r_d2jan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero en las comunidades autónomas.", "regional": true, "desde": 2000}, {"id": "tasa-de-fecundidad", "nombre": "Tasa de fecundidad", "code": "demo_find", "query": "&indic_de=TOTFERRT", "unidad": "Hijos por mujer", "frecuencia": "Anual", "descripcion": "Número medio de hijos por mujer (indicador coyuntural de fecundidad).", "desde": 2000}, {"id": "tasa-de-dependencia-de-las-personas-mayores", "nombre": "Tasa de dependencia de las personas mayores", "code": "demo_pjanind", "query": "&indic_de=OLDDEP1", "unidad": "% de la población de 15-64 años", "frecuencia": "Anual", "descripcion": "Población de 65 años o más en relación con la población en edad de trabajar.", "desde": 2000}, {"id": "esperanza-de-vida-al-nacer", "nombre": "Esperanza de vida al nacer", "code": "demo_mlexpec", "query": "&sex=T&age=Y_LT1&unit=YR", "unidad": "Años", "frecuencia": "Anual", "descripcion": "Número medio de años que se espera que viva una persona recién nacida.", "desde": 2000}, {"id": "poblacion-de-25-34-anos-con-estudios-superiores", "nombre": "Población de 25-34 años con estudios superiores", "code": "sdg_04_20", "query": "&sex=T&unit=PC", "unidad": "% de la población de 25-34 años", "frecuencia": "Anual", "descripcion": "Personas jóvenes con educación terciaria; el objetivo europeo para 2030 es el 45 %.", "desde": 2005}, {"id": "abandono-temprano-de-la-educacion-y-la-formacion", "nombre": "Abandono temprano de la educación y la formación", "code": "sdg_04_10", "query": "&sex=T&unit=PC", "unidad": "% de la población de 18-24 años", "frecuencia": "Anual", "descripcion": "Jóvenes que solo tienen la educación secundaria obligatoria y no siguen estudiando; el objetivo europeo para 2030 es menos del 9 %.", "desde": 2005}], "internacional": [{"id": "exportaciones-de-bienes-y-servicios-del-pib", "nombre": "Exportaciones de bienes y servicios (% del PIB)", "code": "nama_10_gdp", "query": "&unit=PC_GDP&na_item=P6", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Peso de las exportaciones en el PIB: indicador del grado de apertura.", "desde": 2000}, {"id": "importaciones-de-bienes-y-servicios-del-pib", "nombre": "Importaciones de bienes y servicios (% del PIB)", "code": "nama_10_gdp", "query": "&unit=PC_GDP&na_item=P7", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Peso de las importaciones en el PIB.", "desde": 2000}, {"id": "exportaciones-crecimiento-interanual-trimestral", "nombre": "Exportaciones: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P6&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Exportaciones de bienes y servicios en volumen.", "cero": true, "desde": 2005}, {"id": "saldo-por-cuenta-corriente-del-pib", "nombre": "Saldo por cuenta corriente (% del PIB)", "code": "bop_gdp6_q", "query": "&bop_item=CA&stk_flow=BAL&partner=WRL_REST&unit=PC_GDP&s_adj=NSA", "unidad": "% del PIB", "frecuencia": "Trimestral", "descripcion": "Diferencia entre ingresos y pagos por bienes, servicios y rentas con el resto del mundo.", "cero": true, "desde": 2008}, {"id": "posicion-de-inversion-internacional-neta-del-pib", "nombre": "Posición de inversión internacional neta (% del PIB)", "code": "tipsii10", "query": "", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Activos financieros frente al exterior menos pasivos; los valores negativos indican endeudamiento exterior neto.", "cero": true, "desde": 2008}, {"id": "pib-per-capita-en-ppc-ue-27-100", "nombre": "PIB per cápita en PPC (UE-27 = 100)", "code": "tec00114", "query": "", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Volumen del PIB por habitante en paridad de poder de compra respecto a la media de la UE.", "desde": 2005}]})
+AREAS_M = ({"precios": "Precios e inflación", "empleo": "Mercado laboral", "actividad": "Actividad económica y coyuntura", "empresa": "Empresa, innovación y digitalización", "turismo": "Turismo", "publico": "Sector público y mercados financieros", "desigualdad": "Desigualdad, pobreza y condiciones de vida", "sostenibilidad": "Energía y sostenibilidad", "poblacion": "Población, educación y salud", "internacional": "Economía internacional y sector exterior"})
+viewof areaM = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.select(new Map(Object.entries(AREAS_M).map(([k, v]) => [v, k])), {label: "Área", value: "empleo"})
+viewof indM = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.select(INDS_M[areaM], {label: "Indicador", format: i => `${i.nombre}${i.regional ? " (regiones)" : ""}`})
+viewof segM = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.range([5, 40], {label: "Segundos para memorizar", value: 15, step: 1})
+viewof modoM = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.radio(new Map([["¿Dónde estaba este dato? (se toca la casilla)", "donde"], ["¿Qué dato tenía este territorio? (se elige entre cuatro)", "cual"]]), {label: "Tipo de pregunta", value: "donde"})
+viewof espanaM = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.toggle({label: "Incluir siempre España", value: true})
+viewof abrirM = SALA ? Object.assign(html`<span></span>`, {value: 0}) : Inputs.button("▶ Abrir el juego", {value: 0, reduce: v => v + 1})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (SALA) return html``;
+  if (!abrirM) return html`<div class="conc-intro">
+    <p><b>Cómo funciona:</b> elige un indicador y pulsa «Abrir el juego». Proyecta esta pantalla; los estudiantes escanean el código QR con el móvil y escriben un <b>alias</b>. Al pulsar «Empezar» aparece durante unos segundos una <b>malla de 3 × 3</b> con el último dato del indicador en nueve países (o comunidades autónomas) elegidos al azar. Después los datos se ocultan y el móvil va haciendo preguntas sobre la malla: cada acierto <b>descubre una casilla</b>; un fallo enseña la respuesta correcta y obliga a <b>empezar de nuevo</b>. Gana quien antes desbloquee las nueve.</p>
+    <p>Es una buena excusa para comentar después los datos: ¿qué país estaba arriba?, ¿por qué?, ¿os ha sorprendido algún valor?</p>
+    <p class="nota">Los resultados viajan por un servicio público de mensajería en tiempo real y no se guardan en ningún sitio. Antes de usarlo en clase por primera vez, haz una prueba con tu móvil.</p></div>`;
+  // Los ajustes se leen al pulsar el botón: cambiarlos después no reinicia el juego abierto
+  const spec = (viewof indM).value, seg = (viewof segM).value, modo = (viewof modoM).value, conEspana = (viewof espanaM).value;
+  const caja = html`<div class="conc-panel"><p class="pending">Descargando los datos de ${spec.nombre}…</p></div>`;
+  (async () => {
+    const r = await cargar(spec);
+    const validos = (spec.regional ? geosRegiones.filter(c => /^ES\d\d$/.test(c)) : geosPaises.filter(c => /^[A-Z]{2}$/.test(c) || c === "EU27_2020"));
+    const periodo = r.ok ? MEM.periodoMalla(r.rows, validos) : null;
+    if (!periodo) { caja.innerHTML = `<p class="pending">❌ No hay datos suficientes de este indicador para nueve territorios. Elige otro y vuelve a pulsar «Abrir el juego».</p>`; return; }
+    const sel = MEM.elegir(r.rows, periodo, validos, conEspana);
+    const celdas = sel.map(d => ({c: d.codigo_territorio, n: d.territorio, v: fmt(d.valor)}));
+    const info = {ind: spec.nombre, u: spec.unidad, p: periodo, seg, modo, celdas, fuente: `Eurostat (${r.code})`};
+    caja.innerHTML = `<p class="pending">Conectando con el servicio de mensajería…</p>`;
+    let cli = null, broker = null;
+    for (const b of BROKERS) { try { cli = await conectarBroker(b); broker = b; break; } catch (e) {} }
+    if (!cli) { caja.innerHTML = `<p class="pending">❌ No se ha podido conectar con ningún servicio de mensajería. Es posible que la red bloquee estas conexiones: prueba con otra red (por ejemplo, los datos del móvil compartidos).</p>`; return; }
+    const sala = MEM.nuevaSala();
+    const publicar = (estado) => cli.publish(temaEstado(sala), JSON.stringify({...info, ...estado}), {retain: true, qos: 1});
+    publicar({fase: "espera"});
+    const jug = new Map();
+    let fase = "espera", reloj = null;
+    cli.subscribe(temaJug(sala), {qos: 1});
+    const enlace = `${location.href.split("?")[0].split("#")[0]}?sala=${sala}&b=${broker.id}`;
+    caja.innerHTML = "";
+    caja.append(html`<div class="conc-cab"><div class="conc-qr"></div><div><p class="asis-et">Escanea el código o entra en</p><p class="conc-url">${enlace.replace(/^https?:\/\//, "")}</p>
+        <p class="conc-cuenta">0 participantes</p>
+        <div class="graf-botones"><button class="asis-boton mem-empezar">▶ Empezar</button><button class="copiar mem-terminar" disabled>🏁 Terminar</button><button class="copiar conc-full">⛶ Pantalla completa</button></div></div></div>
+      <div class="mem-titulo"><b>${spec.nombre}</b> · ${spec.unidad} · ${periodo}</div>
+      <div class="mem-zona"></div><div class="conc-ranking"></div>`);
+    const $ = (s) => caja.querySelector(s);
+    try { const qrlib = await require("qrcode-generator@1.4.4"); const qr = qrlib(0, "M"); qr.addData(enlace); qr.make(); $(".conc-qr").innerHTML = qr.createSvgTag({cellSize: 6, margin: 2, scalable: true}); } catch (e) { $(".conc-qr").textContent = "(no se ha podido crear el QR)"; }
+    const zona = (contenido) => { $(".mem-zona").innerHTML = ""; $(".mem-zona").append(contenido); };
+    zona(dibujarMalla(celdas, {visibles: false, grande: true}));
+    const pintar = () => {
+      const r = MEM.ordenar(jug);
+      $(".conc-cuenta").textContent = `${jug.size} participante${jug.size === 1 ? "" : "s"}`;
+      if (fase === "espera") { $(".conc-ranking").innerHTML = `<div class="conc-alias">${r.map(j => `<span>${j.alias}</span>`).join("")}</div>`; return; }
+      if (fase === "memoriza") { $(".conc-ranking").innerHTML = ""; return; }
+      const ganador = r.find(j => j.fin);
+      const medalla = (i, j) => j.fin ? (["🥇", "🥈", "🥉"][i] ?? "✔") : `${i + 1}.`;
+      $(".conc-ranking").innerHTML = `${ganador ? `<h2 class="conc-podio">🏆 ${ganador.alias} ha desbloqueado los 9 datos</h2>` : ""}<table class="uso-tabla conc-tabla"><tr><th></th><th>Alias</th><th>Casillas</th><th>Mejor racha</th><th>Fallos</th><th>Tiempo</th></tr>` +
+        r.slice(0, 15).map((j, i) => `<tr class="${j.fin && i < 3 ? "conc-top" : ""}"><td>${medalla(i, j)}</td><td>${j.alias}</td><td><span class="mem-barra"><span style="width:${100 * (j.fin ? 9 : j.actual) / 9}%"></span></span> ${j.fin ? 9 : j.actual} / 9</td><td>${j.mejor}</td><td>${j.fallos}</td><td>${j.tiempo ? MEM.segundos(j.tiempo) : "–"}</td></tr>`).join("") + "</table>";
+    };
+    cli.on("message", (t, m) => { try { const d = JSON.parse(m.toString()); if (!d.id || !d.alias) return; const prev = jug.get(d.id) ?? {actual: 0, mejor: 0, fallos: 0, tiempo: 0};
+      jug.set(d.id, {...prev, ...d, actual: Math.min(9, Math.max(0, +d.actual || 0)), mejor: Math.min(9, Math.max(0, +d.mejor || 0)), fallos: Math.max(0, +d.fallos || 0), alias: String(d.alias).slice(0, 20).replace(/[<>&"]/g, "")}); pintar(); } catch (e) {} });
+    $(".mem-empezar").onclick = () => {
+      fase = "memoriza"; const inicio = Date.now();
+      publicar({fase: "memoriza", inicio});
+      $(".mem-empezar").disabled = true; pintar();
+      zona(html`<div><p class="mem-cuenta">⏱ <span>${seg}</span> s</p>${dibujarMalla(celdas, {visibles: true, grande: true})}</div>`);
+      reloj = setInterval(() => {
+        const quedan = Math.max(0, seg - Math.floor((Date.now() - inicio) / 1000));
+        const s = $(".mem-cuenta span"); if (s) s.textContent = quedan;
+        if (quedan > 0) return;
+        clearInterval(reloj); fase = "juego"; publicar({fase: "juego", inicio});
+        $(".mem-terminar").disabled = false;
+        zona(dibujarMalla(celdas, {visibles: false, grande: true})); pintar();
+      }, 250);
+      window.cceeEvento && window.cceeEvento("memoria/empezar", "Memoria de datos", true);
+    };
+    $(".mem-terminar").onclick = () => {
+      fase = "fin"; publicar({fase: "fin", ranking: MEM.ordenar(jug).slice(0, 10).map(j => ({alias: j.alias, fin: !!j.fin, tiempo: j.tiempo}))});
+      $(".mem-terminar").disabled = true; pintar();
+      zona(html`<div>${dibujarMalla(celdas, {visibles: true, grande: true})}<p class="source">Fuente: ${info.fuente}. Último periodo con dato para los nueve territorios: ${periodo}.</p></div>`);
+      caja.append(DOM.download(() => new Blob([csv(MEM.ordenar(jug).map((j, i) => ({puesto: i + 1, alias: j.alias, terminado: j.fin ? "sí" : "no", casillas: j.fin ? 9 : j.actual, mejor_racha: j.mejor, fallos: j.fallos, tiempo_segundos: Math.round(j.tiempo / 100) / 10})))], {type: "text/csv"}), `memoria_${sala}.csv`, "⬇ Descargar los resultados (CSV)"));
+    };
+    $(".conc-full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : caja.requestFullscreen?.();
+    invalidation.then(() => { clearInterval(reloj); try { cli.end(true); } catch (e) {} });
+    pintar();
+  })();
+  return caja;
+}
+```
+
+```{ojs}
+//| echo: false
+// ============================ MÓVIL DEL ESTUDIANTE ============================
+{
+  if (!SALA) return html``;
+  const broker = BROKERS.find(b => b.id === paramsM.get("b")) ?? BROKERS[0];
+  const caja = html`<div class="conc-movil"><p class="pending">Conectando con el juego…</p></div>`;
+  (async () => {
+    let cli;
+    try { cli = await conectarBroker(broker); } catch (e) { caja.innerHTML = `<p class="pending">❌ No se ha podido conectar. Comprueba la conexión a internet (si estás en la wifi de la universidad, prueba con los datos del móvil) y recarga la página.</p>`; return; }
+    let id; try { id = localStorage.getItem(`ccee-mem-${SALA}`) || crypto.randomUUID(); localStorage.setItem(`ccee-mem-${SALA}`, id); } catch (e) { id = crypto.randomUUID(); }
+    let alias = ""; try { alias = localStorage.getItem("ccee-conc-alias") || ""; } catch (e) {}
+    let estado = null, unido = false, reloj = null;
+    // Partida: orden de las preguntas, casillas descubiertas, racha actual y mejor racha
+    let orden = [], k = 0, vistas = new Set(), mejor = 0, fallos = 0, fin = false, t0 = null, bloqueado = false;
+    const enviar = () => cli.publish(temaJug(SALA), JSON.stringify({id, alias, actual: vistas.size, mejor, fallos, fin, tiempo: t0 ? Date.now() - t0 : 0}), {qos: 1});
+    const reiniciar = () => { orden = MEM.orden(9); k = 0; vistas = new Set(); };
+    const pantalla = () => {
+      clearInterval(reloj);
+      caja.innerHTML = "";
+      if (!unido) {
+        const f = html`<form class="asis-caja"><label class="asis-et">Tu alias para el ranking</label><input type="text" name="alias" required maxlength="20" autocomplete="off" placeholder="p. ej. Analista_7"><button class="asis-boton">Entrar al juego</button><p class="asis-nota">No escribas tu nombre real si no quieres que aparezca en la pantalla de clase.</p></form>`;
+        f.alias.value = alias;
+        f.onsubmit = (e) => { e.preventDefault(); alias = f.alias.value.trim().slice(0, 20).replace(/[<>&"]/g, ""); if (!alias) return; try { localStorage.setItem("ccee-conc-alias", alias); } catch (err) {} unido = true; enviar(); pantalla(); };
+        caja.append(f); return;
+      }
+      if (!estado || estado.fase === "espera") { caja.append(html`<div class="asis-caja conc-espera"><p class="juego-grande">⏳</p><p>Hola, <b>${alias}</b>. Espera a que el profesor empiece el juego…</p>${estado ? html`<p class="asis-nota">Indicador: <b>${estado.ind}</b> (${estado.u})</p>` : ""}</div>`); return; }
+      const C = estado.celdas;
+      const cab = html`<p class="mem-movil-cab"><b>${estado.ind}</b><br><span>${estado.u} · ${estado.p}</span></p>`;
+      if (estado.fase === "memoriza") {
+        const quedan = () => Math.max(0, estado.seg - Math.floor((Date.now() - estado.inicio) / 1000));
+        const c = html`<p class="mem-cuenta">⏱ <span>${quedan()}</span> s · ¡Memoriza!</p>`;
+        caja.append(cab, c, dibujarMalla(C, {visibles: true}));
+        reloj = setInterval(() => { c.querySelector("span").textContent = quedan(); if (!quedan()) { clearInterval(reloj); estado = {...estado, fase: "juego"}; pantalla(); } }, 250);
+        return;
+      }
+      if (estado.fase === "fin" || fin) {
+        const pos = estado.ranking ? estado.ranking.findIndex(r => r.alias === alias) : -1;
+        caja.append(cab, html`<div class="asis-caja conc-espera"><p class="juego-grande">${fin ? "🏆 9 / 9" : `${vistas.size} / 9`}</p>
+          <p>${fin ? html`¡Has desbloqueado los nueve datos en <b>${MEM.segundos(tFin)}</b> con ${fallos} fallo${fallos === 1 ? "" : "s"}!` : html`Mejor racha: <b>${mejor}</b> · Fallos: ${fallos}`}</p>
+          ${estado.fase === "fin" && pos >= 0 ? html`<p>Puesto <b>${pos + 1}</b> ${["🥇", "🥈", "🥉"][pos] ?? ""}</p>` : html`<p class="asis-nota">Mira el ranking en la pantalla de clase.</p>`}</div>`,
+          dibujarMalla(C, {visibles: true}));
+        return;
+      }
+      // Fase de juego
+      if (!t0) { t0 = Date.now(); reiniciar(); }
+      const pedida = orden[k];
+      const aviso = html`<div class="mem-aviso"></div>`;
+      const marcador = html`<p class="juego-ind">Casillas: <b>${vistas.size}</b> / 9 · Mejor racha: ${mejor} · Fallos: ${fallos}</p>`;
+      const resolver = (ok, elegida) => {
+        if (bloqueado) return;
+        bloqueado = true;
+        if (ok) {
+          vistas.add(pedida); k++; mejor = Math.max(mejor, vistas.size);
+          if (vistas.size === 9) { fin = true; tFin = Date.now() - t0; }
+          enviar();
+          aviso.innerHTML = `<p class="mem-ok">✔ ¡Bien!</p>`;
+          setTimeout(() => { bloqueado = false; pantalla(); }, 450);
+        } else {
+          fallos++; enviar();
+          aviso.innerHTML = `<p class="mem-ko">✘ Era <b>${C[pedida].v}</b> en <b>${C[pedida].n}</b>. ¡Empiezas de nuevo!</p>`;
+          caja.querySelector(".mem-malla")?.replaceWith(dibujarMalla(C, {visibles: new Set([...vistas, pedida]), destacar: pedida}));
+          setTimeout(() => { bloqueado = false; reiniciar(); enviar(); pantalla(); }, 2200);
+        }
+      };
+      if (estado.modo === "cual") {
+        const ops = MEM.opciones(C, pedida);
+        const botones = html`<div class="mem-opciones">${ops.map(v => { const b = html`<button type="button" class="asis-boton">${v}</button>`; b.onclick = () => resolver(v === C[pedida].v, null); return b; })}</div>`;
+        caja.append(cab, marcador, html`<p class="mem-pregunta">¿Qué dato tenía <b>${C[pedida].n}</b>?</p>`, botones, aviso, dibujarMalla(C, {visibles: vistas, destacar: pedida}));
+      } else {
+        caja.append(cab, marcador, html`<p class="mem-pregunta">¿Dónde estaba <b class="mem-dato">${C[pedida].v}</b>?</p>`, aviso,
+          dibujarMalla(C, {visibles: vistas, alPulsar: (i) => { if (vistas.has(i)) return; resolver(MEM.correcta(C, pedida, i), i); }}));
+      }
+    };
+    let tFin = 0;
+    cli.subscribe(temaEstado(SALA), {qos: 1});
+    cli.on("message", (t, m) => { try { const d = JSON.parse(m.toString()); const antes = estado?.fase; estado = d; if (antes !== d.fase) pantalla(); } catch (e) {} });
+    invalidation.then(() => { clearInterval(reloj); try { cli.end(true); } catch (e) {} });
+    pantalla();
+  })();
+  return caja;
+}
+```

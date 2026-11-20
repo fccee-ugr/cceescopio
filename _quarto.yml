@@ -166,6 +166,8 @@ website:
             text: "Concurso en clase con QR y ranking en directo"
           - href: concurso-precios.qmd
             text: "Concurso con QR «¿Cuánto costaba?»"
+          - href: memoria.qmd
+            text: "Memoria de datos: malla 3 × 3 con QR"
           - href: juegos.qmd#aula
             text: "Modo aula: competición en clase"
           - href: presentacion.qmd

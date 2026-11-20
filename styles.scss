@@ -322,3 +322,31 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 .cp-sol.medio { background: #FFF4E0; }
 .cp-sol.ko { background: #FDE8EC; }
 .cp-soluciones { margin-top: 1.2rem; }
+
+/* Memoria de datos (malla 3 × 3) */
+.mem-titulo { text-align: center; font-size: 1.15rem; margin: 1rem 0 .4rem; }
+.mem-malla { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; max-width: 460px; margin: .6rem auto; }
+.mem-malla.mem-grande { max-width: 900px; gap: .8rem; }
+.mem-celda { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; min-height: 92px; padding: .4rem .3rem;
+  background: #fff; border: 2px solid #E3D6DC; border-radius: 12px; color: $ccee-dark; font: inherit; cursor: pointer; }
+.mem-celda:disabled { cursor: default; opacity: 1; }
+.mem-celda:not(:disabled):active { transform: scale(.97); }
+.mem-bandera { width: 34px; height: auto; border: 1px solid #ddd; border-radius: 3px; }
+.mem-nombre { font-size: .82rem; line-height: 1.15; text-align: center; }
+.mem-valor { font-size: 1.35rem; font-weight: 800; color: #bbb; }
+.mem-ver { background: $ccee-cream; border-color: $ccee-magenta; .mem-valor { color: $ccee-magenta; } }
+.mem-destacada { outline: 4px solid $ccee-orange; outline-offset: 1px; }
+.mem-grande .mem-celda { min-height: 150px; }
+.mem-grande .mem-bandera { width: 56px; }
+.mem-grande .mem-nombre { font-size: 1.15rem; }
+.mem-grande .mem-valor { font-size: 2.3rem; }
+.mem-cuenta { text-align: center; font-size: 1.6rem; font-weight: 800; color: $ccee-magenta; margin: .3rem 0; }
+.mem-movil-cab { text-align: center; margin: .3rem 0; span { color: #666; font-size: .85rem; } }
+.mem-pregunta { text-align: center; font-size: 1.25rem; margin: .5rem 0; }
+.mem-dato { color: $ccee-magenta; font-size: 1.6rem; }
+.mem-opciones { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; max-width: 460px; margin: .4rem auto; .asis-boton { margin: 0; width: 100%; } }
+.mem-aviso { min-height: 1.6rem; text-align: center; }
+.mem-ok { color: #1E7B34; font-weight: 700; font-size: 1.15rem; margin: .2rem 0; }
+.mem-ko { color: #B00020; font-size: 1.05rem; margin: .2rem 0; }
+.mem-barra { display: inline-block; width: 90px; height: 9px; background: #eee; border-radius: 5px; vertical-align: middle; overflow: hidden;
+  span { display: block; height: 100%; background: $ccee-magenta; } }
