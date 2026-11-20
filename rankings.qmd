@@ -19,9 +19,9 @@ rk = FileAttachment("data/rankings_ugr_areas.csv").csv({typed: false})
 ```{ojs}
 //| echo: false
 html`<div class="cards">
-  <div class="card-ccee"><div class="icon">✈️</div><h3>Turismo</h3><p>Entre las <b>100 mejores del mundo</b> (76-100) en el Ranking de Shanghái 2025 y 1.ª de Andalucía.</p></div>
-  <div class="card-ccee"><div class="icon">📈</div><h3>Gestión (Management)</h3><p><b>151-200 del mundo</b> y <b>2.ª de España</b> en el Ranking de Shanghái 2025.</p></div>
-  <div class="card-ccee"><div class="icon">🏢</div><h3>Administración de Empresas</h3><p>201-300 del mundo en Shanghái 2025 (101-150 en 2024) y 1.ª de Andalucía.</p></div>
+  <div class="card-ccee"><div class="icon">✈️</div><h3>Turismo</h3><p>Entre las <b>100 mejores del mundo</b> (76-100) en el Ranking de Shanghái 2026 y 1.ª de Andalucía.</p></div>
+  <div class="card-ccee"><div class="icon">📈</div><h3>Gestión (Management)</h3><p><b>151-200 del mundo</b> y <b>2.ª de España</b> en el Ranking de Shanghái 2026.</p></div>
+  <div class="card-ccee"><div class="icon">🏢</div><h3>Administración de Empresas</h3><p>201-300 del mundo en Shanghái 2026 (101-150 en 2025) y 1.ª de Andalucía.</p></div>
 </div>`
 ```
 
@@ -35,8 +35,8 @@ viewof rkSel = Inputs.form({
 })
 rkFilt = rk.filter(d => (rkSel.ranking === "Todos" || d.ranking === rkSel.ranking) && (rkSel.edicion === "Todas" || d.edicion === rkSel.edicion))
 Inputs.table(rkFilt, {
-  columns: ["ranking", "area", "edicion", "mundial", "espana", "andalucia"],
-  header: {ranking: "Ranking", area: "Área", edicion: "Edición", mundial: "Mundo", espana: "España", andalucia: "Andalucía"},
+  columns: ["ranking", "area", "edicion", "mundial", "espana", "andalucia", "fuente"],
+  header: {ranking: "Ranking", area: "Área", edicion: "Edición", mundial: "Mundo", espana: "España", andalucia: "Andalucía", fuente: "Fuente"},
   sort: "area", rows: 30, layout: "auto"
 })
 ```
@@ -45,6 +45,44 @@ Inputs.table(rkFilt, {
 //| echo: false
 html`<div class="descargas">${DOM.download(() => new Blob(["﻿" + d3.csvFormat(rkFilt)], {type: "text/csv;charset=utf-8"}), "cceescopio_rankings_ugr.csv", "⬇ Descargar tabla (CSV)")}</div>`
 ```
+
+## Evolución en el tiempo {#evolucion}
+
+Posición mundial de cada área en todas las ediciones disponibles. La banda indica el intervalo publicado y la línea une sus centros; **más arriba es mejor**. El Ranking de Shanghái por materias tiene la serie más larga: desde 2017-2019, según el área. Las ediciones que no figuran en las fuentes consultadas aparecen como un hueco.
+
+```{ojs}
+//| echo: false
+viewof rkEvo = Inputs.select([...new Set(rk.map(d => d.ranking))], {label: "Ranking", value: "ARWU (Shanghai)"})
+```
+
+```{ojs}
+//| echo: false
+{
+  const iv = (s) => { const m = String(s ?? "").match(/(\d+)\s*[-–]\s*(\d+)/); if (m) return [+m[1], +m[2]]; const n = parseInt(s); return Number.isFinite(n) ? [n, n] : null; };
+  const f = rk.filter(d => d.ranking === rkEvo).map(d => ({...d, anio: +d.edicion, iv: iv(d.mundial)})).filter(d => d.iv && d.anio).sort((a, b) => a.anio - b.anio);
+  const areas = [...new Set(f.map(d => d.area))];
+  const anios = d3.range(d3.min(f, d => d.anio), d3.max(f, d => d.anio) + 1);
+  // Para que la línea se corte en los años sin dato
+  const conHuecos = areas.flatMap(a => anios.map(y => { const d = f.find(x => x.area === a && x.anio === y); return d ? {...d, c: d3.mean(d.iv)} : {area: a, anio: y, c: NaN}; }));
+  const col = {domain: areas, range: ["#B5175F", "#F29200", "#3C3C3B", "#1F77B4", "#2CA02C", "#9467BD", "#8C564B"].slice(0, areas.length), legend: true};
+  return Plot.plot({
+    title: `La UGR en ${rkEvo}: evolución de la posición mundial por área`,
+    height: 440, marginLeft: 55, marginRight: 20,
+    x: {label: "Edición", tickFormat: "d", ticks: anios, domain: [anios[0] - 0.3, anios.at(-1) + 0.3]},
+    y: {label: "↑ Posición mundial (1 = la mejor)", reverse: true, grid: true, domain: [0, Math.ceil(d3.max(f, d => d.iv[1]) / 100) * 100]},
+    color: col,
+    marks: [
+      Plot.areaY(conHuecos, {x: "anio", y1: d => d.iv ? d.iv[0] : NaN, y2: d => d.iv ? d.iv[1] : NaN, fill: "area", fillOpacity: 0.12, z: "area"}),
+      Plot.line(conHuecos, {x: "anio", y: "c", stroke: "area", strokeWidth: 2.5, z: "area"}),
+      Plot.dot(f, {x: "anio", y: d => d3.mean(d.iv), fill: "area", r: 5, tip: true,
+        title: d => `${d.area} · ${d.ranking} ${d.edicion}\nMundo: ${d.mundial}${d.espana ? `\nEspaña: ${d.espana}` : ""}\nFuente: ${d.fuente}`}),
+      Plot.text(f.filter(d => d.anio === d3.max(f.filter(x => x.area === d.area), x => x.anio)), {x: "anio", y: d => d3.mean(d.iv), text: "mundial", dx: 10, textAnchor: "start", fill: "area", fontSize: 10})
+    ]
+  });
+}
+```
+
+<p class="source">Fuentes: Unidad de Analítica de la UGR para las ediciones más recientes; noticias de la Facultad de Ciencias Económicas y Empresariales y de la Facultad de Ciencias Sociales y Jurídicas de Melilla e informe de la Secretaría General de la UGR para las ediciones anteriores (columna «Fuente» de la tabla). Si dispones de las posiciones de otras ediciones, basta con añadirlas a <code>data/rankings_ugr_areas.csv</code> y el gráfico se actualiza solo.</p>
 
 ## En gráficos {#en-graficos}
 

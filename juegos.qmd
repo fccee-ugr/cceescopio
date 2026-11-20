@@ -5,7 +5,31 @@ toc: true
 toc-depth: 2
 ---
 
-Seis juegos rápidos con datos de Eurostat. Sirven para repasar en clase, para empezar una sesión o para retar a tus compañeros. Los datos se cargan en directo, así que cada día pueden cambiar.
+Todos los juegos de CCEEscopio D+I usan datos oficiales de Eurostat que se cargan en directo, así que cada día pueden cambiar. Hay dos tipos: los **juegos para clase**, en los que el profesorado proyecta un código QR y los estudiantes juegan desde el móvil con un ranking en directo, y los **juegos para jugar a tu ritmo**, que están en esta misma página.
+
+## 🏫 Juegos para clase con código QR {#qr}
+
+::: {.cards}
+[<span class="icon">🏆</span><span class="ct">Concurso de preguntas</span><span class="cd">Preguntas sobre los datos del observatorio, con ranking por aciertos y tiempo.</span>](concurso.qmd){.card-ccee}
+
+[<span class="icon">💶</span><span class="ct">¿Cuánto costaba?</span><span class="cd">Adivina el precio de la gasolina, el pan o el café en una fecha del pasado.</span>](concurso-precios.qmd){.card-ccee}
+
+[<span class="icon">🧠</span><span class="ct">Memoria de datos</span><span class="cd">Memoriza una malla 3 × 3 de datos y desbloquea las nueve casillas.</span>](memoria.qmd){.card-ccee}
+
+[<span class="icon">🔢</span><span class="ct">Ordena la malla</span><span class="cd">Ordena países o regiones de mayor a menor en un indicador.</span>](ordena.qmd){.card-ccee}
+
+[<span class="icon">🕵️</span><span class="ct">¿Quién es quién?</span><span class="cd">Adivina el país o la comunidad autónoma a partir de sus indicadores.</span>](quien.qmd){.card-ccee}
+
+[<span class="icon">🎱</span><span class="ct">Bingo de indicadores</span><span class="cd">Tacha en tu cartón los territorios que cumplen cada condición.</span>](bingo.qmd){.card-ccee}
+
+[<span class="icon">🏫</span><span class="ct">Modo aula</span><span class="cd">Competición con código de sala, sin necesidad de código QR.</span>](#aula){.card-ccee}
+
+[<span class="icon">🔮</span><span class="ct">Predice el próximo dato</span><span class="cd">Apuesta por el próximo dato de un indicador y compáralo cuando se publique.</span>](prediccion.qmd){.card-ccee}
+:::
+
+## 🎮 Juegos para jugar a tu ritmo {#individuales}
+
+Seis juegos rápidos para repasar, empezar una sesión o retar a tus compañeros.
 
 ```{ojs}
 //| echo: false

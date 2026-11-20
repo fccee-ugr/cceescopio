@@ -8,19 +8,19 @@ project:
     - "media/*"
 
 website:
-  title: "CCEEscopio"
-  description: "CCEEscopio: observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. Observando la economía y la empresa."
+  title: "CCEEscopio D+I"
+  description: "CCEEscopio D+I: datos para la docencia y la investigación. Observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. Observando la economía y la empresa."
   site-url: "https://jfmunozrosas.github.io/cceescopio"   # <- cambiar por la URL definitiva
   favicon: images/brand/cceescopio_icono.png
   page-navigation: true
   open-graph: true
   twitter-card: true
-  image: images/brand/cceescopio_logo.png
+  image: images/brand/cceescopio_logo_di.png
   back-to-top-navigation: true
   search: true
   navbar:
-    logo: images/brand/cceescopio_navbar.png
-    logo-alt: "Logo de CCEEscopio"
+    logo: images/brand/cceescopio_navbar_di.png
+    logo-alt: "Logo de CCEEscopio D+I"
     title: false
     left:
       - href: index.qmd
@@ -82,22 +82,20 @@ website:
             text: "Ficha de país o región"
           - href: comparador.qmd
             text: "Comparador de comunidades autónomas"
-          - href: prediccion.qmd
-            text: "Predice el próximo dato"
-          - text: "---"
-          - href: graficos.qmd
-            text: "Generador de gráficos para el TFG"
-          - href: ideas-tfg.qmd
-            text: "Ideas para tu TFG o TFM"
-          - href: ejercicios.qmd
-            text: "Ejercicios autocorregibles"
+          - href: indicadores.qmd
+            text: "Buscador de indicadores"
           - text: "---"
           - href: boletin.qmd
             text: "Boletín de coyuntura"
           - href: calendario.qmd
             text: "Datos recientes y calendario"
-          - href: indicadores.qmd
-            text: "Buscador de indicadores"
+          - href: noticias.qmd
+            text: "Noticias e indicadores"
+          - text: "---"
+          - href: datos.qmd
+            text: "Datos y fuentes"
+          - href: glosario.qmd
+            text: "Glosario de indicadores"
       - text: "Calculadoras"
         menu:
           - href: calculadoras.qmd
@@ -138,56 +136,10 @@ website:
             text: "Simulador de política fiscal"
           - href: piramides.qmd
             text: "Pirámides de población"
-      - href: rankings.qmd
-        text: Rankings
-      - href: juegos.qmd
-        text: "🎮 Juegos"
-      - text: "Datos"
-        menu:
-          - href: datos.qmd
-            text: "Datos y fuentes"
-          - href: glosario.qmd
-            text: "Glosario de indicadores"
-          - href: noticias.qmd
-            text: "Noticias e indicadores"
-          - href: biblioteca.qmd
-            text: "Bases de datos de la Biblioteca y fuentes abiertas"
       - text: "Docencia"
         menu:
           - href: docencia.qmd
-            text: "Docencia e investigación: cómo usar CCEEscopio"
-          - href: ejercicios.qmd
-            text: "Ejercicios autocorregibles"
-          - href: graficos.qmd
-            text: "Generador de gráficos para el TFG"
-          - href: ideas-tfg.qmd
-            text: "Ideas para tu TFG o TFM"
-          - href: numeros-indice.qmd
-            text: "Laboratorio de números índice"
-          - text: "---"
-          - text: "Para el profesorado"
-          - href: examen.qmd
-            text: "Generador de exámenes, fichas y preguntas para PRADO"
-          - href: noticias.qmd
-            text: "Noticias e indicadores (retos para clase)"
-          - href: examen-tc3.qmd
-            text: "Exámenes de Técnicas Cuantitativas III (GMIM)"
-          - href: concurso.qmd
-            text: "Concurso en clase con QR y ranking en directo"
-          - href: concurso-precios.qmd
-            text: "Concurso con QR «¿Cuánto costaba?»"
-          - href: memoria.qmd
-            text: "Memoria de datos: malla 3 × 3 con QR"
-          - href: ordena.qmd
-            text: "Ordena la malla (QR)"
-          - href: quien.qmd
-            text: "¿Quién es quién? (QR)"
-          - href: bingo.qmd
-            text: "Bingo de indicadores (QR)"
-          - href: juegos.qmd#aula
-            text: "Modo aula: competición en clase"
-          - href: presentacion.qmd
-            text: "Modo presentación"
+            text: "Cómo usar CCEEscopio en docencia e investigación"
           - text: "---"
           - text: "Por grados y asignaturas"
           - href: docencia/gade.qmd
@@ -200,10 +152,87 @@ website:
             text: "GMIM · Marketing e Investigación de Mercados"
           - href: docencia/gtur.qmd
             text: "GTUR · Turismo"
+          - text: "---"
+          - text: "Para el estudiantado"
+          - href: ejercicios.qmd
+            text: "Ejercicios autocorregibles"
+          - href: numeros-indice.qmd
+            text: "Laboratorio de números índice"
+          - href: calculadoras.qmd
+            text: "Calculadoras"
+          - text: "---"
+          - text: "Para el profesorado"
+          - href: examen.qmd
+            text: "Generador de exámenes, fichas y preguntas para PRADO"
+          - href: noticias.qmd
+            text: "Noticias e indicadores (retos para clase)"
+          - href: presentacion.qmd
+            text: "Modo presentación"
+          - href: juegos.qmd
+            text: "🎮 Juegos para clase"
+      - text: "🎮 Juegos"
+        menu:
+          - href: juegos.qmd
+            text: "Todos los juegos"
+          - text: "---"
+          - text: "En clase, con código QR y ranking en directo"
+          - href: concurso.qmd
+            text: "Concurso de preguntas"
+          - href: concurso-precios.qmd
+            text: "¿Cuánto costaba?"
+          - href: memoria.qmd
+            text: "Memoria de datos (malla 3 × 3)"
+          - href: ordena.qmd
+            text: "Ordena la malla"
+          - href: quien.qmd
+            text: "¿Quién es quién?"
+          - href: bingo.qmd
+            text: "Bingo de indicadores"
+          - href: juegos.qmd#aula
+            text: "Modo aula: competición con código de sala"
+          - text: "---"
+          - text: "Para jugar a tu ritmo"
+          - href: juegos.qmd#dato-del-dia
+            text: "El dato del día"
+          - href: juegos.qmd#mas-alto
+            text: "¿Más alto o más bajo?"
+          - href: juegos.qmd#adivina-pais
+            text: "Adivina el país"
+          - href: juegos.qmd#que-paso
+            text: "¿Qué pasó aquí?"
+          - href: juegos.qmd#ordena
+            text: "Ordena de mayor a menor"
+          - href: prediccion.qmd
+            text: "Predice el próximo dato"
+      - text: "Investigación"
+        menu:
+          - text: "TFG, TFM y tesis"
+          - href: ideas-tfg.qmd
+            text: "Ideas para tu TFG o TFM"
+          - href: graficos.qmd
+            text: "Generador de gráficos con cita de la fuente"
+          - href: biblioteca.qmd
+            text: "Bases de datos de la Biblioteca y fuentes abiertas"
+          - href: datos.qmd
+            text: "Datos y fuentes: descarga y reutilización"
+          - text: "---"
+          - text: "Análisis avanzado"
+          - href: coyuntura.qmd
+            text: "Mapa de calor de coyuntura"
+          - href: desigualdad-calc.qmd
+            text: "Desigualdad: Gini, Lorenz y Theil con inferencia"
+          - href: convergencia.qmd
+            text: "Convergencia sigma y beta"
+          - href: regresion.qmd
+            text: "Regresión con análisis de supuestos"
+          - text: "---"
+          - text: "La UGR en los rankings"
+          - href: rankings.qmd
+            text: "Posición y evolución en los rankings por disciplinas"
       - href: contacto.qmd
         text: "Contacto"
   page-footer:
-    left: "CCEEscopio · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es)"
+    left: "CCEEscopio D+I · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es)"
     right: "![](images/logos_ugr_fccee.jpg){height=38 fig-alt='Universidad de Granada y Facultad de Ciencias Económicas y Empresariales'}"
 
 date-modified: "2026-11-18"

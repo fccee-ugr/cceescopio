@@ -70,7 +70,7 @@ ideasGen = {
       <p><b>Posibles ampliaciones.</b> ${x.t.extensiones.join(" ")}</p>
       <div class="graf-botones">${copiar}</div></div>`;
   };
-  return html`<p class="source">${temasIdea.length} temas y más de ${locES.format(",.0f")(combinacionesIdea)} combinaciones posibles con estos filtros. Pulsa «Generar nuevas ideas» para ver otras.</p><div class="idea-grid">${ideasGen.map(tarjeta)}</div>`;
+  return html`<p class="source">${temasIdea.length} temas y más de ${combinacionesIdea.toLocaleString("es-ES")} combinaciones posibles con estos filtros. Pulsa «Generar nuevas ideas» para ver otras.</p><div class="idea-grid">${ideasGen.map(tarjeta)}</div>`;
 }
 ```
 

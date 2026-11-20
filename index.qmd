@@ -1,20 +1,20 @@
 ---
-title: "CCEEscopio"
+title: "CCEEscopio D+I"
 toc: false
 page-layout: full
 ---
 
 ::: {.hero}
-![](images/brand/cceescopio_logo.png){.hero-logo fig-alt="CCEEscopio. Observando la economía y la empresa"}
+![](images/brand/cceescopio_logo_di.png){.hero-logo fig-alt="CCEEscopio D+I. Observando la economía y la empresa"}
 
-**CCEEscopio** es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar **99 indicadores** de la economía y la empresa (precios, empleo, actividad, empresa e innovación, turismo, sector público y mercados financieros, desigualdad y pobreza, sostenibilidad, población y economía internacional) para España, Andalucía y los países de la Unión Europea.
+**CCEEscopio D+I** (Docencia + Investigación) es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar **99 indicadores** de la economía y la empresa (precios, empleo, actividad, empresa e innovación, turismo, sector público y mercados financieros, desigualdad y pobreza, sostenibilidad, población y economía internacional) para España, Andalucía y los países de la Unión Europea.
 
 <p class="tagline">Datos oficiales, actualizados y descargables, al servicio de la **docencia** y la **investigación** de la Facultad.</p>
 
 <p class="visitas-ccee" hidden>👁️ <span class="vc-num"></span> visitas a CCEEscopio</p>
 :::
 
-## CCEEscopio en vídeo
+## CCEEscopio D+I en vídeo
 
 ```{=html}
 <div class="video-wrap">
@@ -75,19 +75,18 @@ En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, G
 ::: {.use-box}
 ### Docencia
 
-- Datos reales y actualizados para las clases de **Economía, Empresa, Métodos Cuantitativos, Econometría, Finanzas y Turismo**.
-- Gráficos interactivos para explicar conceptos (inflación, ciclo económico, convergencia regional, desigualdad).
-- Material para prácticas, **TFG y TFM**, con datos listos para descargar.
-- [Ideas de uso en asignaturas](docencia.qmd)
+- Datos reales y actualizados para las clases de **Economía, Empresa, Métodos Cuantitativos, Econometría, Finanzas y Turismo**, con indicadores y ejemplos [por grados y asignaturas](docencia.qmd).
+- Gráficos interactivos, calculadoras y un [laboratorio de números índice](numeros-indice.qmd) para explicar conceptos.
+- [Juegos para clase](juegos.qmd) con código QR y ranking en directo, [ejercicios autocorregibles](ejercicios.qmd) y un [generador de exámenes](examen.qmd).
 :::
 
 ::: {.use-box}
 ### Investigación
 
-- **Descarga de los datos en CSV** de cada gráfico, con su fuente y unidad, para usarlos en artículos, tesis y proyectos.
-- Series oficiales y homogéneas de Eurostat, comparables entre países y regiones.
-- Enlaces a microdatos y fuentes especializadas (INE, Banco de España, IECA, Banco Mundial).
-- [Datos y fuentes](datos.qmd)
+- [Ideas para TFG y TFM](ideas-tfg.qmd) con pregunta, hipótesis, datos y método, y un [generador de gráficos](graficos.qmd) que da la cita de la fuente.
+- **Descarga de los datos en CSV** y de los gráficos en PNG o SVG, con su fuente y unidad, para artículos, tesis y proyectos.
+- Análisis avanzados: [mapa de calor de coyuntura](coyuntura.qmd), [desigualdad con Gini y Theil](desigualdad-calc.qmd), [convergencia](convergencia.qmd) y [regresión](regresion.qmd).
+- [La UGR en los rankings por disciplinas](rankings.qmd) y [datos y fuentes](datos.qmd) (INE, Banco de España, IECA, Banco Mundial).
 :::
 :::
 
