@@ -68,6 +68,8 @@ website:
             text: "Precios de productos: gasolina, luz y cesta de la compra"
           - text: "---"
           - text: "Análisis"
+          - href: coyuntura.qmd
+            text: "Mapa de calor de coyuntura"
           - href: descomposiciones.qmd
             text: "¿Qué explica cada indicador? (descomposiciones)"
           - href: extremos.qmd
@@ -85,6 +87,8 @@ website:
           - text: "---"
           - href: graficos.qmd
             text: "Generador de gráficos para el TFG"
+          - href: ideas-tfg.qmd
+            text: "Ideas para tu TFG o TFM"
           - href: ejercicios.qmd
             text: "Ejercicios autocorregibles"
           - text: "---"
@@ -100,6 +104,8 @@ website:
             text: "🧮 Todas las calculadoras"
           - text: "---"
           - text: "Métodos Cuantitativos y econometría"
+          - href: numeros-indice.qmd
+            text: "Laboratorio de números índice"
           - href: regresion.qmd
             text: "Regresión lineal con análisis de supuestos"
           - href: estadistica.qmd
@@ -154,6 +160,10 @@ website:
             text: "Ejercicios autocorregibles"
           - href: graficos.qmd
             text: "Generador de gráficos para el TFG"
+          - href: ideas-tfg.qmd
+            text: "Ideas para tu TFG o TFM"
+          - href: numeros-indice.qmd
+            text: "Laboratorio de números índice"
           - text: "---"
           - text: "Para el profesorado"
           - href: examen.qmd
@@ -168,6 +178,12 @@ website:
             text: "Concurso con QR «¿Cuánto costaba?»"
           - href: memoria.qmd
             text: "Memoria de datos: malla 3 × 3 con QR"
+          - href: ordena.qmd
+            text: "Ordena la malla (QR)"
+          - href: quien.qmd
+            text: "¿Quién es quién? (QR)"
+          - href: bingo.qmd
+            text: "Bingo de indicadores (QR)"
           - href: juegos.qmd#aula
             text: "Modo aula: competición en clase"
           - href: presentacion.qmd

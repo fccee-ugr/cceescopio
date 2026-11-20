@@ -572,6 +572,7 @@ viewof anualE = temporalE && fuenteE === "propios" ? Inputs.select(new Map([["An
 # =====================================================================================
 GRUPOS = [
     ("📊 Métodos Cuantitativos y econometría", [
+        ("numeros-indice", "Laboratorio de números índice", "Cambio de base, tasas de variación, enlace de series, deflactación e índices de Laspeyres, Paasche y Fisher, con datos reales y ejercicios.", True),
         ("regresion", "Regresión lineal con análisis de supuestos", "MCO con hasta cuatro variables explicativas, interpretación y contrastes de linealidad, normalidad, homocedasticidad, autocorrelación y multicolinealidad.", True),
         ("estadistica", "Análisis cuantitativo de datos", "Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.", True),
         ("desfases", "¿Qué indicador se adelanta?", "Correlación con desfase entre dos series para detectar indicadores adelantados y retrasados.", False),
@@ -681,7 +682,7 @@ viewof abrirC = SALA ? Object.assign(html`<span></span>`, {value: 0}) : Inputs.b
   if (SALA) return html``;
   if (!abrirC) return html`<div class="conc-intro">
     <p><b>Cómo funciona:</b> pulsa «Abrir concurso» y proyecta esta pantalla. Los estudiantes escanean el código QR con el móvil y escriben un <b>alias</b> (no se piden nombres ni DNI). Cuando estén todos, pulsa «Empezar»: cada estudiante responde las preguntas a su ritmo y en la pantalla verás el <b>ranking en directo</b>, ordenado por aciertos y, en caso de empate, por el tiempo empleado.</p>
-    <p>¿Prefieres otro formato? Prueba <a href="concurso-precios.html">«¿Cuánto costaba?»</a> (adivinar precios del pasado) o la <a href="memoria.html">Memoria de datos</a> (memorizar una malla 3 × 3 de datos de un indicador).</p>
+    <p>¿Prefieres otro formato? Prueba <a href="concurso-precios.html">«¿Cuánto costaba?»</a> (adivinar precios del pasado) la <a href="memoria.html">Memoria de datos</a>, <a href="ordena.html">Ordena la malla</a>, <a href="quien.html">¿Quién es quién?</a> o el <a href="bingo.html">Bingo de indicadores</a>.</p>
     <p class="nota">Los resultados viajan por un servicio público de mensajería en tiempo real y no se guardan en ningún sitio. Antes de usarlo en clase por primera vez, haz una prueba con tu móvil: si la red del aula bloquea la conexión, la página lo indicará.</p></div>`;
   const caja = html`<div class="conc-panel"><p class="pending">Preparando las preguntas con los datos de Eurostat…</p></div>`;
   (async () => {

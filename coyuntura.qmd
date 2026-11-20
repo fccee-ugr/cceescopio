@@ -1,0 +1,331 @@
+---
+title: "Mapa de calor de coyuntura"
+subtitle: "Todos los países (o comunidades autónomas) y sus principales indicadores de un vistazo"
+toc: false
+---
+
+Cada fila es un territorio y cada columna un indicador, con su último dato disponible. El color indica la **posición relativa** del territorio en ese indicador: **verde**, entre los que mejor están; **rojo**, entre los que peor. Para la inflación se considera mejor estar cerca del 2 %, el objetivo del Banco Central Europeo. La columna **Puntuación** resume la posición media en todos los indicadores.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+// Datos para los juegos: territorios, último periodo común, banderas
+DJ = {
+  const paises = geosPaises.filter(c => /^[A-Z]{2}$/.test(c));
+  const regiones = geosRegiones.filter(c => /^ES\d\d$/.test(c) && !["ES63", "ES64"].includes(c));
+  // Último periodo con dato para la mayor parte de los territorios
+  function ultimoComun(rows, validos, cobertura = 0.6) {
+    const por = d3.group(rows.filter(r => validos.includes(r.codigo_territorio)), r => r.periodo);
+    const min = Math.max(3, Math.ceil(cobertura * validos.length));
+    const p = [...por.keys()].sort().reverse().find(p => new Set(por.get(p).map(r => r.codigo_territorio)).size >= min);
+    return p ? {periodo: p, valores: new Map(por.get(p).map(r => [r.codigo_territorio, r.valor]))} : null;
+  }
+  // Carga varios indicadores a la vez; ref: valor de la UE (países) o de España (regiones) en el mismo periodo
+  async function cargarVarios(specs, validos, refCode) {
+    const res = await Promise.all(specs.map(async s => {
+      try {
+        const r = await cargar(s);
+        if (!r.ok) return null;
+        const u = ultimoComun(r.rows, validos);
+        if (!u) return null;
+        const ref = r.rows.find(x => x.periodo === u.periodo && x.codigo_territorio === refCode)?.valor;
+        return {...s, ...u, ref, fuente: r.code};
+      } catch (e) { return null; }
+    }));
+    return res.filter(Boolean);
+  }
+  const nombre = (c) => nombresGeo[c] ?? c;
+  function bandera(c) {
+    const iso = c === "EU27_2020" ? "eu" : c === "EL" ? "gr" : c === "UK" ? "gb" : (/^[A-Z]{2}$/.test(c) ? c.toLowerCase() : null);
+    if (!iso) return "";
+    const img = html`<img class="mem-bandera" alt="" loading="lazy">`;
+    img.src = `https://flagcdn.com/w80/${iso}.png`;
+    img.onerror = () => img.remove();
+    return img;
+  }
+  function barajar(a, azar = Math.random) { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(azar() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+  const conUnidad = (v, uc) => uc === "%" ? `${fmt(v)} %` : uc ? `${fmt(v)} ${uc}` : fmt(v);
+  return {paises, regiones, ultimoComun, cargarVarios, nombre, bandera, barajar, conUnidad};
+}
+```
+
+```{ojs}
+//| echo: false
+VISTAS_C = ({"coyuntura": {"titulo": "Coyuntura de los países de la UE", "ambito": "paises", "ind": [{"id": "pib-crecimiento-interanual-trimestral", "nombre": "PIB: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=B1GQ&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Tasa de variación del PIB en volumen respecto al mismo trimestre del año anterior.", "cero": true, "desde": 2005, "area": "actividad", "corto": "Crecimiento del PIB", "sentido": 1}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Porcentaje de personas desempleadas sobre la población activa (15-74 años), desestacionalizado.", "desde": 2005, "area": "empleo", "corto": "Paro", "sentido": -1}, {"id": "tasa-de-paro-juvenil-menores-de-25-anos", "nombre": "Tasa de paro juvenil (menores de 25 años)", "code": "une_rt_m", "query": "&s_adj=SA&age=Y_LT25&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Paro de las personas menores de 25 años, desestacionalizado.", "desde": 2005, "area": "empleo", "corto": "Paro juvenil", "sentido": -1}, {"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOTAL", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP00"}, {"code": "prc_hicp_manr", "query": "&coicop=CP00"}], "area": "precios", "corto": "Inflación", "sentido": "obj2"}, {"id": "ipca-inflacion-subyacente-sin-energia-ni-alimentos", "nombre": "IPCA: inflación subyacente (sin energía ni alimentos)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del IPCA excluidos la energía y los alimentos: aproxima la tendencia de fondo de los precios.", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOT_X_NRG_FOOD"}, {"code": "prc_hicp_manr", "query": "&coicop=TOT_X_NRG_FOOD"}], "area": "precios", "corto": "Inflación subyacente", "sentido": "obj2"}, {"id": "indicador-de-sentimiento-economico", "nombre": "Indicador de sentimiento económico", "code": "ei_bssi_m_r2", "query": "&indic=BS-ESI-I&s_adj=SA", "unidad": "Índice (media a largo plazo = 100)", "frecuencia": "Mensual", "descripcion": "Indicador compuesto de confianza de industria, servicios, consumidores, construcción y comercio (Comisión Europea).", "desde": 2008, "area": "actividad", "corto": "Sentimiento económico", "sentido": 1}, {"id": "confianza-del-consumidor", "nombre": "Confianza del consumidor", "code": "ei_bsco_m", "query": "&indic=BS-CSMCI&s_adj=SA", "unidad": "Saldo de respuestas (%)", "frecuencia": "Mensual", "descripcion": "Indicador de confianza de los consumidores de la Comisión Europea (expectativas sobre su situación financiera, la economía y las compras importantes).", "cero": true, "desde": 2008, "area": "actividad", "corto": "Confianza consumidor", "sentido": 1}, {"id": "exportaciones-crecimiento-interanual-trimestral", "nombre": "Exportaciones: crecimiento interanual (trimestral)", "code": "namq_10_gdp", "query": "&unit=CLV_PCH_SM&na_item=P6&s_adj=SCA", "unidad": "% de variación interanual", "frecuencia": "Trimestral", "descripcion": "Exportaciones de bienes y servicios en volumen.", "cero": true, "desde": 2005, "area": "internacional", "corto": "Exportaciones", "sentido": 1}, {"id": "saldo-por-cuenta-corriente-del-pib", "nombre": "Saldo por cuenta corriente (% del PIB)", "code": "bop_gdp6_q", "query": "&bop_item=CA&stk_flow=BAL&partner=WRL_REST&unit=PC_GDP&s_adj=NSA", "unidad": "% del PIB", "frecuencia": "Trimestral", "descripcion": "Diferencia entre ingresos y pagos por bienes, servicios y rentas con el resto del mundo.", "cero": true, "desde": 2008, "area": "internacional", "corto": "Cuenta corriente", "sentido": 1}, {"id": "deficit-o-superavit-publico-del-pib", "nombre": "Déficit (−) o superávit (+) público (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=B9", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Capacidad o necesidad de financiación de las administraciones públicas.", "cero": true, "desde": 2000, "area": "publico", "corto": "Saldo público", "sentido": 1}, {"id": "deuda-publica-del-pib", "nombre": "Deuda pública (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=GD", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Deuda bruta consolidada de las administraciones públicas (criterio de Maastricht).", "desde": 2000, "area": "publico", "corto": "Deuda pública", "sentido": -1}, {"id": "rentabilidad-del-bono-a-10-anos", "nombre": "Rentabilidad del bono a 10 años", "code": "irt_lt_mcby_m", "query": "&int_rt=MCBY", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Rendimiento de la deuda pública a largo plazo (criterio de convergencia de Maastricht).", "desde": 2000, "area": "publico", "corto": "Bono a 10 años", "sentido": -1}]}, "estructura": {"titulo": "Estructura económica y social de los países de la UE", "ambito": "paises", "ind": [{"id": "pib-per-capita-en-ppc-ue-27-100", "nombre": "PIB per cápita en PPC (UE-27 = 100)", "code": "tec00114", "query": "", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Volumen del PIB por habitante en paridad de poder de compra respecto a la media de la UE.", "desde": 2005, "area": "internacional", "corto": "PIB per cápita", "sentido": 1}, {"id": "tasa-de-empleo-20-64-anos", "nombre": "Tasa de empleo (20-64 años)", "code": "lfsi_emp_a", "query": "&indic_em=EMP_LFS&sex=T&age=Y20-64&unit=PC_POP", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Porcentaje de personas ocupadas de 20 a 64 años; el objetivo de la UE para 2030 es el 78 %.", "desde": 2005, "area": "empleo", "corto": "Tasa de empleo", "sentido": 1}, {"id": "jovenes-que-ni-estudian-ni-trabajan-15-29-anos", "nombre": "Jóvenes que ni estudian ni trabajan (15-29 años)", "code": "sdg_08_20", "query": "&sex=T&age=Y15-29&unit=PC", "unidad": "% de la población de 15-29 años", "frecuencia": "Anual", "descripcion": "Jóvenes que no tienen empleo ni siguen ningún tipo de educación o formación (indicador NEET).", "desde": 2005, "area": "empleo", "corto": "Ni estudian ni trabajan", "sentido": -1}, {"id": "brecha-salarial-de-genero", "nombre": "Brecha salarial de género", "code": "sdg_05_20", "query": "&unit=PC", "unidad": "% del salario medio de los hombres", "frecuencia": "Anual", "descripcion": "Diferencia entre la ganancia media por hora de hombres y mujeres, en porcentaje de la de los hombres.", "desde": 2007, "area": "empleo", "corto": "Brecha salarial", "sentido": -1}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "code": "rd_e_gerdtot", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno total en investigación y desarrollo; el objetivo europeo es el 3 % del PIB.", "desde": 2005, "area": "empresa", "corto": "I+D", "sentido": 1}, {"id": "indice-de-gini", "nombre": "Índice de Gini", "code": "ilc_di12", "query": "", "unidad": "Coeficiente (0-100)", "frecuencia": "Anual", "descripcion": "Coeficiente de Gini de la renta disponible equivalente (0 = igualdad perfecta; 100 = máxima desigualdad).", "desde": 2005, "area": "desigualdad", "corto": "Gini", "sentido": -1}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "code": "ilc_peps01n", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas en riesgo de pobreza, con carencia material y social severa o en hogares con baja intensidad de empleo.", "desde": 2015, "area": "desigualdad", "corto": "Pobreza o exclusión", "sentido": -1}, {"id": "poblacion-de-25-34-anos-con-estudios-superiores", "nombre": "Población de 25-34 años con estudios superiores", "code": "sdg_04_20", "query": "&sex=T&unit=PC", "unidad": "% de la población de 25-34 años", "frecuencia": "Anual", "descripcion": "Personas jóvenes con educación terciaria; el objetivo europeo para 2030 es el 45 %.", "desde": 2005, "area": "poblacion", "corto": "Estudios superiores", "sentido": 1}, {"id": "abandono-temprano-de-la-educacion-y-la-formacion", "nombre": "Abandono temprano de la educación y la formación", "code": "sdg_04_10", "query": "&sex=T&unit=PC", "unidad": "% de la población de 18-24 años", "frecuencia": "Anual", "descripcion": "Jóvenes que solo tienen la educación secundaria obligatoria y no siguen estudiando; el objetivo europeo para 2030 es menos del 9 %.", "desde": 2005, "area": "poblacion", "corto": "Abandono escolar", "sentido": -1}, {"id": "esperanza-de-vida-al-nacer", "nombre": "Esperanza de vida al nacer", "code": "demo_mlexpec", "query": "&sex=T&age=Y_LT1&unit=YR", "unidad": "Años", "frecuencia": "Anual", "descripcion": "Número medio de años que se espera que viva una persona recién nacida.", "desde": 2000, "area": "poblacion", "corto": "Esperanza de vida", "sentido": 1}, {"id": "cuota-de-energias-renovables", "nombre": "Cuota de energías renovables", "code": "nrg_ind_ren", "query": "&nrg_bal=REN&unit=PC", "unidad": "% del consumo final bruto de energía", "frecuencia": "Anual", "descripcion": "Porcentaje de energía procedente de fuentes renovables; el objetivo europeo para 2030 es el 42,5 %.", "desde": 2005, "area": "sostenibilidad", "corto": "Renovables", "sentido": 1}, {"id": "emisiones-de-gases-de-efecto-invernadero-por-habitante", "nombre": "Emisiones de gases de efecto invernadero por habitante", "code": "sdg_13_10", "query": "&unit=T_HAB", "unidad": "Toneladas de CO₂ equivalente por habitante", "frecuencia": "Anual", "descripcion": "Emisiones netas de gases de efecto invernadero por habitante.", "desde": 2000, "area": "sostenibilidad", "corto": "Emisiones por hab.", "sentido": -1}]}, "regiones": {"titulo": "Comunidades autónomas", "ambito": "regiones", "ind": [{"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "code": "nama_10r_2gdp", "query": "&unit=PPS_EU27_2020_HAB", "unidad": "PPC por habitante", "frecuencia": "Anual", "descripcion": "PIB por habitante en paridad de poder de compra; permite comparar el nivel de vida entre regiones y países.", "regional": true, "desde": 2005, "area": "actividad", "corto": "PIB per cápita", "sentido": 1}, {"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "code": "lfst_r_lfu3rt", "query": "&sex=T&age=Y15-74&unit=PC", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Tasa de paro de las comunidades autónomas (NUTS 2).", "regional": true, "desde": 2005, "area": "empleo", "corto": "Paro", "sentido": -1}, {"id": "tasa-de-empleo-por-regiones-20-64-anos", "nombre": "Tasa de empleo por regiones (20-64 años)", "code": "lfst_r_lfe2emprt", "query": "&sex=T&age=Y20-64&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de empleo de las comunidades autónomas.", "regional": true, "desde": 2005, "area": "empleo", "corto": "Tasa de empleo", "sentido": 1}, {"id": "gasto-en-i-d-por-regiones-del-pib", "nombre": "Gasto en I+D por regiones (% del PIB)", "code": "rd_e_gerdreg", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno en I+D de las comunidades autónomas.", "regional": true, "desde": 2005, "area": "empresa", "corto": "I+D", "sentido": 1}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "code": "ilc_peps11n", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa AROPE de las comunidades autónomas.", "regional": true, "desde": 2015, "area": "desigualdad", "corto": "Pobreza o exclusión", "sentido": -1}, {"id": "tasa-de-riesgo-de-pobreza-por-regiones", "nombre": "Tasa de riesgo de pobreza por regiones", "code": "ilc_li41", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de riesgo de pobreza de las comunidades autónomas.", "regional": true, "desde": 2008, "area": "desigualdad", "corto": "Riesgo de pobreza", "sentido": -1}]}})
+viewof vistaC = Inputs.radio(new Map(Object.entries(VISTAS_C).map(([k, v]) => [v.titulo, k])), {label: "Vista", value: "coyuntura"})
+```
+
+```{ojs}
+//| echo: false
+datosC = {
+  const v = VISTAS_C[vistaC];
+  const validos = v.ambito === "regiones" ? [...DJ.regiones, "ES"] : [...DJ.paises, "EU27_2020"];
+  yield html`<p class="pending">Descargando ${v.ind.length} indicadores de Eurostat…</p>`;
+  yield {v, validos, inds: await DJ.cargarVarios(v.ind, validos, null)};
+}
+```
+
+```{ojs}
+//| echo: false
+// Puntuación de 0 (peor) a 1 (mejor) según la posición relativa entre los territorios (sin contar los agregados)
+calor = {
+  if (!datosC?.inds) return null;
+  const {v, validos, inds} = datosC;
+  const terr = validos.filter(c => inds.some(d => Number.isFinite(d.valores.get(c))));
+  const agregado = (c) => c === "EU27_2020" || (v.ambito === "regiones" && c === "ES");
+  const celdas = [];
+  for (const d of inds) {
+    const base = (x) => d.sentido === "obj2" ? -Math.abs(x - 2) : d.sentido * x;
+    const xs = terr.filter(c => !agregado(c)).map(c => d.valores.get(c)).filter(Number.isFinite).map(base).sort((a, b) => a - b);
+    for (const c of terr) {
+      const x = d.valores.get(c);
+      if (!Number.isFinite(x)) continue;
+      const b = base(x), menores = d3.bisectLeft(xs, b), iguales = d3.bisectRight(xs, b) - menores;
+      celdas.push({c, t: DJ.nombre(c), ind: d.corto, nombre: d.nombre, unidad: d.unidad, periodo: d.periodo, valor: x, punt: xs.length > 1 ? (menores + (iguales - 1) / 2) / (xs.length - 1) : 0.5, agregado: agregado(c)});
+    }
+  }
+  const media = d3.rollup(celdas, g => d3.mean(g, d => d.punt), d => d.c);
+  return {celdas, media, terr, inds, agregado};
+}
+viewof ordenC = calor ? Inputs.select(new Map([["Puntuación media", "media"], ["Nombre", "nombre"], ...calor.inds.map(d => [d.corto, d.corto])]), {label: "Ordenar por"}) : Object.assign(html`<span></span>`, {value: "media"})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!calor) return html``;
+  if (!calor.inds.length) return html`<p class="pending">No se han podido cargar los datos de Eurostat. Inténtalo de nuevo más tarde.</p>`;
+  const {celdas, media, terr, inds} = calor;
+  const valorDe = (c, ind) => celdas.find(d => d.c === c && d.ind === ind);
+  const orden = [...terr].sort((a, b) => ordenC === "nombre" ? DJ.nombre(a).localeCompare(DJ.nombre(b), "es")
+    : ordenC === "media" ? (media.get(b) ?? 0) - (media.get(a) ?? 0)
+    : ((valorDe(b, ordenC)?.punt ?? -1) - (valorDe(a, ordenC)?.punt ?? -1))).map(DJ.nombre);
+  const cols = ["Puntuación", ...inds.map(d => d.corto)];
+  const filas = [...celdas, ...terr.map(c => ({c, t: DJ.nombre(c), ind: "Puntuación", punt: media.get(c), valor: 100 * media.get(c), unidad: "posición media (0-100)", periodo: "", nombre: "Puntuación media"}))];
+  const periodos = Object.fromEntries(inds.map(d => [d.corto, d.periodo]));
+  return Plot.plot({
+    title: VISTAS_C[vistaC].titulo,
+    width: Math.max(760, 92 * cols.length + 150), height: 26 * orden.length + 140, marginLeft: 130, marginTop: 120,
+    x: {domain: cols, axis: "top", label: null, tickRotate: -35, tickFormat: d => periodos[d] ? `${d} (${periodos[d]})` : d},
+    y: {domain: orden, label: null},
+    color: {type: "linear", scheme: "RdYlGn", domain: [0, 1], legend: true, label: "Posición relativa (0 = peor, 1 = mejor)", tickFormat: d => d === 0 ? "peor" : d === 1 ? "mejor" : ""},
+    marks: [
+      Plot.cell(filas, {x: "ind", y: "t", fill: "punt", inset: 0.5, tip: true, title: d => `${d.t}\n${d.nombre}${d.periodo ? ` (${d.periodo})` : ""}\n${d.ind === "Puntuación" ? locES.format(",.0f")(d.valor) + " sobre 100" : fmt(d.valor) + " · " + d.unidad}`}),
+      Plot.text(filas, {x: "ind", y: "t", text: d => d.ind === "Puntuación" ? locES.format(",.0f")(d.valor) : fmt(d.valor), fontSize: 10, fill: d => d.punt < 0.15 || d.punt > 0.85 ? "white" : "black", fontWeight: d => d.t === "España" || d.t === "Andalucía" || d.t === "UE-27" ? 700 : 400}),
+      Plot.frame({anchor: "left", stroke: "#999"})
+    ]
+  });
+}
+```
+
+```{ojs}
+//| echo: false
+calor?.celdas?.length ? html`<div class="descargas">${DOM.download(() => csv(calor.celdas.map(d => ({territorio: d.t, codigo: d.c, indicador: d.nombre, periodo: d.periodo, valor: d.valor, unidad: d.unidad, posicion_relativa: Math.round(1000 * d.punt) / 1000}))), `cceescopio_mapa_calor_${vistaC}.csv`, "⬇ Descargar los datos (CSV)")}</div>
+<p class="source">Fuente: Eurostat (${calor.inds.map(d => d.fuente).join(", ")}). La posición relativa va de 0 (el peor dato entre los territorios) a 1 (el mejor), sin contar los agregados (UE-27 o España), que se sitúan respecto a los demás. Qué se considera «mejor» es una convención: un superávit exterior o una deuda baja no son siempre preferibles, y depende del momento del ciclo.</p>` : html``
+```
+
+::: {.callout-tip appearance="simple"}
+**Para clase.** Proyecta el mapa y pregunta: ¿qué países están en verde en casi todo?, ¿hay alguno con buena coyuntura pero mala estructura?, ¿dónde está España? Para profundizar en un territorio, usa la [ficha de país o región](ficha.qmd); para jugar con estos mismos datos, el [¿Quién es quién?](quien.qmd) o el [Bingo de indicadores](bingo.qmd).
+:::

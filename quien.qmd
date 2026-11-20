@@ -1,0 +1,446 @@
+---
+title: "¿Quién es quién?"
+subtitle: "Juego para clase con código QR: adivina el país o la comunidad autónoma a partir de sus indicadores"
+toc: false
+---
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+// Salas en tiempo real con código QR (servicios públicos de mensajería MQTT; no se guarda nada)
+QRJ = {
+  const BROKERS = [
+    {id: "h", url: "wss://broker.hivemq.com:8884/mqtt"},
+    {id: "e", url: "wss://broker.emqx.io:8084/mqtt"},
+    {id: "m", url: "wss://test.mosquitto.org:8081/mqtt"}];
+  let lib;
+  async function libreria() {
+    if (lib === undefined) { try { const m = await import("https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.esm.js"); lib = m.default ?? m; } catch (e) { lib = null; } }
+    return lib;
+  }
+  async function conectar(b) {
+    const L = await libreria();
+    if (!L) throw new Error("sin librería");
+    return new Promise((ok, mal) => {
+      const c = L.connect(b.url, {clientId: "ccee_" + Math.random().toString(16).slice(2, 10), connectTimeout: 6000, reconnectPeriod: 2000, clean: true});
+      const t = setTimeout(() => { c.end(true); mal(new Error("tiempo agotado")); }, 7000);
+      c.once("connect", () => { clearTimeout(t); ok(c); });
+    });
+  }
+  const nuevaSala = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
+  const segundos = (ms) => ms == null ? "–" : `${(ms / 1000).toFixed(1).replace(".", ",")} s`;
+  const limpiar = (s) => String(s ?? "").slice(0, 20).replace(/[<>&"]/g, "");
+  const ERR_RED = `<p class="pending">❌ No se ha podido conectar con ningún servicio de mensajería. Es posible que la red bloquee estas conexiones: prueba con otra red (por ejemplo, los datos del móvil compartidos).</p>`;
+  const ERR_MOVIL = `<p class="pending">❌ No se ha podido conectar. Comprueba la conexión a internet (si estás en la wifi de la universidad, prueba con los datos del móvil) y recarga la página.</p>`;
+  // Profesor: abre una sala y recibe los mensajes de los estudiantes
+  async function abrirSala(prefijo) {
+    let cli = null, broker = null;
+    for (const b of BROKERS) { try { cli = await conectar(b); broker = b; break; } catch (e) {} }
+    if (!cli) return null;
+    const sala = nuevaSala(), tE = `cceescopio/${prefijo}/${sala}/estado`, tJ = `cceescopio/${prefijo}/${sala}/jugadores`;
+    const enlace = `${location.href.split("?")[0].split("#")[0]}?sala=${sala}&b=${broker.id}`;
+    const jug = new Map(), oyentes = [];
+    cli.subscribe(tJ, {qos: 1});
+    cli.on("message", (t, m) => {
+      if (t !== tJ) return;
+      try { const d = JSON.parse(m.toString()); if (!d.id || !d.alias) return; d.alias = limpiar(d.alias); jug.set(d.id, {...(jug.get(d.id) ?? {}), ...d}); oyentes.forEach(f => f(jug)); } catch (e) {}
+    });
+    return {sala, enlace, jug, publicar: (e) => cli.publish(tE, JSON.stringify(e), {retain: true, qos: 1}),
+      alCambiar: (f) => oyentes.push(f), cerrar: () => { try { cli.end(true); } catch (e) {} }};
+  }
+  function cabecera(enlace, botones) {
+    const el = html`<div class="conc-cab"><div class="conc-qr"></div><div><p class="asis-et">Escanea el código o entra en</p><p class="conc-url">${enlace.replace(/^https?:\/\//, "")}</p><p class="conc-cuenta">0 participantes</p><div class="graf-botones"></div></div></div>`;
+    const full = html`<button class="copiar">⛶ Pantalla completa</button>`;
+    full.onclick = () => document.fullscreenElement ? document.exitFullscreen() : el.parentElement?.requestFullscreen?.();
+    el.querySelector(".graf-botones").append(...botones, full);
+    (async () => { try { const q = (await require("qrcode-generator@1.4.4"))(0, "M"); q.addData(enlace); q.make(); el.querySelector(".conc-qr").innerHTML = q.createSvgTag({cellSize: 6, margin: 2, scalable: true}); } catch (e) { el.querySelector(".conc-qr").textContent = "(no se ha podido crear el QR)"; } })();
+    return el;
+  }
+  const cuenta = (raiz, n) => { const c = raiz.querySelector(".conc-cuenta"); if (c) c.textContent = `${n} participante${n === 1 ? "" : "s"}`; };
+  // Estudiante: se une a la sala del enlace
+  async function unirse(prefijo, alEstado) {
+    const p = new URLSearchParams(location.search), sala = p.get("sala");
+    const b = BROKERS.find(x => x.id === p.get("b")) ?? BROKERS[0];
+    let cli; try { cli = await conectar(b); } catch (e) { return null; }
+    const tE = `cceescopio/${prefijo}/${sala}/estado`, tJ = `cceescopio/${prefijo}/${sala}/jugadores`;
+    let id; try { id = localStorage.getItem(`ccee-${prefijo}-${sala}`) || crypto.randomUUID(); localStorage.setItem(`ccee-${prefijo}-${sala}`, id); } catch (e) { id = crypto.randomUUID(); }
+    cli.subscribe(tE, {qos: 1});
+    cli.on("message", (t, m) => { if (t !== tE) return; try { alEstado(JSON.parse(m.toString())); } catch (e) {} });
+    return {sala, id, enviar: (d) => cli.publish(tJ, JSON.stringify({id, ...d}), {qos: 1}), cerrar: () => { try { cli.end(true); } catch (e) {} }};
+  }
+  function formAlias(alEntrar) {
+    let alias = ""; try { alias = localStorage.getItem("ccee-conc-alias") || ""; } catch (e) {}
+    const f = html`<form class="asis-caja"><label class="asis-et">Tu alias para el ranking</label><input type="text" name="alias" required maxlength="20" autocomplete="off" placeholder="p. ej. Analista_7"><button class="asis-boton">Entrar</button><p class="asis-nota">No escribas tu nombre real si no quieres que aparezca en la pantalla de clase.</p></form>`;
+    f.alias.value = alias;
+    f.onsubmit = (e) => { e.preventDefault(); const a = limpiar(f.alias.value.trim()); if (!a) return; try { localStorage.setItem("ccee-conc-alias", a); } catch (err) {} alEntrar(a); };
+    return f;
+  }
+  const espera = (alias, extra = "") => html`<div class="asis-caja conc-espera"><p class="juego-grande">⏳</p><p>Hola, <b>${alias}</b>. Espera a que el profesor empiece…</p>${extra}</div>`;
+  const medalla = (i) => ["🥇", "🥈", "🥉"][i] ?? `${i + 1}.`;
+  const hash = (s) => [...s].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
+  return {conectar, nuevaSala, segundos, limpiar, ERR_RED, ERR_MOVIL, abrirSala, cabecera, cuenta, unirse, formAlias, espera, medalla, hash};
+}
+```
+
+```{ojs}
+//| echo: false
+// Datos para los juegos: territorios, último periodo común, banderas
+DJ = {
+  const paises = geosPaises.filter(c => /^[A-Z]{2}$/.test(c));
+  const regiones = geosRegiones.filter(c => /^ES\d\d$/.test(c) && !["ES63", "ES64"].includes(c));
+  // Último periodo con dato para la mayor parte de los territorios
+  function ultimoComun(rows, validos, cobertura = 0.6) {
+    const por = d3.group(rows.filter(r => validos.includes(r.codigo_territorio)), r => r.periodo);
+    const min = Math.max(3, Math.ceil(cobertura * validos.length));
+    const p = [...por.keys()].sort().reverse().find(p => new Set(por.get(p).map(r => r.codigo_territorio)).size >= min);
+    return p ? {periodo: p, valores: new Map(por.get(p).map(r => [r.codigo_territorio, r.valor]))} : null;
+  }
+  // Carga varios indicadores a la vez; ref: valor de la UE (países) o de España (regiones) en el mismo periodo
+  async function cargarVarios(specs, validos, refCode) {
+    const res = await Promise.all(specs.map(async s => {
+      try {
+        const r = await cargar(s);
+        if (!r.ok) return null;
+        const u = ultimoComun(r.rows, validos);
+        if (!u) return null;
+        const ref = r.rows.find(x => x.periodo === u.periodo && x.codigo_territorio === refCode)?.valor;
+        return {...s, ...u, ref, fuente: r.code};
+      } catch (e) { return null; }
+    }));
+    return res.filter(Boolean);
+  }
+  const nombre = (c) => nombresGeo[c] ?? c;
+  function bandera(c) {
+    const iso = c === "EU27_2020" ? "eu" : c === "EL" ? "gr" : c === "UK" ? "gb" : (/^[A-Z]{2}$/.test(c) ? c.toLowerCase() : null);
+    if (!iso) return "";
+    const img = html`<img class="mem-bandera" alt="" loading="lazy">`;
+    img.src = `https://flagcdn.com/w80/${iso}.png`;
+    img.onerror = () => img.remove();
+    return img;
+  }
+  function barajar(a, azar = Math.random) { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(azar() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+  const conUnidad = (v, uc) => uc === "%" ? `${fmt(v)} %` : uc ? `${fmt(v)} ${uc}` : fmt(v);
+  return {paises, regiones, ultimoComun, cargarVarios, nombre, bandera, barajar, conUnidad};
+}
+```
+
+```{ojs}
+//| echo: false
+SALA = new URLSearchParams(location.search).get("sala")
+SETS_Q = ({paises: [{"id": "pib-per-capita-en-ppc-ue-27-100", "nombre": "PIB per cápita en PPC (UE-27 = 100)", "code": "tec00114", "query": "", "unidad": "Índice (UE-27 = 100)", "frecuencia": "Anual", "descripcion": "Volumen del PIB por habitante en paridad de poder de compra respecto a la media de la UE.", "desde": 2005, "area": "internacional", "corto": "PIB per cápita (UE = 100)", "uc": ""}, {"id": "tasa-de-paro", "nombre": "Tasa de paro", "code": "une_rt_m", "query": "&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Porcentaje de personas desempleadas sobre la población activa (15-74 años), desestacionalizado.", "desde": 2005, "area": "empleo", "corto": "Tasa de paro", "uc": "%"}, {"id": "tasa-de-paro-juvenil-menores-de-25-anos", "nombre": "Tasa de paro juvenil (menores de 25 años)", "code": "une_rt_m", "query": "&s_adj=SA&age=Y_LT25&sex=T&unit=PC_ACT", "unidad": "% de la población activa", "frecuencia": "Mensual", "descripcion": "Paro de las personas menores de 25 años, desestacionalizado.", "desde": 2005, "area": "empleo", "corto": "Paro juvenil", "uc": "%"}, {"id": "deuda-publica-del-pib", "nombre": "Deuda pública (% del PIB)", "code": "gov_10dd_edpt1", "query": "&unit=PC_GDP&sector=S13&na_item=GD", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Deuda bruta consolidada de las administraciones públicas (criterio de Maastricht).", "desde": 2000, "area": "publico", "corto": "Deuda pública", "uc": "% del PIB"}, {"id": "ipca-inflacion-general-tasa-anual", "nombre": "IPCA: inflación general (tasa anual)", "code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=TOTAL", "unidad": "%", "frecuencia": "Mensual", "descripcion": "Tasa de variación anual del Índice de Precios de Consumo Armonizado (todos los bienes y servicios).", "cero": true, "desde": 2005, "alt": [{"code": "prc_hicp_minr", "query": "&unit=RCH_A&coicop18=CP00"}, {"code": "prc_hicp_manr", "query": "&coicop=CP00"}], "area": "precios", "corto": "Inflación", "uc": "%"}, {"id": "cuota-de-energias-renovables", "nombre": "Cuota de energías renovables", "code": "nrg_ind_ren", "query": "&nrg_bal=REN&unit=PC", "unidad": "% del consumo final bruto de energía", "frecuencia": "Anual", "descripcion": "Porcentaje de energía procedente de fuentes renovables; el objetivo europeo para 2030 es el 42,5 %.", "desde": 2005, "area": "sostenibilidad", "corto": "Energías renovables", "uc": "%"}, {"id": "esperanza-de-vida-al-nacer", "nombre": "Esperanza de vida al nacer", "code": "demo_mlexpec", "query": "&sex=T&age=Y_LT1&unit=YR", "unidad": "Años", "frecuencia": "Anual", "descripcion": "Número medio de años que se espera que viva una persona recién nacida.", "desde": 2000, "area": "poblacion", "corto": "Esperanza de vida", "uc": "años"}, {"id": "riesgo-de-pobreza-o-exclusion-social-arope", "nombre": "Riesgo de pobreza o exclusión social (AROPE)", "code": "ilc_peps01n", "query": "&unit=PC&age=TOTAL&sex=T", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Personas en riesgo de pobreza, con carencia material y social severa o en hogares con baja intensidad de empleo.", "desde": 2015, "area": "desigualdad", "corto": "Riesgo de pobreza o exclusión", "uc": "%"}, {"id": "gasto-en-i-d-del-pib", "nombre": "Gasto en I+D (% del PIB)", "code": "rd_e_gerdtot", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno total en investigación y desarrollo; el objetivo europeo es el 3 % del PIB.", "desde": 2005, "area": "empresa", "corto": "Gasto en I+D", "uc": "% del PIB"}, {"id": "tasa-de-fecundidad", "nombre": "Tasa de fecundidad", "code": "demo_find", "query": "&indic_de=TOTFERRT", "unidad": "Hijos por mujer", "frecuencia": "Anual", "descripcion": "Número medio de hijos por mujer (indicador coyuntural de fecundidad).", "desde": 2000, "area": "poblacion", "corto": "Hijos por mujer", "uc": ""}], regiones: [{"id": "tasa-de-paro-por-regiones", "nombre": "Tasa de paro por regiones", "code": "lfst_r_lfu3rt", "query": "&sex=T&age=Y15-74&unit=PC", "unidad": "% de la población activa", "frecuencia": "Anual", "descripcion": "Tasa de paro de las comunidades autónomas (NUTS 2).", "regional": true, "desde": 2005, "area": "empleo", "corto": "Tasa de paro", "uc": "%"}, {"id": "tasa-de-empleo-por-regiones-20-64-anos", "nombre": "Tasa de empleo por regiones (20-64 años)", "code": "lfst_r_lfe2emprt", "query": "&sex=T&age=Y20-64&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de empleo de las comunidades autónomas.", "regional": true, "desde": 2005, "area": "empleo", "corto": "Tasa de empleo", "uc": "%"}, {"id": "pib-per-capita-en-paridad-de-poder-de-compra", "nombre": "PIB per cápita en paridad de poder de compra", "code": "nama_10r_2gdp", "query": "&unit=PPS_EU27_2020_HAB", "unidad": "PPC por habitante", "frecuencia": "Anual", "descripcion": "PIB por habitante en paridad de poder de compra; permite comparar el nivel de vida entre regiones y países.", "regional": true, "desde": 2005, "area": "actividad", "corto": "PIB per cápita (PPC)", "uc": "PPC"}, {"id": "gasto-en-i-d-por-regiones-del-pib", "nombre": "Gasto en I+D por regiones (% del PIB)", "code": "rd_e_gerdreg", "query": "&sectperf=TOTAL&unit=PC_GDP", "unidad": "% del PIB", "frecuencia": "Anual", "descripcion": "Gasto interno en I+D de las comunidades autónomas.", "regional": true, "desde": 2005, "area": "empresa", "corto": "Gasto en I+D", "uc": "% del PIB"}, {"id": "riesgo-de-pobreza-o-exclusion-social-por-regiones", "nombre": "Riesgo de pobreza o exclusión social por regiones", "code": "ilc_peps11n", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa AROPE de las comunidades autónomas.", "regional": true, "desde": 2015, "area": "desigualdad", "corto": "Riesgo de pobreza o exclusión", "uc": "%"}, {"id": "tasa-de-riesgo-de-pobreza-por-regiones", "nombre": "Tasa de riesgo de pobreza por regiones", "code": "ilc_li41", "query": "&unit=PC", "unidad": "% de la población", "frecuencia": "Anual", "descripcion": "Tasa de riesgo de pobreza de las comunidades autónomas.", "regional": true, "desde": 2008, "area": "desigualdad", "corto": "Tasa de riesgo de pobreza", "uc": "%"}, {"id": "pernoctaciones-por-regiones", "nombre": "Pernoctaciones por regiones", "code": "tour_occ_nin2", "query": "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553", "unidad": "Número de pernoctaciones", "frecuencia": "Anual", "descripcion": "Pernoctaciones en hoteles, alojamientos de corta estancia y campings de las comunidades autónomas.", "regional": true, "desde": 2008, "area": "turismo", "corto": "Pernoctaciones", "uc": ""}, {"id": "poblacion-por-regiones", "nombre": "Población por regiones", "code": "demo_r_d2jan", "query": "&sex=T&age=TOTAL", "unidad": "Personas", "frecuencia": "Anual", "descripcion": "Población residente a 1 de enero en las comunidades autónomas.", "regional": true, "desde": 2000, "area": "poblacion", "corto": "Población", "uc": "habitantes"}]})
+// Preguntas: un territorio oculto con su perfil y cuatro opciones (en «difícil», los tres más parecidos)
+prepararQuien = (datos, pool, n, dificil, azar = Math.random) => {
+  const z = datos.map(d => { const v = pool.map(c => d.valores.get(c)).filter(Number.isFinite); return {m: d3.mean(v), s: d3.deviation(v) || 1}; });
+  const dist = (a, b) => d3.sum(datos, (d, i) => { const x = d.valores.get(a), y = d.valores.get(b); return Number.isFinite(x) && Number.isFinite(y) ? ((x - y) / z[i].s) ** 2 : 0; });
+  return DJ.barajar(pool, azar).slice(0, n).map(c => {
+    const otros = pool.filter(o => o !== c);
+    const dis = dificil ? [...otros].sort((a, b) => dist(c, a) - dist(c, b)).slice(0, 3) : DJ.barajar(otros, azar).slice(0, 3);
+    return {c, opciones: DJ.barajar([c, ...dis], azar),
+      perfil: datos.filter(d => Number.isFinite(d.valores.get(c))).map(d => ({i: d.corto, v: DJ.conUnidad(d.valores.get(c), d.uc), r: Number.isFinite(d.ref) ? DJ.conUnidad(d.ref, d.uc) : "", p: d.periodo}))};
+  });
+}
+```
+
+```{ojs}
+//| echo: false
+viewof ambitoQ = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.radio(new Map([["Países de la UE", "paises"], ["Comunidades autónomas", "regiones"]]), {label: "Territorios", value: "paises"})
+viewof nQ = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.range([4, 12], {label: "Número de preguntas", value: 6, step: 1})
+viewof difQ = SALA ? Object.assign(html`<span></span>`, {value: null}) : Inputs.radio(new Map([["Normal: opciones al azar", false], ["Difícil: las opciones son territorios parecidos", true]]), {label: "Dificultad", value: false})
+viewof abrirQ = SALA ? Object.assign(html`<span></span>`, {value: 0}) : Inputs.button("▶ Abrir el juego", {value: 0, reduce: v => v + 1})
+```
+
+```{ojs}
+//| echo: false
+// ============================ PANTALLA DEL PROFESOR ============================
+{
+  if (SALA) return html``;
+  if (!abrirQ) return html`<div class="conc-intro"><p><b>Cómo funciona:</b> cada pregunta muestra el perfil de un país (o comunidad autónoma) oculto: su PIB per cápita, su paro, su deuda, su inflación, su esperanza de vida… junto a la media de referencia. Los estudiantes eligen en el móvil de qué territorio se trata entre cuatro opciones. Gana quien más acierte y, si hay empate, quien tarde menos.</p><p>Es una forma de practicar la lectura conjunta de indicadores: ¿qué combinación de datos delata a Irlanda, a Grecia o a Madrid?</p><p class="nota">Los resultados viajan por un servicio público de mensajería en tiempo real y no se guardan en ningún sitio. Antes de usarlo en clase por primera vez, haz una prueba con tu móvil.</p></div>`;
+  const ambito = (viewof ambitoQ).value, n = (viewof nQ).value, dificil = (viewof difQ).value;
+  const caja = html`<div class="conc-panel"><p class="pending">Descargando los datos de Eurostat…</p></div>`;
+  (async () => {
+    const validos = ambito === "regiones" ? DJ.regiones : DJ.paises;
+    const datos = await DJ.cargarVarios(SETS_Q[ambito], validos, ambito === "regiones" ? "ES" : "EU27_2020");
+    const pool = validos.filter(c => datos.filter(d => Number.isFinite(d.valores.get(c))).length >= Math.max(3, datos.length - 1));
+    if (datos.length < 3 || pool.length < 4) { caja.innerHTML = `<p class="pending">❌ No se han podido descargar suficientes datos. Inténtalo de nuevo más tarde.</p>`; return; }
+    const S = await QRJ.abrirSala("quien");
+    if (!S) { caja.innerHTML = QRJ.ERR_RED; return; }
+    const P = prepararQuien(datos, pool, Math.min(n, pool.length), dificil).map((q, i) => ({perfil: q.perfil, op: q.opciones.map(c => ({c, n: DJ.nombre(c)})), k: (q.opciones.indexOf(q.c) + QRJ.hash(S.sala + i)) % 4}));
+    const ref = ambito === "regiones" ? "España" : "UE-27";
+    let fase = "espera";
+    S.publicar({fase, P, ref});
+    const empezar = html`<button class="asis-boton">▶ Empezar</button>`, terminar = html`<button class="copiar">🏁 Terminar</button>`;
+    terminar.disabled = true;
+    caja.innerHTML = "";
+    caja.append(QRJ.cabecera(S.enlace, [empezar, terminar]), html`<div class="conc-ranking"></div><div class="cp-soluciones"></div>`);
+    const orden = () => [...S.jug.values()].sort((a, b) => (b.aciertos ?? 0) - (a.aciertos ?? 0) || (b.fin ? 1 : 0) - (a.fin ? 1 : 0) || (a.tiempo ?? 0) - (b.tiempo ?? 0));
+    const pintar = () => {
+      const r = orden(); QRJ.cuenta(caja, r.length);
+      const z = caja.querySelector(".conc-ranking");
+      if (fase === "espera") { z.innerHTML = `<div class="conc-alias">${r.map(j => `<span>${j.alias}</span>`).join("")}</div>`; return; }
+      z.innerHTML = `${fase === "fin" && r[0] ? `<h2 class="conc-podio">🏆 ${r[0].alias}</h2>` : ""}<table class="uso-tabla conc-tabla"><tr><th></th><th>Alias</th><th>Aciertos</th><th>Pregunta</th><th>Tiempo</th></tr>` +
+        r.slice(0, 15).map((j, i) => `<tr class="${fase === "fin" && i < 3 ? "conc-top" : ""}"><td>${fase === "fin" ? QRJ.medalla(i) : i + 1 + "."}</td><td>${j.alias}</td><td><b>${j.aciertos ?? 0}</b> / ${P.length}</td><td>${j.fin ? "✔ terminado" : `${j.resp ?? 0} / ${P.length}`}</td><td>${QRJ.segundos(j.tiempo)}</td></tr>`).join("") + "</table>";
+    };
+    S.alCambiar(pintar);
+    empezar.onclick = () => { fase = "juego"; S.publicar({fase, P, ref}); empezar.disabled = true; terminar.disabled = false; pintar(); window.cceeEvento && window.cceeEvento("quien/empezar", "Quién es quién", true); };
+    terminar.onclick = () => {
+      fase = "fin"; S.publicar({fase, P, ref, ranking: orden().slice(0, 10).map(j => j.alias)}); terminar.disabled = true; pintar();
+      caja.querySelector(".cp-soluciones").innerHTML = `<h3>Soluciones</h3><div class="ord-sols">` + P.map((q, i) => { const ok = q.op[(q.k - QRJ.hash(S.sala + i) % 4 + 4) % 4];
+        return `<div class="ord-sol"><p><b>${i + 1}. ${ok.n}</b></p><ul>${q.perfil.map(f => `<li>${f.i}: <b>${f.v}</b>${f.r ? ` <span class="kpi-s">(${ref}: ${f.r})</span>` : ""}</li>`).join("")}</ul></div>`; }).join("") + "</div>";
+    };
+    invalidation.then(() => S.cerrar());
+    pintar();
+  })();
+  return caja;
+}
+```
+
+```{ojs}
+//| echo: false
+// ============================ MÓVIL DEL ESTUDIANTE ============================
+{
+  if (!SALA) return html``;
+  const caja = html`<div class="conc-movil"><p class="pending">Conectando con el juego…</p></div>`;
+  let estado = null, alias = null, i = 0, aciertos = 0, t0 = null, C;
+  const pantalla = () => {
+    caja.innerHTML = "";
+    if (!alias) { caja.append(QRJ.formAlias(a => { alias = a; C.enviar({alias, aciertos: 0, resp: 0}); pantalla(); })); return; }
+    if (!estado || estado.fase === "espera") { caja.append(QRJ.espera(alias)); return; }
+    const P = estado.P;
+    if (estado.fase === "fin" || i >= P.length) {
+      const pos = estado.ranking ? estado.ranking.indexOf(alias) : -1;
+      caja.append(html`<div class="asis-caja conc-espera"><p class="juego-grande">${aciertos} / ${P.length}</p><p>aciertos · ${QRJ.segundos(t0 ? Date.now() - t0 : 0)}</p>${estado.fase === "fin" && pos >= 0 ? html`<p>Puesto <b>${pos + 1}</b> ${QRJ.medalla(pos)}</p>` : html`<p class="asis-nota">Mira el ranking en la pantalla de clase.</p>`}</div>`);
+      return;
+    }
+    if (!t0) t0 = Date.now();
+    const q = P[i], ok = (q.k - QRJ.hash(C.sala + i) % 4 + 4) % 4;
+    const tabla = html`<table class="uso-tabla qui-perfil"><tr><th>Indicador</th><th>Dato</th><th>${estado.ref}</th></tr>${q.perfil.map(f => html`<tr><td>${f.i} <span class="kpi-s">${f.p}</span></td><td><b>${f.v}</b></td><td class="kpi-s">${f.r}</td></tr>`)}</table>`;
+    const fb = html`<div></div>`;
+    const ops = html`<div class="mem-opciones qui-opciones"></div>`;
+    q.op.forEach((o, j) => {
+      const b = html`<button type="button" class="ord-item"></button>`;
+      const f = DJ.bandera(o.c); if (f) b.append(f);
+      b.append(html`<span class="ord-nombre">${o.n}</span>`);
+      b.onclick = () => {
+        ops.querySelectorAll("button").forEach(x => x.disabled = true);
+        const bien = j === ok; if (bien) aciertos++; i++;
+        b.classList.add(bien ? "qui-bien" : "qui-mal"); ops.children[ok].classList.add("qui-bien");
+        C.enviar({alias, aciertos, resp: i, fin: i >= P.length, tiempo: Date.now() - t0});
+        fb.append(html`<p class="${bien ? "mem-ok" : "mem-ko"}">${bien ? "✔ ¡Correcto!" : html`✘ Era <b>${q.op[ok].n}</b>`}</p>`);
+        const sig = html`<button type="button" class="asis-boton">${i >= P.length ? "Ver mi resultado" : "Siguiente ▶"}</button>`;
+        sig.onclick = pantalla; fb.append(sig);
+      };
+      ops.append(b);
+    });
+    caja.append(html`<p class="juego-ind">Pregunta ${i + 1} de ${P.length} · ${aciertos} aciertos</p>`, html`<p class="mem-pregunta">¿Quién es quién?</p>`, tabla, ops, fb);
+  };
+  (async () => {
+    C = await QRJ.unirse("quien", d => { const antes = estado?.fase; estado = d; if (antes !== d.fase) pantalla(); });
+    if (!C) { caja.innerHTML = QRJ.ERR_MOVIL; return; }
+    pantalla();
+  })();
+  invalidation.then(() => C?.cerrar());
+  return caja;
+}
+```

@@ -97,6 +97,11 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · Tres juegos más para clase con código QR** <span class="badge-nuevo">nuevo</span>: [Bingo de indicadores](bingo.qmd) (tacha los países que cumplen cada condición), [Ordena la malla](ordena.qmd) (de mayor a menor) y [¿Quién es quién?](quien.qmd) (adivina el país por sus indicadores).
+- **Nuevo · [Mapa de calor de coyuntura](coyuntura.qmd)** <span class="badge-nuevo">nuevo</span>: todos los países de la UE (o las comunidades autónomas) y sus principales indicadores de un vistazo, coloreados según su posición relativa.
+- **Nuevo · [Laboratorio de números índice](numeros-indice.qmd)** <span class="badge-nuevo">nuevo</span>: cambio de base, tasas de variación, enlace de series, deflactación y los índices de Laspeyres, Paasche y Fisher, con datos reales y ejercicios autocorregibles.
+- **Nuevo · [Ideas para tu TFG o TFM](ideas-tfg.qmd)** <span class="badge-nuevo">nuevo</span>: un generador de temas de investigación con pregunta, hipótesis, datos, método y estructura, para todas las titulaciones de la Facultad.
+- **Rankings en gráficos**: la posición de la UGR en los rankings por disciplinas, ahora también [en gráficos](rankings.qmd#en-graficos).
 - **Nuevo · [Memoria de datos](memoria.qmd)** <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. Durante unos segundos se proyecta una malla 3 × 3 con el dato de un indicador en nueve países o comunidades autónomas; después se ocultan y, desde el móvil, cada acierto descubre una casilla y cada fallo obliga a empezar de nuevo. Gana quien antes desbloquee las nueve.
 - **Nuevo · [Precios de productos](precios-productos.qmd)** <span class="badge-nuevo">nuevo</span>: la gasolina y el gasóleo cada semana desde 2005, con la parte que son impuestos y comparados con el IPC (también en euros de hoy); el precio de la luz y el gas de los hogares; y cuánto costaban el pan, la leche, el aceite o el café en cualquier fecha.
 - **Nuevo · Concurso [«¿Cuánto costaba?»](concurso-precios.qmd)** <span class="badge-nuevo">nuevo</span>: los estudiantes ven un producto con su precio actual y, desde el móvil, adivinan cuánto costaba en una fecha del pasado. Gana quien más se acerque.

@@ -46,6 +46,69 @@ Inputs.table(rkFilt, {
 html`<div class="descargas">${DOM.download(() => new Blob(["﻿" + d3.csvFormat(rkFilt)], {type: "text/csv;charset=utf-8"}), "cceescopio_rankings_ugr.csv", "⬇ Descargar tabla (CSV)")}</div>`
 ```
 
+## En gráficos {#en-graficos}
+
+Cada barra es el **intervalo de posiciones** que publica el ranking (por ejemplo, 151-200); el punto marca su centro. Más a la izquierda es mejor. Se compara la edición más reciente de cada ranking con la anterior.
+
+```{ojs}
+//| echo: false
+rkIntervalo = (s) => { const m = String(s ?? "").match(/(\d+)\s*[-–]\s*(\d+)/); if (m) return [+m[1], +m[2]]; const n = parseInt(s); return Number.isFinite(n) ? [n, n] : null; }
+rkGraf = {
+  const out = [];
+  for (const g of d3.groups(rk, d => `${d.ranking} · ${d.area}`)) {
+    const ed = [...new Set(g[1].map(d => d.edicion))].sort().reverse();
+    g[1].forEach(d => { const k = ed.indexOf(d.edicion); if (k > 1) return;
+      out.push({etiqueta: g[0], ranking: d.ranking, area: d.area, edicion: d.edicion, cual: k === 0 ? "Edición más reciente" : "Edición anterior",
+        mundo: rkIntervalo(d.mundial), espana: rkIntervalo(d.espana), txtM: d.mundial, txtE: d.espana}); });
+  }
+  return out;
+}
+viewof rkEje = Inputs.radio(new Map([["Posición en el mundo", "mundo"], ["Posición en España", "espana"]]), {label: "Mostrar", value: "mundo"})
+```
+
+```{ojs}
+//| echo: false
+{
+  const f = rkGraf.filter(d => d[rkEje]);
+  const orden = d3.groupSort(f.filter(d => d.cual === "Edición más reciente"), g => d3.mean(g[0][rkEje]), d => d.etiqueta);
+  const desplaza = (cual) => cual === "Edición más reciente" ? -5 : 5;
+  const marcas = ["Edición más reciente", "Edición anterior"].flatMap(cual => {
+    const d = f.filter(x => x.cual === cual);
+    return [
+      Plot.link(d, {x1: x => x[rkEje][0], x2: x => x[rkEje][1] + (x[rkEje][1] === x[rkEje][0] ? 0.5 : 0), y1: "etiqueta", y2: "etiqueta", dy: desplaza(cual), stroke: "cual", strokeWidth: 7, strokeLinecap: "round", strokeOpacity: 0.85}),
+      Plot.dot(d, {x: x => d3.mean(x[rkEje]), y: "etiqueta", dy: desplaza(cual), fill: "white", stroke: "cual", r: 3.5,
+        tip: true, title: x => `${x.ranking} · ${x.area}\nEdición ${x.edicion}\n${rkEje === "mundo" ? "Mundo" : "España"}: ${rkEje === "mundo" ? x.txtM : x.txtE}`}),
+      ...(cual === "Edición más reciente" ? [Plot.text(d, {x: x => x[rkEje][1], y: "etiqueta", dy: desplaza(cual), dx: 8, text: x => `${rkEje === "mundo" ? x.txtM : x.txtE} (${x.edicion})`, textAnchor: "start", fontSize: 10, fill: "#B5175F"})] : [])
+    ];
+  });
+  return Plot.plot({
+    title: `La UGR en los rankings por disciplinas: posición ${rkEje === "mundo" ? "mundial" : "en España"}`,
+    height: 34 * orden.length + 90, marginLeft: 330, marginRight: 110,
+    x: {label: rkEje === "mundo" ? "Posición mundial (1 = la mejor)" : "Posición en España (1 = la mejor)", grid: true, domain: [rkEje === "mundo" ? 0 : 0, d3.max(f, d => d[rkEje][1]) * 1.05]},
+    y: {domain: orden, label: null},
+    color: {domain: ["Edición más reciente", "Edición anterior"], range: ["#B5175F", "#BDBDBD"], legend: true},
+    marks: [...marcas]
+  });
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  // Número de áreas por tramo de posición mundial (edición más reciente)
+  const f = rkGraf.filter(d => d.cual === "Edición más reciente" && d.mundo);
+  const tramo = (x) => { const c = d3.mean(x.mundo); return c <= 100 ? "Top 100" : c <= 200 ? "101-200" : c <= 300 ? "201-300" : c <= 400 ? "301-400" : "401-500"; };
+  const dom = ["Top 100", "101-200", "201-300", "301-400", "401-500"];
+  const filas = f.map(d => ({tramo: tramo(d), ranking: d.ranking, area: d.area}));
+  return Plot.plot({
+    title: "Áreas de la Facultad por tramo de posición mundial (edición más reciente)",
+    height: 260, marginLeft: 80, x: {label: "Número de áreas", grid: true, tickFormat: "d"}, y: {domain: dom, label: null},
+    color: {legend: true, scheme: "tableau10"},
+    marks: [Plot.barX(filas, Plot.groupY({x: "count"}, {y: "tramo", fill: "ranking", tip: true})), Plot.ruleX([0])]
+  });
+}
+```
+
 <p class="source">Fuente: Unidad de Analítica de la Universidad de Granada, [analitica.ugr.es/rankings](https://analitica.ugr.es/rankings/): [ARWU por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-de-shanghai/ranking-shanghai-subjects/), [QS por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-qs-world-university-rankings/ranking-qs-world-university-por-disciplinas/) y [THE por disciplinas](https://analitica.ugr.es/rankings/ranking/ranking-times-higher-education/ranking-times-higher-education-subjects/). Datos consultados en noviembre de 2026; consulta la fuente para las ediciones más recientes.</p>
 
 ## Otros rankings por disciplinas

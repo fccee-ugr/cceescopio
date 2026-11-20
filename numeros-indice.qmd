@@ -1,0 +1,552 @@
+---
+title: "Laboratorio de números índice"
+subtitle: "Cambio de base, tasas de variación, enlace de series, deflactación e índices de Laspeyres, Paasche y Fisher, con datos reales"
+toc: true
+---
+
+Los números índice resumen cómo cambia una magnitud respecto a un periodo de referencia (la **base**, que vale 100). Este laboratorio aplica, paso a paso y con las fórmulas a la vista, las operaciones más habituales a series reales de Eurostat. Al final puedes ponerte a prueba con ejercicios que se corrigen solos.
+
+```{ojs}
+//| echo: false
+// ================= Funciones comunes de CCEEscopio =================
+// Descarga datos de la API de Eurostat (JSON-stat 2.0) en el navegador del usuario,
+// de modo que los gráficos muestran siempre la última publicación oficial.
+
+nombresGeo = ({
+  ES: "España", EU27_2020: "UE-27", EA20: "Zona euro", EA: "Zona euro", EA19: "Zona euro (19)",
+  DE: "Alemania", FR: "Francia", IT: "Italia", PT: "Portugal", NL: "Países Bajos", BE: "Bélgica",
+  AT: "Austria", IE: "Irlanda", EL: "Grecia", FI: "Finlandia", SE: "Suecia", DK: "Dinamarca",
+  PL: "Polonia", CZ: "Chequia", HU: "Hungría", RO: "Rumanía", BG: "Bulgaria", HR: "Croacia",
+  SI: "Eslovenia", SK: "Eslovaquia", LT: "Lituania", LV: "Letonia", EE: "Estonia", LU: "Luxemburgo",
+  MT: "Malta", CY: "Chipre", NO: "Noruega", CH: "Suiza", IS: "Islandia", UK: "Reino Unido",
+  US: "Estados Unidos", JP: "Japón", TR: "Turquía",
+  ES11: "Galicia", ES12: "Asturias", ES13: "Cantabria", ES21: "País Vasco", ES22: "Navarra",
+  ES23: "La Rioja", ES24: "Aragón", ES30: "Madrid", ES41: "Castilla y León", ES42: "Castilla-La Mancha",
+  ES43: "Extremadura", ES51: "Cataluña", ES52: "C. Valenciana", ES53: "Illes Balears", ES61: "Andalucía",
+  ES62: "Región de Murcia", ES63: "Ceuta", ES64: "Melilla", ES70: "Canarias"
+})
+geosPaises = ["ES", "EU27_2020", "EA20", "DE", "FR", "IT", "PT", "NL", "BE", "AT", "IE", "EL", "FI", "SE",
+              "DK", "PL", "CZ", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV", "EE", "LU", "MT", "CY"]
+geosRegiones = ["ES", "EU27_2020", "ES11", "ES12", "ES13", "ES21", "ES22", "ES23", "ES24", "ES30", "ES41",
+                "ES42", "ES43", "ES51", "ES52", "ES53", "ES61", "ES62", "ES63", "ES64", "ES70"]
+defPaises = ["ES", "EU27_2020", "DE", "FR", "IT", "PT"]
+defRegiones = ["ES61", "ES", "ES30", "ES51", "ES52"]
+
+locES = d3.formatLocale({decimal: ",", thousands: ".", grouping: [3], currency: ["", " €"]})
+fmt = (v) => Math.abs(v) >= 1000 ? locES.format(",.0f")(v) : locES.format(",.2~f")(v)
+
+function jsonstat(js) {
+  const ids = js.id, size = js.size, dims = js.dimension;
+  const codes = ids.map(d => {
+    const idx = dims[d].category.index;
+    return Array.isArray(idx) ? idx : Object.keys(idx).sort((a, b) => idx[a] - idx[b]);
+  });
+  const labels = ids.map(d => dims[d].category.label || {});
+  const vals = js.value, out = [];
+  const keys = Array.isArray(vals) ? vals.map((v, i) => i).filter(i => vals[i] != null) : Object.keys(vals).map(Number);
+  for (const i of keys) {
+    let rem = i; const rec = {};
+    for (let d = ids.length - 1; d >= 0; d--) {
+      const c = codes[d][rem % size[d]];
+      rec[ids[d]] = c;
+      if (ids[d] === "geo") rec.geoLabel = labels[d][c] || c;
+      rem = Math.floor(rem / size[d]);
+    }
+    rec.value = +vals[i];
+    out.push(rec);
+  }
+  return out;
+}
+
+preferidas = ["TOTAL", "T", "TOT", "CP00", "PC", "EUR", "NR", "SA", "SCA", "RCH_A", "I90", "A", "Y15-74"]
+function unaCategoria(recs) {
+  // Para cada dimensión distinta de geo y time, conserva una sola categoría
+  if (!recs.length) return recs;
+  const dimsAll = Object.keys(recs[0]).filter(k => !["geo", "time", "value", "geoLabel"].includes(k));
+  let r = recs;
+  for (const d of dimsAll) {
+    const cats = [...new Set(r.map(x => x[d]))];
+    if (cats.length < 2) continue;
+    const elegida = preferidas.find(p => cats.includes(p)) ?? cats[0];
+    r = r.filter(x => x[d] === elegida);
+  }
+  return r;
+}
+
+async function eurostat(code, query = "") {
+  const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const js = await res.json(); const err = Array.isArray(js.error) ? js.error[0] : js.error; if (err && err.label) msg += ` – ${err.label}`; } catch (e) {}
+    throw new Error(`Eurostat ${code}: ${msg}`);
+  }
+  return jsonstat(await res.json());
+}
+
+function fecha(t) {
+  let m;
+  if ((m = /^(\d{4})-(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})M(\d{2})$/.exec(t))) return new Date(+m[1], +m[2] - 1, 1);
+  if ((m = /^(\d{4})-?Q(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 3, 1);
+  if ((m = /^(\d{4})-?S(\d)$/.exec(t))) return new Date(+m[1], (+m[2] - 1) * 6, 1);
+  if ((m = /^(\d{4})$/.exec(t))) return new Date(+m[1], 0, 1);
+  return null;
+}
+
+async function consultar(code, query, geos, desde) {
+  try {
+    return await eurostat(code, query + (geos ? geos.map(g => `&geo=${g}`).join("") : "") + desde);
+  } catch (e1) {
+    // Si algún territorio no existe en la tabla, se repite la consulta sin filtrar territorios
+    const r = await eurostat(code, query + desde);
+    return geos ? r.filter(x => geos.includes(x.geo)) : r;
+  }
+}
+
+async function cargar(spec) {
+  const desde = `&sinceTimePeriod=${spec.desde ?? 2008}`;
+  const geos = spec.regional ? geosRegiones : (spec.sinGeo ? null : geosPaises);
+  // Intentos: la consulta principal, las alternativas (p. ej., tablas que Eurostat ha renovado)
+  // y, por último, la tabla sin filtros adicionales
+  const intentos = [{code: spec.code, query: spec.query}, ...(spec.alt ?? []), {code: spec.code, query: ""}];
+  let recs = null, usado = null, error = "";
+  for (const t of intentos) {
+    try { recs = await consultar(t.code, t.query, geos, desde); if (recs.length) { usado = t; break; } }
+    catch (e) { error = e.message; }
+  }
+  if (!recs || !recs.length) return {ok: false, error: error || "la consulta no devolvió datos", rows: []};
+  recs = unaCategoria(recs);
+  const rows = recs.map(r => ({
+    indicador: spec.nombre,
+    codigo_territorio: r.geo ?? "",
+    territorio: r.geo ? (nombresGeo[r.geo] ?? r.geoLabel) : (spec.serie ?? spec.nombre),
+    periodo: r.time,
+    fecha: fecha(r.time),
+    valor: r.value,
+    unidad: spec.unidad,
+    fuente: `Eurostat (${usado.code})`
+  })).filter(r => r.fecha && Number.isFinite(r.valor));
+  return {ok: rows.length > 0, rows, code: usado.code, error: rows.length ? "" : "la consulta no devolvió datos"};
+}
+
+function colores(terrs) {
+  const fijos = {"España": "#B5175F", "Andalucía": "#F29200", "UE-27": "#3C3C3B", "Zona euro": "#7A7A7A"};
+  const paleta = ["#1F77B4", "#2CA02C", "#9467BD", "#8C564B", "#17BECF", "#BCBD22", "#E377C2", "#D62728", "#7F7F7F"];
+  let k = 0;
+  return terrs.map(t => fijos[t] ?? paleta[k++ % paleta.length]);
+}
+
+function rewind(f) {
+  // Los GeoJSON de GISCO siguen la regla de la mano derecha; d3 necesita el sentido contrario
+  const fix = poly => d3.geoArea({type: "Polygon", coordinates: poly}) > 2 * Math.PI ? poly.map(r => r.slice().reverse()) : poly;
+  const g = f.geometry;
+  if (g?.type === "Polygon") g.coordinates = fix(g.coordinates);
+  else if (g?.type === "MultiPolygon") g.coordinates = g.coordinates.map(fix);
+  return f;
+}
+
+async function geoNuts(nivel) {
+  // Límites de países (nivel 0) o regiones NUTS 2 (nivel 2) de Eurostat-GISCO; los países tienen
+  // como alternativa Natural Earth. Solo se descargan cuando se pide un mapa y se guardan en memoria.
+  window.__cceeGeo = window.__cceeGeo ?? new Map();
+  if (!window.__cceeGeo.has(nivel)) window.__cceeGeo.set(nivel, geoDescargar(nivel));
+  return window.__cceeGeo.get(nivel);
+}
+
+async function geoDescargar(nivel) {
+  const url = `https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_${nivel}.geojson`;
+  try {
+    const r = await fetch(url);
+    if (r.ok) { const g = await r.json(); g.features.forEach(f => { rewind(f); f.properties.geo = f.properties.NUTS_ID; }); return g; }
+  } catch (e) {}
+  if (nivel === 0) {
+    try {
+      const r = await fetch("https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_110m_admin_0_countries.geojson");
+      const g = await r.json(), eq = {GR: "EL", GB: "UK"};
+      g.features.forEach(f => { const c = f.properties.ISO_A2_EH ?? f.properties.ISO_A2; f.properties.geo = eq[c] ?? c; });
+      return g;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function tooltipMapa(node) {
+  // Etiqueta propia para los mapas: aparece en cuanto el ratón está sobre cualquier territorio
+  // (la de Plot solo se activa cerca del centro del territorio y fallaba en los grandes).
+  const tip = window.__cceeTip ?? (window.__cceeTip = Object.assign(document.createElement("div"), {className: "mapa-tip", hidden: true}));
+  if (!tip.isConnected) document.body.appendChild(tip);
+  // Los contornos destacados y los nombres no deben tapar a los territorios
+  node.querySelectorAll('svg g[fill="none"], svg g[aria-label="text"]').forEach(g => { g.style.pointerEvents = "none"; });
+  node.querySelectorAll("svg title").forEach(t => {
+    const el = t.parentNode; el.dataset.tip = t.textContent; el.classList.add("mapa-zona"); t.remove();
+  });
+  let actual = null;
+  const ocultar = () => { tip.hidden = true; if (actual) actual.classList.remove("mapa-hl"); actual = null; };
+  const mover = e => {
+    const el = e.target.closest ? e.target.closest("[data-tip]") : null;
+    if (!el || !node.contains(el)) return ocultar();
+    if (el !== actual) {
+      if (actual) actual.classList.remove("mapa-hl");
+      actual = el; el.classList.add("mapa-hl");
+      const [l1, ...resto] = el.dataset.tip.split("\n");
+      tip.innerHTML = `<b>${l1}</b>${resto.length ? "<br>" + resto.join("<br>") : ""}`;
+      tip.hidden = false;
+    }
+    const x = e.clientX + 14, y = e.clientY + 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    tip.style.left = Math.min(x, window.innerWidth - w - 8) + "px";
+    tip.style.top = (y + h > window.innerHeight - 8 ? e.clientY - h - 10 : y) + "px";
+  };
+  node.addEventListener("pointermove", mover);
+  node.addEventListener("pointerdown", mover);
+  node.addEventListener("pointerleave", ocultar);
+  window.addEventListener("scroll", ocultar, {passive: true});
+  return node;
+}
+
+function csv(rows) {
+  return new Blob(["﻿" + d3.csvFormat(rows.map(({fecha, ...r}) => r))], {type: "text/csv;charset=utf-8"});
+}
+```
+
+```{ojs}
+//| echo: false
+// Módulo de precios: carburantes (Boletín Petrolero de la Comisión Europea) e índices de precios por producto (IPCA, Eurostat)
+PRECIOS = {
+  const PRODUCTOS = [{"id": "gasolina", "nombre": "Gasolina 95", "emoji": "⛽", "unidad": "litro", "ref": 1.5, "carb": "g95", "pat": ["petrol|gasoline"]}, {"id": "gasoleo", "nombre": "Gasóleo (diésel)", "emoji": "🛻", "unidad": "litro", "ref": 1.45, "carb": "die", "pat": ["diesel"]}, {"id": "luz", "nombre": "Electricidad", "emoji": "💡", "unidad": "kWh (hogares)", "ref": 0.2, "pat": ["^electricity"]}, {"id": "gas", "nombre": "Gas natural", "emoji": "🔥", "unidad": "kWh (hogares)", "ref": 0.09, "pat": ["natural gas", "^gas$"]}, {"id": "pan", "nombre": "Pan", "emoji": "🥖", "unidad": "barra de 250 g", "ref": 1.1, "pat": ["^bread"]}, {"id": "leche", "nombre": "Leche entera", "emoji": "🥛", "unidad": "litro", "ref": 1.05, "pat": ["whole milk", "^(fresh )?milk$", "^raw milk", "^milk"]}, {"id": "huevos", "nombre": "Huevos", "emoji": "🥚", "unidad": "docena", "ref": 2.9, "pat": ["^eggs"]}, {"id": "aceite", "nombre": "Aceite de oliva", "emoji": "🫒", "unidad": "litro", "ref": 5.0, "pat": ["olive oil"]}, {"id": "cafe", "nombre": "Café", "emoji": "☕", "unidad": "paquete de 250 g", "ref": 4.0, "pat": ["^coffee"]}, {"id": "azucar", "nombre": "Azúcar", "emoji": "🍬", "unidad": "kg", "ref": 1.1, "pat": ["^sugar"]}, {"id": "pollo", "nombre": "Pollo", "emoji": "🍗", "unidad": "kg", "ref": 3.8, "pat": ["poultry"]}, {"id": "ternera", "nombre": "Carne de vacuno", "emoji": "🥩", "unidad": "kg", "ref": 16.0, "pat": ["beef|bovine"]}, {"id": "patatas", "nombre": "Patatas", "emoji": "🥔", "unidad": "kg", "ref": 1.4, "pat": ["^potatoes"]}, {"id": "cerveza", "nombre": "Cerveza", "emoji": "🍺", "unidad": "lata de 33 cl", "ref": 0.75, "pat": ["^beer", "lager"]}, {"id": "tabaco", "nombre": "Tabaco", "emoji": "🚬", "unidad": "cajetilla", "ref": 5.5, "pat": ["cigarettes"]}, {"id": "menu", "nombre": "Comer en un restaurante", "emoji": "🍽️", "unidad": "menú del día", "ref": 15.0, "pat": ["restaurant"]}, {"id": "pelo", "nombre": "Peluquería", "emoji": "💇", "unidad": "corte de pelo", "ref": 15.0, "pat": ["^hairdressing salons", "hairdressing"]}, {"id": "libro", "nombre": "Libros", "emoji": "📚", "unidad": "libro", "ref": 20.0, "pat": ["^books"]}, {"id": "ropa", "nombre": "Ropa", "emoji": "👕", "unidad": "camiseta", "ref": 12.0, "pat": ["^garments$", "^garments"]}, {"id": "avion", "nombre": "Billetes de avión", "emoji": "✈️", "unidad": "billete", "ref": 90.0, "pat": ["passenger transport by air"]}, {"id": "alquiler", "nombre": "Alquiler de vivienda", "emoji": "🏠", "unidad": "mes", "ref": 900.0, "pat": ["actual rentals.*main residence", "actual rentals paid by tenants", "actual rental"], "concurso": false}];
+  const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const mesTexto = (p) => { const m = /^(\d{4})-(\d{2})/.exec(p); return m ? `${MESES[+m[2] - 1]} de ${m[1]}` : p; };
+  const nombreP = (c) => c === "EU27_2020" ? "UE-27 (media)" : c === "EA" ? "Zona euro (media)" : (nombresGeo[c] ?? c);
+  async function cargarCarburantes() {
+    const h = location.hostname, seg = location.pathname.split("/").filter(Boolean)[0];
+    const urls = [];
+    if (h.endsWith("github.io") && seg) urls.push(`https://raw.githubusercontent.com/${h.split(".")[0]}/${seg}/carburantes/carburantes.json`);
+    urls.push("carburantes.json", "data/carburantes.json");
+    for (const u of urls) { try { const r = await fetch(u, {cache: "no-store"}); if (r.ok) { const d = await r.json(); if (d.series) return d; } } catch (e) {} }
+    return null;
+  }
+  // Serie semanal de un territorio -> [{fecha, periodo, valor}]
+  function semanal(carb, pais, serie) {
+    const v = carb?.series?.[pais]?.[serie]; if (!v) return [];
+    return carb.fechas.map((f, i) => ({fecha: new Date(f + "T00:00:00"), periodo: f, valor: v[i]})).filter(d => d.valor != null);
+  }
+  // Media mensual de una serie semanal
+  function mensual(sem) {
+    return [...d3.rollup(sem, v => d3.mean(v, d => d.valor), d => d.periodo.slice(0, 7))].sort((a, b) => a[0] < b[0] ? -1 : 1)
+      .map(([p, v]) => ({periodo: p, fecha: fecha(p), valor: v}));
+  }
+  async function eurostatCrudo(code, query) {
+    const url = `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/${code}?format=JSON&lang=EN${query}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(`Eurostat ${code}: HTTP ${r.status}`);
+    const js = await r.json();
+    return {recs: jsonstat(js), labels: Object.fromEntries(js.id.map(d => [d, js.dimension[d].category.label || {}]))};
+  }
+  // Catálogo de subclases del IPCA: primero la tabla nueva (ECOICOP 2, 2025 = 100) y, si falla, la anterior
+  const anioBase = (u) => { const n = +u.slice(1); return n < 50 ? 2000 + n : 1900 + n; };
+  let catalogo = null;
+  async function catalogoIPC() {
+    if (catalogo) return catalogo;
+    for (const tabla of ["prc_hicp_minr", "prc_hicp_minx", "prc_hicp_midx"]) {
+      for (const q of ["&geo=ES&unit=I25", "&geo=ES&unit=I15", "&geo=ES"]) {
+        try {
+          const {recs, labels} = await eurostatCrudo(tabla, q + "&lastTimePeriod=1");
+          if (!recs.length) continue;
+          const dim = Object.keys(recs[0]).find(k => /coicop/i.test(k));
+          const uds = [...new Set(recs.map(r => r.unit))].filter(u => /^I\d\d$/.test(u ?? "")).sort((a, b) => anioBase(b) - anioBase(a));
+          if (!dim || !uds.length) continue;
+          const codigos = new Map();
+          for (const r of recs) if (r.unit === uds[0]) codigos.set(r[dim], labels[dim]?.[r[dim]] ?? r[dim]);
+          const total = ["TOTAL", "CP00"].find(c => codigos.has(c)) ?? "CP00";
+          return (catalogo = {tabla, dim, unidad: uds[0], base: anioBase(uds[0]), codigos, total});
+        } catch (e) {}
+      }
+    }
+    return null;
+  }
+  function emparejar(cat) {
+    const subclases = [...cat.codigos].filter(([k]) => /^CP\d{3,}$/.test(k));
+    const out = [];
+    for (const p of PRODUCTOS) {
+      for (const pat of p.pat) {
+        const re = new RegExp(pat, "i");
+        const c = subclases.filter(([k, l]) => re.test(l)).sort((a, b) => b[0].length - a[0].length || (a[0] < b[0] ? -1 : 1))[0];
+        if (c) { out.push({...p, code: c[0], etiqueta: c[1]}); break; }
+      }
+    }
+    return out;
+  }
+  const cache = new Map();
+  async function seriesIPC(cat, geo, codes, desde = 1996) {
+    const falta = codes.filter(c => !cache.has(`${geo}|${c}`));
+    for (let i = 0; i < falta.length; i += 25) {
+      const lote = falta.slice(i, i + 25);
+      try {
+        const {recs} = await eurostatCrudo(cat.tabla, `&geo=${geo}&unit=${cat.unidad}` + lote.map(c => `&${cat.dim}=${c}`).join("") + `&sinceTimePeriod=${desde}`);
+        for (const c of lote) cache.set(`${geo}|${c}`, recs.filter(r => r[cat.dim] === c && Number.isFinite(r.value))
+          .map(r => ({periodo: r.time, fecha: fecha(r.time), valor: r.value})).filter(r => r.fecha).sort((a, b) => a.fecha - b.fecha));
+      } catch (e) { for (const c of lote) cache.set(`${geo}|${c}`, []); }
+    }
+    return new Map(codes.map(c => [c, cache.get(`${geo}|${c}`) ?? []]));
+  }
+  // Índice con base 100 en la media de un año
+  function base100(serie, anio) {
+    const b = d3.mean(serie.filter(d => d.fecha.getFullYear() === anio), d => d.valor);
+    return b ? serie.map(d => ({...d, valor: 100 * d.valor / b})) : [];
+  }
+  const valorEn = (serie, periodo) => serie.find(d => d.periodo.slice(0, 7) === periodo.slice(0, 7))?.valor;
+  const euros = (v, dec = 2) => Number.isFinite(v) ? locES.format(`,.${dec}f`)(v) + " €" : "–";
+  const pct = (v) => Number.isFinite(v) ? (v > 0 ? "+" : "") + locES.format(",.1f")(v) + " %" : "–";
+  return {PRODUCTOS, MESES, mesTexto, nombreP, cargarCarburantes, semanal, mensual, eurostatCrudo, catalogoIPC, emparejar, seriesIPC, base100, valorEn, euros, pct};
+}
+```
+
+```{ojs}
+//| echo: false
+SERIES_NI = ({"ipc": {"nombre": "IPC general (IPCA)", "tipo": "ipc", "patron": null}, "alimentos": {"nombre": "IPCA: alimentos y bebidas no alcohólicas", "tipo": "ipc", "patron": "^food and non-alcoholic beverages$"}, "energia": {"nombre": "IPCA: energía", "tipo": "ipc", "patron": "^energy$"}, "servicios": {"nombre": "IPCA: servicios", "tipo": "ipc", "patron": "^services( \\(overall index excluding goods\\))?$"}, "industria": {"nombre": "Índice de producción industrial", "tipo": "spec", "spec": {"id": "indice-de-produccion-industrial", "nombre": "Índice de producción industrial", "code": "sts_inpr_m", "query": "&nace_r2=B-D&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción de la industria (extractiva, manufacturera y energía), corregido de estacionalidad y calendario.", "desde": 2008, "area": "actividad"}}, "comercio": {"nombre": "Índice de comercio minorista", "tipo": "spec", "spec": {"id": "indice-de-comercio-minorista", "nombre": "Índice de comercio minorista", "code": "sts_trtu_m", "query": "&nace_r2=G47&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de ventas del comercio minorista, corregido de estacionalidad y calendario.", "desde": 2008, "area": "actividad"}}, "construccion": {"nombre": "Producción en la construcción", "tipo": "spec", "spec": {"id": "produccion-en-la-construccion", "nombre": "Producción en la construcción", "code": "sts_copr_m", "query": "&nace_r2=F&s_adj=SCA&unit=I21", "unidad": "Índice (2021 = 100)", "frecuencia": "Mensual", "descripcion": "Volumen de producción del sector de la construcción, corregido de estacionalidad y calendario.", "desde": 2008, "area": "actividad"}}})
+NOMINALES_NI = ({"renta": {"id": "renta-mediana-equivalente", "nombre": "Renta mediana equivalente", "code": "ilc_di03", "query": "&age=TOTAL&sex=T&indic_il=MED_E&unit=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta disponible equivalente mediana por persona.", "desde": 2005, "area": "desigualdad"}, "smi": {"id": "salario-minimo-mensual", "nombre": "Salario mínimo mensual", "code": "earn_mw_cur", "query": "&currency=EUR", "unidad": "€ al mes", "frecuencia": "Semestral", "descripcion": "Salario mínimo legal mensual bruto en los países que lo tienen establecido.", "desde": 2005, "area": "empleo"}, "coste": {"id": "coste-laboral-por-hora", "nombre": "Coste laboral por hora", "code": "lc_lci_lev", "query": "&nace_r2=B-S_X_O&lcstruct=D1_D4_MD5&unit=EUR", "unidad": "€ por hora", "frecuencia": "Anual", "descripcion": "Coste laboral medio por hora trabajada (salarios y cotizaciones sociales) en la industria, la construcción y los servicios.", "desde": 2008, "area": "empleo"}, "umbral": {"id": "umbral-de-pobreza-hogar-de-una-persona", "nombre": "Umbral de pobreza (hogar de una persona)", "code": "ilc_li01", "query": "&hhtyp=A1&indic_il=LI_C_MD60&currency=EUR", "unidad": "€ al año", "frecuencia": "Anual", "descripcion": "Renta anual por debajo de la cual una persona que vive sola se considera en riesgo de pobreza.", "desde": 2005, "area": "desigualdad"}})
+f2 = (v) => Number.isFinite(v) ? locES.format(",.2f")(v) : "–"
+f1 = (v) => Number.isFinite(v) ? locES.format(",.1f")(v) : "–"
+mediaAnio = (s, a) => d3.mean(s.filter(d => d.fecha.getFullYear() === a), d => d.valor)
+anuales = (s) => [...d3.rollup(s, v => ({valor: d3.mean(v, d => d.valor), n: v.length}), d => d.fecha.getFullYear())].filter(([, v]) => v.n >= 12).map(([a, v]) => ({anio: a, valor: v.valor})).sort((a, b) => a.anio - b.anio)
+viewof serieNI = Inputs.select(new Map(Object.entries(SERIES_NI).map(([k, v]) => [v.nombre, k])), {label: "Serie", value: "ipc"})
+viewof geoNI = Inputs.select(new Map(geosPaises.map(c => [nombresGeo[c] ?? c, c])), {label: "Territorio", value: "ES"})
+```
+
+```{ojs}
+//| echo: false
+catNI = PRECIOS.catalogoIPC()
+datosNI = {
+  const s = SERIES_NI[serieNI];
+  if (s.tipo === "ipc") {
+    if (!catNI) return null;
+    let code = catNI.total;
+    if (s.patron) { const re = new RegExp(s.patron, "i"); code = [...catNI.codigos].find(([k, l]) => re.test(l))?.[0]; if (!code) return null; }
+    const m = await PRECIOS.seriesIPC(catNI, geoNI, [code], 1996);
+    return {serie: m.get(code), base: `${catNI.base} = 100`, fuente: `Eurostat (${catNI.tabla})`};
+  }
+  const r = await cargar(s.spec);
+  if (!r.ok) return null;
+  return {serie: r.rows.filter(d => d.codigo_territorio === geoNI && /^\d{4}-\d{2}$/.test(d.periodo)).sort((a, b) => a.fecha - b.fecha), base: s.spec.unidad.replace(/^Índice \((.*)\)$/, "$1"), fuente: `Eurostat (${r.code})`};
+}
+serieN = datosNI?.serie?.length ? datosNI.serie : null
+aniosN = serieN ? anuales(serieN).map(d => d.anio) : []
+```
+
+```{ojs}
+//| echo: false
+serieN ? html`<p class="source">${SERIES_NI[serieNI].nombre} en ${nombresGeo[geoNI] ?? geoNI}: ${serieN.length} datos mensuales, de ${PRECIOS.mesTexto(serieN[0].periodo)} a ${PRECIOS.mesTexto(serieN.at(-1).periodo)}. Base original: ${datosNI.base}. Fuente: ${datosNI.fuente}.</p>` : html`<p class="pending">${datosNI === undefined ? "Descargando la serie…" : "No hay datos de esta serie para este territorio. Prueba con otra."}</p>`
+```
+
+## 1. Cambio de base
+
+Para expresar un índice con otra base se divide cada valor entre el valor (o la media) del nuevo periodo base y se multiplica por 100:
+
+$$I_t^{(\text{nueva base})} = 100 \cdot \frac{I_t}{\bar I_{\text{nueva base}}}$$
+
+El cambio de base no altera las tasas de variación: solo cambia el periodo que vale 100.
+
+```{ojs}
+//| echo: false
+viewof baseNI = aniosN.length ? Inputs.select(aniosN, {label: "Nueva base (media del año = 100)", value: aniosN.includes(2015) ? 2015 : aniosN[0]}) : Object.assign(html`<span></span>`, {value: null})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!serieN || !baseNI) return html``;
+  const mb = mediaAnio(serieN, baseNI), ult = serieN.at(-1);
+  const nueva = serieN.map(d => ({...d, nuevo: 100 * d.valor / mb}));
+  const filas = nueva.flatMap(d => [{fecha: d.fecha, s: `Base original (${datosNI.base})`, v: d.valor}, {fecha: d.fecha, s: `Nueva base (${baseNI} = 100)`, v: d.nuevo}]);
+  const tabla = anuales(serieN).filter(d => d.anio >= baseNI - 2).slice(-12);
+  return html`<div class="calc-result"><p class="calc-big">Ejemplo con el último dato (${PRECIOS.mesTexto(ult.periodo)}): ${f2(ult.valor)} en la base original; la media de ${baseNI} fue ${f2(mb)}. En base ${baseNI}: 100 × ${f2(ult.valor)} / ${f2(mb)} = <b>${f2(100 * ult.valor / mb)}</b>.</p>
+    <p class="calc-small">Interpretación: en ${PRECIOS.mesTexto(ult.periodo)} el índice está un ${PRECIOS.pct(100 * ult.valor / mb - 100)} por encima (o por debajo) de su nivel medio de ${baseNI}.</p></div>
+  ${Plot.plot({title: `${SERIES_NI[serieNI].nombre}: base original y base ${baseNI}`, height: 340, marginLeft: 50, x: {type: "time", label: null}, y: {label: "Índice", grid: true},
+    color: {legend: true, range: ["#3C3C3B", "#B5175F"]},
+    marks: [Plot.ruleY([100], {stroke: "#bbb"}), Plot.line(filas, {x: "fecha", y: "v", stroke: "s", strokeWidth: 2}), Plot.tip(filas, Plot.pointer({x: "fecha", y: "v", title: d => `${d.s}\n${d.fecha.toLocaleDateString("es-ES", {month: "long", year: "numeric"})}: ${f2(d.v)}`}))]})}
+  ${Inputs.table(tabla.map(d => ({Año: String(d.anio), "Base original": f2(d.valor), [`Base ${baseNI}`]: f2(100 * d.valor / mb)})), {layout: "auto", rows: 13})}`;
+}
+```
+
+## 2. Tasas de variación
+
+```{ojs}
+//| echo: false
+viewof tasaNI = Inputs.radio(new Map([["Mensual", "m"], ["Interanual", "a"], ["Acumulada en el año", "c"], ["Media anual", "ma"]]), {label: "Tasa", value: "a"})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!serieN) return html``;
+  const idx = new Map(serieN.map(d => [d.periodo.slice(0, 7), d.valor]));
+  const prev = (p, k) => { const [a, m] = p.split("-").map(Number), t = a * 12 + m - 1 - k; return `${Math.floor(t / 12)}-${String(t % 12 + 1).padStart(2, "0")}`; };
+  let filas, formula, ejemplo;
+  if (tasaNI === "ma") {
+    const an = anuales(serieN);
+    filas = an.slice(1).map((d, i) => ({fecha: new Date(d.anio, 6, 1), et: String(d.anio), v: 100 * (d.valor / an[i].valor - 1)}));
+    const u = an.at(-1), p = an.at(-2);
+    formula = String.raw`T_{\text{media}} = 100\left(\frac{\bar I_{a}}{\bar I_{a-1}} - 1\right)`;
+    ejemplo = u && p ? `Media de ${u.anio}: ${f2(u.valor)}; media de ${p.anio}: ${f2(p.valor)}. Tasa = 100 × (${f2(u.valor)} / ${f2(p.valor)} − 1) = ${f2(100 * (u.valor / p.valor - 1))} %.` : "";
+  } else {
+    const k = tasaNI === "m" ? 1 : tasaNI === "a" ? 12 : null;
+    filas = serieN.map(d => { const p = d.periodo.slice(0, 7); const ref = k ? prev(p, k) : `${+p.slice(0, 4) - 1}-12`; const b = idx.get(ref); return b ? {fecha: d.fecha, et: p, v: 100 * (d.valor / b - 1), ref, b, I: d.valor} : null; }).filter(Boolean);
+    const u = filas.at(-1);
+    formula = tasaNI === "m" ? String.raw`T_{t,t-1} = 100\left(\frac{I_t}{I_{t-1}} - 1\right)` : tasaNI === "a" ? String.raw`T_{t,t-12} = 100\left(\frac{I_t}{I_{t-12}} - 1\right)` : String.raw`T_{\text{acum}} = 100\left(\frac{I_t}{I_{\text{dic. año anterior}}} - 1\right)`;
+    ejemplo = u ? `${PRECIOS.mesTexto(u.et)}: ${f2(u.I)}; ${PRECIOS.mesTexto(u.ref)}: ${f2(u.b)}. Tasa = 100 × (${f2(u.I)} / ${f2(u.b)} − 1) = ${f2(u.v)} %.` : "";
+  }
+  const ult = filas.slice(tasaNI === "ma" ? -25 : -61);
+  let formulaEl; try { formulaEl = tex.block`${formula}`; } catch (e) { formulaEl = html`<code>${formula}</code>`; }
+  return html`<div class="calc-result">${formulaEl}<p class="calc-small">${ejemplo}</p></div>
+  ${Plot.plot({title: `Tasa de variación ${{m: "mensual", a: "interanual", c: "acumulada en el año", ma: "media anual"}[tasaNI]} (%)`, height: 320, marginLeft: 45, x: {type: tasaNI === "ma" ? "band" : "time", label: null, ...(tasaNI === "ma" ? {tickFormat: d => d.getFullYear(), tickRotate: -45} : {})}, y: {label: "%", grid: true},
+    marks: [Plot.ruleY([0]), Plot.rectY(ult, tasaNI === "ma" ? {x: "fecha", y: "v", fill: d => d.v >= 0 ? "#B5175F" : "#3C3C3B"} : {x: "fecha", y: "v", interval: "month", fill: d => d.v >= 0 ? "#B5175F" : "#3C3C3B"}),
+      Plot.tip(ult, Plot.pointerX({x: "fecha", y: "v", title: d => `${d.et}: ${f2(d.v)} %`}))]})}`;
+}
+```
+
+## 3. Enlace (empalme) de series
+
+Cuando un índice cambia de base, la serie antigua y la nueva solo coinciden en el periodo de **solapamiento**. Para tener una serie larga y homogénea se **enlazan**: la serie antigua se multiplica por el **coeficiente de enlace**, el cociente entre las dos series en el periodo común.
+
+$$k = \frac{\bar I^{\text{nueva}}_{\text{solape}}}{\bar I^{\text{antigua}}_{\text{solape}}}, \qquad I^{\text{enlazada}}_t = k \cdot I^{\text{antigua}}_t$$
+
+Aquí se simula: la serie «antigua» tiene base en el año que elijas y termina en el año de solapamiento; la «nueva» empieza ese año con base 100 en él.
+
+```{ojs}
+//| echo: false
+viewof solapeNI = aniosN.length > 4 ? Inputs.select(aniosN.slice(2, -1), {label: "Año de solapamiento (base de la serie nueva)", value: aniosN.includes(2015) ? 2015 : aniosN[Math.floor(aniosN.length / 2)]}) : Object.assign(html`<span></span>`, {value: null})
+viewof baseViejaNI = aniosN.length > 4 ? Inputs.select(aniosN.filter(a => a < (solapeNI ?? 0)), {label: "Base de la serie antigua", value: aniosN.filter(a => a < (solapeNI ?? 0))[0]}) : Object.assign(html`<span></span>`, {value: null})
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!serieN || !solapeNI || !baseViejaNI) return html``;
+  const mV = mediaAnio(serieN, baseViejaNI), mN = mediaAnio(serieN, solapeNI);
+  const vieja = serieN.filter(d => d.fecha.getFullYear() <= solapeNI).map(d => ({...d, v: 100 * d.valor / mV}));
+  const nueva = serieN.filter(d => d.fecha.getFullYear() >= solapeNI).map(d => ({...d, v: 100 * d.valor / mN}));
+  const solV = d3.mean(vieja.filter(d => d.fecha.getFullYear() === solapeNI), d => d.v), solN = 100;
+  const k = solN / solV;
+  const filas = [...vieja.map(d => ({fecha: d.fecha, s: `Serie antigua (base ${baseViejaNI})`, v: d.v})), ...nueva.map(d => ({fecha: d.fecha, s: `Serie nueva (base ${solapeNI})`, v: d.v})),
+    ...vieja.filter(d => d.fecha.getFullYear() < solapeNI).map(d => ({fecha: d.fecha, s: "Serie antigua enlazada", v: k * d.v}))];
+  return html`<div class="calc-result"><p class="calc-big">Media de ${solapeNI} en la serie antigua: ${f2(solV)}; en la nueva: 100. Coeficiente de enlace: k = 100 / ${f2(solV)} = <b>${locES.format(",.4f")(k)}</b>.</p>
+    <p class="calc-small">Comprobación: la serie enlazada coincide con la que se obtiene cambiando directamente la base a ${solapeNI}, porque aquí las dos series proceden de los mismos datos. En la práctica, cuando cambia la cesta o el método, el enlace introduce una pequeña discontinuidad.</p></div>
+  ${Plot.plot({title: "Enlace de una serie antigua y una nueva", height: 340, marginLeft: 50, x: {type: "time", label: null}, y: {label: "Índice", grid: true},
+    color: {legend: true, domain: [`Serie antigua (base ${baseViejaNI})`, `Serie nueva (base ${solapeNI})`, "Serie antigua enlazada"], range: ["#9E9E9E", "#B5175F", "#F29200"]},
+    marks: [Plot.ruleY([100], {stroke: "#ddd"}), Plot.line(filas, {x: "fecha", y: "v", stroke: "s", strokeWidth: 2, strokeDasharray: d => d.s === "Serie antigua enlazada" ? "5,3" : null}), Plot.ruleX([new Date(solapeNI, 0, 1), new Date(solapeNI, 11, 31)], {stroke: "#999", strokeDasharray: "2,2"})]})}`;
+}
+```
+
+## 4. Deflactar: de euros corrientes a euros constantes
+
+Una magnitud en euros corrientes (**nominal**) mezcla el cambio de su valor real con el de los precios. Para expresarla en euros de un año concreto (**real**) se divide entre el índice de precios:
+
+$$X^{\text{real}}_t = X^{\text{nominal}}_t \cdot \frac{\text{IPC}_{\text{base}}}{\text{IPC}_t}$$
+
+```{ojs}
+//| echo: false
+viewof nomNI = Inputs.select(new Map([...Object.entries(NOMINALES_NI).map(([k, v]) => [v.nombre, k]), ["Mis datos (año;valor)", "propios"]]), {label: "Magnitud nominal", value: "renta"})
+viewof propiosNI = nomNI === "propios" ? Inputs.textarea({label: "Tus datos: una línea por año, «año;valor»", value: "2010;1200\n2015;1300\n2020;1450\n2024;1700", rows: 5}) : Object.assign(html`<span></span>`, {value: ""})
+```
+
+```{ojs}
+//| echo: false
+nominalNI = {
+  if (nomNI === "propios") return {nombre: "Tus datos", unidad: "€", filas: propiosNI.split(/\n/).map(l => l.split(/[;\t]/)).map(([a, v]) => ({anio: +a, valor: +String(v ?? "").replace(/\./g, "").replace(",", ".")})).filter(d => d.anio > 1990 && Number.isFinite(d.valor))};
+  const s = NOMINALES_NI[nomNI], r = await cargar(s);
+  if (!r.ok) return null;
+  const f = [...d3.rollup(r.rows.filter(d => d.codigo_territorio === geoNI), v => d3.mean(v, d => d.valor), d => d.fecha.getFullYear())].map(([anio, valor]) => ({anio, valor})).sort((a, b) => a.anio - b.anio);
+  return {nombre: s.nombre, unidad: s.unidad, filas: f};
+}
+ipcAnualNI = {
+  if (!catNI) return null;
+  const m = await PRECIOS.seriesIPC(catNI, geoNI, [catNI.total], 1996);
+  return new Map(anuales(m.get(catNI.total)).map(d => [d.anio, d.valor]));
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  if (!nominalNI || !ipcAnualNI) return html`<p class="pending">Cargando los datos…</p>`;
+  const f = nominalNI.filas.filter(d => ipcAnualNI.has(d.anio));
+  if (f.length < 2) return html`<p class="pending">No hay datos suficientes de esta magnitud para ${nombresGeo[geoNI] ?? geoNI}.</p>`;
+  const base = f.at(-1).anio, ib = ipcAnualNI.get(base);
+  const t = f.map(d => ({...d, real: d.valor * ib / ipcAnualNI.get(d.anio), ipc: ipcAnualNI.get(d.anio)}));
+  const a = t[0], b = t.at(-1);
+  const filas = t.flatMap(d => [{anio: d.anio, s: "Nominal (euros de cada año)", v: d.valor}, {anio: d.anio, s: `Real (euros de ${base})`, v: d.real}]);
+  return html`<div class="calc-result"><p class="calc-big">Entre ${a.anio} y ${b.anio}, ${nominalNI.nombre.toLowerCase()} creció un <b>${PRECIOS.pct(100 * (b.valor / a.valor - 1))}</b> en euros corrientes, pero solo un <b>${PRECIOS.pct(100 * (b.real / a.real - 1))}</b> en términos reales: los precios subieron un ${PRECIOS.pct(100 * (b.ipc / a.ipc - 1))}.</p>
+    <p class="calc-small">Ejemplo para ${a.anio}: ${f2(a.valor)} × ${f2(ib)} / ${f2(a.ipc)} = ${f2(a.real)} euros de ${base}. IPC: media anual del IPCA de ${nombresGeo[geoNI] ?? geoNI}.</p></div>
+  ${Plot.plot({title: `${nominalNI.nombre}: nominal y real`, height: 320, marginLeft: 60, x: {label: null, tickFormat: d => String(d)}, y: {label: nominalNI.unidad, grid: true},
+    color: {legend: true, range: ["#3C3C3B", "#B5175F"]}, marks: [Plot.line(filas, {x: "anio", y: "v", stroke: "s", strokeWidth: 2, marker: "circle"}), Plot.tip(filas, Plot.pointer({x: "anio", y: "v", title: d => `${d.s}\n${d.anio}: ${f2(d.v)}`}))]})}`;
+}
+```
+
+## 5. Índices de Laspeyres, Paasche y Fisher
+
+Un índice de precios **compuesto** resume la evolución de varios productos ponderándolos por las cantidades. **Laspeyres** usa las cantidades del periodo base, **Paasche** las del periodo actual y **Fisher** es la media geométrica de ambos. El IPC es, en esencia, un índice de tipo Laspeyres encadenado. Cambia la cesta para ver cómo varían.
+
+```{ojs}
+//| echo: false
+viewof cestaNI = Inputs.textarea({label: "Cesta: producto;p0;q0;p1;q1 (precio y cantidad en el periodo base, 0, y en el actual, 1)", rows: 6,
+  value: "Pan;1,00;60;1,20;55\nLeche;0,80;100;1,05;95\nGasolina;1,30;500;1,55;420\nCine;7,00;8;9,00;10\nCafé en el bar;1,20;150;1,50;160"})
+```
+
+```{ojs}
+//| echo: false
+{
+  const num = (x) => +String(x ?? "").trim().replace(",", ".");
+  const c = cestaNI.split(/\n/).map(l => l.split(/[;\t]/)).filter(x => x.length >= 5).map(([n, p0, q0, p1, q1]) => ({n: n.trim(), p0: num(p0), q0: num(q0), p1: num(p1), q1: num(q1)})).filter(d => [d.p0, d.q0, d.p1, d.q1].every(x => Number.isFinite(x) && x >= 0));
+  if (!c.length) return html`<p class="pending">Escribe al menos un producto con sus cuatro números.</p>`;
+  const S = (f) => d3.sum(c, f);
+  const p0q0 = S(d => d.p0 * d.q0), p1q0 = S(d => d.p1 * d.q0), p0q1 = S(d => d.p0 * d.q1), p1q1 = S(d => d.p1 * d.q1);
+  const L = 100 * p1q0 / p0q0, P = 100 * p1q1 / p0q1, F = Math.sqrt(L * P), V = 100 * p1q1 / p0q0, Lq = 100 * p0q1 / p0q0, Pq = 100 * p1q1 / p1q0;
+  return html`${Inputs.table([...c.map(d => ({Producto: d.n, "p0·q0": f2(d.p0 * d.q0), "p1·q0": f2(d.p1 * d.q0), "p0·q1": f2(d.p0 * d.q1), "p1·q1": f2(d.p1 * d.q1), "Variación del precio": PRECIOS.pct(100 * (d.p1 / d.p0 - 1))})),
+      {Producto: "Total", "p0·q0": f2(p0q0), "p1·q0": f2(p1q0), "p0·q1": f2(p0q1), "p1·q1": f2(p1q1), "Variación del precio": ""}], {layout: "auto"})}
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-l">Laspeyres de precios</div><div class="kpi-n">${f2(L)}</div><div class="kpi-s">100 · Σp1q0 / Σp0q0</div></div>
+    <div class="kpi"><div class="kpi-l">Paasche de precios</div><div class="kpi-n">${f2(P)}</div><div class="kpi-s">100 · Σp1q1 / Σp0q1</div></div>
+    <div class="kpi"><div class="kpi-l">Fisher de precios</div><div class="kpi-n">${f2(F)}</div><div class="kpi-s">√(Laspeyres · Paasche)</div></div>
+    <div class="kpi"><div class="kpi-l">Índice de valor</div><div class="kpi-n">${f2(V)}</div><div class="kpi-s">100 · Σp1q1 / Σp0q0</div></div>
+  </div>
+  <p class="calc-small">Comprobación: índice de valor = Laspeyres de precios × Paasche de cantidades / 100 = ${f2(L)} × ${f2(Pq)} / 100 = ${f2(L * Pq / 100)}; y también = Paasche de precios × Laspeyres de cantidades / 100 = ${f2(P)} × ${f2(Lq)} / 100 = ${f2(P * Lq / 100)}. ${L > P ? "Laspeyres supera a Paasche: los consumidores han sustituido los productos que más se encarecen por otros, y Laspeyres, al mantener la cesta fija, sobrestima la subida del coste de la vida." : L < P ? "Paasche supera a Laspeyres: la cantidad consumida ha crecido más en los productos que más se encarecen." : ""}</p>`;
+}
+```
+
+## 6. Ponte a prueba
+
+```{ojs}
+//| echo: false
+viewof nuevoEj = Inputs.button("🎲 Nuevo ejercicio", {value: 0, reduce: v => v + 1})
+```
+
+```{ojs}
+//| echo: false
+{
+  nuevoEj;
+  if (!serieN || serieN.length < 30) return html`<p class="pending">Elige una serie con datos para generar ejercicios.</p>`;
+  const r = () => Math.random();
+  const i = 13 + Math.floor(r() * (serieN.length - 13)), d = serieN[i], d12 = serieN[i - 12], d1 = serieN[i - 1];
+  const an = anuales(serieN), ab = an[Math.floor(r() * an.length)];
+  const tipos = [
+    {t: `El índice ${SERIES_NI[serieNI].nombre} de ${nombresGeo[geoNI] ?? geoNI} valía <b>${f2(d.valor)}</b> en ${PRECIOS.mesTexto(d.periodo)} y <b>${f2(d12.valor)}</b> doce meses antes. ¿Cuál es la tasa de variación interanual (en %)?`, sol: 100 * (d.valor / d12.valor - 1), exp: `100 × (${f2(d.valor)} / ${f2(d12.valor)} − 1)`},
+    {t: `El índice valía <b>${f2(d.valor)}</b> en ${PRECIOS.mesTexto(d.periodo)} y <b>${f2(d1.valor)}</b> el mes anterior. ¿Cuál es la tasa de variación mensual (en %)?`, sol: 100 * (d.valor / d1.valor - 1), exp: `100 × (${f2(d.valor)} / ${f2(d1.valor)} − 1)`},
+    {t: `El índice valía <b>${f2(d.valor)}</b> en ${PRECIOS.mesTexto(d.periodo)}, y su media de ${ab.anio} fue <b>${f2(ab.valor)}</b>. ¿Cuánto vale en ${PRECIOS.mesTexto(d.periodo)} con base ${ab.anio} = 100?`, sol: 100 * d.valor / ab.valor, exp: `100 × ${f2(d.valor)} / ${f2(ab.valor)}`},
+    {t: `Un salario era de <b>${locES.format(",.0f")(1000 + 50 * Math.round(r() * 20))} €</b> cuando el índice de precios valía <b>${f2(d12.valor)}</b>. Si hoy el índice vale <b>${f2(d.valor)}</b>, ¿qué salario nominal mantendría el mismo poder adquisitivo (en €)?`, sol: null, exp: ""}
+  ];
+  const k = Math.floor(r() * tipos.length), q = tipos[k];
+  if (q.sol === null) { const s = +q.t.match(/<b>([\d.]+) €<\/b>/)[1].replace(/\./g, ""); q.sol = s * d.valor / d12.valor; q.exp = `${locES.format(",.0f")(s)} × ${f2(d.valor)} / ${f2(d12.valor)}`; }
+  const inp = html`<input type="text" inputmode="decimal" placeholder="Tu respuesta" style="width:9rem;font-size:1.1rem;padding:.3rem .5rem">`;
+  const fb = html`<div></div>`, b = html`<button class="asis-boton">Comprobar</button>`;
+  b.onclick = () => {
+    const v = +inp.value.replace(/\s|%|€/g, "").replace(/\.(?=\d{3}\b)/g, "").replace(",", ".");
+    const ok = Number.isFinite(v) && Math.abs(v - q.sol) <= Math.max(0.06, Math.abs(q.sol) * 0.002);
+    fb.innerHTML = `<p class="${ok ? "mem-ok" : "mem-ko"}">${ok ? "✔ ¡Correcto!" : "✘ No es correcto."} Solución: ${q.exp} = <b>${f2(q.sol)}</b>.</p>`;
+  };
+  return html`<div class="calc-result"><p>${html`<span>${Object.assign(document.createElement("span"), {innerHTML: q.t})}</span>`}</p><div class="graf-botones">${inp}${b}</div>${fb}<p class="calc-small">Redondea a dos decimales. Se acepta un margen pequeño de redondeo.</p></div>`;
+}
+```
+
+::: {.callout-tip appearance="simple"}
+**Para clase.** Todo lo que se ve aquí puede comprobarse en una hoja de cálculo: descarga la serie desde la [calculadora de inflación](calculadora.qmd) o el [comparador](comparador.qmd) y repite las cuentas. Para practicar con el IPC por productos, usa [Precios de productos](precios-productos.qmd).
+:::
