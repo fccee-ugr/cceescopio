@@ -386,3 +386,34 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
 .idea-meta { margin: 0; }
 .idea-tag { display: inline-block; background: $ccee-cream; color: $ccee-magenta; border-radius: 999px; padding: .05rem .6rem; font-size: .75rem; font-weight: 700; margin-right: .3rem; }
 .idea-dif { background: #F3F3F3; color: #555; }
+
+/* ---------- Piedra, papel o tijera ---------- */
+.ppt-meta { font-size: 1.1rem; margin: .2rem 0 .6rem; }
+.ppt-barra { display: inline-block; vertical-align: middle; width: 90px; height: .6rem; background: #F1E6EB; border-radius: 999px; margin-left: .4rem; overflow: hidden;
+  span { display: block; height: 100%; background: $ccee-magenta; border-radius: 999px; } }
+.ppt-juego { text-align: center; }
+.ppt-duelo { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin: .6rem 0;
+  > div:not(.vs) { background: #fff; border: 1px solid #eadde3; border-radius: 14px; padding: .6rem 1rem; min-width: 110px; }
+  small { display: block; color: #666; }
+  .vs { font-weight: 800; color: $ccee-magenta; } }
+.ppt-mano { display: block; font-size: 3.2rem; line-height: 1.2; }
+.ppt-cuenta { font-size: 1.3rem; font-weight: 700; color: $ccee-magenta; min-height: 1.8rem; margin: .4rem 0; }
+.ppt-botones { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; max-width: 460px; margin: .4rem auto 1.2rem; }
+.ppt-boton { background: #fff; border: 2px solid $ccee-magenta; border-radius: 16px; padding: .6rem .2rem; cursor: pointer; min-height: 96px;
+  span { display: block; font-size: 2.6rem; line-height: 1.2; }
+  small { display: block; font-weight: 700; color: $ccee-magenta; }
+  &:hover:not(:disabled) { background: #F6EEF2; }
+  &:disabled { opacity: .5; cursor: default; }
+  &.elegida { opacity: 1; background: $ccee-magenta; small { color: #fff; } } }
+
+/* ---------- Detecta el engaño ---------- */
+.engano-par { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: .6rem 0 1rem;
+  figure { background: #fff; border: 1px solid #E6DEDA; border-radius: 12px; padding: .6rem .8rem; margin: 0; }
+  figcaption { font-weight: 800; color: $ccee-magenta; margin-bottom: .3rem; }
+  svg { max-width: 100%; height: auto; } }
+.engano-sol { border-top: 1px solid #E6DEDA; margin-top: .8rem; padding-top: .6rem; }
+.engano-regla { background: #FFF7E0; border-radius: 8px; padding: .5rem .8rem; }
+
+/* ---------- Plantilla de informe de coyuntura ---------- */
+.informe-gen { margin: .6rem 0 1.4rem; }
+.informe-texto { width: 100%; min-height: 420px; font-family: var(--bs-font-monospace, monospace); font-size: .85rem; line-height: 1.45; border: 1px solid #E3D6DC; border-radius: 12px; padding: .8rem 1rem; background: #FFFCFD; }

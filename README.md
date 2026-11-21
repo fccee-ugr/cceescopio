@@ -1,6 +1,6 @@
 # CCEEscopio
 
-Observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. *Observando la economía y la empresa.*
+Observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación. Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. *Observando la economía y la empresa.*
 
 Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · investiga_ccee@ugr.es
 
@@ -12,7 +12,7 @@ styles.scss            estilos con los colores de la Facultad
 index.qmd              portada (vídeo, categorías, docencia e investigación)
 precios.qmd …          páginas de indicadores (generadas, ver más abajo)
 andalucia.qmd          indicadores regionales
-rankings.qmd           la UGR en los rankings por disciplinas (data/rankings_ugr_areas.csv)
+rankings.qmd           La Facultad en los ranking: la UGR por disciplinas (data/rankings_ugr_areas.csv)
 datos.qmd              descarga de datos, cómo citar, código R/Python, fuentes
 docencia.qmd           usos en docencia e investigación
 contacto.qmd           contacto
@@ -30,6 +30,9 @@ tools/make_docencia.py genera docencia/<grado>.qmd, indicadores.qmd (buscador)
                        y _grados_cards.md (tarjetas de docencia.qmd)
 docencia/              páginas por grado, curso y asignatura (generadas)
 tools/make_logo.py     genera el logo
+tools/make_ppt.py      genera ppt.qmd (Piedra, papel o tijera) a partir de concurso.qmd
+tools/make_informe.py  genera informe-coyuntura.qmd (plantilla de informe de coyuntura y rúbrica)
+detecta-engano.qmd     «Detecta el engaño»: gráficos honestos y engañosos con datos de Eurostat
 ```
 
 ## Añadir o modificar indicadores
@@ -41,6 +44,8 @@ tools/make_logo.py     genera el logo
 python3 tools/make_pages.py
 python3 tools/make_apps.py
 python3 tools/make_docencia.py
+python3 tools/make_ppt.py        # después de generar concurso.qmd
+python3 tools/make_informe.py
 quarto render
 ```
 
@@ -58,4 +63,4 @@ No necesita R: todos los datos se descargan en el navegador desde la API de Euro
 
 ## Actualizar los rankings
 
-Edita `data/rankings_ugr_areas.csv` con las nuevas ediciones publicadas en https://analitica.ugr.es/rankings/.
+Edita `data/rankings_ugr_areas.csv` con las nuevas ediciones publicadas en https://analitica.ugr.es/rankings/. Las posiciones mundiales del Ranking de Shanghái por materias pueden consultarse en la web oficial (https://www.shanghairanking.com/rankings/gras/2026); la UGR aparece en Economics (AS0501), Business Administration (AS0509), Management (AS0511) y Hospitality & Tourism Management (AS0513).

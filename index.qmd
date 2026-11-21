@@ -9,7 +9,7 @@ page-layout: full
 
 **CCEEscopio D+I** (Docencia + Investigación) es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar **99 indicadores** de la economía y la empresa (precios, empleo, actividad, empresa e innovación, turismo, sector público y mercados financieros, desigualdad y pobreza, sostenibilidad, población y economía internacional) para España, Andalucía y los países de la Unión Europea.
 
-<p class="tagline">Datos oficiales, actualizados y descargables, al servicio de la **docencia** y la **investigación** de la Facultad.</p>
+<p class="tagline">Observatorio de indicadores económicos y empresariales al servicio de la **Docencia** y la **Investigación**</p>
 
 <p class="visitas-ccee" hidden>👁️ <span class="vc-num"></span> visitas a CCEEscopio</p>
 :::
@@ -50,7 +50,7 @@ page-layout: full
 
 [<span class="icon">🗺️</span><span class="ct">Andalucía y regiones</span><span class="cd">Andalucía frente al resto de comunidades autónomas y la UE.</span>](andalucia.qmd){.card-ccee}
 
-[<span class="icon">🏆</span><span class="ct">Rankings</span><span class="cd">La UGR en Economía, Empresa, Finanzas y Turismo.</span>](rankings.qmd){.card-ccee}
+[<span class="icon">🏆</span><span class="ct">La Facultad en los ranking</span><span class="cd">La UGR en Economía, Empresa, Finanzas y Turismo.</span>](rankings.qmd){.card-ccee}
 :::
 
 ## Herramientas
@@ -86,7 +86,7 @@ En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, G
 - [Ideas para TFG y TFM](ideas-tfg.qmd) con pregunta, hipótesis, datos y método, y un [generador de gráficos](graficos.qmd) que da la cita de la fuente.
 - **Descarga de los datos en CSV** y de los gráficos en PNG o SVG, con su fuente y unidad, para artículos, tesis y proyectos.
 - Análisis avanzados: [mapa de calor de coyuntura](coyuntura.qmd), [desigualdad con Gini y Theil](desigualdad-calc.qmd), [convergencia](convergencia.qmd) y [regresión](regresion.qmd).
-- [La UGR en los rankings por disciplinas](rankings.qmd) y [datos y fuentes](datos.qmd) (INE, Banco de España, IECA, Banco Mundial).
+- [La Facultad en los ranking](rankings.qmd) y [datos y fuentes](datos.qmd) (INE, Banco de España, IECA, Banco Mundial).
 :::
 :::
 
@@ -96,6 +96,10 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · [Piedra, papel o tijera](ppt.qmd)** <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. El profesorado elige cuántas preguntas hay que superar; cada acierto da una partida contra la aplicación (si ganas, pasas de pregunta; si empatas, vuelves a jugar; si pierdes, contestas otra pregunta). Gana quien antes las supere todas.
+- **Nuevo · [Detecta el engaño](detecta-engano.qmd)** <span class="badge-nuevo">nuevo</span>: seis pares de gráficos con datos reales de Eurostat, uno honesto y otro engañoso. Descubre cuál engaña y qué truco usa: ejes cortados, fechas a medida, euros sin deflactar, bases de índice interesadas…
+- **Nuevo · [Plantilla de informe de coyuntura](informe-coyuntura.qmd)** <span class="badge-nuevo">nuevo</span>: genera en un clic el esqueleto de un informe con los últimos datos del país que elijas, descárgalo en Word y evalúalo con la rúbrica incluida.
+- **Actualizado · [La Facultad en los ranking](rankings.qmd)**: añadida la edición 2024 del Ranking de Shanghái por materias y completadas las series con la web oficial de ShanghaiRanking.
 - **Nuevo · Tres juegos más para clase con código QR** <span class="badge-nuevo">nuevo</span>: [Bingo de indicadores](bingo.qmd) (tacha los países que cumplen cada condición), [Ordena la malla](ordena.qmd) (de mayor a menor) y [¿Quién es quién?](quien.qmd) (adivina el país por sus indicadores).
 - **Nuevo · [Mapa de calor de coyuntura](coyuntura.qmd)** <span class="badge-nuevo">nuevo</span>: todos los países de la UE (o las comunidades autónomas) y sus principales indicadores de un vistazo, coloreados según su posición relativa.
 - **Nuevo · [Laboratorio de números índice](numeros-indice.qmd)** <span class="badge-nuevo">nuevo</span>: cambio de base, tasas de variación, enlace de series, deflactación y los índices de Laspeyres, Paasche y Fisher, con datos reales y ejercicios autocorregibles.

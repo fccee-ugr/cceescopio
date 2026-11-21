@@ -1,0 +1,270 @@
+---
+title: "Detecta el engaño"
+subtitle: "Gráficos que engañan con datos verdaderos: seis casos con datos oficiales de Eurostat para aprender a leer (y a hacer) gráficos honestos"
+toc: false
+---
+
+Un gráfico puede engañar sin que ninguno de sus datos sea falso: basta con cortar el eje, elegir bien las fechas o no descontar la inflación. En cada caso verás **el mismo dato en dos gráficos**. Uno es honesto y el otro engaña. Descubre cuál es el engañoso y qué truco usa: al responder aparece la explicación con los números reales.
+
+Los datos se descargan en directo de Eurostat, así que los casos se actualizan solos con cada nueva publicación. El orden de los gráficos cambia cada vez que se carga la página.
+
+::: {.callout-tip appearance="simple"}
+**En clase.** Proyecta un caso, deja un minuto para que cada estudiante decida qué gráfico engaña y por qué, y discutid la respuesta antes de pulsar. Como tarea, pide que construyan su propio gráfico engañoso con el [generador de gráficos](graficos.qmd) y que otro grupo descubra el truco.
+:::
+
+{{< include _helpers.qmd >}}
+
+```{ojs}
+//| echo: false
+ENG = ({
+  trucos: {
+    eje: "Eje vertical que no empieza en cero",
+    ventana: "Periodo elegido a conveniencia",
+    percapita: "Totales en lugar de valores por habitante",
+    nominal: "Euros corrientes sin descontar la inflación",
+    base: "Base del índice escogida a conveniencia",
+    tasa: "Confundir la tasa de variación con el nivel",
+    log: "Escala logarítmica sin avisar",
+    doble: "Dos ejes verticales que fuerzan una relación"
+  },
+  paises: ["DE", "FR", "IT", "ES", "NL", "PL", "BE", "IE", "AT", "LU", "PT", "SE"],
+  magenta: "#B5175F", gris: "#3C3C3B", naranja: "#F29200",
+  pct: (v) => `${fmt(v)} %`,
+  firma: (v) => `${v > 0 ? "+" : ""}${fmt(v)}`
+})
+```
+
+```{ojs}
+//| echo: false
+// Descarga, en paralelo, las series que usan los casos (cada una con alternativas por si Eurostat renueva la tabla)
+datosEng = {
+  const anio = new Date().getFullYear();
+  const serie = async (intentos, geos) => {
+    for (const [code, q] of intentos) {
+      try {
+        let r = await eurostat(code, q + (geos ? geos.map(g => `&geo=${g}`).join("") : ""));
+        r = unaCategoria(r).map(d => ({geo: d.geo, territorio: nombresGeo[d.geo] ?? d.geoLabel, periodo: d.time, fecha: fecha(d.time), valor: d.value}))
+          .filter(d => d.fecha && Number.isFinite(d.valor)).sort((a, b) => a.fecha - b.fecha);
+        if (r.length) return r;
+      } catch (e) {}
+    }
+    return [];
+  };
+  const P = ENG.paises;
+  const cargas = {
+    paro: serie([["une_rt_m", `&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT&sinceTimePeriod=${anio - 3}`]], ["ES"]),
+    deuda: serie([["gov_10dd_edpt1", "&unit=PC_GDP&sector=S13&na_item=GD&sinceTimePeriod=2000"]], ["ES"]),
+    pibTot: serie([["nama_10_gdp", `&unit=CP_MEUR&na_item=B1GQ&sinceTimePeriod=${anio - 5}`]], P),
+    pibPc: serie([["nama_10_pc", `&unit=CP_EUR_HAB&na_item=B1GQ&sinceTimePeriod=${anio - 5}`]], P),
+    smi: serie([["earn_mw_cur", "&currency=EUR&sinceTimePeriod=2008"]], ["ES"]),
+    ipcaIdx: serie([["prc_hicp_aind", "&unit=INX_A_AVG&coicop18=TOTAL&sinceTimePeriod=2008"], ["prc_hicp_aind", "&unit=INX_A_AVG&coicop=CP00&sinceTimePeriod=2008"]], ["ES"]),
+    ipcaTasa: serie([["prc_hicp_aind", "&unit=RCH_A_AVG&coicop18=TOTAL&sinceTimePeriod=2015"], ["prc_hicp_aind", "&unit=RCH_A_AVG&coicop=CP00&sinceTimePeriod=2015"]], ["ES"]),
+    ipi: serie([["sts_inpr_m", "&nace_r2=B-D&s_adj=SCA&unit=I21&sinceTimePeriod=2019"]], ["ES"])
+  };
+  const out = {};
+  for (const [k, p] of Object.entries(cargas)) out[k] = await p;
+  return out;
+}
+```
+
+```{ojs}
+//| echo: false
+// Construcción de los seis casos. Cada función devuelve null si los datos no permiten el caso.
+casosEng = {
+  const D = datosEng, M = ENG.magenta, G = ENG.gris;
+  const W = 440, H = 280;
+  const anual = (rows) => d3.rollups(rows, v => d3.mean(v, d => d.valor), d => d.fecha.getFullYear()).map(([anio, valor]) => ({anio, valor})).sort((a, b) => a.anio - b.anio);
+  const ticksMes = (d) => /(-|M)01$/.test(d) ? d.slice(0, 4) : "";
+  const casos = [];
+  const intentar = (f) => { try { const c = f(); if (c) casos.push(c); } catch (e) { console.warn("Caso no disponible", e); } };
+
+  // 1. Eje vertical que no empieza en cero (barras)
+  intentar(() => {
+    const s = D.paro.slice(-24);
+    if (s.length < 12) return null;
+    const a = s[0], b = s.at(-1), lo = d3.min(s, d => d.valor), hi = d3.max(s, d => d.valor);
+    const baja = b.valor < a.valor;
+    const y0 = lo - (hi - lo) * 0.1;
+    const aparente = 100 * ((b.valor - y0) / (a.valor - y0) - 1), real = 100 * (b.valor / a.valor - 1);
+    const barras = (dom, titulo) => Plot.plot({width: W, height: H, title: titulo, marginLeft: 44,
+      x: {type: "band", label: null, tickFormat: ticksMes, tickRotate: 0}, y: {domain: dom, label: "% de la población activa", grid: true},
+      marks: [Plot.barY(s, {x: "periodo", y: "valor", fill: M, clip: true, tip: true, title: d => `${d.periodo}: ${ENG.pct(d.valor)}`}), Plot.ruleY([dom[0]])]});
+    return {id: "eje", tema: "Mercado laboral", contexto: `Tasa de paro de España entre ${a.periodo} y ${b.periodo}, según Eurostat.`,
+      honesto: barras([0, hi * 1.1], "Tasa de paro en España (%)"),
+      enganoso: barras([y0, hi + (hi - lo) * 0.05], baja ? "¡El paro se desploma!" : "¡El paro se dispara!"),
+      explicacion: `La tasa de paro pasó de <b>${ENG.pct(a.valor)}</b> a <b>${ENG.pct(b.valor)}</b>: ${ENG.firma(b.valor - a.valor)} puntos, un <b>${fmt(Math.abs(real))} %</b> ${baja ? "menos" : "más"}. En el gráfico engañoso el eje empieza en ${fmt(y0)} %, así que la última barra parece un <b>${fmt(Math.abs(aparente))} %</b> ${baja ? "más baja" : "más alta"} que la primera.`,
+      regla: "En un gráfico de barras, la altura de la barra es el dato: el eje tiene que empezar en cero. En un gráfico de líneas se puede ajustar el eje, pero conviene indicarlo y no sacar titulares de un cambio pequeño."};
+  });
+
+  // 2. Periodo elegido a conveniencia
+  intentar(() => {
+    const s = D.deuda.map(d => ({...d, anio: d.fecha.getFullYear()}));
+    if (s.length < 10) return null;
+    const pico = d3.greatest(s, d => d.valor), u = s.at(-1);
+    const iPico = s.indexOf(pico);
+    if (iPico > s.length - 3 || u.valor >= pico.valor) return null;
+    const ref = s.find(d => d.anio === 2007) ?? s[0];
+    const tramo = s.slice(iPico);
+    const linea = (datos, titulo, marcas = []) => Plot.plot({width: W, height: H, title: titulo, marginLeft: 44,
+      x: {label: null, tickFormat: "d", ticks: Math.min(datos.length, 8)}, y: {label: "% del PIB", grid: true, zero: false},
+      marks: [Plot.line(datos, {x: "anio", y: "valor", stroke: M, strokeWidth: 2.5}), Plot.dot(datos, {x: "anio", y: "valor", fill: M, r: 3, tip: true, title: d => `${d.anio}: ${ENG.pct(d.valor)}`}), ...marcas]});
+    return {id: "ventana", tema: "Sector público", contexto: "Deuda pública de España en porcentaje del PIB (criterio de Maastricht).",
+      honesto: linea(s, `Deuda pública de España, ${s[0].anio}-${u.anio} (% del PIB)`, [Plot.text([ref], {x: "anio", y: "valor", text: d => `${d.anio}: ${fmt(d.valor)} %`, dy: -12, fill: G})]),
+      enganoso: linea(tramo, "La deuda pública no deja de bajar"),
+      explicacion: `Desde su máximo de <b>${ENG.pct(pico.valor)}</b> en ${pico.anio}, la deuda ha bajado a <b>${ENG.pct(u.valor)}</b> en ${u.anio}. Es verdad, pero el gráfico engañoso empieza justo en el máximo. Con la serie completa se ve que en ${ref.anio} era del <b>${ENG.pct(ref.valor)}</b>: sigue ${fmt(u.valor - ref.valor)} puntos por encima.`,
+      regla: "Pregúntate siempre por qué el gráfico empieza y termina en esas fechas. Si el inicio coincide con un máximo o un mínimo, desconfía y busca la serie completa."};
+  });
+
+  // 3. Totales en lugar de valores por habitante
+  intentar(() => {
+    const comun = [...new Set(D.pibTot.map(d => d.periodo))].filter(p => D.pibTot.filter(d => d.periodo === p).length >= 8 && D.pibPc.filter(d => d.periodo === p).length >= 8).sort().pop();
+    if (!comun) return null;
+    const tot = D.pibTot.filter(d => d.periodo === comun).map(d => ({...d, valor: d.valor / 1000})).sort((a, b) => b.valor - a.valor);
+    const pc = D.pibPc.filter(d => d.periodo === comun).sort((a, b) => b.valor - a.valor);
+    const barrasH = (datos, titulo, et) => Plot.plot({width: W, height: H + 40, title: titulo, marginLeft: 92,
+      x: {label: et, grid: true}, y: {label: null, domain: datos.map(d => d.territorio)},
+      marks: [Plot.barX(datos, {y: "territorio", x: "valor", fill: d => d.geo === "ES" ? M : "#BDB6B9", tip: true, title: d => `${d.territorio}: ${fmt(d.valor)}`}), Plot.ruleX([0])]});
+    const posT = tot.findIndex(d => d.geo === "ES") + 1, posP = pc.findIndex(d => d.geo === "ES") + 1;
+    if (!posT || !posP) return null;
+    return {id: "percapita", tema: "Actividad económica", contexto: `Producto interior bruto de ${tot.length} países europeos en ${comun}. El titular pregunta dónde se vive mejor.`,
+      honesto: barrasH(pc, `PIB por habitante, ${comun} (euros)`, "euros por habitante"),
+      enganoso: barrasH(tot, `¿Dónde se vive mejor? PIB de cada país, ${comun}`, "miles de millones de euros"),
+      explicacion: `En PIB total, el primero es <b>${tot[0].territorio}</b> y España es <b>${posT}.ª</b> de ${tot.length}, porque el total crece con el tamaño del país. Para comparar el nivel de vida hay que dividir por la población: en PIB por habitante el primero es <b>${pc[0].territorio}</b> (${fmt(pc[0].valor)} €) y España pasa a ser <b>${posP}.ª</b> (${fmt(pc.find(d => d.geo === "ES").valor)} €).`,
+      regla: "Para comparar territorios de distinto tamaño, usa valores por habitante, por empresa o en porcentaje. Y para comparar niveles de vida entre países, mejor aún en paridad de poder de compra."};
+  });
+
+  // 4. Euros corrientes sin descontar la inflación
+  intentar(() => {
+    const nom = anual(D.smi), idx = new Map(anual(D.ipcaIdx).map(d => [d.anio, d.valor]));
+    const s = nom.filter(d => idx.has(d.anio));
+    if (s.length < 6) return null;
+    const L = s.at(-1).anio, a = s[0], b = s.at(-1);
+    const real = s.map(d => ({anio: d.anio, valor: d.valor * idx.get(L) / idx.get(d.anio)}));
+    const gNom = 100 * (b.valor / a.valor - 1), gReal = 100 * (real.at(-1).valor / real[0].valor - 1);
+    const ambas = [...s.map(d => ({...d, serie: "Euros corrientes"})), ...real.map(d => ({...d, serie: `Euros de ${L}`}))];
+    return {id: "nominal", tema: "Mercado laboral y precios", contexto: `Salario mínimo mensual de España entre ${a.anio} y ${L} (media anual, euros).`,
+      honesto: Plot.plot({width: W, height: H, title: `Salario mínimo: euros corrientes y euros de ${L}`, marginLeft: 50, color: {domain: ["Euros corrientes", `Euros de ${L}`], range: ["#BDB6B9", M], legend: true},
+        x: {label: null, tickFormat: "d"}, y: {label: "euros al mes", grid: true, zero: true},
+        marks: [Plot.line(ambas, {x: "anio", y: "valor", stroke: "serie", strokeWidth: 2.5}), Plot.dot(ambas, {x: "anio", y: "valor", fill: "serie", r: 2.5, tip: true, title: d => `${d.serie}, ${d.anio}: ${fmt(d.valor)} €`})]}),
+      enganoso: Plot.plot({width: W, height: H, title: `El salario mínimo sube un ${fmt(gNom)} % desde ${a.anio}`, marginLeft: 50,
+        x: {label: null, tickFormat: "d"}, y: {label: "euros al mes", grid: true, zero: true},
+        marks: [Plot.line(s, {x: "anio", y: "valor", stroke: M, strokeWidth: 2.5}), Plot.dot(s, {x: "anio", y: "valor", fill: M, r: 2.5, tip: true, title: d => `${d.anio}: ${fmt(d.valor)} €`})]}),
+      explicacion: `En euros corrientes, el salario mínimo sube un <b>${fmt(gNom)} %</b> entre ${a.anio} y ${L}. Pero los precios también han subido: descontando la inflación (IPCA), la subida real es del <b>${fmt(gReal)} %</b>. El titular no es falso, pero exagera el aumento del poder de compra.`,
+      regla: "Cuando compares euros de años distintos, deflacta: divide por un índice de precios. Puedes hacerlo con la calculadora de inflación o el laboratorio de números índice de CCEEscopio."};
+  });
+
+  // 5. Base del índice escogida a conveniencia
+  intentar(() => {
+    const s = D.ipi;
+    if (s.length < 24) return null;
+    const min = d3.least(s, d => d.valor), iMin = s.indexOf(min), u = s.at(-1);
+    const pre = s.filter(d => d.fecha.getFullYear() === 2020 && d.fecha.getMonth() < 2);
+    if (iMin > s.length - 6 || !pre.length) return null;
+    const preV = d3.mean(pre, d => d.valor);
+    const reb = s.slice(iMin).map(d => ({...d, valor: 100 * d.valor / min.valor}));
+    const gEng = reb.at(-1).valor - 100, gPre = 100 * (u.valor / preV - 1);
+    const linea = (datos, titulo, et, marcas = []) => Plot.plot({width: W, height: H, title: titulo, marginLeft: 44,
+      x: {label: null}, y: {label: et, grid: true},
+      marks: [Plot.line(datos, {x: "fecha", y: "valor", stroke: M, strokeWidth: 2}), ...marcas, Plot.tip(datos, Plot.pointerX({x: "fecha", y: "valor", title: d => `${d.periodo}: ${fmt(d.valor)}`}))]});
+    return {id: "base", tema: "Actividad económica", contexto: "Índice de producción industrial de España, corregido de estacionalidad y calendario.",
+      honesto: linea(s, "Producción industrial de España (2021 = 100)", "índice, 2021 = 100", [Plot.ruleY([preV], {stroke: G, strokeDasharray: "4 4"}), Plot.text([{fecha: s[0].fecha, valor: preV}], {x: "fecha", y: "valor", text: () => "nivel antes de la pandemia", dy: -8, textAnchor: "start", fill: G})]),
+      enganoso: linea(reb, `La industria se dispara: +${fmt(gEng)} %`, "índice"),
+      explicacion: `El gráfico engañoso toma como base (= 100) el peor mes de la serie, <b>${min.periodo}</b>, en pleno confinamiento, y así la producción parece crecer un <b>${fmt(gEng)} %</b>. Comparada con el nivel de enero y febrero de 2020, la variación es del <b>${fmt(gPre)} %</b>.`,
+      regla: "Mira siempre cuál es el periodo base de un índice. Si el titular habla de crecimiento, pregúntate desde cuándo y si ese punto de partida era normal."};
+  });
+
+  // 6. Confundir la tasa de variación con el nivel
+  intentar(() => {
+    const t = anual(D.ipcaTasa), idx = anual(D.ipcaIdx);
+    if (t.length < 5 || idx.length < 5) return null;
+    const pico = d3.greatest(t, d => d.valor), iP = t.indexOf(pico), u = t.at(-1);
+    if (iP > t.length - 2 || u.valor >= pico.valor || u.valor <= 0) return null;
+    const tramo = t.slice(iP), base = idx.find(d => d.anio === pico.anio - 1), uI = idx.at(-1);
+    if (!base) return null;
+    const nivel = idx.filter(d => d.anio >= pico.anio - 1).map(d => ({...d, valor: 100 * d.valor / base.valor}));
+    const subida = nivel.at(-1).valor - 100;
+    return {id: "tasa", tema: "Precios e inflación", contexto: `Precios de consumo en España (IPCA, media anual) desde ${pico.anio}.`,
+      honesto: Plot.plot({width: W, height: H, title: `Nivel de precios (${base.anio} = 100)`, marginLeft: 44, x: {label: null, tickFormat: "d", ticks: nivel.length}, y: {label: "índice", grid: true, zero: false},
+        marks: [Plot.line(nivel, {x: "anio", y: "valor", stroke: M, strokeWidth: 2.5}), Plot.dot(nivel, {x: "anio", y: "valor", fill: M, r: 3, tip: true, title: d => `${d.anio}: ${fmt(d.valor)}`})]}),
+      enganoso: Plot.plot({width: W, height: H, title: `Los precios bajan desde ${pico.anio}`, marginLeft: 44, x: {label: null, tickFormat: "d", ticks: tramo.length}, y: {label: "%", grid: true, zero: true},
+        marks: [Plot.line(tramo, {x: "anio", y: "valor", stroke: M, strokeWidth: 2.5}), Plot.dot(tramo, {x: "anio", y: "valor", fill: M, r: 3, tip: true, title: d => `${d.anio}: ${ENG.pct(d.valor)}`}), Plot.ruleY([0])]}),
+      explicacion: `El gráfico engañoso muestra la <b>tasa de inflación</b>, que baja del <b>${ENG.pct(pico.valor)}</b> en ${pico.anio} al <b>${ENG.pct(u.valor)}</b> en ${u.anio}. Que la tasa baje significa que los precios suben <b>más despacio</b>, no que bajen: mientras la tasa sea positiva, el nivel de precios sigue subiendo. En ${uI.anio}, los precios eran un <b>${fmt(subida)} %</b> más altos que en ${base.anio}.`,
+      regla: "Distingue el nivel de una variable de su tasa de variación. Una tasa que baja pero sigue siendo positiva significa que el nivel sigue subiendo, solo que más despacio."};
+  });
+
+  return casos;
+}
+```
+
+```{ojs}
+//| echo: false
+{
+  const casos = casosEng;
+  if (!casos.length) return html`<p class="pending">No se han podido cargar los datos de Eurostat. Comprueba la conexión y recarga la página.</p>`;
+  const claves = Object.keys(ENG.trucos);
+  let puntos = 0, respondidos = 0;
+  const marcador = html`<p class="juego-marcador"></p>`;
+  const pintarMarcador = () => { marcador.innerHTML = `Puntuación: <b>${puntos}</b> de ${2 * casos.length} posibles · Casos resueltos: ${respondidos} de ${casos.length}`; };
+  const cont = html`<div></div>`;
+  casos.forEach((c, i) => {
+    const engA = Math.random() < 0.5;
+    const A = engA ? c.enganoso : c.honesto, B = engA ? c.honesto : c.enganoso;
+    const caja = html`<div class="juego engano-caso">
+      <p class="juego-ind">Caso ${i + 1} de ${casos.length} · ${c.tema}</p>
+      <p class="juego-p">${c.contexto}</p>
+      <div class="engano-par"><figure><figcaption>Gráfico A</figcaption>${A}</figure><figure><figcaption>Gráfico B</figcaption>${B}</figure></div>
+      <div class="engano-q1"><p><b>1. ¿Qué gráfico engaña?</b></p><div class="juego-ops"></div></div>
+      <div class="engano-q2" hidden><p><b>2. ¿Qué truco usa?</b></p><div class="juego-ops juego-ops-v"></div></div>
+      <div class="engano-sol" hidden></div>
+    </div>`;
+    const q1 = caja.querySelector(".engano-q1 .juego-ops"), q2 = caja.querySelector(".engano-q2"), sol = caja.querySelector(".engano-sol");
+    const opciones = d3.shuffle([c.id, ...d3.shuffle(claves.filter(k => k !== c.id)).slice(0, 3)]);
+    let bien1 = false;
+    ["Gráfico A", "Gráfico B"].forEach((t, k) => {
+      const b = html`<button class="juego-op">${t}</button>`;
+      b.onclick = () => {
+        const correcta = engA ? 0 : 1;
+        bien1 = k === correcta; if (bien1) puntos++;
+        q1.querySelectorAll("button").forEach((x, j) => { x.disabled = true; if (j === correcta) x.classList.add("ok"); });
+        if (!bien1) b.classList.add("ko");
+        q2.hidden = false; pintarMarcador();
+      };
+      q1.append(b);
+    });
+    const ops2 = q2.querySelector(".juego-ops");
+    opciones.forEach(k => {
+      const b = html`<button class="juego-op">${ENG.trucos[k]}</button>`;
+      b.onclick = () => {
+        const bien2 = k === c.id; if (bien2) puntos++;
+        respondidos++;
+        ops2.querySelectorAll("button").forEach((x, j) => { x.disabled = true; if (opciones[j] === c.id) x.classList.add("ok"); });
+        if (!bien2) b.classList.add("ko");
+        const total = (bien1 ? 1 : 0) + (bien2 ? 1 : 0);
+        sol.innerHTML = `<p class="juego-res ${total === 2 ? "bien" : "mal"}">${total === 2 ? "✅ ¡Bien visto!" : total === 1 ? "🟡 Casi." : "❌ Esta vez te han engañado."} El gráfico engañoso era el <b>${engA ? "A" : "B"}</b> y el truco: <b>${ENG.trucos[c.id].toLowerCase()}</b>.</p>
+          <p>${c.explicacion}</p><p class="engano-regla"><b>Regla para no caer:</b> ${c.regla}</p>`;
+        sol.hidden = false; pintarMarcador();
+        window.cceeEvento && window.cceeEvento(`engano/${c.id}/${total}`, "Detecta el engaño", true);
+      };
+      ops2.append(b);
+    });
+    cont.append(caja);
+  });
+  pintarMarcador();
+  return html`<div>${marcador}${cont}<p class="nota">Fuente de los datos: Eurostat (tablas une_rt_m, gov_10dd_edpt1, nama_10_gdp, nama_10_pc, earn_mw_cur, prc_hicp_aind y sts_inpr_m), descargados en directo. Si algún caso no aparece, es que Eurostat no ha devuelto sus datos en este momento.</p></div>`;
+}
+```
+
+## Las trampas más habituales
+
+| Trampa | Cómo detectarla | Qué hacer en su lugar |
+|---|---|---|
+| Eje vertical que no empieza en cero | Mira el primer valor del eje. En barras, la altura debe ser proporcional al dato. | Barras siempre desde cero; en líneas, avisar del corte del eje. |
+| Periodo elegido a conveniencia | ¿El gráfico empieza en un máximo, un mínimo o un año excepcional? | Mostrar la serie completa o justificar las fechas. |
+| Totales en lugar de valores por habitante | ¿Se comparan territorios o empresas de tamaños muy distintos? | Dividir por la población, el número de empresas o el PIB. |
+| Euros corrientes sin descontar la inflación | ¿Se comparan euros de años distintos? | Deflactar con un índice de precios y decir de qué año son los euros. |
+| Base del índice escogida a conveniencia | ¿Cuál es el periodo base = 100? ¿Era un periodo normal? | Usar la base oficial o un año representativo. |
+| Confundir la tasa con el nivel | ¿El gráfico muestra una variación (%) y el titular habla del nivel? | Mostrar el nivel o explicar qué significa que la tasa baje. |
+| Escala logarítmica sin avisar | Las distancias iguales del eje no suman lo mismo (10, 100, 1.000). | Indicarlo en el eje y explicar que muestra crecimientos relativos. |
+| Dos ejes verticales | Cada serie tiene su propia escala: moviéndolas se puede inventar una relación. | Usar índices con la misma base o un gráfico de dispersión. |
+
+Para practicar la construcción de gráficos honestos, usa el [generador de gráficos con cita de la fuente](graficos.qmd); para deflactar series, la [calculadora de inflación](calculadora.qmd) y el [laboratorio de números índice](numeros-indice.qmd).

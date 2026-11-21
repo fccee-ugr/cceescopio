@@ -4,7 +4,7 @@ toc: false
 ---
 
 ::: {.contact-box}
-**CCEEscopio** · Observatorio de indicadores económicos y empresariales
+**CCEEscopio D+I** · Observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación
 
 **Vicedecanato de Investigación, Transferencia y Posgrado**\
 Facultad de Ciencias Económicas y Empresariales\

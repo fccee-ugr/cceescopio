@@ -9,7 +9,7 @@ project:
 
 website:
   title: "CCEEscopio D+I"
-  description: "CCEEscopio D+I: datos para la docencia y la investigación. Observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. Observando la economía y la empresa."
+  description: "Observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación"
   site-url: "https://jfmunozrosas.github.io/cceescopio"   # <- cambiar por la URL definitiva
   favicon: images/brand/cceescopio_icono.png
   page-navigation: true
@@ -156,6 +156,10 @@ website:
           - text: "Para el estudiantado"
           - href: ejercicios.qmd
             text: "Ejercicios autocorregibles"
+          - href: informe-coyuntura.qmd
+            text: "Plantilla de informe de coyuntura"
+          - href: detecta-engano.qmd
+            text: "Detecta el engaño: gráficos que mienten"
           - href: numeros-indice.qmd
             text: "Laboratorio de números índice"
           - href: calculadoras.qmd
@@ -188,6 +192,8 @@ website:
             text: "¿Quién es quién?"
           - href: bingo.qmd
             text: "Bingo de indicadores"
+          - href: ppt.qmd
+            text: "Piedra, papel o tijera"
           - href: juegos.qmd#aula
             text: "Modo aula: competición con código de sala"
           - text: "---"
@@ -226,7 +232,7 @@ website:
           - href: regresion.qmd
             text: "Regresión con análisis de supuestos"
           - text: "---"
-          - text: "La UGR en los rankings"
+          - text: "La Facultad en los ranking"
           - href: rankings.qmd
             text: "Posición y evolución en los rankings por disciplinas"
       - href: contacto.qmd

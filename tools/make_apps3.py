@@ -335,6 +335,8 @@ Todos los juegos de CCEEscopio D+I usan datos oficiales de Eurostat que se carga
 
 [<span class="icon">🎱</span><span class="ct">Bingo de indicadores</span><span class="cd">Tacha en tu cartón los territorios que cumplen cada condición.</span>](bingo.qmd){.card-ccee}
 
+[<span class="icon">✊</span><span class="ct">Piedra, papel o tijera</span><span class="cd">Cada acierto da una partida contra la aplicación: gana quien antes supere todas las preguntas.</span>](ppt.qmd){.card-ccee}
+
 [<span class="icon">🏫</span><span class="ct">Modo aula</span><span class="cd">Competición con código de sala, sin necesidad de código QR.</span>](#aula){.card-ccee}
 
 [<span class="icon">🔮</span><span class="ct">Predice el próximo dato</span><span class="cd">Apuesta por el próximo dato de un indicador y compáralo cuando se publique.</span>](prediccion.qmd){.card-ccee}
