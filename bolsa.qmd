@@ -1,0 +1,162 @@
+---
+title: "Bolsa al día"
+subtitle: "Los principales índices bursátiles, el petróleo, el oro y las grandes empresas del IBEX 35, actualizados cada día"
+toc: false
+include-in-header:
+  - text: |
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script src="js/ccee-sim.js"></script>
+---
+
+Las cotizaciones se descargan **tres veces cada día hábil**: antes de las 9:00 (con el cierre de Asia y de Wall Street), tras el cierre de las bolsas europeas y tras el de Wall Street. Pulsa en cualquier tarjeta para añadirla al gráfico. Completa este panel con [Mercados al día](mercados.qmd) (tipos de cambio, deuda pública, prima de riesgo y euríbor) y ponlo en práctica con el simulador [Gestiona una cartera](sim-cartera.qmd).
+
+```{=html}
+<div id="bolsa-estado" class="nota">Cargando las cotizaciones…</div>
+<div id="bolsa-tarjetas"></div>
+
+<h2 id="evolucion">Evolución comparada</h2>
+<div class="sim-panel">
+  <div><b>Periodo:</b> <span class="chips-sel" id="bolsa-periodos" style="display:inline-flex"></span></div>
+  <div><b>Valores en el gráfico</b> <small class="nota">(pulsa en las tarjetas de arriba para añadir o quitar)</small>: <span class="chips-sel" id="bolsa-sel"></span></div>
+  <label style="font-size:.9rem"><input type="checkbox" id="bolsa-base" checked> Comparar en base 100 (todas las series empiezan en 100 al inicio del periodo)</label>
+  <div id="bolsa-graf" style="margin-top:.5rem"></div>
+  <div class="sim-botones"><button class="sim-btn sec" id="bolsa-csv">⬇️ Descargar los datos del gráfico (CSV)</button></div>
+</div>
+<div id="bolsa-lectura" class="calc-result" hidden></div>
+
+<h2 id="tabla">Todos los valores</h2>
+<div style="overflow-x:auto" id="bolsa-tabla"></div>
+<p class="source" id="bolsa-fuente"></p>
+```
+
+## La bolsa y los indicadores económicos {#bolsa-economia}
+
+La bolsa **anticipa** lo que los inversores esperan de la economía y de los beneficios empresariales. Estos retos relacionan las cotizaciones con los indicadores de CCEEscopio:
+
+::: {.uses}
+::: {.use-box}
+### 📈 Bolsa y ciclo económico
+
+Compara la evolución del **IBEX 35** en el último año con el [crecimiento del PIB](actividad.qmd) y el [indicador de sentimiento económico](actividad.qmd) de España. ¿Se adelanta la bolsa a la actividad? Comprueba los desfases con [¿Qué indicador se adelanta?](desfases.qmd).
+:::
+
+::: {.use-box}
+### 🏦 Bolsa y tipos de interés
+
+Cuando el BCE sube los tipos, el [euríbor](mercados.qmd) y la [rentabilidad del bono a 10 años](mercados.qmd) suben y las acciones suelen perder atractivo frente a la renta fija. ¿Cómo se comportaron los **bancos** (Santander, BBVA, CaixaBank) frente al índice? Pruébalo en el simulador [Gobernador del Banco Central](sim-banco-central.qmd).
+:::
+
+::: {.use-box}
+### 🛢️ Petróleo, energía e inflación
+
+El precio del **Brent** se traslada a la gasolina y a la [inflación energética](precios.qmd). Compara su evolución con la de los [precios de los carburantes](precios-productos.qmd). ¿Cuánto tarda en notarse una subida del petróleo en el surtidor?
+:::
+
+::: {.use-box}
+### 😨 Riesgo y volatilidad
+
+El **VIX** mide la volatilidad que esperan los inversores en el S&P 500 (el «índice del miedo»). Busca en el gráfico de 10 años los picos de 2020 y 2022 y relaciónalos con lo que ocurrió en la [economía internacional](internacional.qmd).
+:::
+:::
+
+::: {.callout-note collapse="true"}
+## Glosario rápido de bolsa
+
+- **Índice bursátil**: resume la evolución de un conjunto de acciones (el IBEX 35, las 35 empresas más líquidas de la Bolsa española). Se calcula ponderando por la capitalización bursátil.
+- **Rentabilidad**: variación porcentual del precio en un periodo. Los índices de esta página son **de precios**: no incluyen los dividendos, así que infravaloran la rentabilidad total del inversor.
+- **Volatilidad anualizada**: desviación típica de las rentabilidades diarias del último año multiplicada por √252 (sesiones de un año). Mide el riesgo: cuanto mayor, más oscila el precio.
+- **Máximo y mínimo de 52 semanas**: el precio más alto y más bajo del último año.
+- **Base 100**: divide cada serie por su valor inicial y multiplica por 100, para comparar evoluciones de índices con niveles muy distintos (el mismo procedimiento que en el [laboratorio de números índice](numeros-indice.qmd)).
+:::
+
+::: {.nota}
+Datos de Yahoo Finance, con fines docentes. Pueden tener retraso o pequeñas diferencias con los datos oficiales de cada bolsa; los índices de otros países están en su propia moneda. No constituyen recomendación de inversión.
+:::
+
+```{=html}
+<script>
+(async function () {
+  const C = window.CCEE, $ = (id) => document.getElementById(id);
+  const datos = await C.rama("bolsa", "bolsa.json");
+  if (!datos) {
+    $("bolsa-estado").innerHTML = `<div class="pending"><p>Todavía no hay cotizaciones disponibles.</p><p><small><b>Para quien administra la web:</b> en GitHub, pestaña <b>Actions</b> → «Bolsa de CCEEscopio» → <b>Run workflow</b>.</small></p></div>`;
+    return;
+  }
+  const S = datos.series, porId = Object.fromEntries(S.map(s => [s.id, s]));
+  const act = new Date(datos.actualizado * 1000);
+  $("bolsa-estado").innerHTML = `Actualizado el ${act.toLocaleString("es-ES", {dateStyle: "full", timeStyle: "short"})}. Variación del día respecto al cierre anterior.`;
+  const clase = v => v > 0 ? "sube" : v < 0 ? "baja" : "";
+  const dec = s => s.valor < 10 ? 3 : s.valor < 1000 ? 2 : 1;
+
+  // ---------- tarjetas por grupos ----------
+  let sel = ["ibex35", "eurostoxx50", "sp500"].filter(id => porId[id]);
+  const grupos = [...new Set(S.map(s => s.grupo))];
+  const pintarTarjetas = () => {
+    $("bolsa-tarjetas").innerHTML = grupos.map(g => `<h3 class="bolsa-grupo">${g}</h3><div class="bolsa-grid">${S.filter(s => s.grupo === g).map(s => `
+      <div class="bolsa-card ${sel.includes(s.id) ? "sel" : ""}" data-id="${s.id}" role="button" tabindex="0" title="Añadir o quitar del gráfico">
+        <div class="bc-n">${C.esc(s.nombre)}</div>
+        <div><span class="bc-v">${C.num(s.valor, dec(s))}</span> <span class="tick-d ${clase(s.d1)}">${C.pct(s.d1, 2, true)}</span></div>
+        ${C.spark(s.diario.c.slice(-60), {w: 160, h: 32})}
+        <div class="bc-row"><span>En el año: <b class="${clase(s.ytd)}">${C.pct(s.ytd, 1, true)}</b></span><span>1 año: <b class="${clase(s.a1)}">${C.pct(s.a1, 1, true)}</b></span></div>
+        <div class="bc-row"><span>${s.moneda || ""} · ${C.fecha(s.fecha + "T12:00", {day: "numeric", month: "short"})}</span><span>Volat.: ${C.pct(s.vol, 0)}</span></div>
+        ${s.antiguo ? `<div class="bc-antiguo">⚠ No se pudo actualizar hoy: datos anteriores</div>` : ""}
+      </div>`).join("")}</div>`).join("");
+    document.querySelectorAll(".bolsa-card").forEach(el => {
+      const f = () => { const id = el.dataset.id; sel = sel.includes(id) ? sel.filter(x => x !== id) : [...sel, id].slice(-8); pintarTarjetas(); pintarGrafico(); };
+      el.onclick = f; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); f(); } };
+    });
+  };
+
+  // ---------- gráfico ----------
+  const PERIODOS = [["1m", "1 mes", 31, "diario"], ["3m", "3 meses", 92, "diario"], ["6m", "6 meses", 183, "diario"], ["ytd", "En el año", null, "diario"],
+                    ["1a", "1 año", 366, "diario"], ["5a", "5 años", 1827, "semanal"], ["10a", "10 años", 3660, "semanal"]];
+  let periodo = "1a";
+  $("bolsa-periodos").innerHTML = PERIODOS.map(p => `<button class="chip-sel" data-p="${p[0]}">${p[1]}</button>`).join("");
+  $("bolsa-periodos").querySelectorAll("button").forEach(b => b.onclick = () => { periodo = b.dataset.p; pintarGrafico(); });
+  $("bolsa-base").onchange = () => pintarGrafico();
+  const paleta = ["#B5175F", "#F29200", "#3C3C3B", "#2C6FBB", "#2E8B57", "#8E44AD", "#17A2B8", "#C0392B"];
+  let ultimas = [];
+  function pintarGrafico() {
+    $("bolsa-periodos").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.p === periodo));
+    $("bolsa-sel").innerHTML = sel.map((id, i) => `<span class="chip-sel on" style="background:${paleta[i]};border-color:${paleta[i]}">${C.esc(porId[id].nombre)}</span>`).join("") || `<span class="nota">Ningún valor seleccionado</span>`;
+    const p = PERIODOS.find(x => x[0] === periodo);
+    const hoy = Math.max(...sel.map(id => porId[id].diario.d.at(-1)));
+    const desde = p[2] ? hoy - p[2] : (Date.UTC(new Date(hoy * 864e5).getUTCFullYear() - 1, 11, 31) / 864e5);
+    const base = $("bolsa-base").checked;
+    const series = sel.map((id, i) => {
+      const s = porId[id], fuente = s[p[3]];
+      const idx = fuente.d.map((d, k) => k).filter(k => fuente.d[k] >= desde);
+      const k0 = Math.max(0, (idx[0] ?? 0) - 1);  // el último cierre anterior al periodo, como base
+      const puntos = [k0, ...idx.filter(k => k > k0)].map(k => ({x: C.dia(fuente.d[k]), y: base ? 100 * fuente.c[k] / fuente.c[k0] : fuente.c[k], v: fuente.c[k]}));
+      return {nombre: s.nombre, color: paleta[i], puntos, id};
+    });
+    ultimas = series;
+    C.lineas($("bolsa-graf"), series, {alto: 360, refs: base ? [{y: 100, texto: "Valor al inicio del periodo = 100", color: "#999"}] : [],
+      yEtiqueta: base ? "Base 100 al inicio del periodo" : "Cotización", yFormato: v => C.num(v, base ? 0 : (Math.abs(v) < 10 ? 2 : 0))});
+    // lectura del gráfico
+    if (series.length) {
+      const res = series.map(s => ({n: s.nombre, r: 100 * (s.puntos.at(-1).v / s.puntos[0].v - 1)})).sort((a, b) => b.r - a.r);
+      $("bolsa-lectura").hidden = false;
+      $("bolsa-lectura").innerHTML = `<div class="calc-small"><b>Lectura (${p[1].toLowerCase()}):</b> ${res.map(r => `${C.esc(r.n)} <b class="${clase(r.r)}">${C.pct(r.r, 1, true)}</b>`).join(" · ")}.
+        ${res.length > 1 ? `La mejor evolución ha sido la de <b>${C.esc(res[0].n)}</b> y la peor, la de <b>${C.esc(res.at(-1).n)}</b>.` : ""}
+        ${res.some(r => /EE\. UU\.|Japón|Hong Kong|China|Brasil|Reino Unido/.test(r.n)) ? " Recuerda que cada índice está en su moneda: para un inversor europeo, la rentabilidad también depende del tipo de cambio." : ""}</div>`;
+    } else $("bolsa-lectura").hidden = true;
+  }
+  $("bolsa-csv").onclick = () => {
+    const filas = [];
+    ultimas.forEach(s => s.puntos.forEach(p => filas.push({valor: s.nombre, fecha: p.x.toISOString().slice(0, 10), cierre: p.v, base100: +(100 * p.v / s.puntos[0].v).toFixed(2)})));
+    C.csv(filas, `cceescopio_bolsa_${periodo}.csv`); C.evento("bolsa/csv", "Bolsa: descarga");
+  };
+
+  // ---------- tabla ----------
+  const TB = "table";  // (así Quarto no intenta interpretar la tabla al generar la página)
+  $("bolsa-tabla").innerHTML = `<${TB} class="table table-sm bolsa-tabla"><thead><tr><th>Valor</th><th class="num">Último</th><th class="num">Día</th><th class="num">Semana</th><th class="num">Mes</th><th class="num">En el año</th><th class="num">1 año</th><th class="num">Máx. 52 sem.</th><th class="num">Mín. 52 sem.</th><th class="num">Volatilidad</th><th>Fecha</th></tr></thead>
+    <tbody>${S.map(s => `<tr><td>${C.esc(s.nombre)}</td><td class="num">${C.num(s.valor, dec(s))}</td>${["d1", "s1", "m1", "ytd", "a1"].map(k => `<td class="num ${clase(s[k])}">${C.pct(s[k], k === "d1" ? 2 : 1, true)}</td>`).join("")}
+      <td class="num">${C.num(s.max52, dec(s))}</td><td class="num">${C.num(s.min52, dec(s))}</td><td class="num">${C.pct(s.vol, 1)}</td><td>${C.fecha(s.fecha + "T12:00", {day: "numeric", month: "short"})}</td></tr>`).join("")}</tbody></${TB}>`;
+  $("bolsa-fuente").textContent = `Fuente: ${datos.fuente}. Volatilidad: desviación típica anualizada de las rentabilidades diarias del último año.`;
+
+  pintarTarjetas(); pintarGrafico();
+  let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(pintarGrafico, 200); });
+})();
+</script>
+```

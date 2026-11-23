@@ -1,0 +1,44 @@
+# Actualiza las cotizaciones de la página «Bolsa al día», la portada y el simulador de carteras.
+# Guarda bolsa.json y bolsa-resumen.json en la rama «bolsa»: no toca la rama principal ni la carpeta docs/.
+# Horarios (UTC, de lunes a sábado): por la mañana, antes de las 9:00 de Madrid (cierre de Asia y EE. UU. del día anterior);
+# tras el cierre de las bolsas europeas, y tras el cierre de Wall Street. También al subir cambios a main y a mano (Actions → Run workflow).
+# Si la descarga de un valor falla, se conservan sus datos anteriores.
+name: Bolsa de CCEEscopio
+on:
+  schedule:
+    - cron: "12 6 * * 1-6"
+    - cron: "52 16 * * 1-5"
+    - cron: "33 21 * * 1-5"
+  push:
+    branches: [main]
+    paths: ["tools/bolsa.py", ".github/workflows/bolsa.yml"]
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: bolsa
+  cancel-in-progress: false
+jobs:
+  bolsa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Recuperar los datos anteriores
+        run: |
+          git fetch --depth 1 origin bolsa && git show origin/bolsa:bolsa.json > /tmp/previas.json || echo '{}' > /tmp/previas.json
+      - name: Descargar las cotizaciones
+        run: |
+          mkdir -p /tmp/bolsa
+          python tools/bolsa.py --salida /tmp/bolsa --previas /tmp/previas.json
+      - name: Publicar en la rama bolsa
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan bolsa-tmp
+          cp /tmp/bolsa/bolsa.json /tmp/bolsa/bolsa-resumen.json .
+          git add bolsa.json bolsa-resumen.json
+          git commit -m "Bolsa $(date -u '+%F %H:%M')"
+          git push -f origin HEAD:bolsa

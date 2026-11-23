@@ -1,0 +1,201 @@
+---
+title: "💶 Llega a fin de mes"
+subtitle: "Gestiona el presupuesto de un hogar durante un año, con la inflación real de cada tipo de gasto"
+toc: false
+include-in-header:
+  - text: |
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script src="js/ccee-sim.js"></script>
+---
+
+Elige un hogar y gestiona su presupuesto durante **doce meses**. Los precios de cada tipo de gasto suben según la **última inflación publicada en España** para ese grupo (alimentos, vivienda y suministros, transporte, ocio, restaurantes…). Cada mes aparece un imprevisto y tienes que decidir. El reto: **llegar a fin de año con ahorros sin que se hunda el bienestar del hogar**. Al final descubrirás tu **inflación personal** y por qué puede ser distinta del IPC.
+
+**Para:** Economía, Introducción a la Economía, Finanzas personales, Educación financiera y Números índice (todos los grados). **Duración:** 10 minutos. **Indicadores relacionados:** [inflación por grupos](descomposiciones.qmd), [precios de productos](precios-productos.qmd), [IPCA](precios.qmd) y [hipotecas](hipoteca.qmd).
+
+```{=html}
+<div id="fm-app"><p class="nota">Cargando la inflación por grupos de gasto (Eurostat)…</p></div>
+```
+
+::: {.sim-modelo}
+**Cómo funciona.** Cada mes, el gasto de cada grupo se multiplica por (1 + tasa anual)^(1/12), donde la tasa anual es la última inflación publicada en España para ese grupo del IPCA (Eurostat). Tus decisiones cambian el gasto de forma puntual (un pago) o permanente (por ejemplo, cambiar de compañía eléctrica) y afectan al **bienestar** del hogar. Si el saldo acumulado es negativo, el hogar paga un 1,5 % de intereses al mes por el descubierto y el estrés reduce el bienestar. La **inflación personal** es la media de las tasas de cada grupo ponderada por el peso que tiene ese grupo en el gasto de tu hogar (igual que el IPC, pero con tu cesta en lugar de la cesta media). Simplificación docente: el sueldo no se actualiza durante el año.
+:::
+
+```{=html}
+<script>
+(async function () {
+  const C = window.CCEE, app = document.getElementById("fm-app");
+  const GRUPOS = [["CP01", "Alimentos y bebidas", "🛒"], ["CP04", "Vivienda, agua, luz y gas", "🏠"], ["CP07", "Transporte", "🚌"], ["CP11", "Restaurantes y alojamiento", "🍽️"],
+                  ["CP09", "Ocio, deporte y cultura", "🎭"], ["CP03", "Ropa y calzado", "👕"], ["CP08", "Información y comunicación", "📱"], ["CP13", "Otros gastos", "🧴"]];
+  // tasas anuales de inflación de España por grupos (Eurostat, ECOICOP 2018; si falla, la clasificación antigua)
+  let tasas = {}, periodo = null, general = null, ok = false;
+  try {
+    const q = (cod) => `&unit=RCH_A&geo=ES&sinceTimePeriod=${new Date().getFullYear() - 1}-01` + cod.map(c => `&coicop18=${c}`).join("");
+    let recs = await C.eurostat("prc_hicp_minr", q(["TOTAL", ...GRUPOS.map(g => g[0])]));
+    let dim = "coicop18";
+    if (!recs.length) { recs = await C.eurostat("prc_hicp_manr", `&geo=ES&sinceTimePeriod=${new Date().getFullYear() - 1}-01` + ["CP00", ...GRUPOS.map(g => g[0] === "CP13" ? "CP12" : g[0])].map(c => `&coicop=${c}`).join("")); dim = "coicop"; }
+    periodo = recs.map(r => r.time).sort().at(-1);
+    recs.filter(r => r.time === periodo).forEach(r => { const c = r[dim] === "CP00" ? "TOTAL" : r[dim] === "CP12" && dim === "coicop" ? "CP13" : r[dim]; tasas[c] = r.value; });
+    general = tasas.TOTAL; ok = GRUPOS.filter(g => Number.isFinite(tasas[g[0]])).length >= 5;
+  } catch (e) {}
+  GRUPOS.forEach(g => { if (!Number.isFinite(tasas[g[0]])) tasas[g[0]] = Number.isFinite(general) ? general : 2.5; });
+  if (!Number.isFinite(general)) general = 2.5;
+
+  const PERFILES = {
+    estudiante: {n: "🎓 Estudiante en piso compartido", d: "Beca y trabajo a tiempo parcial", ingreso: 950, gasto: {CP01: 210, CP04: 360, CP07: 40, CP11: 90, CP09: 70, CP03: 35, CP08: 30, CP13: 35}, coche: false, extra: false},
+    pareja: {n: "👫 Pareja joven de alquiler", d: "Dos sueldos, sin hijos, un coche", ingreso: 2600, gasto: {CP01: 440, CP04: 980, CP07: 280, CP11: 240, CP09: 150, CP03: 90, CP08: 75, CP13: 110}, coche: true, extra: true},
+    familia: {n: "👨‍👩‍👧‍👦 Familia con hipoteca", d: "Dos sueldos, dos hijos, un coche", ingreso: 3300, gasto: {CP01: 760, CP04: 1100, CP07: 330, CP11: 190, CP09: 170, CP03: 160, CP08: 95, CP13: 185}, coche: true, extra: true},
+  };
+  const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  // Imprevistos: cada opción tiene un pago (pago), cambios permanentes en el gasto de un grupo (perm: {grupo: factor}) y efecto en el bienestar (bien)
+  const EVENTOS = [
+    {t: "🏠 Te actualizan el alquiler (o la cuota de la hipoteca)", x: "Sube un 4 % el gasto en vivienda.", o: [
+      {n: "Aceptar la subida", perm: {CP04: 1.04}, bien: 0},
+      {n: "Negociar y comprometerte a quedarte dos años más", perm: {CP04: 1.02}, bien: -1},
+      {n: "Mudarte a una vivienda más barata y más lejos", pago: 450, perm: {CP04: 0.9, CP07: 1.15}, bien: -6}]},
+    {t: "⚡ La factura de la luz llega disparada", x: "Una ola de frío y la subida del precio de la electricidad.", o: [
+      {n: "Pagar y seguir igual", pago: 60, bien: 0},
+      {n: "Comparar ofertas y cambiar de compañía", pago: 60, perm: {CP04: 0.97}, bien: -1},
+      {n: "Poner menos la calefacción", perm: {CP04: 0.985}, bien: -4}]},
+    {t: "🔧 Se estropea el coche (o el portátil, si no tienes coche)", x: "La reparación cuesta 380 €.", o: [
+      {n: "Pagarla al contado", pago: 380, bien: 0},
+      {n: "Financiarla en 12 meses al 22 % TAE", plazo: {cuota: 35.5, meses: 12}, bien: 0},
+      {n: "No arreglarlo y apañarte sin él", perm: {CP07: 0.9}, bien: -8}]},
+    {t: "🎁 Cobras una paga extra", x: "Una paga adicional (o un ingreso extra por un trabajo puntual).", extra: true, o: [
+      {n: "Ahorrarla entera", ingreso: 1, bien: 1},
+      {n: "Un viaje de fin de semana", ingreso: 1, pago: 550, bien: 10},
+      {n: "Renovar muebles y electrodomésticos", ingreso: 1, pago: 700, bien: 6}]},
+    {t: "🛍️ Llegan las rebajas", x: "Hay buenas ofertas en ropa y tecnología.", o: [
+      {n: "Comprar lo que necesitas", pago: 120, bien: 3},
+      {n: "Darte un capricho grande", pago: 350, bien: 7},
+      {n: "No comprar nada", bien: -2}]},
+    {t: "💍 Boda de unos amigos", x: "Viaje, regalo y ropa.", o: [
+      {n: "Ir y quedar bien", pago: 380, bien: 8},
+      {n: "Ir con un presupuesto ajustado", pago: 180, bien: 4},
+      {n: "Poner una excusa", bien: -6}]},
+    {t: "🫒 El aceite de oliva y la fruta se disparan", x: "La cesta de la compra sube más de lo esperado.", o: [
+      {n: "Seguir comprando lo mismo", perm: {CP01: 1.04}, bien: 0},
+      {n: "Pasarte a marcas blancas y comparar supermercados", perm: {CP01: 0.94}, bien: -2},
+      {n: "Comer más a menudo fuera para no cocinar", perm: {CP01: 0.97, CP11: 1.25}, bien: 2}]},
+    {t: "📺 Oferta: plataforma de vídeo + gimnasio por 45 € al mes", x: "Un gasto fijo nuevo.", o: [
+      {n: "Contratarla", perm: {CP09: 1.3}, bien: 6},
+      {n: "Solo el gimnasio", perm: {CP09: 1.15}, bien: 4},
+      {n: "No, gracias", bien: 0}]},
+    {t: "⏰ Te ofrecen horas extra este mes", x: "250 € más, pero menos tiempo libre.", o: [
+      {n: "Aceptarlas", ingresoFijo: 250, bien: -4},
+      {n: "Aceptar solo la mitad", ingresoFijo: 120, bien: -1},
+      {n: "Rechazarlas", bien: 1}]},
+    {t: "🚌 Nuevo abono de transporte público bonificado", x: "El abono mensual cuesta la mitad.", o: [
+      {n: "Dejar el coche y moverte en autobús y metro", perm: {CP07: 0.6}, bien: -3},
+      {n: "Usarlo solo algunos días", perm: {CP07: 0.85}, bien: 0},
+      {n: "Seguir igual", bien: 0}]},
+    {t: "🏖️ Llegan las vacaciones de verano", x: "Todo el mundo hace planes.", o: [
+      {n: "Una semana en la playa", pago: 750, bien: 12},
+      {n: "Unos días en el pueblo de la familia", pago: 160, bien: 6},
+      {n: "Quedarte en casa", bien: -5}]},
+    {t: "📄 Se renuevan los seguros (hogar, coche, salud)", x: "La compañía sube un 9 % la prima.", o: [
+      {n: "Renovar sin mirar", pago: 90, perm: {CP13: 1.03}, bien: 0},
+      {n: "Comparar y cambiar de compañía", pago: 40, bien: -1},
+      {n: "Quitar coberturas", bien: -3}]},
+    {t: "📱 Tu móvil se rompe", x: "Uno nuevo de gama media cuesta 300 €.", o: [
+      {n: "Comprar uno nuevo", pago: 300, bien: 2},
+      {n: "Uno reacondicionado", pago: 150, bien: 0},
+      {n: "Repararlo como se pueda", pago: 60, bien: -3}]},
+    {t: "🍽️ Cenas y salidas con amigos", x: "Este mes hay muchos planes.", o: [
+      {n: "Apuntarte a todo", perm: {CP11: 1.15}, bien: 6},
+      {n: "Elegir los planes más baratos", bien: 2},
+      {n: "Quedarte en casa", perm: {CP11: 0.9}, bien: -5}]},
+  ];
+
+  let G;
+  function inicio() {
+    app.innerHTML = `<div class="sim-datos">${ok ? `<b>Inflación en España (tasa anual, ${C.periodoTexto(periodo)}, Eurostat):</b> general ${C.pct(general)} · ${GRUPOS.map(g => `${g[2]} ${g[1].toLowerCase()} ${C.pct(tasas[g[0]])}`).join(" · ")}` : `⚠️ No se han podido descargar los datos de Eurostat: se usa una inflación de referencia del ${C.pct(general)} para todos los grupos.`}</div>
+      <h3 style="border:0">Elige tu hogar</h3><div class="sim-opciones">${Object.entries(PERFILES).map(([k, p]) => `<button class="sim-opcion" data-p="${k}"><b>${p.n}</b><small>${p.d}. Ingresos netos: <b>${C.eur(p.ingreso)}</b> al mes. Gasto mensual previsto: ${C.eur(d3.sum(Object.values(p.gasto)))}.</small></button>`).join("")}</div>`;
+    app.querySelectorAll("[data-p]").forEach(b => b.onclick = () => empezar(b.dataset.p));
+  }
+  function empezar(perfil) {
+    const P = PERFILES[perfil];
+    const mazo = [...EVENTOS].filter(e => P.extra || !e.extra).sort(() => Math.random() - 0.5);
+    // la paga extra, en junio o diciembre si hay
+    const ev = mazo.slice(0, 12);
+    const iExtra = ev.findIndex(e => e.extra); if (iExtra >= 0) { const [e] = ev.splice(iExtra, 1); ev.splice(Math.random() < 0.5 ? 5 : 11, 0, e); }
+    G = {perfil, P, mes: 0, saldo: 0, bien: 70, gasto: {...P.gasto}, gasto0: {...P.gasto}, ev: ev.slice(0, 12), hist: [], plazos: [], gastadoGrupo: Object.fromEntries(GRUPOS.map(g => [g[0], 0]))};
+    C.evento("simuladores/fin-de-mes/inicio", "Llega a fin de mes: inicio");
+    pintar();
+  }
+  const totalGasto = () => d3.sum(Object.values(G.gasto));
+  function pintar() {
+    const m = G.mes, e = G.ev[m];
+    const cuotas = d3.sum(G.plazos.filter(p => p.meses > 0), p => p.cuota);
+    app.innerHTML = `<div class="sim-progreso">${MESES.map((_, k) => `<span class="${k < m ? "hecho" : k === m ? "actual" : ""}"></span>`).join("")}</div>
+      <h3 style="border:0;margin:.4rem 0">${MESES[m][0].toUpperCase() + MESES[m].slice(1)} · ${G.P.n}</h3>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-l">Ahorro acumulado</div><div class="kpi-n" style="color:${G.saldo >= 0 ? "#2E7D32" : "#C62828"}">${C.eur(G.saldo)}</div></div>
+        <div class="kpi"><div class="kpi-l">Ingresos del mes</div><div class="kpi-n">${C.eur(G.P.ingreso)}</div></div>
+        <div class="kpi"><div class="kpi-l">Gastos fijos del mes</div><div class="kpi-n">${C.eur(totalGasto() + cuotas)}</div><div class="kpi-s">${cuotas ? `Incluye ${C.eur(cuotas)} de préstamo` : "Suben con la inflación"}</div></div>
+        <div class="kpi"><div class="kpi-l">Bienestar del hogar</div><div class="kpi-n">${Math.round(G.bien)}</div><div class="sim-barra"><span style="width:${G.bien}%"></span></div></div></div>
+      <details><summary>Ver el presupuesto por grupos de gasto</summary><div style="overflow-x:auto"><${"table"} class="table table-sm sim-hist"><thead><tr><th>Grupo</th><th class="num">Gasto este mes</th><th class="num">En enero</th><th class="num">Inflación anual del grupo</th></tr></thead><tbody>
+        ${GRUPOS.map(g => `<tr><td>${g[2]} ${g[1]}</td><td class="num">${C.eur(G.gasto[g[0]], 2)}</td><td class="num">${C.eur(G.gasto0[g[0]], 2)}</td><td class="num">${C.pct(tasas[g[0]])}</td></tr>`).join("")}</tbody></${"table"}></div></details>
+      <div class="sim-evento"><div class="se-t">${e.t}</div><small class="nota">${e.x}</small>
+        <div class="sim-opciones">${e.o.map((o, k) => `<button class="sim-opcion" data-o="${k}"><b>${o.n}</b><small>${describe(o)}</small></button>`).join("")}</div></div>
+      <div id="fm-graf"></div>`;
+    app.querySelectorAll("[data-o]").forEach(b => b.onclick = () => elegir(e.o[+b.dataset.o]));
+    if (G.hist.length) C.lineas(document.getElementById("fm-graf"), [{nombre: "Ahorro acumulado (€)", color: "#B5175F", puntosVisibles: true, puntos: G.hist.map((h, k) => ({x: k + 1, y: h.saldo}))},
+      {nombre: "Bienestar (0-100) × 20", color: "#F29200", discontinua: true, puntos: G.hist.map((h, k) => ({x: k + 1, y: h.bien * 20}))}],
+      {xTipo: "lineal", xDominio: [1, 12], alto: 230, refs: [{y: 0, color: "#999"}], xFormato: v => MESES[v - 1]?.slice(0, 3) ?? "", xTexto: v => MESES[v - 1] ?? ""});
+  }
+  function describe(o) {
+    const p = [];
+    if (o.ingreso) p.push(`+${C.eur(G.P.ingreso)} de paga extra`);
+    if (o.ingresoFijo) p.push(`+${C.eur(o.ingresoFijo)}`);
+    if (o.pago) p.push(`pago de ${C.eur(o.pago)}`);
+    if (o.plazo) p.push(`${o.plazo.meses} cuotas de ${C.eur(o.plazo.cuota, 2)} (total ${C.eur(o.plazo.cuota * o.plazo.meses)})`);
+    if (o.perm) p.push(Object.entries(o.perm).map(([g, f]) => `${GRUPOS.find(x => x[0] === g)[1].toLowerCase()} ${f > 1 ? "+" : "−"}${C.num(Math.abs(f - 1) * 100, 0)} % cada mes`).join(", "));
+    p.push(o.bien > 0 ? `bienestar +${o.bien}` : o.bien < 0 ? `bienestar ${o.bien}` : "bienestar =");
+    return p.join(" · ");
+  }
+  function elegir(o) {
+    const P = G.P;
+    let ingreso = P.ingreso + (o.ingreso ? P.ingreso : 0) + (o.ingresoFijo || 0);
+    if (o.perm) Object.entries(o.perm).forEach(([g, f]) => { G.gasto[g] *= f; });
+    if (o.plazo) G.plazos.push({...o.plazo});
+    const cuotas = d3.sum(G.plazos.filter(p => p.meses > 0), p => p.cuota); G.plazos.forEach(p => p.meses--);
+    GRUPOS.forEach(g => { G.gastadoGrupo[g[0]] += G.gasto[g[0]]; });
+    const gasto = totalGasto() + cuotas + (o.pago || 0);
+    G.saldo += ingreso - gasto;
+    if (G.saldo < 0) { G.saldo *= 1.015; G.bien -= 3; }
+    G.bien = Math.max(0, Math.min(100, G.bien + (o.bien || 0)));
+    G.hist.push({saldo: G.saldo, bien: G.bien, eleccion: o.n, evento: G.ev[G.mes].t});
+    // los precios suben con la inflación de cada grupo
+    GRUPOS.forEach(g => { G.gasto[g[0]] *= (1 + tasas[g[0]] / 100) ** (1 / 12); });
+    G.mes++;
+    G.mes >= 12 ? final() : pintar();
+  }
+  function final() {
+    const tot = d3.sum(Object.values(G.gastadoGrupo));
+    const pesos = Object.fromEntries(GRUPOS.map(g => [g[0], G.gastadoGrupo[g[0]] / tot]));
+    const infPers = d3.sum(GRUPOS, g => pesos[g[0]] * tasas[g[0]]);
+    const tasaAhorro = 100 * G.saldo / (G.P.ingreso * 12);
+    const puntos = Math.max(0, Math.min(100, Math.round(0.7 * G.bien + 2.5 * Math.max(-20, Math.min(10, tasaAhorro)) + 5)));  // ahorrar más del 10 % no suma más puntos
+    const rc = C.record("fin-de-mes-" + G.perfil, puntos);
+    const nota = G.saldo < 0 ? "No has llegado a fin de mes: el hogar ha terminado el año endeudado." : G.bien < 40 ? "Has ahorrado, pero a costa de un bienestar muy bajo." : tasaAhorro > 8 && G.bien >= 60 ? "¡Excelente! Ahorro y bienestar equilibrados." : "Has llegado a fin de mes.";
+    app.innerHTML = `<div class="calc-result"><div class="sim-nota">${puntos} / 100</div><div class="calc-big">${nota}</div>
+      <div class="calc-small">Ahorro final: <b>${C.eur(G.saldo)}</b> (${C.pct(tasaAhorro, 1)} de los ingresos del año) · bienestar: <b>${Math.round(G.bien)}</b>. ${rc.nuevo ? "🏅 ¡Tu mejor resultado con este hogar!" : rc.record != null ? `Tu récord con este hogar: ${rc.record}.` : ""}</div></div>
+      <h3>Tu inflación personal: ${C.pct(infPers, 2)} (IPC general: ${C.pct(general, 2)})</h3>
+      <p>${Math.abs(infPers - general) < 0.2 ? "Tu inflación personal es casi igual a la oficial: tu cesta se parece a la cesta media." : infPers > general ? `Tu inflación personal es <b>${C.num(infPers - general, 2)} puntos mayor</b> que la oficial porque en tu cesta pesan más los grupos que más se han encarecido.` : `Tu inflación personal es <b>${C.num(general - infPers, 2)} puntos menor</b> que la oficial porque en tu cesta pesan menos los grupos que más se han encarecido.`}
+      Por eso cada hogar «siente» la inflación de forma distinta: el IPC mide la evolución de los precios de la cesta <b>media</b> de todos los hogares.</p>
+      <div style="overflow-x:auto"><${"table"} class="table table-sm sim-hist"><thead><tr><th>Grupo</th><th class="num">Gasto en el año</th><th class="num">Peso en tu cesta</th><th class="num">Inflación del grupo</th><th class="num">Contribución</th></tr></thead><tbody>
+        ${GRUPOS.map(g => `<tr><td>${g[2]} ${g[1]}</td><td class="num">${C.eur(G.gastadoGrupo[g[0]])}</td><td class="num">${C.pct(100 * pesos[g[0]])}</td><td class="num">${C.pct(tasas[g[0]])}</td><td class="num">${C.num(pesos[g[0]] * tasas[g[0]], 2)} p.p.</td></tr>`).join("")}
+        <tr style="font-weight:700"><td>Total</td><td class="num">${C.eur(tot)}</td><td class="num">100 %</td><td></td><td class="num">${C.num(infPers, 2)} %</td></tr></tbody></${"table"}></div>
+      <div id="fm-gfin"></div>
+      <details><summary>Tus decisiones mes a mes</summary><ol>${G.hist.map((h, k) => `<li><b>${MESES[k]}</b>: ${h.evento} → ${h.eleccion} (ahorro: ${C.eur(h.saldo)})</li>`).join("")}</ol></details>
+      <p class="nota">Compara tu cesta con las ponderaciones oficiales en <a href="descomposiciones.html">¿Qué explica cada indicador?</a> y calcula índices de precios en el <a href="numeros-indice.html">laboratorio de números índice</a>.</p>
+      <div class="sim-botones"><button class="sim-btn" id="fm-otra">🔄 Jugar otra vez</button></div>`;
+    C.lineas(document.getElementById("fm-gfin"), [{nombre: "Ahorro acumulado (€)", color: "#B5175F", puntosVisibles: true, puntos: G.hist.map((h, k) => ({x: k + 1, y: h.saldo}))}],
+      {xTipo: "lineal", xDominio: [1, 12], alto: 230, refs: [{y: 0, color: "#999"}], xFormato: v => MESES[v - 1]?.slice(0, 3) ?? "", xTexto: v => MESES[v - 1] ?? ""});
+    document.getElementById("fm-otra").onclick = inicio;
+    C.evento("simuladores/fin-de-mes/fin", "Llega a fin de mes: partida terminada");
+  }
+  inicio();
+})();
+</script>
+```

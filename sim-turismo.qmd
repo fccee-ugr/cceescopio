@@ -1,0 +1,112 @@
+---
+title: "🏖️ Gestiona tu destino turístico"
+subtitle: "Cinco años al frente del turismo de una ciudad: rentabilidad, empleo, vivienda y sostenibilidad"
+toc: false
+include-in-header:
+  - text: |
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script src="js/ccee-sim.js"></script>
+      <script src="js/sim-turismo.js"></script>
+---
+
+Diriges la política turística de **una ciudad media del sur de Europa** con patrimonio, universidad y unos 230.000 habitantes (un destino ficticio, inspirado en ciudades como Granada). Cada año decides el **precio medio** de los hoteles, la **promoción**, la **tasa turística**, las **nuevas plazas hoteleras** y qué hacer con las **viviendas turísticas**. Más turistas significan más empleo e ingresos, pero también más presión sobre la vivienda, los servicios y el medio ambiente. ¿Encontrarás el equilibrio?
+
+**Para:** Economía del Turismo, Dirección de Empresas Turísticas, Marketing Turístico, Economía Pública y Economía Urbana (GTUR, GADE, GECO, GMIM). **Duración:** 10-15 minutos. **Indicadores relacionados:** [Turismo](turismo.qmd), [Turismo en Andalucía](turismo-andalucia.qmd), [precio de la vivienda](precios.qmd) y [paro por regiones](andalucia.qmd).
+
+```{=html}
+<div class="sim-datos" id="tur-contexto">Cargando datos reales del turismo en Andalucía (Eurostat)…</div>
+<div id="tur-app"></div>
+```
+
+::: {.sim-modelo}
+**Cómo funciona el modelo.** La **demanda** de viajeros depende del precio (elasticidad −1,1), de la promoción (con rendimientos decrecientes), de la reputación del destino, de la tasa turística y de los acontecimientos de cada año. Los turistas eligen hotel o vivienda turística según el precio; si no hay plazas, la demanda se pierde. Las **nuevas plazas hoteleras** tardan un año en abrir. El **gasto turístico** (alojamiento más 78 € diarios por persona en comercio, restauración y cultura) genera unos 18 empleos por cada millón de euros. El **alquiler** de los residentes sube con la inflación, con el crecimiento de las viviendas turísticas y con la presión turística; la vivienda asequible financiada con la tasa lo modera. La **satisfacción de los residentes** cae con la saturación y la subida del alquiler y mejora con el empleo y con los servicios financiados con la tasa. La **sostenibilidad** empeora cuando crecen las pernoctaciones y mejora con la inversión en transporte y limpieza; ambas afectan a la reputación y, por tanto, a la demanda futura. La nota es la media geométrica de cuatro objetivos (empleo, residentes, sostenibilidad y vivienda): descuidar uno por completo la hunde. Los parámetros son ilustrativos, elegidos con fines docentes.
+:::
+
+```{=html}
+<script>
+(async function () {
+  const C = window.CCEE, T = window.SimTurismo, app = document.getElementById("tur-app");
+  // contexto real: pernoctaciones en Andalucía (Eurostat)
+  C.primera([["tour_occ_nin2", "&c_resid=TOTAL&unit=NR&nace_r2=I551-I553&geo=ES61&sinceTimePeriod=2015"]]).then(s => {
+    const el = document.getElementById("tur-contexto");
+    if (!s) { el.remove(); return; }
+    const u = s.at(-1), a19 = s.find(r => r.t === "2019");
+    el.innerHTML = `<b>Datos reales:</b> los alojamientos turísticos de Andalucía registraron <b>${C.num(u.v / 1e6, 1)} millones de pernoctaciones</b> en ${u.t}${a19 ? ` (${C.pct(100 * (u.v / a19.v - 1), 1, true)} respecto a 2019, antes de la pandemia)` : ""}. Fuente: Eurostat (tour_occ_nin2). Compara Granada con otras provincias en <a href="turismo-andalucia.html">Turismo en Andalucía</a>.`;
+  });
+
+  const N = 5;
+  let G;
+  function nueva() { G = {e: T.inicial(), hist: [], dec: [], eventos: [...T.EVENTOS].sort(() => Math.random() - 0.5).slice(0, N)}; pintar(); C.evento("simuladores/turismo/inicio", "Destino turístico: inicio"); }
+
+  function pintar() {
+    const k = G.hist.length, e = G.e, ult = G.hist.at(-1), ev = G.eventos[k];
+    const d = G.dec.at(-1) || T.DEF;
+    app.innerHTML = `<div class="sim-progreso">${Array.from({length: N}, (_, i) => `<span class="${i < k ? "hecho" : i === k ? "actual" : ""}"></span>`).join("")}</div>
+      <h3 style="border:0;margin:.4rem 0">Año ${k + 1} de ${N}</h3>
+      ${ult ? kpis(ult) : `<p>Situación de partida: unos <b>2 millones de viajeros</b> al año que pasan una media de <b>2 noches</b>, ${C.num(e.plazasHotel, 0)} plazas hoteleras y ${C.num(e.plazasVut, 0)} plazas en viviendas turísticas. El precio medio de una habitación doble es de 95 € por noche.</p>`}
+      <div class="sim-evento"><div class="se-t">📰 Previsión para este año</div><div style="font-size:1.05rem">${ev.t}</div><small class="nota">${ev.x}</small></div>
+      <div class="sim-panel"><b>Tus decisiones para el año ${k + 1}</b>
+        <div class="sim-controles" id="tur-sl"></div>
+        <div style="margin:.5rem 0"><b>Viviendas turísticas:</b><div class="sim-opciones" id="tur-pol">${Object.entries(T.POLITICAS).map(([kk, p]) => `<label class="sim-opcion" style="cursor:pointer"><input type="radio" name="tur-pol" value="${kk}" ${kk === d.politica ? "checked" : ""}> <b style="display:inline">${p.n}</b></label>`).join("")}</div></div>
+        <div class="sim-botones"><button class="sim-btn" id="tur-ok">▶️ Ejecutar el año ${k + 1}</button></div></div>
+      ${ult ? `<div class="uses"><div><b>Ocupación hotelera (%)</b><div id="tur-g1"></div></div><div><b>Alquiler (año 0 = 100), residentes y sostenibilidad (0-100)</b><div id="tur-g2"></div></div></div>` : ""}`;
+    const sl = {
+      precio: C.deslizador({etiqueta: "Precio medio de la habitación doble (€/noche)", min: 50, max: 220, paso: 5, valor: d.precio, formato: v => v + " €"}),
+      promo: C.deslizador({etiqueta: "Presupuesto de promoción (millones de € al año)", min: 0, max: 5, paso: 0.25, valor: d.promo, formato: v => C.num(v, 2) + " M€"}),
+      tasa: C.deslizador({etiqueta: "Tasa turística (€ por persona y noche)", min: 0, max: 5, paso: 0.25, valor: d.tasa, formato: v => C.num(v, 2) + " €"}),
+      vivienda: C.deslizador({etiqueta: "Parte de la tasa para vivienda asequible (el resto, a transporte y limpieza)", min: 0, max: 100, paso: 10, valor: d.vivienda, formato: v => v + " %"}),
+      nuevas: C.deslizador({etiqueta: "Licencias para nuevas plazas hoteleras (abren el año siguiente)", min: 0, max: 3000, paso: 100, valor: 0, formato: v => C.num(v, 0) + " plazas"}),
+    };
+    Object.values(sl).forEach(s => document.getElementById("tur-sl").appendChild(s));
+    document.getElementById("tur-ok").onclick = () => {
+      const dec = {precio: sl.precio.valor, promo: sl.promo.valor, tasa: sl.tasa.valor, vivienda: sl.vivienda.valor, nuevas: sl.nuevas.valor, politica: document.querySelector("input[name=tur-pol]:checked").value};
+      G.dec.push(dec); G.e = T.ano(G.e, dec, ev); G.hist.push(G.e);
+      G.hist.length >= N ? final() : pintar();
+    };
+    if (ult) graficos("tur-g1", "tur-g2");
+  }
+  function kpis(u) {
+    const f = (v, r) => v >= r ? "sube" : "baja";
+    return `<div class="kpi-grid">
+      <div class="kpi"><div class="kpi-l">Viajeros</div><div class="kpi-n">${C.num(u.viajeros / 1e6, 2)} M</div><div class="kpi-s">${C.num(u.noches / 1e6, 2)} M de pernoctaciones${u.perdidas > 1e4 ? ` · <b class="baja">${C.num(u.perdidas / 1e6, 2)} M perdidas por falta de plazas</b>` : ""}</div></div>
+      <div class="kpi"><div class="kpi-l">Ocupación hotelera</div><div class="kpi-n">${C.pct(100 * u.ocupacion, 0)}</div><div class="kpi-s">${C.num(u.plazasHotel, 0)} plazas hoteleras · ${C.num(u.plazasVut, 0)} en viviendas turísticas</div></div>
+      <div class="kpi"><div class="kpi-l">Gasto turístico y empleo</div><div class="kpi-n">${C.num(u.gasto / 1e6, 0)} M€</div><div class="kpi-s">${C.num(u.empleo, 0)} empleos · tasa recaudada: ${C.num(u.recaudacion / 1e6, 1)} M€</div></div>
+      <div class="kpi"><div class="kpi-l">Alquiler de los residentes</div><div class="kpi-n">${C.num(u.alquiler, 1)}</div><div class="kpi-s">Año 0 = 100 · este año ${C.pct(100 * u.varAlq, 1, true)}</div></div>
+      <div class="kpi"><div class="kpi-l">Satisfacción de los residentes</div><div class="kpi-n">${Math.round(u.satisf)}</div><div class="sim-barra"><span style="width:${u.satisf}%"></span></div></div>
+      <div class="kpi"><div class="kpi-l">Sostenibilidad</div><div class="kpi-n">${Math.round(u.sost)}</div><div class="sim-barra"><span style="width:${u.sost}%;background:#2E8B57"></span></div><div class="kpi-s">Reputación del destino: ${C.num(100 * u.rep, 0)}</div></div></div>`;
+  }
+  function graficos(id1, id2) {
+    const h = G.hist, x = (i) => i + 1, o = {xTipo: "lineal", xDominio: [1, N], alto: 240, xFormato: v => "Año " + v, xTexto: v => "Año " + v};
+    C.lineas(document.getElementById(id1), [{nombre: "Ocupación hotelera", color: "#F29200", puntosVisibles: true, puntos: h.map((u, i) => ({x: x(i), y: 100 * u.ocupacion}))}],
+      {...o, ySufijo: " %", refs: [{y: 88, texto: "Saturación", color: "#C62828"}]});
+    C.lineas(document.getElementById(id2), [{nombre: "Alquiler", color: "#3C3C3B", puntosVisibles: true, puntos: h.map((u, i) => ({x: x(i), y: u.alquiler}))},
+      {nombre: "Residentes", color: "#2C6FBB", puntosVisibles: true, puntos: h.map((u, i) => ({x: x(i), y: u.satisf}))},
+      {nombre: "Sostenibilidad", color: "#2E8B57", puntosVisibles: true, puntos: h.map((u, i) => ({x: x(i), y: u.sost}))}], o);
+  }
+  function final() {
+    const p = T.puntuar(G.hist), u = G.hist.at(-1), rc = C.record("turismo", p.total);
+    const comp = [["💼 Empleo", p.pEmpleo], ["🏘️ Residentes", p.pResid], ["🌱 Sostenibilidad", p.pSost], ["🏠 Vivienda", p.pViv]];
+    const debil = comp.reduce((a, b) => b[1] < a[1] ? b : a);
+    const consejos = {
+      "💼 Empleo": "El empleo turístico ha caído: unos precios muy altos, una tasa elevada o la falta de promoción alejan a los visitantes.",
+      "🏘️ Residentes": "Los residentes están descontentos: la saturación y la subida del alquiler pesan más que el empleo que crea el turismo.",
+      "🌱 Sostenibilidad": "La sostenibilidad se ha resentido: el crecimiento de las pernoctaciones necesita inversión en transporte, limpieza y gestión de flujos.",
+      "🏠 Vivienda": "El alquiler se ha disparado: las viviendas turísticas compiten con el alquiler residencial."};
+    app.innerHTML = `<div class="calc-result"><div class="sim-nota">${p.total} / 100</div>
+      <div class="calc-big">${p.total >= 70 ? "¡Destino equilibrado y competitivo!" : p.total >= 50 ? "Buena gestión, con margen de mejora" : p.total >= 30 ? "Gestión desequilibrada" : "El destino ha perdido el rumbo"}</div>
+      <div class="calc-small">${comp.map(c => `${c[0]}: <b>${C.num(c[1], 0)}/25</b>`).join(" · ")}. ${rc.nuevo ? "🏅 ¡Tu mejor resultado!" : rc.record != null ? `Tu récord: ${rc.record}.` : ""}</div></div>
+      <p>${p.total < 70 ? `<b>Tu punto débil:</b> ${consejos[debil[0]]}` : "Has combinado crecimiento económico y calidad de vida: la clave de un turismo sostenible."}</p>
+      ${kpis(u)}
+      <div class="uses"><div><b>Ocupación hotelera (%)</b><div id="tur-gf1"></div></div><div><b>Alquiler, residentes y sostenibilidad</b><div id="tur-gf2"></div></div></div>
+      <div style="overflow-x:auto"><${"table"} class="table table-sm sim-hist"><thead><tr><th>Año</th><th>Acontecimiento</th><th class="num">Precio</th><th class="num">Promoción</th><th class="num">Tasa</th><th>Viviendas turísticas</th><th class="num">Viajeros</th><th class="num">Empleo</th></tr></thead><tbody>
+      ${G.hist.map((h, i) => `<tr><td>${i + 1}</td><td>${G.eventos[i].t}</td><td class="num">${G.dec[i].precio} €</td><td class="num">${C.num(G.dec[i].promo, 2)} M€</td><td class="num">${C.num(G.dec[i].tasa, 2)} €</td><td>${T.POLITICAS[G.dec[i].politica].n.split(":")[0]}</td><td class="num">${C.num(h.viajeros / 1e6, 2)} M</td><td class="num">${C.num(h.empleo, 0)}</td></tr>`).join("")}</tbody></${"table"}></div>
+      <p><b>Para debatir en clase:</b> ¿debe una ciudad limitar el número de turistas? ¿Quién paga y quién se beneficia de la tasa turística? ¿Qué indicadores reales usarías para medir la «saturación» turística? Busca datos de pernoctaciones y ocupación en <a href="turismo.html">Turismo</a>.</p>
+      <div class="sim-botones"><button class="sim-btn" id="tur-otra">🔄 Jugar otra vez</button></div>`;
+    graficos("tur-gf1", "tur-gf2");
+    document.getElementById("tur-otra").onclick = nueva;
+    C.evento("simuladores/turismo/fin", "Destino turístico: partida terminada");
+  }
+  nueva();
+})();
+</script>
+```

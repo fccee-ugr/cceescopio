@@ -1,0 +1,46 @@
+---
+title: "🧪 Simuladores"
+subtitle: "Toma decisiones económicas con datos reales y observa sus consecuencias"
+toc: false
+---
+
+Los simuladores de CCEEscopio parten de los **últimos datos publicados** (Eurostat y las bolsas) y te ponen en el papel de quien decide: un banco central, una inversora, un hogar o una ciudad turística. Cada uno termina con una **puntuación**, una comparación con otras estrategias y enlaces a los **indicadores reales** relacionados. Funcionan en el móvil, no piden datos personales y tu mejor resultado se guarda solo en tu navegador.
+
+```{=html}
+<div class="cat-filtros" id="cat-filtros"></div>
+<div class="cat-grid" id="cat-grid"></div>
+<script>
+(function () {
+  const SIMS = [
+    {u: "sim-banco-central.html", i: "🏦", t: "Gobernador del Banco Central", d: "Fija los tipos de interés durante ocho trimestres. Empieza con los datos de hoy o revive la crisis inflacionista de 2022-2023 y compárate con el BCE.", g: ["GECO", "GADE", "GFICO"], dur: "10-15 min", ind: "Inflación · paro · PIB · euríbor"},
+    {u: "sim-cartera.html", i: "💼", t: "Gestiona una cartera", d: "Reparte 100.000 € entre índices bursátiles, oro y un depósito en un periodo secreto de la última década. Rentabilidad, volatilidad, máxima caída y ratio de Sharpe.", g: ["GFICO", "GADE", "GECO"], dur: "10 min", ind: "Bolsa · euríbor"},
+    {u: "sim-fin-de-mes.html", i: "💶", t: "Llega a fin de mes", d: "Gestiona el presupuesto de un hogar durante un año con la inflación real de cada grupo de gasto y descubre tu inflación personal.", g: ["GECO", "GADE", "GFICO", "GMIM", "GTUR"], dur: "10 min", ind: "IPCA por grupos"},
+    {u: "sim-turismo.html", i: "🏖️", t: "Gestiona tu destino turístico", d: "Precios, promoción, tasa turística, plazas hoteleras y viviendas turísticas: equilibra empleo, vivienda, residentes y sostenibilidad.", g: ["GTUR", "GADE", "GECO", "GMIM"], dur: "10-15 min", ind: "Pernoctaciones · ocupación · vivienda"},
+    {u: "politica-fiscal.html", i: "🏛️", t: "Simulador de política fiscal", d: "¿Hacia dónde va la deuda pública? Saldo primario, tipos de interés y crecimiento, con los datos de partida de España.", g: ["GECO", "GADE"], dur: "5 min", ind: "Deuda · déficit"},
+    {u: "hipoteca.html", i: "🏠", t: "Simulador de hipotecas y préstamos", d: "Cuota, intereses, TAE y cuadro de amortización con el euríbor más reciente.", g: ["GFICO", "GADE", "GECO"], dur: "5 min", ind: "Euríbor"},
+  ];
+  const grados = ["Todos", "GADE", "GECO", "GFICO", "GMIM", "GTUR"];
+  let sel = "Todos";
+  const fil = document.getElementById("cat-filtros"), grid = document.getElementById("cat-grid");
+  function pintar() {
+    fil.innerHTML = grados.map(g => `<button class="chip-sel ${g === sel ? "on" : ""}" data-g="${g}">${g}</button>`).join("");
+    fil.querySelectorAll("button").forEach(b => b.onclick = () => { sel = b.dataset.g; pintar(); });
+    grid.innerHTML = SIMS.filter(s => sel === "Todos" || s.g.includes(sel)).map(s => `<a class="cat-card" href="${s.u}">
+      <span class="cat-i">${s.i}</span><span class="cat-t">${s.t}</span><span class="cat-d">${s.d}</span>
+      <span class="cat-meta">${s.g.map(g => `<span>${g}</span>`).join("")}<span class="dur">⏱️ ${s.dur}</span><span class="ind">📊 ${s.ind}</span></span></a>`).join("");
+  }
+  pintar();
+})();
+</script>
+```
+
+## Cómo usarlos en clase
+
+- **Como actividad final** de un tema: cada estudiante juega una partida y entrega su puntuación y una captura del resultado con una explicación de sus decisiones.
+- **Por equipos**: proyecta el simulador y que cada equipo vote la decisión de cada ronda. Al final, comparad vuestra trayectoria con la de la regla de Taylor, el BCE real o las estrategias de referencia.
+- **Para debatir**: ¿por qué el BCE tardó en subir los tipos en 2022? ¿Es mejor una cartera diversificada aunque rinda menos? ¿Cuánto turismo puede soportar una ciudad?
+- **Con los datos reales**: después de cada simulador, busca los indicadores relacionados en CCEEscopio y comprueba si el modelo se parece a lo que ocurrió.
+
+::: {.nota}
+Los simuladores son **modelos simplificados con fines docentes**: cada uno explica al final de su página cómo funciona y qué supuestos hace. No son modelos de previsión ni recomendaciones de inversión.
+:::

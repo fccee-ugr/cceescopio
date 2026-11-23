@@ -7,6 +7,11 @@ toc-depth: 2
 
 Todos los juegos de CCEEscopio D+I usan datos oficiales de Eurostat que se cargan en directo, así que cada día pueden cambiar. Hay dos tipos: los **juegos para clase**, en los que el profesorado proyecta un código QR y los estudiantes juegan desde el móvil con un ranking en directo, y los **juegos para jugar a tu ritmo**, que están en esta misma página.
 
+::: {.callout-tip}
+## 🧪 ¿Buscas algo más largo? Prueba los simuladores
+En los [simuladores](simuladores.qmd) tomas decisiones durante varias rondas con datos reales: [Gobernador del Banco Central](sim-banco-central.qmd), [Gestiona una cartera](sim-cartera.qmd), [Llega a fin de mes](sim-fin-de-mes.qmd) y [Gestiona tu destino turístico](sim-turismo.qmd).
+:::
+
 ## 🏫 Juegos para clase con código QR {#qr}
 
 ::: {.cards}

@@ -2,6 +2,9 @@
 title: "CCEEscopio D+I"
 toc: false
 page-layout: full
+include-in-header:
+  - text: |
+      <script src="js/ccee-sim.js"></script>
 ---
 
 ::: {.hero}
@@ -13,6 +16,50 @@ page-layout: full
 
 <p class="visitas-ccee" hidden>👁️ <span class="vc-num"></span> visitas a CCEEscopio</p>
 :::
+
+## Hoy en la economía {#hoy}
+
+```{=html}
+<div class="hoy-cab"><span class="hoy-fecha" id="hoy-fecha"></span><span class="hoy-act" id="hoy-act"></span></div>
+<div class="ticker" id="hoy-bolsa" aria-label="Cotizaciones"></div>
+<p class="nota" id="hoy-bolsa-nota"></p>
+<div class="hoy-bloques" id="hoy-noticias"><p class="hoy-vacio">Cargando las noticias del día…</p></div>
+<p class="nota">Las noticias más destacadas de las últimas 24 horas (las que publican más medios), seleccionadas cada mañana antes de las 9:00 a partir de Google Noticias. Los titulares enlazan a la noticia original y las etiquetas, a los indicadores de CCEEscopio con los que puedes comprobarlas. Más noticias en <a href="noticias.html">Noticias e indicadores</a>; todas las cotizaciones en <a href="bolsa.html">Bolsa al día</a>.</p>
+<script>
+(async function () {
+  const C = window.CCEE, $ = (id) => document.getElementById(id);
+  const hoyTxt = new Date().toLocaleDateString("es-ES", {weekday: "long", day: "numeric", month: "long", year: "numeric"});
+  $("hoy-fecha").textContent = hoyTxt.charAt(0).toUpperCase() + hoyTxt.slice(1);
+  // cotizaciones
+  C.rama("bolsa", "bolsa-resumen.json").then(b => {
+    if (!b) { $("hoy-bolsa").remove(); return; }
+    const ids = ["ibex35", "eurostoxx50", "dax", "sp500", "nasdaq", "nikkei", "brent", "oro"];
+    const S = ids.map(id => b.series.find(s => s.id === id)).filter(Boolean);
+    $("hoy-bolsa").innerHTML = S.map(s => {
+      const cl = s.d1 > 0 ? "sube" : s.d1 < 0 ? "baja" : "";
+      const nom = s.nombre.replace(/ \(.*\)$/, "");
+      return `<a class="tick" href="bolsa.html" title="${C.esc(s.nombre)} · cierre del ${C.fecha(s.fecha + "T12:00", {day: "numeric", month: "long"})}">
+        <span class="tick-n">${C.esc(nom)}</span><span class="tick-v">${C.num(s.valor, s.valor < 1000 ? 2 : 0)}</span><span class="tick-d ${cl}">${s.d1 > 0 ? "▲" : s.d1 < 0 ? "▼" : ""} ${C.pct(s.d1, 2, true)}</span>${C.spark(s.spark, {w: 120, h: 24})}</a>`;
+    }).join("");
+    $("hoy-bolsa-nota").textContent = `Último cierre disponible y variación diaria. Cotizaciones actualizadas el ${new Date(b.actualizado * 1000).toLocaleString("es-ES", {day: "numeric", month: "long", hour: "2-digit", minute: "2-digit"})} (fuente: ${b.fuente}).`;
+  });
+  // noticias del día
+  const d = await C.rama("portada", "portada.json");
+  if (!d) { $("hoy-noticias").innerHTML = `<p class="hoy-vacio">Las noticias del día todavía no están disponibles. Mientras tanto, consulta <a href="noticias.html">Noticias e indicadores</a>.</p>`; return; }
+  const act = new Date(d.actualizado * 1000);
+  const esHoy = act.toDateString() === new Date().toDateString();
+  $("hoy-act").textContent = (esHoy ? "Noticias seleccionadas hoy a las " + act.toLocaleTimeString("es-ES", {hour: "2-digit", minute: "2-digit"}) : "Noticias del " + C.fecha(act, {weekday: "long", day: "numeric", month: "long"}));
+  const hace = ts => { const h = (Date.now() / 1000 - ts) / 3600; return h < 1 ? "hace menos de una hora" : h < 24 ? `hace ${Math.round(h)} h` : C.fecha(ts * 1000, {day: "numeric", month: "short"}); };
+  const icono = {espana: "🇪🇸", europa: "🇪🇺", mundo: "🌍"};
+  $("hoy-noticias").innerHTML = d.bloques.map(b => `<div class="hoy-bloque"><h3>${icono[b.id] || ""} ${C.esc(b.titulo)}</h3>${b.noticias.length ? `<ol>${b.noticias.map(n => `
+    <li><a class="hoy-t" href="${C.esc(n.url)}" target="_blank" rel="noopener">${C.esc(n.t)}</a>
+      <span class="hoy-m">${C.esc(n.fuente)} · ${hace(n.ts)}${n.medios > 1 ? ` · en ${n.medios} medios` : ""}</span>
+      ${(n.ind.length || n.bolsa) ? `<div class="hoy-ind">${n.ind.map(i => d.indicadores[i] ? `<a href="${d.indicadores[i].pagina}.html?i=${i}">📊 ${C.esc(d.indicadores[i].nombre)}</a>` : "").join("")}${n.bolsa ? `<a href="bolsa.html">📈 Bolsa al día</a>` : ""}</div>` : ""}
+    </li>`).join("")}</ol>` : `<p class="hoy-vacio">Sin noticias destacadas en las últimas horas.</p>`}</div>`).join("");
+  document.querySelectorAll("#hoy-noticias a.hoy-t").forEach(a => a.addEventListener("click", () => C.evento("inicio/noticia", "Inicio: noticia del día")));
+})();
+</script>
+```
 
 ## CCEEscopio D+I en vídeo
 
@@ -65,6 +112,20 @@ page-layout: full
 [<span class="icon">🔎</span><span class="ct">Buscador de indicadores</span><span class="cd">Los 99 indicadores de CCEEscopio en una tabla.</span>](indicadores.qmd){.card-ccee}
 :::
 
+## Simuladores con datos reales {#simuladores}
+
+Toma decisiones y observa sus consecuencias. Cada simulador parte de los **últimos datos publicados** y enlaza con los indicadores de CCEEscopio. [Ver todos los simuladores](simuladores.qmd).
+
+::: {.cards}
+[<span class="icon">🏦</span><span class="ct">Gobernador del Banco Central</span><span class="cd">Fija los tipos de interés durante ocho trimestres y controla la inflación sin provocar una recesión.</span>](sim-banco-central.qmd){.card-ccee}
+
+[<span class="icon">💼</span><span class="ct">Gestiona una cartera</span><span class="cd">Invierte 100.000 € en un periodo secreto de la historia de la bolsa y descubre su rentabilidad y su riesgo.</span>](sim-cartera.qmd){.card-ccee}
+
+[<span class="icon">💶</span><span class="ct">Llega a fin de mes</span><span class="cd">Gestiona el presupuesto de un hogar durante un año con la inflación real de cada tipo de gasto.</span>](sim-fin-de-mes.qmd){.card-ccee}
+
+[<span class="icon">🏖️</span><span class="ct">Gestiona tu destino turístico</span><span class="cd">Precios, plazas, promoción y tasa turística: rentabilidad, empleo, vivienda y sostenibilidad.</span>](sim-turismo.qmd){.card-ccee}
+:::
+
 ## Para cada asignatura de la Facultad
 
 En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, GMIM y GTUR) y asignaturas**, los indicadores recomendados y ejemplos de uso en clase.
@@ -95,6 +156,10 @@ En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, G
 Los indicadores se **descargan en directo de la API de Eurostat** cada vez que se abre una página, de modo que muestran siempre la última publicación oficial. Cada gráfico permite elegir los territorios que se comparan (España, Andalucía, comunidades autónomas y países de la UE), consultar los valores pasando el ratón y **descargar los datos** en CSV.
 
 ## Novedades
+
+- **Nuevo · [Hoy en la economía](#hoy)** <span class="badge-nuevo">nuevo</span>: cada mañana, antes de las 9:00, la portada muestra las noticias económicas y empresariales más destacadas del día en España, Europa y el mundo, con los indicadores de CCEEscopio para comprobarlas, y las últimas cotizaciones de las bolsas.
+- **Nuevo · [Bolsa al día](bolsa.qmd)** <span class="badge-nuevo">nuevo</span>: el IBEX 35, el Euro Stoxx 50, Wall Street, Asia, el petróleo, el oro y las grandes empresas del IBEX, actualizados tres veces al día, con gráficos comparados en base 100, rentabilidades, volatilidad y retos que los relacionan con los indicadores económicos.
+- **Nuevo · [Simuladores](simuladores.qmd)** <span class="badge-nuevo">nuevo</span>: [Gobernador del Banco Central](sim-banco-central.qmd), [Gestiona una cartera](sim-cartera.qmd), [Llega a fin de mes](sim-fin-de-mes.qmd) y [Gestiona tu destino turístico](sim-turismo.qmd), con datos reales de Eurostat y de las bolsas.
 
 - **Nuevo · [Piedra, papel o tijera](ppt.qmd)** <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. El profesorado elige cuántas preguntas hay que superar; cada acierto da una partida contra la aplicación (si ganas, pasas de pregunta; si empatas, vuelves a jugar; si pierdes, contestas otra pregunta). Gana quien antes las supere todas.
 - **Nuevo · [Detecta el engaño](detecta-engano.qmd)** <span class="badge-nuevo">nuevo</span>: seis pares de gráficos con datos reales de Eurostat, uno honesto y otro engañoso. Descubre cuál engaña y qué truco usa: ejes cortados, fechas a medida, euros sin deflactar, bases de índice interesadas…

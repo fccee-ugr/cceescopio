@@ -51,6 +51,10 @@ Todas las calculadoras funcionan en tu navegador: si usas tus propios datos, **n
 
 <a class="calc-card" href="hipoteca.html"><b>Simulador de hipotecas y préstamos</b><span>Cuota, cuadro de amortización y TAE con el euríbor actual.</span></a>
 
+<a class="calc-card" href="sim-cartera.html"><b>Gestiona una cartera</b><span>Rentabilidad, volatilidad, máxima caída y ratio de Sharpe con cotizaciones reales.</span></a>
+
+<a class="calc-card" href="sim-fin-de-mes.html"><b>Llega a fin de mes</b><span>Presupuesto de un hogar con la inflación real de cada grupo de gasto e inflación personal.</span></a>
+
 </div>
 ```
 
@@ -62,6 +66,10 @@ Todas las calculadoras funcionan en tu navegador: si usas tus propios datos, **n
 <a class="calc-card" href="desigualdad-calc.html"><b>Calculadora de desigualdad</b><span>Gini, curva de Lorenz, S80/S20 e índices de Theil con tus datos, con inferencia jackknife.</span></a>
 
 <a class="calc-card" href="politica-fiscal.html"><b>Simulador de política fiscal</b><span>Dinámica de la deuda pública y efecto de un ajuste fiscal.</span></a>
+
+<a class="calc-card" href="sim-banco-central.html"><b>Gobernador del Banco Central</b><span>Política monetaria, inflación, paro y regla de Taylor durante ocho trimestres.</span></a>
+
+<a class="calc-card" href="sim-turismo.html"><b>Gestiona tu destino turístico</b><span>Precios, tasa turística y viviendas turísticas: empleo, alquiler y sostenibilidad.</span></a>
 
 </div>
 ```

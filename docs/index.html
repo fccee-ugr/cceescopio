@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6cb6ee23776d438a000a80a7a314e910.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-bdfe3d2d08c237835f7fa3a677371bd4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,6 +69,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script src="js/ccee-sim.js"></script>
 
 
 <meta property="og:title" content="CCEEscopio D+I">
@@ -181,6 +182,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Mercados al día</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./bolsa.html">
+ <span class="dropdown-text">Bolsa al día: índices y empresas del IBEX</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./piramides.html">
  <span class="dropdown-text">Pirámides de población</span></a>
   </li>  
@@ -237,6 +242,10 @@ ul.task-list li input[type="checkbox"] {
         <li>
     <a class="dropdown-item" href="./noticias.html">
  <span class="dropdown-text">Noticias e indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bolsa.html">
+ <span class="dropdown-text">Bolsa al día</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
@@ -395,16 +404,42 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./juegos.html">
  <span class="dropdown-text">🎮 Juegos para clase</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./simuladores.html">
+ <span class="dropdown-text">🧪 Simuladores con datos reales</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-juegos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">🎮 Juegos</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-juegos-y-simuladores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Juegos y simuladores</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-juegos">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-juegos-y-simuladores">    
         <li>
     <a class="dropdown-item" href="./juegos.html">
  <span class="dropdown-text">Todos los juegos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./simuladores.html">
+ <span class="dropdown-text">🧪 Todos los simuladores</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Simuladores con datos reales</li>
+        <li>
+    <a class="dropdown-item" href="./sim-banco-central.html">
+ <span class="dropdown-text">Gobernador del Banco Central</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sim-cartera.html">
+ <span class="dropdown-text">Gestiona una cartera</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sim-fin-de-mes.html">
+ <span class="dropdown-text">Llega a fin de mes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sim-turismo.html">
+ <span class="dropdown-text">Gestiona tu destino turístico</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">En clase, con código QR y ranking en directo</li>
@@ -549,7 +584,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Fecha de modificación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">18 de noviembre de 2026</p>
+      <p class="date-modified">23 de noviembre de 2026</p>
     </div>
   </div>
     
@@ -570,6 +605,48 @@ Observatorio de indicadores económicos y empresariales al servicio de la <stron
 👁️ <span class="vc-num"></span> visitas a CCEEscopio
 </p>
 </div>
+<section id="hoy" class="level2">
+<h2 class="anchored" data-anchor-id="hoy">Hoy en la economía</h2>
+<div class="hoy-cab"><span class="hoy-fecha" id="hoy-fecha"></span><span class="hoy-act" id="hoy-act"></span></div>
+<div class="ticker" id="hoy-bolsa" aria-label="Cotizaciones"></div>
+<p class="nota" id="hoy-bolsa-nota"></p>
+<div class="hoy-bloques" id="hoy-noticias"><p class="hoy-vacio">Cargando las noticias del día…</p></div>
+<p class="nota">Las noticias más destacadas de las últimas 24 horas (las que publican más medios), seleccionadas cada mañana antes de las 9:00 a partir de Google Noticias. Los titulares enlazan a la noticia original y las etiquetas, a los indicadores de CCEEscopio con los que puedes comprobarlas. Más noticias en <a href="noticias.html">Noticias e indicadores</a>; todas las cotizaciones en <a href="bolsa.html">Bolsa al día</a>.</p>
+<script>
+(async function () {
+  const C = window.CCEE, $ = (id) => document.getElementById(id);
+  const hoyTxt = new Date().toLocaleDateString("es-ES", {weekday: "long", day: "numeric", month: "long", year: "numeric"});
+  $("hoy-fecha").textContent = hoyTxt.charAt(0).toUpperCase() + hoyTxt.slice(1);
+  // cotizaciones
+  C.rama("bolsa", "bolsa-resumen.json").then(b => {
+    if (!b) { $("hoy-bolsa").remove(); return; }
+    const ids = ["ibex35", "eurostoxx50", "dax", "sp500", "nasdaq", "nikkei", "brent", "oro"];
+    const S = ids.map(id => b.series.find(s => s.id === id)).filter(Boolean);
+    $("hoy-bolsa").innerHTML = S.map(s => {
+      const cl = s.d1 > 0 ? "sube" : s.d1 < 0 ? "baja" : "";
+      const nom = s.nombre.replace(/ \(.*\)$/, "");
+      return `<a class="tick" href="bolsa.html" title="${C.esc(s.nombre)} · cierre del ${C.fecha(s.fecha + "T12:00", {day: "numeric", month: "long"})}">
+        <span class="tick-n">${C.esc(nom)}</span><span class="tick-v">${C.num(s.valor, s.valor < 1000 ? 2 : 0)}</span><span class="tick-d ${cl}">${s.d1 > 0 ? "▲" : s.d1 < 0 ? "▼" : ""} ${C.pct(s.d1, 2, true)}</span>${C.spark(s.spark, {w: 120, h: 24})}</a>`;
+    }).join("");
+    $("hoy-bolsa-nota").textContent = `Último cierre disponible y variación diaria. Cotizaciones actualizadas el ${new Date(b.actualizado * 1000).toLocaleString("es-ES", {day: "numeric", month: "long", hour: "2-digit", minute: "2-digit"})} (fuente: ${b.fuente}).`;
+  });
+  // noticias del día
+  const d = await C.rama("portada", "portada.json");
+  if (!d) { $("hoy-noticias").innerHTML = `<p class="hoy-vacio">Las noticias del día todavía no están disponibles. Mientras tanto, consulta <a href="noticias.html">Noticias e indicadores</a>.</p>`; return; }
+  const act = new Date(d.actualizado * 1000);
+  const esHoy = act.toDateString() === new Date().toDateString();
+  $("hoy-act").textContent = (esHoy ? "Noticias seleccionadas hoy a las " + act.toLocaleTimeString("es-ES", {hour: "2-digit", minute: "2-digit"}) : "Noticias del " + C.fecha(act, {weekday: "long", day: "numeric", month: "long"}));
+  const hace = ts => { const h = (Date.now() / 1000 - ts) / 3600; return h < 1 ? "hace menos de una hora" : h < 24 ? `hace ${Math.round(h)} h` : C.fecha(ts * 1000, {day: "numeric", month: "short"}); };
+  const icono = {espana: "🇪🇸", europa: "🇪🇺", mundo: "🌍"};
+  $("hoy-noticias").innerHTML = d.bloques.map(b => `<div class="hoy-bloque"><h3>${icono[b.id] || ""} ${C.esc(b.titulo)}</h3>${b.noticias.length ? `<ol>${b.noticias.map(n => `
+    <li><a class="hoy-t" href="${C.esc(n.url)}" target="_blank" rel="noopener">${C.esc(n.t)}</a>
+      <span class="hoy-m">${C.esc(n.fuente)} · ${hace(n.ts)}${n.medios > 1 ? ` · en ${n.medios} medios` : ""}</span>
+      ${(n.ind.length || n.bolsa) ? `<div class="hoy-ind">${n.ind.map(i => d.indicadores[i] ? `<a href="${d.indicadores[i].pagina}.html?i=${i}">📊 ${C.esc(d.indicadores[i].nombre)}</a>` : "").join("")}${n.bolsa ? `<a href="bolsa.html">📈 Bolsa al día</a>` : ""}</div>` : ""}
+    </li>`).join("")}</ol>` : `<p class="hoy-vacio">Sin noticias destacadas en las últimas horas.</p>`}</div>`).join("");
+  document.querySelectorAll("#hoy-noticias a.hoy-t").forEach(a => a.addEventListener("click", () => C.evento("inicio/noticia", "Inicio: noticia del día")));
+})();
+</script>
+</section>
 <section id="cceescopio-di-en-vídeo" class="level2">
 <h2 class="anchored" data-anchor-id="cceescopio-di-en-vídeo">CCEEscopio D+I en vídeo</h2>
 <div class="video-wrap">
@@ -605,6 +682,16 @@ Observatorio de indicadores económicos y empresariales al servicio de la <stron
 <p><a href="./indicadores.html" class="card-ccee"><span class="icon">🔎</span><span class="ct">Buscador de indicadores</span><span class="cd">Los 99 indicadores de CCEEscopio en una tabla.</span></a></p>
 </div>
 </section>
+<section id="simuladores" class="level2">
+<h2 class="anchored" data-anchor-id="simuladores">Simuladores con datos reales</h2>
+<p>Toma decisiones y observa sus consecuencias. Cada simulador parte de los <strong>últimos datos publicados</strong> y enlaza con los indicadores de CCEEscopio. <a href="./simuladores.html">Ver todos los simuladores</a>.</p>
+<div class="cards">
+<p><a href="./sim-banco-central.html" class="card-ccee"><span class="icon">🏦</span><span class="ct">Gobernador del Banco Central</span><span class="cd">Fija los tipos de interés durante ocho trimestres y controla la inflación sin provocar una recesión.</span></a></p>
+<p><a href="./sim-cartera.html" class="card-ccee"><span class="icon">💼</span><span class="ct">Gestiona una cartera</span><span class="cd">Invierte 100.000 € en un periodo secreto de la historia de la bolsa y descubre su rentabilidad y su riesgo.</span></a></p>
+<p><a href="./sim-fin-de-mes.html" class="card-ccee"><span class="icon">💶</span><span class="ct">Llega a fin de mes</span><span class="cd">Gestiona el presupuesto de un hogar durante un año con la inflación real de cada tipo de gasto.</span></a></p>
+<p><a href="./sim-turismo.html" class="card-ccee"><span class="icon">🏖️</span><span class="ct">Gestiona tu destino turístico</span><span class="cd">Precios, plazas, promoción y tasa turística: rentabilidad, empleo, vivienda y sostenibilidad.</span></a></p>
+</div>
+</section>
 <section id="para-cada-asignatura-de-la-facultad" class="level2">
 <h2 class="anchored" data-anchor-id="para-cada-asignatura-de-la-facultad">Para cada asignatura de la Facultad</h2>
 <p>En <a href="./docencia.html"><strong>Docencia</strong></a> encontrarás, <strong>por grados (GADE, GECO, GFICO, GMIM y GTUR) y asignaturas</strong>, los indicadores recomendados y ejemplos de uso en clase.</p>
@@ -638,32 +725,35 @@ Observatorio de indicadores económicos y empresariales al servicio de la <stron
 <section id="novedades" class="level2">
 <h2 class="anchored" data-anchor-id="novedades">Novedades</h2>
 <ul>
-<li><strong>Nuevo · <a href="./ppt.html">Piedra, papel o tijera</a></strong> <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. El profesorado elige cuántas preguntas hay que superar; cada acierto da una partida contra la aplicación (si ganas, pasas de pregunta; si empatas, vuelves a jugar; si pierdes, contestas otra pregunta). Gana quien antes las supere todas.</li>
-<li><strong>Nuevo · <a href="./detecta-engano.html">Detecta el engaño</a></strong> <span class="badge-nuevo">nuevo</span>: seis pares de gráficos con datos reales de Eurostat, uno honesto y otro engañoso. Descubre cuál engaña y qué truco usa: ejes cortados, fechas a medida, euros sin deflactar, bases de índice interesadas…</li>
-<li><strong>Nuevo · <a href="./informe-coyuntura.html">Plantilla de informe de coyuntura</a></strong> <span class="badge-nuevo">nuevo</span>: genera en un clic el esqueleto de un informe con los últimos datos del país que elijas, descárgalo en Word y evalúalo con la rúbrica incluida.</li>
-<li><strong>Actualizado · <a href="./rankings.html">La Facultad en los ranking</a></strong>: añadida la edición 2024 del Ranking de Shanghái por materias y completadas las series con la web oficial de ShanghaiRanking.</li>
-<li><strong>Nuevo · Tres juegos más para clase con código QR</strong> <span class="badge-nuevo">nuevo</span>: <a href="./bingo.html">Bingo de indicadores</a> (tacha los países que cumplen cada condición), <a href="./ordena.html">Ordena la malla</a> (de mayor a menor) y <a href="./quien.html">¿Quién es quién?</a> (adivina el país por sus indicadores).</li>
-<li><strong>Nuevo · <a href="./coyuntura.html">Mapa de calor de coyuntura</a></strong> <span class="badge-nuevo">nuevo</span>: todos los países de la UE (o las comunidades autónomas) y sus principales indicadores de un vistazo, coloreados según su posición relativa.</li>
-<li><strong>Nuevo · <a href="./numeros-indice.html">Laboratorio de números índice</a></strong> <span class="badge-nuevo">nuevo</span>: cambio de base, tasas de variación, enlace de series, deflactación y los índices de Laspeyres, Paasche y Fisher, con datos reales y ejercicios autocorregibles.</li>
-<li><strong>Nuevo · <a href="./ideas-tfg.html">Ideas para tu TFG o TFM</a></strong> <span class="badge-nuevo">nuevo</span>: un generador de temas de investigación con pregunta, hipótesis, datos, método y estructura, para todas las titulaciones de la Facultad.</li>
-<li><strong>Rankings en gráficos</strong>: la posición de la UGR en los rankings por disciplinas, ahora también <a href="./rankings.html#en-graficos">en gráficos</a>.</li>
-<li><strong>Nuevo · <a href="./memoria.html">Memoria de datos</a></strong> <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. Durante unos segundos se proyecta una malla 3 × 3 con el dato de un indicador en nueve países o comunidades autónomas; después se ocultan y, desde el móvil, cada acierto descubre una casilla y cada fallo obliga a empezar de nuevo. Gana quien antes desbloquee las nueve.</li>
-<li><strong>Nuevo · <a href="./precios-productos.html">Precios de productos</a></strong> <span class="badge-nuevo">nuevo</span>: la gasolina y el gasóleo cada semana desde 2005, con la parte que son impuestos y comparados con el IPC (también en euros de hoy); el precio de la luz y el gas de los hogares; y cuánto costaban el pan, la leche, el aceite o el café en cualquier fecha.</li>
-<li><strong>Nuevo · Concurso <a href="./concurso-precios.html">«¿Cuánto costaba?»</a></strong> <span class="badge-nuevo">nuevo</span>: los estudiantes ven un producto con su precio actual y, desde el móvil, adivinan cuánto costaba en una fecha del pasado. Gana quien más se acerque.</li>
-<li><strong>Nuevo · Mapas animados</strong> <span class="badge-nuevo">nuevo</span>: en todos los paneles temáticos, el mapa se puede animar para ver cómo cambia cada indicador a lo largo del tiempo, con la misma escala de colores en todos los periodos. Puedes pararlo en cualquier momento o seguir eligiendo un periodo concreto.</li>
-<li><strong>Nuevo · <a href="./concurso.html">Concurso en clase</a></strong> <span class="badge-nuevo">nuevo</span>: los estudiantes escanean un QR, responden preguntas con datos reales desde el móvil y el ranking aparece en directo en la pantalla.</li>
-<li><strong>Nuevo · Guarda cualquier gráfico</strong> <span class="badge-nuevo">nuevo</span>: todos los gráficos tienen botones para descargarlos en PNG de alta resolución o en SVG, con su leyenda y la fuente, listos para un trabajo, un TFG o un TFM.</li>
-<li><strong>Nuevo · <a href="./calculadoras.html">Calculadoras</a></strong> <span class="badge-nuevo">nuevo</span>: un menú con todas las calculadoras y dos nuevas, la <a href="./regresion.html">regresión con análisis de supuestos</a> y el <a href="./estadistica.html">análisis cuantitativo de datos</a>, que funcionan con las series de CCEEscopio o con tus propios datos.</li>
-<li><strong>Nuevo · <a href="./piramides.html">Pirámides de población</a></strong> <span class="badge-nuevo">nuevo</span>: de los países europeos, las comunidades autónomas y las provincias, con animación desde el año 2000.</li>
-<li><strong>Nuevo · <a href="./descomposiciones.html">¿Qué explica cada indicador?</a></strong> <span class="badge-nuevo">nuevo</span>: descompón la inflación (alimentos, energía, vivienda, transporte, servicios…), el crecimiento del PIB, la cuenta corriente, la población y el turismo, y descubre qué componentes explican cada subida.</li>
-<li><strong>Nuevo · <a href="./noticias.html">Noticias e indicadores</a></strong> <span class="badge-nuevo">nuevo</span>: noticias económicas de los últimos días con el reto de comprobarlas con los indicadores de CCEEscopio.</li>
-<li><strong>Nuevo · 🎮 <a href="./juegos.html">Juegos con datos</a></strong> <span class="badge-nuevo">nuevo</span>: el dato del día, ¿más alto o más bajo?, adivina el país, ¿qué pasó aquí?, ordena los países y un <strong>modo aula</strong> para competir en clase. Y además, <a href="./prediccion.html">predice el próximo dato</a>.</li>
-<li><strong>Nuevo · Para el profesorado</strong> <span class="badge-nuevo">nuevo</span>: <a href="./examen.html">generador de exámenes y fichas de práctica</a> con versiones, soluciones y exportación a PRADO, <a href="./examen-tc3.html">exámenes de Técnicas Cuantitativas III</a> con soluciones, y <a href="./presentacion.html">modo presentación</a> para proyectar en clase.</li>
-<li><strong>Nuevo · Análisis</strong> <span class="badge-nuevo">nuevo</span>: <a href="./extremos.html">datos extremos e inusuales</a>, <a href="./ciclo.html">ciclo económico y semáforo de coyuntura</a>, <a href="./convergencia.html">convergencia σ y β</a>, <a href="./desfases.html">qué indicador se adelanta</a>, <a href="./prevision.html">previsión sencilla</a>, <a href="./desigualdad-calc.html">calculadora de desigualdad</a> y <a href="./politica-fiscal.html">simulador de política fiscal</a>.</li>
-<li><strong>Para estudiar y enseñar</strong>: <a href="./ejercicios.html">ejercicios autocorregibles</a> con los últimos datos, <a href="./graficos.html">generador de gráficos para el TFG</a> con la cita en APA y <a href="./glosario.html">glosario de indicadores</a>.</li>
-<li><strong>Herramientas</strong>: <a href="./hipoteca.html">simulador de hipotecas y préstamos</a> con el euríbor real, <a href="./conversor.html">conversor de unidades</a> y <a href="./comparador.html">comparador de comunidades autónomas</a>.</li>
-<li><strong>Paneles</strong>: <a href="./mercados.html">mercados al día</a>, <a href="./turismo-andalucia.html">turismo en Andalucía</a>, <a href="./empresas.html">demografía empresarial</a> y <a href="./consumo.html">consumo y confianza</a>.</li>
-<li><strong>Al día</strong>: <a href="./boletin.html">boletín de coyuntura</a>, <a href="./calendario.html">datos recientes y calendario</a> y <a href="./biblioteca.html">bases de datos de la Biblioteca</a>.</li>
+<li><p><strong>Nuevo · <a href="#hoy">Hoy en la economía</a></strong> <span class="badge-nuevo">nuevo</span>: cada mañana, antes de las 9:00, la portada muestra las noticias económicas y empresariales más destacadas del día en España, Europa y el mundo, con los indicadores de CCEEscopio para comprobarlas, y las últimas cotizaciones de las bolsas.</p></li>
+<li><p><strong>Nuevo · <a href="./bolsa.html">Bolsa al día</a></strong> <span class="badge-nuevo">nuevo</span>: el IBEX 35, el Euro Stoxx 50, Wall Street, Asia, el petróleo, el oro y las grandes empresas del IBEX, actualizados tres veces al día, con gráficos comparados en base 100, rentabilidades, volatilidad y retos que los relacionan con los indicadores económicos.</p></li>
+<li><p><strong>Nuevo · <a href="./simuladores.html">Simuladores</a></strong> <span class="badge-nuevo">nuevo</span>: <a href="./sim-banco-central.html">Gobernador del Banco Central</a>, <a href="./sim-cartera.html">Gestiona una cartera</a>, <a href="./sim-fin-de-mes.html">Llega a fin de mes</a> y <a href="./sim-turismo.html">Gestiona tu destino turístico</a>, con datos reales de Eurostat y de las bolsas.</p></li>
+<li><p><strong>Nuevo · <a href="./ppt.html">Piedra, papel o tijera</a></strong> <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. El profesorado elige cuántas preguntas hay que superar; cada acierto da una partida contra la aplicación (si ganas, pasas de pregunta; si empatas, vuelves a jugar; si pierdes, contestas otra pregunta). Gana quien antes las supere todas.</p></li>
+<li><p><strong>Nuevo · <a href="./detecta-engano.html">Detecta el engaño</a></strong> <span class="badge-nuevo">nuevo</span>: seis pares de gráficos con datos reales de Eurostat, uno honesto y otro engañoso. Descubre cuál engaña y qué truco usa: ejes cortados, fechas a medida, euros sin deflactar, bases de índice interesadas…</p></li>
+<li><p><strong>Nuevo · <a href="./informe-coyuntura.html">Plantilla de informe de coyuntura</a></strong> <span class="badge-nuevo">nuevo</span>: genera en un clic el esqueleto de un informe con los últimos datos del país que elijas, descárgalo en Word y evalúalo con la rúbrica incluida.</p></li>
+<li><p><strong>Actualizado · <a href="./rankings.html">La Facultad en los ranking</a></strong>: añadida la edición 2024 del Ranking de Shanghái por materias y completadas las series con la web oficial de ShanghaiRanking.</p></li>
+<li><p><strong>Nuevo · Tres juegos más para clase con código QR</strong> <span class="badge-nuevo">nuevo</span>: <a href="./bingo.html">Bingo de indicadores</a> (tacha los países que cumplen cada condición), <a href="./ordena.html">Ordena la malla</a> (de mayor a menor) y <a href="./quien.html">¿Quién es quién?</a> (adivina el país por sus indicadores).</p></li>
+<li><p><strong>Nuevo · <a href="./coyuntura.html">Mapa de calor de coyuntura</a></strong> <span class="badge-nuevo">nuevo</span>: todos los países de la UE (o las comunidades autónomas) y sus principales indicadores de un vistazo, coloreados según su posición relativa.</p></li>
+<li><p><strong>Nuevo · <a href="./numeros-indice.html">Laboratorio de números índice</a></strong> <span class="badge-nuevo">nuevo</span>: cambio de base, tasas de variación, enlace de series, deflactación y los índices de Laspeyres, Paasche y Fisher, con datos reales y ejercicios autocorregibles.</p></li>
+<li><p><strong>Nuevo · <a href="./ideas-tfg.html">Ideas para tu TFG o TFM</a></strong> <span class="badge-nuevo">nuevo</span>: un generador de temas de investigación con pregunta, hipótesis, datos, método y estructura, para todas las titulaciones de la Facultad.</p></li>
+<li><p><strong>Rankings en gráficos</strong>: la posición de la UGR en los rankings por disciplinas, ahora también <a href="./rankings.html#en-graficos">en gráficos</a>.</p></li>
+<li><p><strong>Nuevo · <a href="./memoria.html">Memoria de datos</a></strong> <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. Durante unos segundos se proyecta una malla 3 × 3 con el dato de un indicador en nueve países o comunidades autónomas; después se ocultan y, desde el móvil, cada acierto descubre una casilla y cada fallo obliga a empezar de nuevo. Gana quien antes desbloquee las nueve.</p></li>
+<li><p><strong>Nuevo · <a href="./precios-productos.html">Precios de productos</a></strong> <span class="badge-nuevo">nuevo</span>: la gasolina y el gasóleo cada semana desde 2005, con la parte que son impuestos y comparados con el IPC (también en euros de hoy); el precio de la luz y el gas de los hogares; y cuánto costaban el pan, la leche, el aceite o el café en cualquier fecha.</p></li>
+<li><p><strong>Nuevo · Concurso <a href="./concurso-precios.html">«¿Cuánto costaba?»</a></strong> <span class="badge-nuevo">nuevo</span>: los estudiantes ven un producto con su precio actual y, desde el móvil, adivinan cuánto costaba en una fecha del pasado. Gana quien más se acerque.</p></li>
+<li><p><strong>Nuevo · Mapas animados</strong> <span class="badge-nuevo">nuevo</span>: en todos los paneles temáticos, el mapa se puede animar para ver cómo cambia cada indicador a lo largo del tiempo, con la misma escala de colores en todos los periodos. Puedes pararlo en cualquier momento o seguir eligiendo un periodo concreto.</p></li>
+<li><p><strong>Nuevo · <a href="./concurso.html">Concurso en clase</a></strong> <span class="badge-nuevo">nuevo</span>: los estudiantes escanean un QR, responden preguntas con datos reales desde el móvil y el ranking aparece en directo en la pantalla.</p></li>
+<li><p><strong>Nuevo · Guarda cualquier gráfico</strong> <span class="badge-nuevo">nuevo</span>: todos los gráficos tienen botones para descargarlos en PNG de alta resolución o en SVG, con su leyenda y la fuente, listos para un trabajo, un TFG o un TFM.</p></li>
+<li><p><strong>Nuevo · <a href="./calculadoras.html">Calculadoras</a></strong> <span class="badge-nuevo">nuevo</span>: un menú con todas las calculadoras y dos nuevas, la <a href="./regresion.html">regresión con análisis de supuestos</a> y el <a href="./estadistica.html">análisis cuantitativo de datos</a>, que funcionan con las series de CCEEscopio o con tus propios datos.</p></li>
+<li><p><strong>Nuevo · <a href="./piramides.html">Pirámides de población</a></strong> <span class="badge-nuevo">nuevo</span>: de los países europeos, las comunidades autónomas y las provincias, con animación desde el año 2000.</p></li>
+<li><p><strong>Nuevo · <a href="./descomposiciones.html">¿Qué explica cada indicador?</a></strong> <span class="badge-nuevo">nuevo</span>: descompón la inflación (alimentos, energía, vivienda, transporte, servicios…), el crecimiento del PIB, la cuenta corriente, la población y el turismo, y descubre qué componentes explican cada subida.</p></li>
+<li><p><strong>Nuevo · <a href="./noticias.html">Noticias e indicadores</a></strong> <span class="badge-nuevo">nuevo</span>: noticias económicas de los últimos días con el reto de comprobarlas con los indicadores de CCEEscopio.</p></li>
+<li><p><strong>Nuevo · 🎮 <a href="./juegos.html">Juegos con datos</a></strong> <span class="badge-nuevo">nuevo</span>: el dato del día, ¿más alto o más bajo?, adivina el país, ¿qué pasó aquí?, ordena los países y un <strong>modo aula</strong> para competir en clase. Y además, <a href="./prediccion.html">predice el próximo dato</a>.</p></li>
+<li><p><strong>Nuevo · Para el profesorado</strong> <span class="badge-nuevo">nuevo</span>: <a href="./examen.html">generador de exámenes y fichas de práctica</a> con versiones, soluciones y exportación a PRADO, <a href="./examen-tc3.html">exámenes de Técnicas Cuantitativas III</a> con soluciones, y <a href="./presentacion.html">modo presentación</a> para proyectar en clase.</p></li>
+<li><p><strong>Nuevo · Análisis</strong> <span class="badge-nuevo">nuevo</span>: <a href="./extremos.html">datos extremos e inusuales</a>, <a href="./ciclo.html">ciclo económico y semáforo de coyuntura</a>, <a href="./convergencia.html">convergencia σ y β</a>, <a href="./desfases.html">qué indicador se adelanta</a>, <a href="./prevision.html">previsión sencilla</a>, <a href="./desigualdad-calc.html">calculadora de desigualdad</a> y <a href="./politica-fiscal.html">simulador de política fiscal</a>.</p></li>
+<li><p><strong>Para estudiar y enseñar</strong>: <a href="./ejercicios.html">ejercicios autocorregibles</a> con los últimos datos, <a href="./graficos.html">generador de gráficos para el TFG</a> con la cita en APA y <a href="./glosario.html">glosario de indicadores</a>.</p></li>
+<li><p><strong>Herramientas</strong>: <a href="./hipoteca.html">simulador de hipotecas y préstamos</a> con el euríbor real, <a href="./conversor.html">conversor de unidades</a> y <a href="./comparador.html">comparador de comunidades autónomas</a>.</p></li>
+<li><p><strong>Paneles</strong>: <a href="./mercados.html">mercados al día</a>, <a href="./turismo-andalucia.html">turismo en Andalucía</a>, <a href="./empresas.html">demografía empresarial</a> y <a href="./consumo.html">consumo y confianza</a>.</p></li>
+<li><p><strong>Al día</strong>: <a href="./boletin.html">boletín de coyuntura</a>, <a href="./calendario.html">datos recientes y calendario</a> y <a href="./biblioteca.html">bases de datos de la Biblioteca</a>.</p></li>
 </ul>
 </section>
 <section id="tu-opinión-cuenta" class="level2">

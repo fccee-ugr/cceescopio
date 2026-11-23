@@ -1,0 +1,160 @@
+---
+title: "💼 Gestiona una cartera"
+subtitle: "Invierte 100.000 € durante tres años de un periodo secreto de la historia reciente de la bolsa"
+toc: false
+include-in-header:
+  - text: |
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script src="js/ccee-sim.js"></script>
+---
+
+Tienes **100.000 €** para repartir entre índices bursátiles, oro y un depósito. Se elige al azar un **periodo de tres años** de la última década con **cotizaciones reales**, pero no sabrás cuál hasta el final. Cada año puedes **reequilibrar** la cartera. ¿Conseguirás buena rentabilidad sin asumir demasiado riesgo? Al terminar descubrirás las fechas, qué ocurrió y cómo lo hicieron otras estrategias.
+
+**Para:** Finanzas, Mercados Financieros, Gestión de Carteras, Matemáticas Financieras y Métodos Cuantitativos (GFICO, GADE, GECO). **Duración:** 10 minutos. **Datos:** [Bolsa al día](bolsa.qmd) (Yahoo Finance) y euríbor a 3 meses ([Eurostat](mercados.qmd)).
+
+```{=html}
+<div id="cart-app"><p class="nota">Cargando las cotizaciones…</p></div>
+```
+
+::: {.sim-modelo}
+**Cómo se calcula.** Se usan los cierres semanales reales de cada índice. La rentabilidad de la cartera en cada semana es la media de las rentabilidades de los activos ponderada por su peso; los pesos cambian con los precios a lo largo del año (no se reequilibra cada semana) y se restablecen al principio de cada año con tu nueva decisión. El **depósito** rinde el euríbor a 3 meses de cada mes (Eurostat). **Rentabilidad anualizada** = (valor final / valor inicial)^(1/3) − 1. **Volatilidad** = desviación típica de las rentabilidades semanales × √52. **Máxima caída** (*drawdown*) = la mayor pérdida desde un máximo anterior. **Ratio de Sharpe** = (rentabilidad anualizada − rentabilidad del depósito) / volatilidad. Simplificaciones: los índices no incluyen dividendos, no hay comisiones ni impuestos y los índices de fuera de la zona euro se miden en su moneda, sin tener en cuenta el tipo de cambio. No es una recomendación de inversión.
+:::
+
+```{=html}
+<script>
+(async function () {
+  const C = window.CCEE, app = document.getElementById("cart-app");
+  const ACTIVOS = [["ibex35", "IBEX 35", "#B5175F"], ["eurostoxx50", "Euro Stoxx 50", "#F29200"], ["sp500", "S&P 500", "#7F7F7F"], ["nasdaq", "Nasdaq", "#2C6FBB"],
+                   ["nikkei", "Nikkei 225", "#8E44AD"], ["oro", "Oro", "#C9A227"], ["deposito", "Depósito (euríbor)", "#2E8B57"]];
+  const EVENTOS = [["2016-06-23", "2016-06-27", "Brexit: el Reino Unido vota salir de la UE"], ["2018-10-01", "2018-12-24", "Guerra comercial EE. UU.-China y subidas de tipos de la Fed: caída de final de 2018"],
+    ["2020-02-19", "2020-03-23", "COVID-19: desplome de las bolsas en un mes"], ["2020-11-09", "2020-11-13", "Anuncio de las primeras vacunas: gran subida de la bolsa"],
+    ["2022-01-03", "2022-10-12", "Inflación, subidas de tipos e invasión de Ucrania: año bajista"], ["2023-03-08", "2023-03-20", "Crisis de bancos regionales en EE. UU. (Silicon Valley Bank)"],
+    ["2023-01-01", "2024-07-10", "Euforia de la inteligencia artificial: suben las tecnológicas"], ["2025-04-02", "2025-04-09", "Anuncio de aranceles de EE. UU.: fuerte caída y rebote"]];
+  const datos = await C.rama("bolsa", "bolsa.json");
+  if (!datos) { app.innerHTML = `<p class="pending">No hay cotizaciones disponibles en este momento. Inténtalo más tarde (para quien administra la web: Actions → «Bolsa de CCEEscopio» → Run workflow).</p>`; return; }
+  // euríbor a 3 meses mensual (para el depósito)
+  let eur = await C.primera([["irt_st_m", "&int_rt=IRT_M3&geo=EA&sinceTimePeriod=2014-01"]]);
+  const eurMes = new Map((eur || []).map(r => [r.t.replace("M", "-"), r.v]));
+  const tipoDeposito = (dia) => { const d = C.dia(dia); const k = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`; return eurMes.has(k) ? eurMes.get(k) : (eur ? eur.at(-1).v : 0); };
+
+  // rejilla semanal común (fechas del IBEX) y precios con el último dato disponible
+  const S = Object.fromEntries(datos.series.map(s => [s.id, s]));
+  const activos = ACTIVOS.filter(a => a[0] === "deposito" || S[a[0]]?.semanal?.d?.length > 160);
+  const base = S.ibex35 || S.eurostoxx50; const dias = base.semanal.d;
+  const precio = {};
+  activos.forEach(([id]) => {
+    if (id === "deposito") { let v = 100; precio[id] = dias.map((d, i) => i === 0 ? v : (v *= 1 + Math.max(tipoDeposito(d), -1) / 100 * (d - dias[i - 1]) / 365)); return; }
+    const sd = S[id].semanal.d, sc = S[id].semanal.c; let j = 0, ult = null;
+    precio[id] = dias.map(d => { while (j < sd.length && sd[j] <= d + 3) { if (sc[j] != null) ult = sc[j]; j++; } return ult; });
+  });
+  const valido = (i) => activos.every(([id]) => precio[id][i] != null);
+  const AN = 52, NA = 3;
+  const inicios = dias.map((d, i) => i).filter(i => i + AN * NA < dias.length && valido(i));
+  if (!inicios.length) { app.innerHTML = `<p class="pending">No hay suficientes datos históricos para el simulador.</p>`; return; }
+
+  // ---------- simulación ----------
+  function evolucion(i0, pesosPorAno) {
+    let valor = 100000; const serie = [{i: i0, v: valor}];
+    for (let a = 0; a < NA; a++) {
+      const ini = i0 + a * AN; const w = pesosPorAno[a];
+      const unidades = activos.map(([id], k) => valor * w[k] / 100 / precio[id][ini]);
+      for (let i = ini + 1; i <= ini + AN; i++) { valor = activos.reduce((s, [id], k) => s + unidades[k] * precio[id][i], 0); serie.push({i, v: valor}); }
+    }
+    return serie;
+  }
+  function metricas(serie) {
+    const v = serie.map(p => p.v), r = v.slice(1).map((x, k) => x / v[k] - 1);
+    const m = d3.mean(r), sd = d3.deviation(r) || 0;
+    let max = v[0], dd = 0; v.forEach(x => { max = Math.max(max, x); dd = Math.min(dd, x / max - 1); });
+    const anual = (v.at(-1) / v[0]) ** (1 / NA) - 1, vol = sd * Math.sqrt(52);
+    return {final: v.at(-1), anual: 100 * anual, vol: 100 * vol, dd: 100 * dd};
+  }
+
+  // ---------- partida ----------
+  let G;
+  function nueva() {
+    const i0 = inicios[Math.floor(Math.random() * inicios.length)];
+    G = {i0, ano: 0, pesos: [], valorIni: 100000};
+    pintar();
+    C.evento("simuladores/cartera/inicio", "Gestiona una cartera: inicio");
+  }
+  function pintar() {
+    const a = G.ano, serie = a ? evolucion(G.i0, [...G.pesos, ...Array(NA - a).fill(G.pesos.at(-1))]).slice(0, a * AN + 1) : [{v: 100000}];
+    const valor = serie.at(-1).v;
+    const prev = G.pesos.at(-1) || activos.map(([id]) => id === "deposito" ? 30 : id === "ibex35" || id === "eurostoxx50" || id === "sp500" ? 20 : id === "oro" ? 10 : 0);
+    app.innerHTML = `
+      <div class="sim-progreso">${Array.from({length: NA}, (_, k) => `<span class="${k < a ? "hecho" : k === a ? "actual" : ""}"></span>`).join("")}</div>
+      <h3 style="border:0;margin:.4rem 0">Año ${a + 1} de ${NA} · Valor de tu cartera: <span style="color:#B5175F">${C.eur(valor)}</span></h3>
+      ${a ? `<div id="cart-graf"></div><div style="overflow-x:auto" id="cart-tabla"></div>` : `<p>Reparte el dinero entre los activos. Piensa en el <b>riesgo</b>: las acciones pueden subir mucho, pero también caer más de un 30 % en pocas semanas; el depósito apenas varía. Diversificar reduce el riesgo.</p>`}
+      <div class="sim-panel"><b>${a ? "¿Reequilibras tu cartera para el año " + (a + 1) + "?" : "Tu cartera para el primer año"}</b>
+        <div class="sim-controles" id="cart-sl"></div>
+        <div class="sim-botones"><span id="cart-suma" style="font-weight:700"></span><button class="sim-btn sec" id="cart-ajusta">Ajustar al 100 %</button>
+          <button class="sim-btn" id="cart-ok">💸 Invertir y ver qué pasa en el año ${a + 1}</button></div></div>`;
+    const sls = activos.map(([id, n], k) => C.deslizador({etiqueta: n, min: 0, max: 100, paso: 5, valor: prev[k], formato: v => v + " %", alCambiar: suma}));
+    sls.forEach(s => document.getElementById("cart-sl").appendChild(s));
+    function suma() {
+      const t = sls.reduce((s, x) => s + x.valor, 0);
+      document.getElementById("cart-suma").innerHTML = `Total: <span style="color:${t === 100 ? "#2E7D32" : "#C62828"}">${t} %</span>`;
+      document.getElementById("cart-ok").disabled = t !== 100;
+    }
+    suma();
+    document.getElementById("cart-ajusta").onclick = () => {
+      const t = sls.reduce((s, x) => s + x.valor, 0) || 1; let acc = 0;
+      sls.forEach((s, k) => { const v = k === sls.length - 1 ? 100 - acc : Math.round(s.valor / t * 20) * 5; s.fijar(Math.max(0, v)); acc += Math.max(0, v); });
+      suma();
+    };
+    document.getElementById("cart-ok").onclick = () => { G.pesos.push(sls.map(s => s.valor)); G.ano++; G.ano >= NA ? final() : pintar(); };
+    if (a) graficoAnos(serie, false);
+  }
+  const etiquetaSemana = (i) => `Semana ${i - G.i0}`;
+  function graficoAnos(serie, revelar) {
+    const ultimo = serie.at(-1).i, x = (i) => revelar ? C.dia(dias[i]) : (i - G.i0) / 52;
+    const opc = revelar ? {} : {xTipo: "lineal", xFormato: v => "Año " + C.num(v, v % 1 ? 1 : 0), xTexto: v => "Año " + C.num(v, 2), xDominio: [0, NA]};
+    const s = [{nombre: "Tu cartera (base 100)", color: "#111111", ancho: 3.4, puntos: serie.map(p => ({x: x(p.i), y: p.v / 1000}))}];
+    activos.filter(([id]) => id !== "deposito").forEach(([id, n, col]) => s.push({nombre: n, color: col, ancho: 1.3,
+      puntos: serie.map(p => ({x: x(p.i), y: 100 * precio[id][p.i] / precio[id][G.i0]}))}));
+    C.lineas(document.getElementById(revelar ? "cart-gfin" : "cart-graf"), s, {...opc, alto: 330, refs: [{y: 100, color: "#999", texto: "Valor inicial"}], yEtiqueta: "Base 100 al inicio",
+      bandas: revelar ? EVENTOS.map(e => ({x0: new Date(e[0]), x1: new Date(e[1]), texto: ""})).filter(b => b.x1 >= C.dia(dias[G.i0]) && b.x0 <= C.dia(dias[ultimo])) : []});
+    if (!revelar) {
+      const a = G.ano, i0 = G.i0 + (a - 1) * AN, i1 = i0 + AN;
+      document.getElementById("cart-tabla").innerHTML = `<p class="nota">Rentabilidad de cada activo en el año ${a}: ${activos.map(([id, n]) => { const r = 100 * (precio[id][i1] / precio[id][i0] - 1); return `${n} <b class="${r >= 0 ? "sube" : "baja"}">${C.pct(r, 1, true)}</b>`; }).join(" · ")}.</p>`;
+    }
+  }
+  function final() {
+    const serie = evolucion(G.i0, G.pesos), m = metricas(serie);
+    const rf = 100 * ((precio.deposito[G.i0 + NA * AN] / precio.deposito[G.i0]) ** (1 / NA) - 1);
+    const sharpe = m.vol > 0 ? (m.anual - rf) / m.vol : 0;
+    const est = [["Tu cartera", G.pesos],
+      ["100 % IBEX 35", [activos.map(([id]) => id === "ibex35" ? 100 : 0)]],
+      ["Clásica 60/40 (60 % Euro Stoxx, 40 % depósito)", [activos.map(([id]) => id === "eurostoxx50" ? 60 : id === "deposito" ? 40 : 0)]],
+      ["A partes iguales", [activos.map((_, k) => k === activos.length - 1 ? 100 - Math.floor(100 / activos.length) * (activos.length - 1) : Math.floor(100 / activos.length))]],
+      ["100 % depósito", [activos.map(([id]) => id === "deposito" ? 100 : 0)]]];
+    const filas = est.map(([n, w]) => { const s = evolucion(G.i0, w.length === 1 ? Array(NA).fill(w[0]) : w), mm = metricas(s); return {n, ...mm, sharpe: mm.vol > 0 ? (mm.anual - rf) / mm.vol : 0}; });
+    // el mejor activo a posteriori
+    const mejores = activos.map(([id, n]) => ({n, r: 100 * ((precio[id][G.i0 + NA * AN] / precio[id][G.i0]) ** (1 / NA) - 1)})).sort((a, b) => b.r - a.r);
+    const d0 = C.dia(dias[G.i0]), d1 = C.dia(dias[G.i0 + NA * AN]);
+    const ev = EVENTOS.filter(e => new Date(e[1]) >= d0 && new Date(e[0]) <= d1).sort((a, b) => a[0] < b[0] ? -1 : 1);
+    const rank = [...filas].sort((a, b) => b.sharpe - a.sharpe).findIndex(f => f.n === "Tu cartera") + 1;
+    const puntos = Math.max(0, Math.min(100, Math.round(50 + 25 * sharpe + 0.6 * m.dd)));
+    const rc = C.record("cartera", puntos);
+    app.innerHTML = `<div class="calc-result"><div class="calc-big">🔓 El periodo secreto era: <b>del ${C.fecha(d0)} al ${C.fecha(d1)}</b></div>
+      <div class="calc-big">Tu cartera vale <b>${C.eur(m.final)}</b> (${C.pct(m.anual, 1, true)} anual)</div>
+      <div class="calc-small">Volatilidad: <b>${C.pct(m.vol)}</b> · máxima caída: <b>${C.pct(m.dd)}</b> · ratio de Sharpe: <b>${C.num(sharpe, 2)}</b> (el depósito rindió un ${C.pct(rf, 2)} anual).
+      Por rentabilidad ajustada al riesgo, tu cartera queda en el puesto <b>${rank} de ${filas.length}</b> estrategias. Puntuación: <b>${puntos}/100</b>${rc.nuevo ? " 🏅 (¡tu mejor resultado!)" : rc.record != null ? ` (tu récord: ${rc.record})` : ""}.</div></div>
+      ${ev.length ? `<p><b>¿Qué pasó en esos años?</b></p><ul>${ev.map(e => `<li><b>${C.fecha(e[0], {month: "long", year: "numeric"})}</b>: ${e[2]}</li>`).join("")}</ul>` : ""}
+      <p>El activo que más subió fue <b>${mejores[0].n}</b> (${C.pct(mejores[0].r, 1, true)} anual) y el que menos, <b>${mejores.at(-1).n}</b> (${C.pct(mejores.at(-1).r, 1, true)}). Acertar a posteriori es fácil; por eso se diversifica.</p>
+      <div id="cart-gfin"></div>
+      <div style="overflow-x:auto"><${"table"} class="table table-sm sim-hist"><thead><tr><th>Estrategia</th><th class="num">Valor final</th><th class="num">Rent. anual</th><th class="num">Volatilidad</th><th class="num">Máx. caída</th><th class="num">Sharpe</th></tr></thead>
+      <tbody>${filas.map(f => `<tr${f.n === "Tu cartera" ? ' style="font-weight:700;background:#FCF6F9"' : ""}><td>${f.n}</td><td class="num">${C.eur(f.final)}</td><td class="num">${C.pct(f.anual, 1, true)}</td><td class="num">${C.pct(f.vol)}</td><td class="num">${C.pct(f.dd)}</td><td class="num">${C.num(f.sharpe, 2)}</td></tr>`).join("")}</tbody></${"table"}></div>
+      <p class="nota">Tus decisiones: ${G.pesos.map((w, a) => `año ${a + 1}: ${activos.map(([, n], k) => w[k] ? `${n} ${w[k]} %` : "").filter(Boolean).join(", ")}`).join(" · ")}.</p>
+      <p class="nota">Bandas sombreadas: episodios destacados de los mercados.</p>
+      <div class="sim-botones"><button class="sim-btn" id="cart-otra">🔄 Otro periodo secreto</button><a class="sim-btn sec" href="bolsa.html" style="text-decoration:none">📈 Bolsa al día</a></div>`;
+    graficoAnos(serie, true);
+    document.getElementById("cart-otra").onclick = nueva;
+    C.evento("simuladores/cartera/fin", "Gestiona una cartera: partida terminada");
+  }
+  if (!eur) app.insertAdjacentHTML("beforebegin", `<p class="nota">⚠️ No se ha podido descargar el euríbor de Eurostat: el depósito rendirá un 0 %.</p>`);
+  nueva();
+})();
+</script>
+```

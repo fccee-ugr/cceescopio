@@ -1,0 +1,54 @@
+# Noticias del día para la portada de CCEEscopio: las más destacadas de las últimas 24 horas en España, Europa y el mundo.
+# Guarda portada.json en la rama «portada»: no toca la rama principal ni la carpeta docs/.
+# Debe estar lista a las 9:00 de Madrid. GitHub programa en hora UTC y Madrid cambia entre UTC+1 (invierno) y UTC+2 (verano),
+# así que hay dos horarios y el trabajo solo continúa en el primero que cae a las 8 o las 9 de Madrid
+# y si todavía no hay noticias de ese día. (GitHub puede retrasar unos minutos las tareas programadas; por eso se lanza hacia las 8:25.)
+# Al lanzarla a mano (Actions → Run workflow) se ejecuta siempre.
+name: Noticias del día (portada)
+on:
+  schedule:
+    - cron: "25 6 * * *"
+    - cron: "25 7 * * *"
+  push:
+    branches: [main]
+    paths: ["tools/noticias_portada.py", ".github/workflows/portada.yml"]
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: portada
+  cancel-in-progress: false
+jobs:
+  portada:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ¿Toca actualizar? (8 o 9 de la mañana en Madrid y aún sin noticias de hoy)
+        id: hora
+        run: |
+          echo "Hora en Madrid: $(TZ=Europe/Madrid date '+%F %H:%M')"
+          h=$(TZ=Europe/Madrid date +%H); hoy=$(TZ=Europe/Madrid date +%F)
+          ult=$(curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/portada/portada.json" | python3 -c "import json,sys,datetime,zoneinfo; print(datetime.datetime.fromtimestamp(json.load(sys.stdin)['actualizado'], zoneinfo.ZoneInfo('Europe/Madrid')).date())" || echo ninguna)
+          echo "Últimas noticias publicadas: $ult"
+          if [ "${{ github.event_name }}" != "schedule" ]; then seguir=si
+          elif { [ "$h" = "08" ] || [ "$h" = "09" ]; } && [ "$ult" != "$hoy" ]; then seguir=si
+          else seguir=no; fi
+          echo "seguir=$seguir" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        if: steps.hora.outputs.seguir == 'si'
+      - uses: actions/setup-python@v5
+        if: steps.hora.outputs.seguir == 'si'
+        with:
+          python-version: "3.12"
+      - name: Seleccionar las noticias del día
+        if: steps.hora.outputs.seguir == 'si'
+        run: python tools/noticias_portada.py --salida /tmp/portada.json
+      - name: Publicar en la rama portada
+        if: steps.hora.outputs.seguir == 'si'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan portada-tmp
+          cp /tmp/portada.json portada.json
+          git add portada.json
+          git commit -m "Noticias del día $(TZ=Europe/Madrid date '+%F %H:%M')"
+          git push -f origin HEAD:portada

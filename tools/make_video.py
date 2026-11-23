@@ -457,7 +457,140 @@ def s11(t, dur):
     paste(img, INST, W / 2, 920, 820, appear(t, 1.8) * e)
     return img
 
-SCENES = [(s0, 6.5), (s1, 7), (s2, 9.5), (s3, 10), (s4, 10), (s5, 9), (s6, 10), (s7, 12), (s8, 10), (s9, 9), (s10, 6.5), (s11, 6.5)]
+
+# ---------- Novedades de noviembre de 2026: noticias del día, bolsa y simuladores ----------
+def reloj(d, cx, cy, r, a, t):
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=mix((255, 255, 255), a), outline=mix(MG, a), width=8)
+    for k in range(12):
+        ang = k * math.pi / 6; d.line([(cx + 0.8 * r * math.sin(ang), cy - 0.8 * r * math.cos(ang)), (cx + 0.9 * r * math.sin(ang), cy - 0.9 * r * math.cos(ang))], fill=mix(DK, a), width=5)
+    m = ease(t / 2.5)  # las agujas avanzan de las 8:00 a las 9:00
+    am = 2 * math.pi * m; ah = math.radians(240 + 30 * m)
+    d.line([(cx, cy), (cx + 0.75 * r * math.sin(am), cy - 0.75 * r * math.cos(am))], fill=mix(DK, a), width=7)
+    d.line([(cx, cy), (cx + 0.5 * r * math.sin(ah), cy - 0.5 * r * math.cos(ah))], fill=mix(MG, a), width=10)
+    d.ellipse([cx - 10, cy - 10, cx + 10, cy + 10], fill=mix(MG, a))
+
+def sN1(t, dur):
+    img = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(img); e = env(t, dur)
+    band(d, e)
+    title(d, "Hoy en la economía", t, e, 110, 80)
+    text(d, (W / 2, 195), "Cada mañana, antes de las 9:00, en la portada", F("SemiBold", 44), DK, appear(t, 0.6) * e)
+    reloj(d, 230, 520, 130, appear(t, 0.8) * e, t - 0.8)
+    text(d, (230, 700), "9:00", F("Black", 64), MG, appear(t, 2.6) * e)
+    cols = [("🇪🇸", "España", MG), ("🇪🇺", "Europa", OR), ("🌍", "Mundo", DK)]
+    for k, (ic, n, col) in enumerate(cols):
+        a = appear(t, 1.4 + k * 0.5) * e
+        if a <= 0: continue
+        x0 = 470 + k * 480; y0 = 290 + (1 - a) * 40
+        d.rounded_rectangle([x0, y0, x0 + 440, y0 + 560], radius=22, fill=mix((255, 255, 255), a), outline=mix((225, 215, 210), a), width=3)
+        d.rectangle([x0, y0, x0 + 440, y0 + 14], fill=mix(col, a))
+        emoji(img, ic, x0 + 50, y0 + 62, 44, a)
+        text(d, (x0 + 90, y0 + 62), n, F("ExtraBold", 38), DK, a, anchor="lm")
+        for j in range(5):
+            ja = appear(t, 2.2 + k * 0.4 + j * 0.25) * e
+            if ja <= 0: continue
+            yy = y0 + 130 + j * 84
+            d.ellipse([x0 + 26, yy - 4, x0 + 58, yy + 28], fill=mix((246, 238, 242), ja))
+            text(d, (x0 + 42, yy + 12), str(j + 1), F("Bold", 22), MG, ja)
+            w1 = 330 - (j * 37 + k * 23) % 90; w2 = 250 - (j * 53 + k * 31) % 110
+            d.rounded_rectangle([x0 + 78, yy, x0 + 78 + w1, yy + 14], radius=7, fill=mix((70, 70, 70), ja))
+            d.rounded_rectangle([x0 + 78, yy + 24, x0 + 78 + w2, yy + 38], radius=7, fill=mix((185, 185, 185), ja))
+            if j % 2 == 0: d.rounded_rectangle([x0 + 78, yy + 48, x0 + 78 + 150, yy + 64], radius=8, fill=mix((246, 238, 242), ja))
+    text(d, (W / 2, 925), "Las noticias económicas y empresariales que más medios publican", F("SemiBold", 40), DK, appear(t, 4.6) * e)
+    text(d, (W / 2, 985), "con los indicadores de CCEEscopio para comprobarlas", F("Medium", 36), GR, appear(t, 5.1) * e)
+    ilus(d, appear(t, 1) * e)
+    return img
+
+TICKS = [("IBEX 35", 0), ("Euro Stoxx 50", 1), ("S&P 500", 2), ("Nikkei 225", 3), ("Brent", 4), ("Oro", 5)]
+def spark_pts(k, n=60):
+    import random
+    r = random.Random(11 + k); v = 0; pts = []
+    for i in range(n): v += r.gauss(0.04 if k % 3 else -0.02, 0.35); pts.append(v)
+    return pts
+def sN2(t, dur):
+    img = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(img); e = env(t, dur)
+    band(d, e)
+    title(d, "Bolsa al día", t, e, 110, 84)
+    text(d, (W / 2, 195), "Índices de todo el mundo, petróleo, oro y empresas del IBEX 35, tres veces al día", F("SemiBold", 40), DK, appear(t, 0.6) * e)
+    for k, (n, _) in enumerate(TICKS):
+        a = appear(t, 1.0 + k * 0.3) * e
+        if a <= 0: continue
+        x0 = 120 + k * 285; y0 = 260 + (1 - a) * 30
+        pts = spark_pts(k); sube = pts[-1] >= pts[0]
+        d.rounded_rectangle([x0, y0, x0 + 260, y0 + 190], radius=18, fill=mix((255, 255, 255), a), outline=mix((225, 215, 210), a), width=3)
+        text(d, (x0 + 20, y0 + 36), n, F("Bold", 30), DK, a, anchor="lm")
+        text(d, (x0 + 20, y0 + 84), "▲" if sube else "▼", F("Bold", 34), (46, 125, 50) if sube else (198, 40, 40), a, anchor="lm")
+        lo, hi = min(pts), max(pts); m = int(len(pts) * clamp((t - 1.3 - k * 0.3) / 1.5))
+        if m > 1:
+            sp = [(x0 + 20 + i / (len(pts) - 1) * 220, y0 + 170 - (v - lo) / (hi - lo + 1e-9) * 60) for i, v in enumerate(pts[:m])]
+            d.line(sp, fill=mix((46, 125, 50) if sube else (198, 40, 40), a), width=4)
+    # gráfico comparado en base 100
+    a = appear(t, 3.2) * e
+    x0, x1, y0, y1 = 200, 1720, 520, 900
+    if a > 0:
+        d.rounded_rectangle([140, 490, 1780, 960], radius=22, fill=mix(CREAM, a))
+        text(d, (180, 540), "Evolución comparada (base 100)", F("Bold", 32), DK, a, anchor="lm")
+        d.line([(x0, 760), (x1, 760)], fill=mix(GR, a), width=2)
+        text(d, (x0 - 14, 760), "100", F("Medium", 24), GR, a, anchor="rm")
+    prog = ease((t - 3.6) / 3.0)
+    for k, col in enumerate([MG, OR, DK]):
+        if prog <= 0: continue
+        pts = spark_pts(k + 7, 140); n = int(len(pts) * prog)
+        sc = [(x0 + i / 139 * (x1 - x0), 760 - pts[i] * 30) for i in range(n)]
+        if len(sc) > 1: d.line(sc, fill=mix(col, e), width=6, joint="curve")
+    for k, (n, col) in enumerate([("IBEX 35", MG), ("Euro Stoxx 50", OR), ("S&P 500", DK)]):
+        la = appear(t, 3.8 + k * 0.2) * e
+        chip(d, 1000 + k * 260, 545, n, col, la, F("Bold", 24), 18, 24)
+    text(d, (W / 2, 1010), "Rentabilidad, volatilidad y retos que conectan la bolsa con los indicadores", F("Medium", 36), GR, appear(t, 5.5) * e)
+    ilus(d, a)
+    return img
+
+SIMS = [("🏦", "Gobernador del Banco Central", "Tipos de interés, inflación y paro"), ("💼", "Gestiona una cartera", "100.000 € en un periodo secreto de la bolsa"),
+        ("💶", "Llega a fin de mes", "Un hogar con la inflación real de cada gasto"), ("🏖️", "Gestiona tu destino turístico", "Empleo, vivienda y sostenibilidad")]
+def sN3(t, dur):
+    img = Image.new("RGB", (W, H), BG); d = ImageDraw.Draw(img); e = env(t, dur)
+    band(d, e)
+    title(d, "Simuladores con datos reales", t, e, 110, 76)
+    text(d, (W / 2, 195), "Decide como un banco central, una inversora, un hogar o una ciudad", F("SemiBold", 42), DK, appear(t, 0.6) * e)
+    for k, (ic, n, s_) in enumerate(SIMS):
+        a = appear(t, 1.0 + k * 0.45) * e
+        if a <= 0: continue
+        x = 140; y = 280 + k * 165; dx = (1 - a) * -40
+        d.rounded_rectangle([x + dx, y, x + 860 + dx, y + 140], radius=24, fill=mix(CREAM, a))
+        d.rectangle([x + dx, y, x + 14 + dx, y + 140], fill=mix(MG if k % 2 == 0 else OR, a))
+        emoji(img, ic, x + 85 + dx, y + 70, 76, a)
+        text(d, (x + 150 + dx, y + 48), n, F("ExtraBold", 38), DK, a, anchor="lm")
+        text(d, (x + 150 + dx, y + 100), s_, F("Medium", 29), GR, a, anchor="lm")
+    # mini simulador: deslizador del tipo de interés y la inflación que responde
+    a = appear(t, 2.6) * e
+    if a > 0:
+        px, py = 1080, 280
+        d.rounded_rectangle([px, py, px + 700, py + 640], radius=24, fill=mix((255, 255, 255), a), outline=mix((225, 215, 210), a), width=3)
+        text(d, (px + 30, py + 45), "Tipo de interés oficial", F("Bold", 32), DK, a, anchor="lm")
+        u = ease((t - 3.4) / 2.5); tipo = 0.5 + 3.5 * u
+        d.rounded_rectangle([px + 30, py + 95, px + 520, py + 107], radius=6, fill=mix((237, 227, 231), a))
+        d.rounded_rectangle([px + 30, py + 95, px + 30 + 490 * tipo / 8, py + 107], radius=6, fill=mix(MG, a))
+        cxk = px + 30 + 490 * tipo / 8
+        d.ellipse([cxk - 18, py + 83, cxk + 18, py + 119], fill=mix(MG, a), outline=mix((255, 255, 255), a), width=4)
+        text(d, (px + 670, py + 101), f"{tipo:.2f} %".replace(".", ","), F("ExtraBold", 36), MG, a, anchor="rm")
+        if 3.4 < t < 6: cursor(d, cxk + 6, py + 110, a)
+        gx0, gx1, gy0, gy1 = px + 60, px + 670, py + 180, py + 560
+        d.line([(gx0, gy1), (gx1, gy1)], fill=mix(GR, a), width=2)
+        y2 = gy1 - 2 / 10 * (gy1 - gy0)
+        d.line([(gx0, y2), (gx1, y2)], fill=mix((46, 125, 50), a), width=3)
+        text(d, (gx0 + 8, y2 + 24), "Objetivo: 2 %", F("SemiBold", 24), (46, 125, 50), a, anchor="lm")
+        pts = []
+        for i in range(9):
+            infl = 8.5 - 6.3 * (1 - math.exp(-i * 0.35 * u * 1.4)) if i else 8.5
+            pts.append((gx0 + i / 8 * (gx1 - gx0), gy1 - infl / 10 * (gy1 - gy0)))
+        d.line(pts, fill=mix(MG, a), width=6, joint="curve")
+        for p_ in pts: d.ellipse([p_[0] - 8, p_[1] - 8, p_[0] + 8, p_[1] + 8], fill=mix(MG, a))
+        text(d, (gx0, gy0 - 20), "Inflación (%)", F("Bold", 26), MG, a, anchor="lm")
+        text(d, (px + 350, py + 605), "Ocho trimestres para controlar la inflación", F("Medium", 26), GR, a)
+    text(d, (W / 2, 1010), "Con los últimos datos de Eurostat y de las bolsas · puntuación y comparación al final", F("Medium", 34), GR, appear(t, 5.0) * e)
+    return img
+
+SCENES = [(s0, 6.5), (s1, 7), (sN1, 9), (sN2, 9.5), (s2, 9.5), (s3, 10), (s4, 10), (s5, 9), (sN3, 10), (s6, 10), (s7, 12), (s8, 10), (s9, 9), (s10, 6.5), (s11, 6.5)]
+
 
 def render(idx, outdir):
     fn, dur = SCENES[idx]
@@ -471,7 +604,7 @@ def render(idx, outdir):
     if p.wait() == 0: os.replace(tmp, out)
 
 if __name__ == "__main__":
-    outdir = "/home/claude/cceescopio_video3"; os.makedirs(outdir, exist_ok=True)
+    outdir = os.environ.get("VIDEO_DIR", "/home/claude/cceescopio_video4"); os.makedirs(outdir, exist_ok=True)
     if sys.argv[1] == "still":
         i, t = int(sys.argv[2]), float(sys.argv[3]); fn, dur = SCENES[i]; fn(t, dur).save(f"{outdir}/still_{i}.png")
     else:
