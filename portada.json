@@ -1,0 +1,199 @@
+{
+"actualizado": 1795509887,
+"horas": 24,
+"bloques": [
+{
+"id": "espana",
+"titulo": "España",
+"noticias": [
+{
+"t": "Las bolsas de Asia se contagian de la euforia tras el regreso de Jensen Huang a la dirección de Nvidia",
+"fuente": "DW.com",
+"url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPVEZZOEUwc1hkdEUyTEdYVmJlS2JKSzJXREdYSERhOXpqend4QUEyTmpIcGRlVWVGODAxWjlmR2E1dW1GSlpxZTg5LVNXZUxJM3VjRzRQbWhoWElQNUxWcUZSS0V2bHRkS3RyODlOTE5nOHREbHJfZjdwVVZKb1J4TVV1d3pNYWtCWkkzZHlVX1ZJMVFTU2NCLW9jZDBRbkhoVlJ5RERMUlc5N2pj0gGsAUFVX3lxTE5JZWhjb0o4X3VJTlBIMF9XQXNkbno0TVM3MmNTRzJEM1FzVEVJeEo1SVBJZG9vdTJSMEpsUU1scGRxUGZnY2c0UDhWdmI1S2NfTlJxcTBLeXlPd0FGbFRNdDBCMko2OTdMZmFMel9lbjB1RnVLN19iN1hVd3VvXy1qWHBXWkNTZXoxZjJ6MF9HZWx1cHVoSzFEVG1VSDFScUR0UUJlMkItNVpFTnM?oc=5",
+"ts": 1795507575,
+"medios": 7,
+"puntos": 14.92,
+"ind": [],
+"bolsa": true
+},
+{
+"t": "Los analistas se preparan para nuevos episodios de inestabilidad en un mercado más frágil",
+"fuente": "TradingView",
+"url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1SR2FWUjVKX0xUaEEwN2paa0tudXh1akg0eUNVdzVYaUt3NC1mUkFGWW1NMENYaVJxcEE0aDZjLWpneHNjSU1qNmdCOFRsMGFkRVplRGRmSndScjFPa2hzUUFaVDJTQQ?oc=5",
+"ts": 1795494960,
+"medios": 1,
+"puntos": 10.21,
+"ind": [],
+"bolsa": false
+},
+{
+"t": "El fenómeno de las ventas exprés de viviendas se reduce en las grandes capitales",
+"fuente": "Idealista",
+"url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxPQ25meEoxbUxWQ0JMQS1McVJ1VlVwUjBJbUliNFdjYWVsVUZSU2lFcXZ5REdpMjdFdlZsdkEwcHRFUWJCZmlMNG5PbXhsRHlxcnJCMEloSVY2U1I3UlBLaWlzZ1JTeGNHU1dYeDlXbHRxVGVSVi1EWXdRcl9NTG1faWpELTJGYVZER3dEb3dKMU1KQ0ZRTFdTV05ZUG1QU0pRN0lrM0d0VFhGR3YtTXdHQ1NHOTBqbUktOU95eXItNHkxcjN0Z3ozbVphbGdaZ0JfQUNUenRVSHF4dXJDREE5b2lTYmdnQdIB6wFBVV95cUxQdjAyQl9xNDgzQzVsR0JmVmRYT1JTLW1ZNkUtaDNlRjZlMW9Kc0U0MDdtNlF3bjlqaVRhYm9vTVJ1dnJTT2x2bXVqUFZ5Qnk4WXQtSU5FblZ1blNBZEpfTDVXWmp5RHdQMlZwX1Z6UkFZRTlaSk9uNnNfSXg5OG1uRTBIWmpuZTZJZVNoSHh3TGRRaVkwb3Vud25RTk81U212eUR6NHVkczlURFBIazFsNl9FSHNDcVRkYXpXbDlRSXlsb1NNdEFfckhuTnJqRXZ5XzRmeUpjOTFoVkNNdlVJSHdaeWNZR3oycmNB?oc=5",
+"ts": 1795507311,
+"medios": 1,
+"puntos": 9.88,
+"ind": [
+"precio-de-la-vivienda-tasa-anual"
+],
+"bolsa": false
+},
+{
+"t": "Dos heridos en el incendio de su vivienda en Lena, uno con pronóstico grave",
+"fuente": "Radiotelevisión del Principado de Asturias",
+"url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxPVW54UW4zWnUxNG1hTzE3LS1kdHE0WDZ5X2VqeW0wVGZhd3lKelFlQ3ZmZWNyd21OYzlCa0NxNXZBWGYtUm1RTDAzSklmMXVGRmdrdV9lREx4X1JZQWY3OWl6WFNoblByZE0zc0hwNnNRVEdsVnM1NlJad2h4MU1YUnc4dmc3ekNpMkpmX0phN0hBYlN6TGVYaWFZUjFZVENLY3kwWmZ1Z0JXTEMyMjhHU0txOS1ZMzFIcU1XQ3Ria3gxMk1MSXVJRS1FRV9PTVBlcVpGWWVxYkLSAd4BQVVfeXFMTjkyM2wydEFmQ3czaTVMbzhlM0VYYjNOVlJyNDRXei16TkwxYTRORUN6SWZKNTYxc0RSMV9lRktDOWNvdm9YUlJOYVB0b3hzakRNTkxKM2VzTk12cHpZSFVlbEwtaWRKUEszakhDLUxRX0FibDExU0d6QUIwemZjV2tNYTR5MUJBVkFNN1RsY0trcm1PT212UmJsemRSTW1ia0lqQUJfTXNxX3dZd2lBajYzV3ppX19Yd0tyRk92YzgwYzltMjNFeHZEYjJ2ZFp3dW9jNC1ZcTBpckpfa3h3?oc=5",
+"ts": 1795507020,
+"medios": 5,
+"puntos": 9.69,
+"ind": [
+"precio-de-la-vivienda-tasa-anual"
+],
+"bolsa": false
+},
+{
+"t": "Del Black Friday a la Navidad: ¿y si volvemos a ilusionar al cliente?, por Jorge Mas",
+"fuente": "The New Barcelona Post",
+"url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPaHoyWmdZdVdkZlVxdzNGUnpONTV4U1lEREhPcnMyanhwQUN3Z3BIUDBJem1wM1E1MGhnei1hQVZTb3Mxc1RNQXc1ak5FUVk0cE1oWDhfa2RtRXB5bzNwWk5KcDFCcXFEODB1NTFwU2xCZ21CTG5JOXZKM0hBWXd2bFBCbmJjcjJPU21lWkpjX0tBTjloRUxTWmh3?oc=5",
+"ts": 1795494545,
+"medios": 1,
+"puntos": 9.49,
+"ind": [
+"consumo-de-los-hogares-crecimiento-interanual"
+],
+"bolsa": false
+}
+]
+},
+{
+"id": "europa",
+"titulo": "Europa",
+"noticias": [
+{
+"t": "Bruselas investiga a la embotelladora de Coca-Cola por una posible conducta anticompetitiva",
+"fuente": "EL PAÍS",
+"url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxOSktidHZnQkRUOG9Ud01TemNpOXIwUE1qZ0xCSHJWdHNhaWl2aWRSMzk5bTBxRld6Nlg5aW5oaEdJbjA1OVZnNEdfemE5VEdqVVdJcjU0ZkNxNkVuSXR1VnJTTlpxd2dEX3NfTXFXcUxYeGpTTjFTbnNKMEgyMmFHb2J0ZlZaUkpnR2EzWDRJS2pFcU1GRWk3RnRGOHE1aW5PYmVXSzdJOTQwaTJfOTkyRDhELU5rZ3F6bzdFbGZhWFM1SjhPZVoxMHdvSkdKUlNrN2NzQmYtdEJ1NlB2ZkI5anNpTXTSAeQBQVVfeXFMTkpLYnR2Z0JEVDhvVHdNU3pjaTlyMFBNamdMQkhyVnRzYWlpdmlkUjM5OW0wcUZXejZYOWluaGhHSW4wNTlWZzRHX3phOVRHalVXSXI1NGZDcTZFbkl0dVZyU05acXdnRF9zX01xV3FMWHhqU04xU25zSjBIMjJhR29idGZWWlJKZ0dhM1g0SUtqRXFNRkVpN0Z0RjhxNWluT2JlV0s3STk0MGkyXzk5MkQ4RC1Oa2dxem83RWxmYVhTNUo4T2VaMTB3b0pHSlJTazdjc0JmLXRCdTZQdmZCOWpzaU10?oc=5",
+"ts": 1795434422,
+"medios": 8,
+"puntos": 10.39,
+"ind": [],
+"bolsa": false
+},
+{
+"t": "La subida del BCE de diciembre podría ser insuficiente, pero no hay prisa por actuar, dice Simkus",
+"fuente": "TradingView",
+"url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE5aOEZhS0dKSl9DNTRqUDhLd291SUFoUlN1YjFBSWgtdVNpY2ZKMkJwUUxmc01oT1BPSmNNRkhidWJlcmY4TmJ2V0FJd0paT1Z3dzgwNmRlODh5WnFPUWZTZ1FyYjFrdlJUNlFvSzg5a3dQb3VyREg4?oc=5",
+"ts": 1795426994,
+"medios": 5,
+"puntos": 8.86,
+"ind": [
+"euribor-a-3-meses"
+],
+"bolsa": false
+},
+{
+"t": "Feijóo se compromete a negociar con el BCE una flexibilización de los créditos para construir vivienda “si es necesario”",
+"fuente": "EL PAÍS",
+"url": "https://news.google.com/rss/articles/CBMijgJBVV95cUxQY0lpamJFSXlkcDZFTjBTVEk0ZEJvTDNYa3ZYaEw5SG9NdTd1TUJiNjRDNXpuLTRfeEthWV8yTUdjSmdCNmkwZmlwakhLNEFhcGl1TlRtTml5VVkxQ2hLWXREUkhFbFM0X0plb2N2bjQtVFhjYTVjc0lyQ2E0RnQ2M3o4a0lpNm1ueUlQNUdQOTU0SU90Q3VLeWdEenI1Q1FFOEM2OVE4Y091dXF1ajI4cXZnX0F2Vl9iRkRmMGFuejRmc3RWQ0NVUUw5UGVTaDJZUWEtUWg0cTh4YzExQ09Jbjh6bU1EUjJtSTNTcTR4TFRMRFg3V1RxXzFnTEduZU9Ga0xvNTRYMU01MExhUEHSAaICQVVfeXFMTjRIRGVwejN2MnpTaXVPMWszNmtEMHVTUkU4MWhTdkRxZkVPN3RpV2ZjU3NXMV9hdm05WVh5YUxQc1VQOXUtMmpsUzNscjdBbkhVNWF5VDJiR2NVc011UWl3azYwdnFMdmlHblFqaEN1MVNtd21waEQtY0oxdjdzM25wSUU1bkR0RmhSRDAzTHhsYm50Sl9HeURjRDNiQkxOTElBQm5PUTRsel9GLThaYU14MTAzNDRKZlkxTUtPX3hVUFlYUDUyS28tLWZhS0hLaFhYd18yelJLNVUxRldzUUNsTjlub0l4NnB3Wnh3TnNBWUFWV19JamZXazlwME9LOFhkZVlsTWgxbmxhX19sWV9CNWloS093eFB0N1M0czRvQlE?oc=5",
+"ts": 1795468594,
+"medios": 4,
+"puntos": 8.17,
+"ind": [
+"precio-de-la-vivienda-tasa-anual",
+"euribor-a-3-meses"
+],
+"bolsa": false
+},
+{
+"t": "Amper, Squirrel o Izertis, entre las 31 empresas elegidas por Six para su programa europeo de crecimiento",
+"fuente": "TradingView",
+"url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9JbGRhemZiUFVvNWJVVE44X1pVRXNhbTdiQ2N5UlJReU80VnlwaFl0cGtfR2JDQkRTVVhXNUNIMkFhaFFRSEY0QURUQTc0eGNvaEI4T0c2RGlPNnJOUlVVS3FidHdSM0E0WGtZOA?oc=5",
+"ts": 1795441364,
+"medios": 1,
+"puntos": 7.0,
+"ind": [],
+"bolsa": false
+},
+{
+"t": "Técnicas Reunidas se adjudica un megacontrato de RWE en Alemania por más de 1.500 millones",
+"fuente": "TradingView",
+"url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE93QzUxYXhET1lHUjl5dDB1UFNFN1ExVjI1V2RJYnVRLW9yUUVqMTFyTE5FaWlCbGFpQ3l5enplV1U2RTVXa3BhanktX21jUzA1YUVPZTZ6QlFUdEZOS3hfWExidmpvZw?oc=5",
+"ts": 1795447011,
+"medios": 1,
+"puntos": 7.0,
+"ind": [],
+"bolsa": false
+}
+]
+},
+{
+"id": "mundo",
+"titulo": "Mundo",
+"noticias": [
+{
+"t": "Jensen Huang vuelve a Nvidia por la puerta grande: por unanimidad, con ovación y las acciones disparadas",
+"fuente": "EL PAÍS",
+"url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxPRjBEeTNDUTZCdnhHLUl0SXhja3ZQbDNETENTR1pZOGNTNG5HMjV0eHc5ZXJQc1RkX3NpYW5vYjRmV2ZBTE1HOXdwcTRpUkFiM2ZaYlA1aW16dmN1d1kzWFQ2ZG5maUFGeE1UdjlTcmNSZFREQVZvajFvWnJocmlFRlRjZzg1ckdFVzJ0RlFsVGNDMGY1azB1SGl4TDNnLTgwdUhtcXZIV2hTM1d4Mm5PUzZ4aHZHeTdnSFVsb2M3ZzU2Z2RRNl94V3pnbzNrdUhYc0FzOUVLNlluOTM3?oc=5",
+"ts": 1795499700,
+"medios": 13,
+"puntos": 19.24,
+"ind": [],
+"bolsa": true
+},
+{
+"t": "Resumen de noticias del regreso de Jensen Huang como CEO de Nvidia del 23 de noviembre de 2026",
+"fuente": "CNN en Español",
+"url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPLVFGcFdtSkV4M2MxYzR0eEQ5OXg2TG4zNFppV1M3TUc4OVQweXVjLXVEMGUwdGZ0RU1SdEl4T2EtbDVFMzlQSkJqNkIzdUV1WVNTUmxacWd2T2ROdDdweFhKWTBCRlRZcUdDeDVkVk00OFBYY2k0VXZDYTZLUncyTm5kbTVOcGVjTmJpbko5NW1tU29EeVZOUHBtOXJXRHBwcVRR?oc=5",
+"ts": 1795500720,
+"medios": 11,
+"puntos": 18.59,
+"ind": [],
+"bolsa": false
+},
+{
+"t": "Economía - Nvidia dispara Wall Street con el regreso de Jensen Huang y suma más de USD 900.000 millones",
+"fuente": "France 24",
+"url": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxPTUNpeEY5eWFsc1ZXbjV2MVhQaWxJVnUwVlkzM19LR29YM05SUHhraXBVWFpSUWpod3AwWHlOUGtMVmt3N2p2eU1CWDFSaE5fV2N0TEx6X3VDWmVOZjVoUnV3ZkY1NjJvLXV5c2YxY3ZPcThOcG9KM2ROdHNQOXZMMkhJRm5xcENsN3JjNXN6cUowQnhjcE96MXU2SG8zNHpVX1U1ZEhmUExPVWd4Tjd0NWcyWWljX0puRUh4ZEJTVDJ0eE5JWlZYekRIcnIwN1R0VUtFM21DQXVidFk1R0ZNQVgzRDJ1d3dLaDl4MHlmbw?oc=5",
+"ts": 1795487043,
+"medios": 13,
+"puntos": 13.31,
+"ind": [],
+"bolsa": true
+},
+{
+"t": "Tras el escándalo con Alice Huang, Estados Unidos incluyó a Megaspeed en la lista negra por el presunto desvío de chips hacia China",
+"fuente": "Infobae",
+"url": "https://news.google.com/rss/articles/CBMijgJBVV95cUxQOU5BNTJhR09Pd2xDYS1iRF9zczNydGFkV19YSFVzclpaek0td0VGM2cwUXM1ZzJNVjRYZ2l0NU5tajZvUWozcW1aVks2Q1pXZk5FVm9SZlEwdFRoRy1ReVBBMlpVbm41bjNEYVR2SEpyTnlaVzhmWHhfVkdReG9aa014dU44N0FvZGJWMlZtbmp2U1pfcnI0ajlFQS1TOG5jVUlsQ1Mydkhob2FnVnZMVU9GRnl4VVRHRTBpenBSOHRMM2NiMUpyUGxvMWdBWFpNTXRPVS1idVpaMm9BTlpZSENxcW1LY3ZvZmViSWhtT290aTFQVFlqbWVwdlJuUUd3dnVibGVyeGVOckxUWUHSAagCQVVfeXFMTWIxSUljaTZwc1dLbFVYbXVjak50UURlbzZGZ0U5WlpNN0ZMbVdtLUdrSkE4VkR5RTVsTmVMQnJ6N0tLeElyVlhGSnJsVmEyaHRpdWpldHJ1YnU0TGtza2JJSE9SYlRGNkMtYWNNREhOVmQtUzdicDBXeVZvRy1JX0ViVmF4dlh0bmNHT2lRSUU3eUwyQmZGN3M1Q2M2OU9LT2lnVERyYWkydVdyWXZOamYtOENiTE45aURBQ2s1Q240dmhsOV92TVNXWHBfWU9sSUtfa0pDS0J4SFdhME91WjFoTnE3RGF1bWR3eDluRFNGWFJsYkhRYkR2S21mbm9sQjRsdXl3Rk41dy1mNUtHeFVnWUZ0LWNBaVdiYXRxdi0yRlpWaEh3ZWo?oc=5",
+"ts": 1795479600,
+"medios": 2,
+"puntos": 12.08,
+"ind": [],
+"bolsa": false
+},
+{
+"t": "El Ibex 35 abre en rojo sobre los 19.100 puntos y lidera las caídas de las bolsas europeas",
+"fuente": "OkDiario",
+"url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxObnFtQTMxVTloQlgzU2h4Z3ZqY1dhdkNvMm9SbklMOTJJVFZ0amJJdnF2YWliZDh5MmJ0dmljSXRIUXNoVHlON2xzTFVuUnN3YkRLalFlZ1BsSnFjMWhqSFNUTXFlQnhWZHg1Sk1Gc0ZoNWVIRmQwOWNJdFh1aGJRTUxhQ0lweG9mSDZ3dVJSWlpuT1NXaDhwM2w5RG9zMkVNWTM1eGlYeEJFMlg0UjV6Q0tVZXE4QdIBuwFBVV95cUxPYS1FS19GelEweXhYN19FSFhPZDhfQlZrc3ROM182UlRNUk1MMnFXb1VrMUtfTTR4M0JocnRnUjM3QzZHNWYtWmlWVThkNUtKTS12UmNscUNYTS1wYTltcnNyWnNZYUdLQWtWRFp4YWhLMEZBR2tHTTc1dTlTUVAxQkMzeW02MVVnZDh1ZHZpS3VKdkp5c1paX2hWeE4xQm1vbjhnaXhJQWhQWTdsLU91YllrWWx6cy03c2hJ?oc=5",
+"ts": 1795508815,
+"medios": 9,
+"puntos": 11.94,
+"ind": [],
+"bolsa": true
+}
+]
+}
+],
+"indicadores": {
+"precio-de-la-vivienda-tasa-anual": {
+"nombre": "Precio de la vivienda (tasa anual)",
+"pagina": "precios"
+},
+"consumo-de-los-hogares-crecimiento-interanual": {
+"nombre": "Consumo de los hogares: crecimiento interanual",
+"pagina": "actividad"
+},
+"euribor-a-3-meses": {
+"nombre": "Euríbor a 3 meses",
+"pagina": "publico"
+}
+}
+}
