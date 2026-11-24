@@ -301,7 +301,7 @@ graficoG = {
   const anio = new Date().getFullYear();
   const url = `https://ec.europa.eu/eurostat/databrowser/view/${datosG.code}/default/table?lang=es`;
   const apa = `Eurostat. (${anio}). ${indG.nombre} [Conjunto de datos ${datosG.code}]. Oficina Estadística de la Unión Europea. Recuperado el ${hoyG} de ${url}`;
-  const apaWeb = `Muñoz, Álvarez (2026). CCEEscopio D+I: observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación [Sitio web]. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Recuperado el ${hoyG} de ${location.origin + location.pathname.replace(/[^/]*$/, "")}`;
+  const apaWeb = `Muñoz, J.F., Álvarez, E. (2026). CCEEscopio D+I: observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación [Sitio web]. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Recuperado el ${hoyG} de ${location.origin + location.pathname.replace(/[^/]*$/, "")}`;
   const caja = (t) => {
     const b = html`<button class="copiar">Copiar</button>`;
     b.onclick = async () => { try { await navigator.clipboard.writeText(t); b.textContent = "Copiado ✓"; } catch (e) { b.textContent = "Selecciona y copia"; } };

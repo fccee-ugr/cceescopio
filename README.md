@@ -32,6 +32,8 @@ docencia/              páginas por grado, curso y asignatura (generadas)
 tools/make_logo.py     genera el logo
 tools/make_ppt.py      genera ppt.qmd (Piedra, papel o tijera) a partir de concurso.qmd
 tools/make_informe.py  genera informe-coyuntura.qmd (plantilla de informe de coyuntura y rúbrica)
+tools/make_muestra.py  genera tamano-muestral.qmd (calculadora de tamaño muestral);
+                       las fórmulas están en tools/muestra.js (pruebas: node tools/muestra.js)
 detecta-engano.qmd     «Detecta el engaño»: gráficos honestos y engañosos con datos de Eurostat
 ```
 
@@ -46,6 +48,7 @@ python3 tools/make_apps.py
 python3 tools/make_docencia.py
 python3 tools/make_ppt.py        # después de generar concurso.qmd
 python3 tools/make_informe.py
+python3 tools/make_muestra.py
 quarto render
 ```
 

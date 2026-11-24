@@ -158,6 +158,7 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · [Tamaño muestral](tamano-muestral.qmd)** <span class="badge-nuevo">nuevo</span>: calcula cuántas observaciones necesita un estudio (encuestas, experimentos, TFG y TFM) según el escenario: error de muestreo al estimar una proporción o una media, o potencia al contrastar hipótesis.
 - **Nuevo · [Todos los recursos](recursos.qmd) y menú reordenado** <span class="badge-nuevo">nuevo</span>: el menú se organiza ahora por objetivos (Indicadores, Actualidad, Herramientas, Docencia, Juegos y simuladores e Investigación), sin opciones repetidas, y una página reúne todos los recursos con filtros por tipo, titulación y público.
 - **Nuevo · Todas las titulaciones** <span class="badge-nuevo">nuevo</span>: [Docencia](docencia.qmd#titulaciones) incluye ya los dobles grados (GADE + Derecho, GADE + Ingenierías y Turismo + Traducción e Interpretación), el Grado en Economía bilingüe y los [másteres y el doctorado](docencia/posgrado.qmd).
 - **Nuevo · [Rutas de aprendizaje](rutas.qmd)** <span class="badge-nuevo">nuevo</span>: ocho recorridos guiados que encadenan datos, herramientas, simuladores y retos.

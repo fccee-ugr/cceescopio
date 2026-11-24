@@ -23,11 +23,11 @@ Tasa de paro por regiones,ES61,Andalucía,2025,…,% de la población activa,Eur
 
 **CCEEscopio** (la web, sus herramientas o sus gráficos):
 
-> Muñoz, Álvarez (2026). CCEEscopio D+I: observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. https://fccee-ugr.github.io/cceescopio/
+> Muñoz, J.F., Álvarez, E. (2026). CCEEscopio D+I: observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. https://fccee-ugr.github.io/cceescopio/
 
 **Datos** descargados a través de CCEEscopio:
 
-> Eurostat (código de la tabla), a través de Muñoz, Álvarez (2026). CCEEscopio D+I. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Consultado el [fecha].
+> Eurostat (código de la tabla), a través de Muñoz, J.F., Álvarez, E. (2026). CCEEscopio D+I. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Consultado el [fecha].
 
 Los datos de Eurostat pueden reutilizarse libremente, incluso con fines comerciales, citando la fuente ([política de reutilización de Eurostat](https://ec.europa.eu/eurostat/about-us/policies/copyright)).
 

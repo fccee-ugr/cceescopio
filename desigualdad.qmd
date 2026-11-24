@@ -527,7 +527,7 @@ datos.ok ? html`<div class="descargas">
   ${DOM.download(() => csv(sel), `cceescopio_${ind.code}_seleccion.csv`, "⬇ Descargar selección (CSV)")}
   ${DOM.download(() => csv(datos.rows), `cceescopio_${ind.code}_completo.csv`, "⬇ Descargar todos los territorios (CSV)")}
 </div>
-<p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de Muñoz, Álvarez (2026), CCEEscopio D+I, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
+<p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de Muñoz, J.F., Álvarez, E. (2026), CCEEscopio D+I, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
 ```
 
 ::: {.callout-tip appearance="simple"}

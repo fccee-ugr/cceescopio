@@ -115,6 +115,8 @@ website:
             text: "Relaciona dos indicadores"
           - href: regresion.qmd
             text: "Regresión lineal con análisis de supuestos"
+          - href: tamano-muestral.qmd
+            text: "Tamaño muestral"
           - href: desfases.qmd
             text: "¿Qué indicador se adelanta? (desfases)"
           - href: prevision.qmd

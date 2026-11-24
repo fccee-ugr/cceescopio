@@ -63,6 +63,8 @@ canvas, #stage, .sc, #vig { position: absolute; left: 0; top: 0; width: 1920px; 
 #g-bars { position: absolute; left: 1270px; top: 300px; width: 540px; height: 590px; padding: 26px 30px; }
 .gb { position: absolute; left: 30px; width: 480px; height: 56px; } .gb .nm { position: absolute; left: 0; width: 150px; font-size: 25px; font-weight: 700; line-height: 56px; white-space: nowrap; }
 .gb .bx { position: absolute; left: 158px; top: 8px; height: 40px; border-radius: 10px; }
+/* 1c: mapa animado */
+.hx { transition: none; } #m-yr { font-size: 120px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; background: linear-gradient(120deg, var(--mgl), var(--or)); -webkit-background-clip: text; color: transparent; }
 /* 7b: docencia e investigación */
 .ej { position: absolute; width: 540px; height: 250px; padding: 26px 30px; }
 .ej .em { font-family: "Noto Color Emoji"; font-size: 60px; line-height: 1; } .ej h3 { font-size: 33px; font-weight: 800; line-height: 1.12; margin: 14px 0 8px; } .ej p { font-size: 24px; color: #E3D3DB; font-weight: 500; line-height: 1.3; }
@@ -90,7 +92,7 @@ const es = (v, d = 0) => v.toLocaleString("es-ES", {minimumFractionDigits: d, ma
 const pct = v => (v > 0 ? "+" : "") + es(v, 2) + " %";
 
 /* ---------- escenas y tiempos ---------- */
-const ESC = [["logo", 8.8], ["ind", 6.0], ["graf", 7.6], ["hoy", 7.2], ["bolsa", 7.8], ["sim", 8.6], ["news", 6.8], ["juegos", 7.2], ["doc", 7.6], ["inv", 7.6], ["tit", 6.2], ["fin", 8.2]];
+const ESC = [["logo", 8.8], ["ind", 6.0], ["graf", 7.6], ["mapa", 7.4], ["hoy", 7.2], ["bolsa", 7.8], ["sim", 8.6], ["news", 6.8], ["juegos", 7.2], ["doc", 7.6], ["inv", 7.6], ["tit", 6.2], ["fin", 8.2]];
 let acc = 0; const T0 = {}; ESC.forEach(e => { T0[e[0]] = acc; acc += e[1]; }); const DUR = acc, X = 0.35;
 const stage = $("#stage"), EL = {};
 ESC.forEach(([id]) => { const d = document.createElement("div"); d.className = "sc"; d.id = "s-" + id; stage.appendChild(d); EL[id] = d; });
@@ -168,7 +170,7 @@ const IND = ["Inflación (IPCA)", "Tasa de paro", "PIB: crecimiento", "Pernoctac
   EL.ind.innerHTML = `<div id="wallp"><div id="wall">${h}</div></div><div id="scrim"></div>
   <div class="abs" style="left:0;top:215px;width:1920px;text-align:center"><div id="n99">0</div><div class="h rv" id="i-h" style="margin-top:6px">indicadores <em>en directo</em></div>
   <div id="i-ch" style="margin-top:34px">${["España", "Andalucía", "Comunidades autónomas", "27 países de la UE"].map(c => `<span class="chip" style="margin:0 9px">${c}</span>`).join("")}</div>
-  <div class="sub" id="i-s" style="margin-top:30px">Datos oficiales de Eurostat · gráficos y mapas animados · descarga en CSV</div></div>`; }
+  <div class="sub" id="i-s" style="margin-top:30px">Datos oficiales de Eurostat · gráficos interactivos, mapas animados y descarga en CSV</div></div>`; }
 S.ind = t => {
   AMB = 0.3; $("#wall").style.transform = `rotateX(54deg) rotateZ(-20deg) translate3d(${-t * 46}px,${-t * 34 + 80}px,0)`;
   $$(".wc").forEach((c, i) => { const p = eo(seg(t, 0.1 + (i % 7) * 0.07 + Math.floor(i / 7) * 0.1, 0.9 + (i % 7) * 0.07 + Math.floor(i / 7) * 0.1)); c.style.opacity = p; c.style.transform = `translateZ(${(1 - p) * 500}px)`; $("path", c).style.strokeDashoffset = 1 - eio(seg(t, 0.6 + i * 0.07, 2.4 + i * 0.07)); });
@@ -184,13 +186,13 @@ const BAR = [["España", "#F0479A", 0.55, 0.9], ["Andalucía", "#F29200", 0.62, 
 const barV = (u, k) => clamp(BAR[k][2] + 0.22 * Math.sin(u * 5.2 + BAR[k][3]) * (0.6 + 0.4 * Math.cos(u * 2.3 + k)), 0.08, 1);
 { let ejes = ""; for (let g = 0; g <= 4; g++) { const y = GC.y + GC.h - g * GC.h / 4; ejes += `<line x1="${GC.x}" x2="${GC.x + GC.w}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,${g ? .12 : .4})" stroke-width="2"/>`; }
   for (let a = GY0; a <= GY1; a += 3) { const x = GC.x + (a - GY0) / (GY1 - GY0) * GC.w; ejes += `<text x="${x}" y="${GC.y + GC.h + 38}" text-anchor="middle" font-size="24" fill="#B9A9B1">${a}</text>`; }
-  EL.graf.innerHTML = `<div class="abs" style="left:110px;top:80px"><div class="kick">Indicadores en directo</div><div class="h rv" id="g-h" style="margin-top:10px">Y ahora, con <em>gráficos animados</em></div></div>
+  EL.graf.innerHTML = `<div class="abs" style="left:110px;top:80px"><div class="kick">Indicadores en directo</div><div class="h rv" id="g-h" style="margin-top:10px">Compara territorios <em>a lo largo del tiempo</em></div></div>
   <div class="abs" id="g-ch" style="left:${GC.x}px;top:255px">${GNOM.map((n, k) => `<span class="chip" style="margin-right:14px;font-size:25px;padding:8px 22px;border-color:${GCOL[k]}"><span style="color:${GCOL[k]}">●</span> ${n}</span>`).join("")}</div>
   <svg class="abs" width="1920" height="1080"><g id="g-ax">${ejes}</g>${GNOM.map((n, k) => `<path id="g-l${k}" fill="none" stroke="${GCOL[k]}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle id="g-d${k}" r="12" fill="${GCOL[k]}" stroke="#10050B" stroke-width="4"/><text id="g-t${k}" font-size="27" font-weight="800" fill="${GCOL[k]}">${n}</text>`).join("")}</svg>
-  <div id="g-bars" class="glass"><div style="font-size:30px;font-weight:800">Ranking animado</div><div style="font-size:22px;color:#D9CBD2;margin-top:2px;width:300px">Los territorios se reordenan año a año</div>
+  <div id="g-bars" class="glass"><div style="font-size:30px;font-weight:800">Ranking año a año</div><div style="font-size:22px;color:#D9CBD2;margin-top:2px;width:300px">Los territorios se reordenan año a año</div>
   <div id="g-yr" style="position:absolute;right:30px;top:22px;font-size:54px;font-weight:900;color:#FFC56B;font-variant-numeric:tabular-nums">2008</div>
   ${BAR.map(b => `<div class="gb"><span class="nm">${b[0]}</span><span class="bx" style="background:linear-gradient(90deg,${b[1]}88,${b[1]})"></span></div>`).join("")}</div>
-  <div class="abs sub" id="g-ft" style="left:110px;top:960px;font-size:30px">Las líneas se dibujan solas y los mapas y rankings cambian año a año · <span style="color:#B9A9B1">formas ilustrativas</span></div>`; }
+  <div class="abs sub" id="g-ft" style="left:110px;top:960px;font-size:30px">Elige indicador y territorios, recorre las líneas con el ratón y descarga los datos · <span style="color:#B9A9B1">formas ilustrativas</span></div>`; }
 S.graf = t => {
   AMB = 0.25; rv($("#g-h"), seg(t, 0.3, 1.3)); $("#g-ax").style.opacity = seg(t, 0.5, 1.1);
   $$("#g-ch .chip").forEach((c, i) => show(c, eo(seg(t, 0.8 + i * 0.15, 1.3 + i * 0.15)), `translateY(${(1 - eo(seg(t, 0.8 + i * 0.15, 1.3 + i * 0.15))) * 20}px)`));
@@ -204,6 +206,34 @@ S.graf = t => {
   $$(".gb", EL.graf).forEach((el, i) => { let rk = 0; v.forEach((o, j) => { if (j !== i) rk += 1 / (1 + Math.exp(-(o - v[i]) / 0.012)); }); el.style.top = (120 + rk * 72) + "px";
     $(".bx", el).style.width = (320 * v[i] / mx * (0.15 + 0.85 * seg(t, 1.4, 2.0))) + "px"; el.style.opacity = seg(t, 1.3 + i * 0.07, 1.7 + i * 0.07); });
   show($("#g-ft"), eo(seg(t, 3.0, 3.6)));
+};
+
+/* ---------- 1c. Mapas animados (mapa de teselas de la UE; valores ilustrativos) ---------- */
+const HEX = [["SE", 4, 0], ["FI", 5, 0], ["EE", 6, 0], ["IE", 0, 1], ["DK", 3, 1], ["LV", 6, 1], ["LT", 5, 1], ["NL", 2, 2], ["BE", 1, 2], ["DE", 3, 2], ["PL", 4, 2],
+  ["FR", 1, 3], ["LU", 2, 3], ["CZ", 3, 3], ["SK", 4, 3], ["PT", 0, 4], ["ES", 1, 4], ["AT", 3, 4], ["HU", 4, 4], ["RO", 5, 4], ["IT", 2, 5], ["SI", 3, 5], ["HR", 4, 5], ["BG", 5, 5],
+  ["MT", 2, 6], ["EL", 5, 6], ["CY", 6, 6]];
+const HR_ = 74, HXW = Math.sqrt(3) * HR_, MX0 = 640, MY0 = 300;
+const hexPos = (c, r) => [MX0 + c * HXW + (r % 2) * HXW / 2, MY0 + r * HR_ * 1.5];
+const hexPath = (x, y, r) => Array.from({length: 6}, (_, i) => { const a = Math.PI / 180 * (60 * i - 30); return `${i ? "L" : "M"}${(x + r * Math.cos(a)).toFixed(1)},${(y + r * Math.sin(a)).toFixed(1)}`; }).join("") + "Z";
+const hexVal = (u, i) => { const ph = (i * 2.399) % 6.28; return clamp(0.5 + 0.32 * Math.sin(u * 4.2 + ph) + 0.12 * Math.cos(u * 7 + i), 0, 1); };
+const rampa = v => { const a = [[59, 16, 44], [181, 23, 95], [240, 71, 154], [242, 146, 0], [255, 214, 150]], x = clamp(v) * (a.length - 1), k = Math.min(a.length - 2, Math.floor(x)), f = x - k;
+  return `rgb(${a[k].map((c, j) => Math.round(c + (a[k + 1][j] - c) * f)).join(",")})`; };
+EL.mapa.innerHTML = `<div class="abs" style="left:110px;top:80px"><div class="kick">Indicadores en directo</div><div class="h rv" id="ma-h" style="margin-top:10px"><em>Mapas animados</em></div>
+  <div class="sub" id="ma-s" style="margin-top:18px;width:520px">Pulsa ▶ y mira cómo cambia cada indicador, año a año, en los países y regiones</div></div>
+  <svg class="abs" width="1920" height="1080">${HEX.map(([c], i) => { const [x, y] = hexPos(HEX[i][1], HEX[i][2]); return `<g class="hx" data-i="${i}"><path d="${hexPath(x, y, HR_ - 5)}" stroke="rgba(255,255,255,.35)" stroke-width="2.5"/><text x="${x}" y="${y + 11}" text-anchor="middle" font-size="30" font-weight="800" fill="#fff">${c}</text></g>`; }).join("")}</svg>
+  <div class="abs" id="ma-leg" style="left:110px;top:640px;width:440px"><div style="font-size:24px;font-weight:700;color:#D9CBD2;margin-bottom:10px">Valor del indicador</div>
+  <div style="height:26px;border-radius:13px;background:linear-gradient(90deg,${[0, .25, .5, .75, 1].map(rampa).join(",")})"></div><div style="display:flex;justify-content:space-between;font-size:22px;color:#B9A9B1;margin-top:6px"><span>bajo</span><span>alto</span></div></div>
+  <div class="abs" id="ma-yrb" style="left:110px;top:430px"><div id="m-yr">2008</div></div>
+  <div class="abs" id="ma-pl" style="left:110px;top:800px;width:440px;display:flex;align-items:center;gap:22px"><div style="flex:none;width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--mg),var(--or));font-size:34px;line-height:70px;text-align:center">▶</div>
+  <div style="flex:1;height:12px;border-radius:6px;background:rgba(255,255,255,.18);position:relative"><div id="ma-bar" style="position:absolute;left:0;top:0;height:12px;border-radius:6px;background:#FFC56B;width:0"></div><div id="ma-kn" style="position:absolute;top:-10px;width:32px;height:32px;border-radius:50%;background:#fff;margin-left:-16px;left:0"></div></div></div>
+  <div class="abs sub" id="ma-ft" style="left:110px;top:965px;font-size:28px;color:#B9A9B1">Mapa de teselas de la UE-27 · valores ilustrativos</div>`;
+S.mapa = t => {
+  AMB = 0.25; rv($("#ma-h"), seg(t, 0.3, 1.2)); show($("#ma-s"), eo(seg(t, 1.0, 1.6)));
+  const u = eio(seg(t, 1.8, 6.6)), ano = Math.round(2008 + u * 17);
+  $$(".hx", EL.mapa).forEach((g, i) => { const q = eo(seg(t, 0.4 + i * 0.035, 1.0 + i * 0.035)); g.style.opacity = q; const [x, y] = hexPos(HEX[i][1], HEX[i][2]);
+    g.setAttribute("transform", `translate(${x},${y}) scale(${0.4 + 0.6 * eback(q)}) translate(${-x},${-y})`); $("path", g).setAttribute("fill", rampa(hexVal(u, i))); });
+  show($("#ma-yrb"), eo(seg(t, 1.4, 1.9))); $("#m-yr").textContent = ano; show($("#ma-leg"), eo(seg(t, 1.6, 2.2))); show($("#ma-pl"), eo(seg(t, 1.6, 2.2)));
+  $("#ma-bar").style.width = (100 * u) + "%"; $("#ma-kn").style.left = (100 * u) + "%"; show($("#ma-ft"), eo(seg(t, 2.4, 3.0)));
 };
 
 /* ---------- 2. Hoy en la economía ---------- */

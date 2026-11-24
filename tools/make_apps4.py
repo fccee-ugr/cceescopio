@@ -612,6 +612,7 @@ GRUPOS = [
     ("📊 Métodos Cuantitativos y econometría", [
         ("numeros-indice", "Laboratorio de números índice", "Cambio de base, tasas de variación, enlace de series, deflactación e índices de Laspeyres, Paasche y Fisher, con datos reales y ejercicios.", True),
         ("regresion", "Regresión lineal con análisis de supuestos", "MCO con hasta cuatro variables explicativas, interpretación y contrastes de linealidad, normalidad, homocedasticidad, autocorrelación y multicolinealidad.", True),
+        ("tamano-muestral", "Tamaño muestral", "Cuántas observaciones necesita tu estudio: estimar una proporción o una media con un error de muestreo dado, o contrastar hipótesis con una potencia dada (proporciones, medias, correlación, regresión y chi-cuadrado).", True),
         ("estadistica", "Análisis cuantitativo de datos", "Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.", True),
         ("desfases", "¿Qué indicador se adelanta?", "Correlación con desfase entre dos series para detectar indicadores adelantados y retrasados.", False),
         ("relaciona", "Relaciona dos indicadores", "Nube de puntos entre dos indicadores para todos los países o regiones.", False),

@@ -15,6 +15,8 @@ Todas las calculadoras funcionan en tu navegador: si usas tus propios datos, **n
 
 <a class="calc-card" href="regresion.html"><b>Regresión lineal con análisis de supuestos</b> <span class="badge-nuevo">nuevo</span><span>MCO con hasta cuatro variables explicativas, interpretación y contrastes de linealidad, normalidad, homocedasticidad, autocorrelación y multicolinealidad.</span></a>
 
+<a class="calc-card" href="tamano-muestral.html"><b>Tamaño muestral</b> <span class="badge-nuevo">nuevo</span><span>Cuántas observaciones necesita tu estudio: estimar una proporción o una media con un error de muestreo dado, o contrastar hipótesis con una potencia dada (proporciones, medias, correlación, regresión y chi-cuadrado).</span></a>
+
 <a class="calc-card" href="estadistica.html"><b>Análisis cuantitativo de datos</b> <span class="badge-nuevo">nuevo</span><span>Medidas descriptivas, crecimiento, tendencia, volatilidad y correlaciones de tus datos o de las series de la web.</span></a>
 
 <a class="calc-card" href="desfases.html"><b>¿Qué indicador se adelanta?</b><span>Correlación con desfase entre dos series para detectar indicadores adelantados y retrasados.</span></a>
