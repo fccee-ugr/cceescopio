@@ -1,0 +1,140 @@
+---
+title: "🧭 Todos los recursos"
+subtitle: "Todo lo que ofrece CCEEscopio, ordenado: filtra por tipo, titulación o público, o busca por palabras"
+toc: false
+page-layout: full
+---
+
+```{=html}
+<div class="rec-barra">
+  <input type="search" id="rec-q" placeholder="Buscar: inflación, regresión, turismo, QR…" aria-label="Buscar recursos">
+  <div><span class="rec-l">¿Qué buscas?</span> <span class="cat-filtros" id="rec-tipo"></span></div>
+  <div><span class="rec-l">Titulación</span> <span class="cat-filtros" id="rec-grado"></span></div>
+  <div><span class="rec-l">Para</span> <span class="cat-filtros" id="rec-pub"></span></div>
+</div>
+<p class="nota" id="rec-n"></p>
+<div id="rec-lista"></div>
+<script>
+(function () {
+  const T = {datos: ["📊", "Datos e indicadores", "Los indicadores de Eurostat, por temas y territorios"], actualidad: ["📰", "Actualidad", "Lo que cambia cada día y el análisis de la coyuntura"],
+    herramienta: ["🧮", "Herramientas", "Calculadoras y laboratorios para analizar datos"], docencia: ["🎓", "Docencia", "Materiales para estudiar y para dar clase"],
+    simulador: ["🧪", "Simuladores", "Decide durante varias rondas con datos reales"], juego: ["🎮", "Juegos y retos", "Para clase, con código QR, o a tu ritmo"],
+    investigacion: ["🔬", "Investigación", "TFG, TFM, tesis y la Facultad en los ranking"]};
+  const TODOS = "GADE GECO GFICO GMIM GTUR POS";
+  // [página, icono, título, descripción, tipo, titulaciones, público (e = estudiantado, p = profesorado, i = investigación)]
+  const R = [
+    ["precios.html", "🛒", "Precios e inflación", "IPCA general y por componentes, inflación subyacente y precios de la vivienda.", "datos", TODOS, "epi"],
+    ["empleo.html", "👥", "Mercado laboral", "Paro total, juvenil y femenino, tasa de empleo y paro por regiones.", "datos", TODOS, "epi"],
+    ["actividad.html", "📈", "Actividad económica y coyuntura", "PIB, producción industrial, comercio y sentimiento económico.", "datos", TODOS, "epi"],
+    ["empresa.html", "💡", "Empresa, innovación y digitalización", "I+D, inteligencia artificial, comercio electrónico y confianza empresarial.", "datos", "GADE GMIM GFICO POS", "epi"],
+    ["turismo.html", "✈️", "Turismo", "Viajeros, pernoctaciones y ocupación hotelera, por países y regiones.", "datos", "GTUR GADE GMIM", "epi"],
+    ["publico.html", "🏛️", "Sector público y mercados financieros", "Deuda y déficit públicos, bono a 10 años, euríbor y tipo de cambio.", "datos", "GECO GFICO GADE POS", "epi"],
+    ["desigualdad.html", "⚖️", "Desigualdad, pobreza y condiciones de vida", "Gini, S80/S20, riesgo de pobreza, carencia material y vivienda.", "datos", "GECO GADE POS", "epi"],
+    ["sostenibilidad.html", "🌱", "Energía y sostenibilidad", "Renovables, precio de la electricidad y emisiones.", "datos", TODOS, "epi"],
+    ["poblacion.html", "👪", "Población, educación y salud", "Población, fecundidad, envejecimiento, esperanza de vida y capital humano.", "datos", TODOS, "epi"],
+    ["internacional.html", "🌍", "Economía internacional y sector exterior", "Exportaciones, cuenta corriente, inversión internacional y convergencia.", "datos", "GECO GADE GMIM POS", "epi"],
+    ["andalucia.html", "🗺️", "Andalucía y las regiones españolas", "Andalucía frente al resto de comunidades autónomas y la UE.", "datos", TODOS, "epi"],
+    ["turismo-andalucia.html", "🏖️", "Turismo en Andalucía", "Pernoctaciones y estacionalidad por provincias andaluzas.", "datos", "GTUR GADE GMIM", "epi"],
+    ["comparador.html", "🆚", "Comparador de comunidades autónomas", "Dos comunidades frente a frente en todos los indicadores regionales.", "datos", TODOS, "epi"],
+    ["ficha.html", "🪪", "Ficha de país o región", "Los indicadores clave de un territorio de un vistazo, comparados con España y la UE.", "datos", TODOS, "epi"],
+    ["precios-productos.html", "⛽", "Precios de productos", "Gasolina, luz, gas y cesta de la compra, con sus impuestos y en euros de hoy.", "datos", "GECO GADE GMIM", "ep"],
+    ["consumo.html", "🛍️", "Consumo y confianza", "Consumo de los hogares, comercio minorista y confianza del consumidor.", "datos", "GMIM GADE GECO POS", "epi"],
+    ["empresas.html", "🏢", "Demografía empresarial", "Altas, bajas y quiebras de empresas.", "datos", "GADE GFICO POS", "epi"],
+    ["piramides.html", "🔺", "Pirámides de población", "Países, comunidades y provincias, con animación desde 2000.", "datos", TODOS, "ep"],
+    ["indicadores.html", "🔎", "Buscador de indicadores", "Los 99 indicadores de CCEEscopio en una tabla con buscador.", "datos", TODOS, "epi"],
+    ["glosario.html", "📖", "Glosario de indicadores", "Qué mide cada indicador y cómo se interpreta.", "datos", TODOS, "ep"],
+
+    ["index.html#hoy", "🗞️", "Hoy en la economía", "Cada mañana, las noticias económicas más destacadas de España, Europa y el mundo.", "actualidad", TODOS, "epi"],
+    ["noticias.html", "📰", "Noticias e indicadores", "Noticias de los últimos días con el reto de comprobarlas con los datos.", "actualidad", TODOS, "ep"],
+    ["bolsa.html", "💹", "Bolsa al día", "IBEX 35, bolsas mundiales, petróleo, oro y empresas del IBEX, tres veces al día.", "actualidad", "GFICO GADE GECO POS", "epi"],
+    ["mercados.html", "💱", "Mercados al día", "Euríbor, deuda pública, prima de riesgo y tipos de cambio.", "actualidad", "GFICO GECO GADE POS", "epi"],
+    ["calendario.html", "🗓️", "Datos recientes y calendario", "Qué indicadores se han actualizado y cuándo se publican los próximos.", "actualidad", TODOS, "epi"],
+    ["boletin.html", "📋", "Boletín de coyuntura", "Resumen automático de la situación económica con los últimos datos.", "actualidad", "GECO GADE POS", "epi"],
+    ["coyuntura.html", "🌡️", "Mapa de calor de coyuntura", "Todos los países o comunidades y sus indicadores, coloreados por posición relativa.", "actualidad", "GECO GADE POS", "epi"],
+    ["ciclo.html", "🚦", "Ciclo económico y semáforo", "¿En qué fase del ciclo está cada economía?", "actualidad", "GECO GADE POS", "epi"],
+    ["descomposiciones.html", "🧩", "¿Qué explica cada indicador?", "Descompón la inflación, el PIB, la cuenta corriente, la población y el turismo.", "actualidad", "GECO GADE GTUR POS", "epi"],
+    ["extremos.html", "⚡", "Datos extremos e inusuales", "Máximos, mínimos y valores atípicos de los últimos datos.", "actualidad", TODOS, "epi"],
+
+    ["calculadoras.html", "🧮", "Todas las herramientas", "El índice de calculadoras y laboratorios.", "herramienta", TODOS, "epi"],
+    ["numeros-indice.html", "🔢", "Laboratorio de números índice", "Cambio de base, enlace, deflactación, Laspeyres, Paasche y Fisher, con ejercicios.", "herramienta", "GADE GECO GFICO GMIM GTUR", "ep"],
+    ["estadistica.html", "📐", "Análisis cuantitativo de datos", "Descriptivos, gráficos y contrastes con las series de CCEEscopio o con tus datos.", "herramienta", TODOS, "epi"],
+    ["relaciona.html", "🔗", "Relaciona dos indicadores", "Diagramas de dispersión entre países: curva de Phillips, ley de Okun…", "herramienta", "GECO GADE GMIM POS", "epi"],
+    ["regresion.html", "📉", "Regresión lineal con análisis de supuestos", "Estimación, diagnóstico y contrastes, con datos reales o propios.", "herramienta", "GECO GADE GFICO GMIM POS", "epi"],
+    ["desfases.html", "⏱️", "¿Qué indicador se adelanta?", "Correlaciones cruzadas para detectar indicadores adelantados.", "herramienta", "GECO POS", "ei"],
+    ["prevision.html", "🔮", "Previsión sencilla", "Tendencia, estacionalidad y predicción de cualquier serie.", "herramienta", "GECO GADE GMIM GTUR POS", "epi"],
+    ["convergencia.html", "🎯", "Convergencia sigma y beta", "¿Convergen los países y las regiones?", "herramienta", "GECO POS", "ei"],
+    ["calculadora.html", "💶", "Calculadora de inflación", "¿Cuánto valen hoy los euros de otro año?", "herramienta", TODOS, "ep"],
+    ["conversor.html", "🔁", "Conversor de unidades económicas", "Nominal y real, tasas, índices y paridades.", "herramienta", TODOS, "ep"],
+    ["hipoteca.html", "🏠", "Simulador de hipotecas y préstamos", "Cuota, TAE y cuadro de amortización con el euríbor actual.", "herramienta", "GFICO GADE GECO", "ep"],
+    ["desigualdad-calc.html", "📏", "Calculadora de desigualdad", "Gini, Lorenz y Theil, con inferencia.", "herramienta", "GECO POS", "ei"],
+    ["politica-fiscal.html", "🏛️", "Simulador de política fiscal", "¿Hacia dónde va la deuda pública?", "herramienta", "GECO GADE POS", "ep"],
+
+    ["docencia.html", "🎓", "Cómo usar CCEEscopio en clase", "Ideas de actividades y resumen por materias.", "docencia", TODOS, "p"],
+    ["rutas.html", "🧭", "Rutas de aprendizaje", "Recorridos guiados: de los datos a la simulación y al reto final.", "docencia", TODOS, "ep"],
+    ["docencia/gade.html", "🎓", "GADE, GADE + Derecho y GADE + Ingenierías", "Indicadores y ejemplos de uso para cada asignatura de ADE.", "docencia", "GADE", "ep"],
+    ["docencia/geco.html", "🎓", "GECO (también bilingüe)", "Indicadores y ejemplos de uso para cada asignatura de Economía.", "docencia", "GECO", "ep"],
+    ["docencia/gfico.html", "🎓", "GFICO", "Indicadores y ejemplos de uso para cada asignatura de Finanzas y Contabilidad.", "docencia", "GFICO", "ep"],
+    ["docencia/gmim.html", "🎓", "GMIM", "Indicadores y ejemplos de uso para cada asignatura de Marketing e Investigación de Mercados.", "docencia", "GMIM", "ep"],
+    ["docencia/gtur.html", "🎓", "GTUR y TITUR", "Indicadores y ejemplos de uso para cada asignatura de Turismo.", "docencia", "GTUR", "ep"],
+    ["docencia/posgrado.html", "🎓", "Másteres y doctorado", "Recursos recomendados para cada máster y para el doctorado.", "docencia", "POS", "epi"],
+    ["ejercicios.html", "✏️", "Ejercicios autocorregibles", "Preguntas con los últimos datos, corregidas al momento.", "docencia", TODOS, "e"],
+    ["detecta-engano.html", "🕵️", "Detecta el engaño", "Gráficos honestos frente a gráficos que mienten.", "docencia", TODOS, "ep"],
+    ["informe-coyuntura.html", "📝", "Plantilla de informe de coyuntura", "El esqueleto de un informe con los últimos datos, en Word y con rúbrica.", "docencia", "GECO GADE POS", "ep"],
+    ["examen.html", "🖨️", "Generador de exámenes y fichas", "Versiones aleatorias, soluciones y exportación a PRADO.", "docencia", TODOS, "p"],
+    ["presentacion.html", "🖥️", "Modo presentación", "Un indicador a pantalla completa para proyectar en clase.", "docencia", TODOS, "p"],
+
+    ["simuladores.html", "🧪", "Todos los simuladores", "El índice de simuladores, con filtro por titulación.", "simulador", TODOS, "ep"],
+    ["sim-banco-central.html", "🏦", "Gobernador del Banco Central", "Fija los tipos ocho trimestres: inflación, paro y regla de Taylor.", "simulador", "GECO GADE GFICO POS", "ep"],
+    ["sim-cartera.html", "💼", "Gestiona una cartera", "100.000 € en un periodo secreto de la bolsa: rentabilidad y riesgo.", "simulador", "GFICO GADE GECO POS", "ep"],
+    ["sim-fin-de-mes.html", "💶", "Llega a fin de mes", "El presupuesto de un hogar con la inflación real de cada gasto.", "simulador", TODOS, "ep"],
+    ["sim-turismo.html", "🏖️", "Gestiona tu destino turístico", "Precios, tasa turística y viviendas turísticas: empleo, alquiler y sostenibilidad.", "simulador", "GTUR GADE GECO GMIM POS", "ep"],
+
+    ["juegos.html", "🎮", "Todos los juegos", "El índice de juegos: el dato del día, ¿más alto o más bajo?, adivina el país…", "juego", TODOS, "ep"],
+    ["escape-room.html", "🔐", "Escape room económico", "Cinco salas, cinco enigmas y quince minutos para salir.", "juego", TODOS, "ep"],
+    ["dato-imposible.html", "🚫", "El dato imposible", "¿Puede ser cierto ese titular? Caza errores de porcentajes, unidades y denominadores.", "juego", TODOS, "ep"],
+    ["correlacion.html", "🔀", "¿Correlación o causalidad?", "Variables de confusión, causalidad inversa y casualidades.", "juego", TODOS, "ep"],
+    ["prediccion.html", "🎱", "Predice el próximo dato", "Apuesta por el próximo dato y compárate con una previsión sencilla.", "juego", "GECO GADE GMIM", "ep"],
+    ["precios.html", "📰", "Crea tu noticia", "Bajo cada gráfica: escribe el titular y compáralo con el del Periódico CCEEscopio.", "juego", TODOS, "ep"],
+    ["concurso.html", "📱", "Concurso de preguntas", "Con código QR y ranking en directo.", "juego", TODOS, "p"],
+    ["concurso-precios.html", "🏷️", "¿Cuánto costaba?", "Adivina el precio de un producto en el pasado (QR).", "juego", TODOS, "p"],
+    ["memoria.html", "🧠", "Memoria de datos", "Recuerda una malla 3 × 3 de datos (QR).", "juego", TODOS, "p"],
+    ["ordena.html", "↕️", "Ordena la malla", "Ordena países o regiones de mayor a menor (QR).", "juego", TODOS, "p"],
+    ["quien.html", "❓", "¿Quién es quién?", "Adivina el país por sus indicadores (QR).", "juego", TODOS, "p"],
+    ["bingo.html", "🎱", "Bingo de indicadores", "Tacha los países que cumplen cada condición (QR).", "juego", TODOS, "p"],
+    ["ppt.html", "✊", "Piedra, papel o tijera", "Cada acierto da una partida contra la aplicación (QR).", "juego", TODOS, "p"],
+
+    ["ideas-tfg.html", "💭", "Ideas para tu TFG o TFM", "Temas con pregunta, hipótesis, datos, método y estructura.", "investigacion", TODOS, "ei"],
+    ["graficos.html", "🖼️", "Generador de gráficos con cita", "Gráficos listos para el trabajo, con la referencia en APA.", "investigacion", TODOS, "ei"],
+    ["datos.html", "💾", "Datos y fuentes", "Descarga en CSV, códigos de Eurostat y ejemplos en R y Python.", "investigacion", TODOS, "epi"],
+    ["biblioteca.html", "📚", "Bases de datos de la Biblioteca", "Recursos suscritos por la UGR y fuentes abiertas.", "investigacion", TODOS, "ei"],
+    ["rankings.html", "🏆", "La Facultad en los ranking", "La UGR en Economía, Empresa, Finanzas y Turismo.", "investigacion", TODOS, "pi"],
+    ["uso.html", "👁️", "Uso de CCEEscopio", "Visitas y páginas más consultadas.", "investigacion", TODOS, "pi"],
+  ];
+  const G = [["", "Todas"], ["GADE", "GADE y dobles grados"], ["GECO", "GECO"], ["GFICO", "GFICO"], ["GMIM", "GMIM"], ["GTUR", "GTUR y TITUR"], ["POS", "Másteres y doctorado"]];
+  const P = [["", "Todos"], ["e", "Estudiantado"], ["p", "Profesorado"], ["i", "Investigación"]];
+  const par = new URLSearchParams(location.search);
+  const est = {tipo: T[par.get("tipo")] ? par.get("tipo") : "", grado: G.some(g => g[0] === par.get("grado")) ? par.get("grado") : "", pub: "", q: ""};
+  const $ = id => document.getElementById(id), norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  function chips(el, ops, clave) {
+    el.innerHTML = ops.map(o => `<button class="chip-sel ${est[clave] === o[0] ? "on" : ""}" data-v="${o[0]}">${o[1]}</button>`).join("");
+    el.querySelectorAll("button").forEach(b => b.onclick = () => { est[clave] = b.dataset.v; pintar(); });
+  }
+  function pintar() {
+    chips($("rec-tipo"), [["", "Todo"], ...Object.entries(T).map(([k, v]) => [k, `${v[0]} ${v[1]}`])], "tipo");
+    chips($("rec-grado"), G, "grado"); chips($("rec-pub"), P, "pub");
+    const q = norm(est.q).split(/\s+/).filter(Boolean);
+    const sel = R.filter(r => (!est.tipo || r[4] === est.tipo) && (!est.grado || r[5].includes(est.grado)) && (!est.pub || r[6].includes(est.pub)) &&
+      q.every(w => norm(r[2] + " " + r[3]).includes(w)));
+    $("rec-n").textContent = `${sel.length} de ${R.length} recursos`;
+    $("rec-lista").innerHTML = Object.entries(T).map(([k, v]) => {
+      const rs = sel.filter(r => r[4] === k); if (!rs.length) return "";
+      return `<h2 class="rec-h" id="${k}">${v[0]} ${v[1]} <small>${v[2]}</small></h2><div class="rec-grid">${rs.map(r =>
+        `<a class="rec-card" href="${r[0]}"><span class="rec-i">${r[1]}</span><span><b>${esc(r[2])}</b><small>${esc(r[3])}</small></span></a>`).join("")}</div>`;
+    }).join("") || `<p class="pending">Ningún recurso coincide con la búsqueda. Prueba con otras palabras o quita algún filtro.</p>`;
+  }
+  $("rec-q").addEventListener("input", e => { est.q = e.target.value; pintar(); });
+  pintar();
+})();
+</script>
+```

@@ -10,7 +10,7 @@
 
   /* ---------- formato en español ---------- */
   C.num = (v, dec = 1) => v == null || !Number.isFinite(v) ? "—" :
-    v.toLocaleString("es-ES", {minimumFractionDigits: dec, maximumFractionDigits: dec});
+    v.toLocaleString("es-ES", {minimumFractionDigits: dec, maximumFractionDigits: dec, useGrouping: "always"});
   C.pct = (v, dec = 1, signo = false) => v == null || !Number.isFinite(v) ? "—" : (signo && v > 0 ? "+" : "") + C.num(v, dec) + " %";
   C.eur = (v, dec = 0) => C.num(v, dec) + " €";
   C.fecha = (d, opt = {day: "numeric", month: "long", year: "numeric"}) => new Date(d).toLocaleDateString("es-ES", opt);

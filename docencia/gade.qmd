@@ -7,6 +7,12 @@ Para cada asignatura del **Grado en Administración y Dirección de Empresas** s
 
 No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.
 
+::: {.callout-note}
+## También para GADE + Derecho y GADE + Ingenierías
+
+Esta página sirve igualmente para los **dobles grados con ADE**: [GADE + Derecho](https://fccee.ugr.es/docencia/grados/graduadoa-administracion-y-direccion-empresas-derecho) y **GADE + Ingenierías** ([Edificación](https://fccee.ugr.es/docencia/grados/graduadoa-edificacion-administ-y-direcc-empresas), [Ingeniería Civil](https://fccee.ugr.es/docencia/grados/grado-ingenieria-civil-y-administracion-y-dreccion-empresas) e [Ingeniería Informática](https://fccee.ugr.es/docencia/grados/graduadoa-inga-informatica-administ-y-direcc-empresas)). En ellos se cursan las mismas asignaturas de ADE que aparecen aquí, repartidas en cinco cursos, salvo algunas que se reconocen por asignaturas equivalentes de la otra titulación (por ejemplo, Matemáticas o Técnicas Cuantitativas I en las ingenierías): el curso en el que se imparte cada una figura en la guía de cada doble grado.
+:::
+
 ## Primer curso {#curso-1}
 
 ### Economía Política {#economia-politica}

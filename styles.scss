@@ -539,3 +539,36 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
     .np-rank-t { font-weight: 800; color: $ccee-magenta; } ol { margin: .3rem 0 0; padding-left: 1.3rem; } small { color: #555; } }
   .np-nota { font-family: system-ui, sans-serif; font-size: .75rem; color: #777; margin: .4rem 0 0; }
 }
+
+/* =====================================================================
+   Todos los recursos, portada por objetivos y rutas de aprendizaje
+   ===================================================================== */
+.rec-barra { background: $ccee-cream; border: 1px solid #EFE4DF; border-radius: 14px; padding: .8rem 1rem; display: grid; gap: .45rem;
+  input[type=search] { width: 100%; border: 2px solid #E3D3DA; border-radius: 999px; padding: .5rem 1rem; font-size: 1.05rem; &:focus { outline: none; border-color: $ccee-magenta; } }
+  .rec-l { font-weight: 700; font-size: .85rem; color: #555; display: inline-block; min-width: 6.2rem; }
+  .cat-filtros { display: inline-flex; margin: 0; } }
+.rec-h { margin-top: 1.4rem; small { font-size: .9rem; font-weight: 400; color: #777; margin-left: .4rem; } }
+.rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .6rem; }
+.rec-card { display: flex; gap: .7rem; align-items: flex-start; text-decoration: none; color: $ccee-dark; background: #fff; border: 1px solid #E6DEDA; border-radius: 10px; padding: .6rem .8rem;
+  &:hover { border-color: $ccee-magenta; box-shadow: 0 4px 12px rgba(0,0,0,.07); color: $ccee-dark; }
+  .rec-i { font-size: 1.5rem; line-height: 1.2; } b { display: block; color: $ccee-magenta; line-height: 1.25; } small { display: block; color: #555; line-height: 1.3; margin-top: .1rem; } }
+.intent { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: .8rem 0 1.4rem; }
+.intent-card { display: block; text-decoration: none; color: $ccee-dark; background: #fff; border: 1px solid #E6DEDA; border-left: 6px solid $ccee-magenta; border-radius: 14px; padding: 1rem 1.1rem; transition: transform .15s, box-shadow .15s;
+  &:nth-child(even) { border-left-color: $ccee-orange; }
+  &:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,.10); color: $ccee-dark; }
+  .ic { font-size: 2rem; } .it { display: block; font-size: 1.2rem; font-weight: 800; color: $ccee-magenta; margin: .1rem 0 .2rem; }
+  .id { display: block; font-size: .93rem; } .il { display: block; margin-top: .5rem; font-size: .82rem; color: #777; } }
+.tit-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: .6rem 0 1rem;
+  a { text-decoration: none; background: #fff; border: 2px solid $ccee-magenta; color: $ccee-magenta; border-radius: 999px; padding: .3rem .9rem; font-weight: 700; font-size: .92rem;
+    &:hover { background: $ccee-magenta; color: #fff; } small { font-weight: 400; } } }
+.ruta { background: #fff; border: 1px solid #E6DEDA; border-top: 5px solid $ccee-magenta; border-radius: 12px; padding: .2rem 1.1rem .6rem; margin: 1rem 0;
+  &:nth-of-type(even) { border-top-color: $ccee-orange; }
+  h2 { border: 0; margin-top: .8rem; } ol { counter-reset: paso; list-style: none; padding-left: 0; }
+  ol > li { counter-increment: paso; position: relative; padding: .35rem 0 .35rem 2.4rem; border-left: 2px solid #EADDE3; margin-left: .8rem; }
+  ol > li::before { content: counter(paso); position: absolute; left: -.85rem; top: .3rem; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: $ccee-magenta; color: #fff; font-weight: 800; font-size: .85rem; text-align: center; line-height: 1.6rem; }
+  .ruta-meta { font-size: .82rem; color: #777; } }
+
+/* Menú principal: algo más compacto para que quepan todas las secciones y el botón de idioma */
+@media (min-width: 1200px) { .navbar .navbar-nav .nav-link { padding-left: .42rem; padding-right: .42rem; font-size: .96rem; white-space: nowrap; } .navbar-brand img { max-height: 40px; } }
+.navbar .dropdown-menu { max-height: 82vh; overflow-y: auto; }
+.tick { white-space: nowrap; } .tick .tick-v { font-size: 1rem; } .tick .tick-d { font-size: .74rem; margin-left: .15rem; }

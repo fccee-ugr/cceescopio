@@ -5,7 +5,7 @@ Uso (desde la carpeta del proyecto): python3 tools/make_pages.py && python3 tool
 import json, os, re, sys, unicodedata
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from asignaturas import DEPTS
-from grados import GR
+from grados import GR, COMPARTEN, NOTA, POSGRADO
 
 cat = json.load(open("data/indicadores.json", encoding="utf-8"))
 porid = {}
@@ -59,6 +59,8 @@ for sig, (nombre, url, cursos) in GR.items():
            f"Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. "
            f"Plan de estudios y guías docentes: [web de la Facultad]({url}).\n",
            "No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.\n"]
+    if sig in NOTA:
+        out.append(f"::: {{.callout-note}}\n## {NOTA[sig][0]}\n\n" + NOTA[sig][1].format(*[u for _, _, u in COMPARTEN[sig]]) + "\n:::\n")
     n = 0
     for c, txt in cursos.items():
         out.append(f"## {CURSOS[c]} {{#curso-{c}}}\n")
@@ -80,9 +82,37 @@ for sig, (nombre, url, cursos) in GR.items():
     open(f"docencia/{sig.lower()}.qmd", "w", encoding="utf-8").write("\n".join(out))
     resumen.append((sig, nombre, n))
 
+EXTRA_CARD = {"GADE": " También para <b>GADE + Derecho</b> y <b>GADE + Ingenierías</b>.", "GECO": " También para <b>GECO bilingüe</b>.",
+              "GTUR": " También para <b>Turismo + Traducción e Interpretación (TITUR)</b>."}
 open("_grados_cards.md", "w", encoding="utf-8").write("::: {.cards}\n" + "\n".join(
-    f'[<span class="icon">🎓</span><span class="ct">{sig}</span><span class="cd">{nombre}: {n} asignaturas con indicadores y ejemplos de uso.</span>](docencia/{sig.lower()}.qmd){{.card-ccee}}\n'
-    for sig, nombre, n in resumen) + ":::\n")
+    f'[<span class="icon">🎓</span><span class="ct">{sig}</span><span class="cd">{nombre}: {n} asignaturas con indicadores y ejemplos de uso.{EXTRA_CARD.get(sig, "")}</span>](docencia/{sig.lower()}.qmd){{.card-ccee}}\n'
+    for sig, nombre, n in resumen)
+    + '\n[<span class="icon">🎓</span><span class="ct">Másteres y doctorado</span><span class="cd">Recursos de CCEEscopio para los másteres universitarios y el programa de doctorado de la Facultad.</span>](docencia/posgrado.qmd){.card-ccee}\n'
+    + ":::\n")
+
+# ---- Tabla con todas las titulaciones de la Facultad (se incluye en docencia.qmd)
+filas_t = []
+for sig, (nombre, url, _) in GR.items():
+    filas_t.append(f"| [{nombre}]({url}) | **{sig}** | [Asignaturas de {sig}](docencia/{sig.lower()}.qmd) |")
+    for corta, largo, u in COMPARTEN.get(sig, []):
+        filas_t.append(f"| [{largo}]({u}) | {corta} | [Asignaturas de {sig}](docencia/{sig.lower()}.qmd) (las mismas) |")
+for nombre, url, _ in POSGRADO:
+    filas_t.append(f"| [{nombre}]({url}) | Posgrado | [Másteres y doctorado](docencia/posgrado.qmd) |")
+open("_titulaciones.md", "w", encoding="utf-8").write("| Titulación | En CCEEscopio | Dónde están sus recursos |\n|---|---|---|\n" + "\n".join(filas_t) + "\n")
+
+# ---- Másteres y doctorado
+pg = ['---\ntitle: "Másteres y doctorado"\nsubtitle: "Recursos de CCEEscopio para el posgrado de la Facultad"\n---\n',
+      "Para cada máster universitario y para el programa de doctorado de la Facultad se proponen los recursos de CCEEscopio más útiles: datos descargables y citables, herramientas de análisis y actividades para clase. "
+      "Oferta de posgrado: [web de la Facultad](https://fccee.ugr.es/docencia/posgrados).\n"]
+for nombre, url, rec in POSGRADO:
+    pg.append(f"## {nombre}\n")
+    pg.append("**Recursos recomendados:** " + " · ".join(f"[{r.split('|')[1]}](../{r.split('|')[0]})" for r in rec) + "\n")
+    pg.append(f'<p class="source"><a href="{url}">Información del título en la web de la Facultad</a></p>\n')
+pg.append("## Para cualquier TFM o tesis\n")
+pg.append("- [**Ideas para tu TFG o TFM**](../ideas-tfg.qmd): temas con pregunta, hipótesis, datos, método y estructura.\n- [**Generador de gráficos con cita de la fuente**](../graficos.qmd): gráficos listos para el trabajo, con la referencia en APA.\n"
+          "- [**Datos y fuentes**](../datos.qmd): descarga en CSV, códigos de las tablas de Eurostat y ejemplos en R y Python.\n- [**Bases de datos de la Biblioteca y fuentes abiertas**](../biblioteca.qmd).\n"
+          "- [**Rutas de aprendizaje**](../rutas.qmd): recorridos guiados por temas, también útiles como repaso al empezar un máster.\n")
+open("docencia/posgrado.qmd", "w", encoding="utf-8").write("\n".join(pg))
 
 # ---- Buscador de indicadores
 filas = "\n".join(

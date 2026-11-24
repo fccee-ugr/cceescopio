@@ -1,0 +1,56 @@
+---
+title: "Másteres y doctorado"
+subtitle: "Recursos de CCEEscopio para el posgrado de la Facultad"
+---
+
+Para cada máster universitario y para el programa de doctorado de la Facultad se proponen los recursos de CCEEscopio más útiles: datos descargables y citables, herramientas de análisis y actividades para clase. Oferta de posgrado: [web de la Facultad](https://fccee.ugr.es/docencia/posgrados).
+
+## Máster Universitario en Auditoría
+
+**Recursos recomendados:** [Demografía empresarial](../empresas.qmd) · [Sector público y mercados financieros](../publico.qmd) · [Mercados al día](../mercados.qmd) · [Simulador de préstamos](../hipoteca.qmd) · [El dato imposible](../dato-imposible.qmd)
+
+<p class="source"><a href="https://fccee.ugr.es/docencia/posgrados/master-universitario-auditoria-1">Información del título en la web de la Facultad</a></p>
+
+## Máster Universitario en Economía / Economics
+
+**Recursos recomendados:** [Convergencia sigma y beta](../convergencia.qmd) · [¿Qué indicador se adelanta?](../desfases.qmd) · [Regresión con análisis de supuestos](../regresion.qmd) · [Desigualdad: Gini, Lorenz y Theil](../desigualdad-calc.qmd) · [Simulador de política fiscal](../politica-fiscal.qmd) · [Gobernador del Banco Central](../sim-banco-central.qmd)
+
+<p class="source"><a href="https://fccee.ugr.es/docencia/posgrados/master-universitario-economia-economics">Información del título en la web de la Facultad</a></p>
+
+## Máster Universitario en Economía y Organización de Empresas
+
+**Recursos recomendados:** [Empresa, innovación y digitalización](../empresa.qmd) · [Demografía empresarial](../empresas.qmd) · [Regresión](../regresion.qmd) · [Ideas para tu TFM](../ideas-tfg.qmd) · [Generador de gráficos con cita](../graficos.qmd)
+
+<p class="source"><a href="https://fccee.ugr.es/docencia/posgrados/master-universitario-economia-y-organizacion-empresas">Información del título en la web de la Facultad</a></p>
+
+## Máster Universitario en Gestión y Tecnologías de Procesos de Negocio
+
+**Recursos recomendados:** [Digitalización e inteligencia artificial en las empresas](../empresa.qmd) · [Análisis cuantitativo de datos](../estadistica.qmd) · [Previsión sencilla](../prevision.qmd) · [Datos y fuentes (API y descarga)](../datos.qmd)
+
+<p class="source"><a href="https://fccee.ugr.es/docencia/posgrados/master-universitario-gestion-y-tecnologias-procesos-negocio">Información del título en la web de la Facultad</a></p>
+
+## Máster Universitario en Marketing y Comportamiento del Consumidor
+
+**Recursos recomendados:** [Consumo y confianza](../consumo.qmd) · [Precios de productos](../precios-productos.qmd) · [Análisis cuantitativo de datos](../estadistica.qmd) · [¿Correlación o causalidad?](../correlacion.qmd) · [Gestiona tu destino turístico](../sim-turismo.qmd)
+
+<p class="source"><a href="https://fccee.ugr.es/docencia/posgrados/master-universitario-marketing-y-comportamiento-del-consumidor">Información del título en la web de la Facultad</a></p>
+
+## Máster Universitario en Técnicas Cuantitativas en Gestión Empresarial
+
+**Recursos recomendados:** [Análisis cuantitativo de datos](../estadistica.qmd) · [Regresión con análisis de supuestos](../regresion.qmd) · [Previsión sencilla](../prevision.qmd) · [Laboratorio de números índice](../numeros-indice.qmd) · [Desigualdad con inferencia](../desigualdad-calc.qmd) · [Gestiona una cartera](../sim-cartera.qmd)
+
+<p class="source"><a href="https://fccee.ugr.es/docencia/posgrados/master-universitario-tecnicas-cuantitativas-gestion-empresarial">Información del título en la web de la Facultad</a></p>
+
+## Programa de Doctorado en Ciencias Económicas y Empresariales
+
+**Recursos recomendados:** [Datos y fuentes: descarga y reutilización](../datos.qmd) · [Bases de datos de la Biblioteca](../biblioteca.qmd) · [Generador de gráficos con cita](../graficos.qmd) · [Desigualdad con inferencia](../desigualdad-calc.qmd) · [La Facultad en los ranking](../rankings.qmd)
+
+<p class="source"><a href="https://fccee.ugr.es/docencia/posgrados/doctorado">Información del título en la web de la Facultad</a></p>
+
+## Para cualquier TFM o tesis
+
+- [**Ideas para tu TFG o TFM**](../ideas-tfg.qmd): temas con pregunta, hipótesis, datos, método y estructura.
+- [**Generador de gráficos con cita de la fuente**](../graficos.qmd): gráficos listos para el trabajo, con la referencia en APA.
+- [**Datos y fuentes**](../datos.qmd): descarga en CSV, códigos de las tablas de Eurostat y ejemplos en R y Python.
+- [**Bases de datos de la Biblioteca y fuentes abiertas**](../biblioteca.qmd).
+- [**Rutas de aprendizaje**](../rutas.qmd): recorridos guiados por temas, también útiles como repaso al empezar un máster.

@@ -1,0 +1,103 @@
+---
+title: "🔐 Escape room económico"
+subtitle: "Cinco salas, cinco enigmas y quince minutos para salir"
+toc: false
+include-in-header:
+  - text: |
+      <script src="js/ccee-sim.js"></script>
+---
+
+Estáis encerrados en el **archivo de datos de la Facultad**. Para salir hay que resolver cinco enigmas: **inflación, empleo, PIB, desigualdad y finanzas**. Cada sala resuelta da una letra de la palabra que abre la puerta. Tenéis **15 minutos**; cada pista cuesta 60 segundos y cada error, 20.
+
+**Para:** actividad final de un tema o de un curso, individual o por equipos (todas las titulaciones). **Duración:** 15 minutos. **Para que toda la clase tenga los mismos enigmas**, escribid el mismo código de partida.
+
+```{=html}
+<div id="er-app"></div>
+<script>
+(function () {
+  const C = window.CCEE, app = document.getElementById("er-app");
+  const T0 = 15 * 60, PALABRA = "DATOS";
+  let G = null, reloj = null;
+  function salas(sem) {
+    const az = C.azar(sem), el = a => a[Math.floor(az() * a.length)], ent = (a, b) => a + Math.floor(az() * (b - a + 1));
+    const cesta = el([80, 100, 120, 150, 200]);
+    const oc = ent(180, 260), pa = ent(18, 45), inac = ent(120, 200);
+    const nom = el([5.2, 5.8, 6.2, 6.6, 7.1]), def = el([2.4, 2.9, 3.4, 3.8]);
+    const rentas = Array.from({length: 10}, (_, i) => Math.round((8 + i * 4.5 + az() * 5) * (i >= 8 ? 1.5 + az() : 1))).sort((a, b) => a - b);
+    const cap = el([1000, 2000, 5000]), tipo = el([3, 4, 5]), anos = el([5, 8, 10]);
+    return [
+      {i: "🛒", n: "Sala 1 · El archivo de precios", t: `En un cajón encontráis un tique de 2021: una cesta de la compra de <b>${cesta} €</b>. Una nota dice que la inflación media anual fue del <b>8,4 %</b> en 2022, del <b>3,5 %</b> en 2023 y del <b>2,8 %</b> en 2024 (tasas medias del IPC en España, redondeadas).`,
+       q: "¿Cuánto costaría esa misma cesta en 2024? (euros, sin decimales)", r: cesta * 1.084 * 1.035 * 1.028, tol: 1, dec: 0, u: "€",
+       p: "Las tasas no se suman: se multiplica por (1 + tasa) de cada año.", s: `${cesta} × 1,084 × 1,035 × 1,028`},
+      {i: "👥", n: "Sala 2 · La oficina de empleo", t: `Un informe describe una comarca con <b>${oc + pa + inac} mil</b> personas de 16 o más años: <b>${oc} mil</b> trabajan, <b>${pa} mil</b> buscan empleo y el resto ni trabaja ni busca.`,
+       q: "¿Cuál es la tasa de paro? (en %, con un decimal)", r: 100 * pa / (oc + pa), tol: 0.15, dec: 1, u: "%",
+       p: "El denominador es la población activa (ocupados más parados), no toda la población.", s: `${pa} / (${oc} + ${pa}) × 100`},
+      {i: "📈", n: "Sala 3 · La sala de cuentas nacionales", t: `En la pizarra pone: «El PIB nominal ha crecido un <b>${C.num(nom, 1)} %</b> y los precios (deflactor del PIB), un <b>${C.num(def, 1)} %</b>».`,
+       q: "¿Cuánto ha crecido el PIB real? (en %, con un decimal)", r: 100 * ((1 + nom / 100) / (1 + def / 100) - 1), tol: 0.15, dec: 1, u: "%",
+       p: "Divide (1 + crecimiento nominal) entre (1 + variación de los precios). Restar las dos tasas da una buena aproximación.", s: `(1 + ${C.num(nom / 100, 3)}) / (1 + ${C.num(def / 100, 3)}) − 1`},
+      {i: "⚖️", n: "Sala 4 · El despacho de la desigualdad", t: `Sobre la mesa hay una lista con la renta anual de diez hogares, en miles de euros: <b>${rentas.join(" · ")}</b>.`,
+       q: "Calculad la ratio S80/S20: la renta total del 20 % más rico dividida entre la del 20 % más pobre (un decimal)", r: (rentas[8] + rentas[9]) / (rentas[0] + rentas[1]), tol: 0.06, dec: 1, u: "",
+       p: "Con diez hogares, el 20 % son dos: sumad las dos rentas más altas y divididlas entre la suma de las dos más bajas.", s: `(${rentas[8]} + ${rentas[9]}) / (${rentas[0]} + ${rentas[1]})`},
+      {i: "💶", n: "Sala 5 · La caja fuerte", t: `La última puerta tiene una caja fuerte con una inscripción: «Se depositaron <b>${C.num(cap, 0)} €</b> al <b>${tipo} %</b> anual de interés compuesto durante <b>${anos} años</b>».`,
+       q: "¿Cuánto dinero hay ahora en la caja? (euros, sin decimales)", r: cap * Math.pow(1 + tipo / 100, anos), tol: 2, dec: 0, u: "€",
+       p: "Capital final = capital inicial × (1 + tipo)^años. Los intereses también generan intereses.", s: `${C.num(cap, 0)} × (1 + ${C.num(tipo / 100, 2)})^${anos}`},
+    ];
+  }
+  const mmss = s => `${String(Math.floor(Math.max(0, s) / 60)).padStart(2, "0")}:${String(Math.max(0, s) % 60).padStart(2, "0")}`;
+  function inicio() {
+    clearInterval(reloj);
+    app.innerHTML = `<div class="sim-panel"><label class="np-campo" style="display:block;margin:.3rem 0"><b>Nombre del equipo</b> (opcional)<br><input id="er-eq" maxlength="30" placeholder="p. ej., Las Keynesianas" style="width:100%;max-width:340px;padding:.35rem .6rem;border:1px solid #ccc;border-radius:8px"></label>
+      <label style="display:block;margin:.3rem 0"><b>Código de partida</b> (opcional: el mismo número da los mismos enigmas)<br><input id="er-cod" inputmode="numeric" maxlength="6" placeholder="p. ej., 2026" style="width:160px;padding:.35rem .6rem;border:1px solid #ccc;border-radius:8px"></label>
+      <div class="sim-botones"><button class="sim-btn" id="er-go">🔓 Empezar: 15:00</button></div></div>`;
+    const par = new URLSearchParams(location.search).get("codigo"); if (par) document.getElementById("er-cod").value = par.replace(/\D/g, "").slice(0, 6);
+    document.getElementById("er-go").onclick = () => {
+      const cod = parseInt(document.getElementById("er-cod").value, 10);
+      const sem = Number.isFinite(cod) ? cod : Math.floor(Math.random() * 900000) + 1000;
+      G = {eq: document.getElementById("er-eq").value.trim(), sem, salas: salas(sem * 7919 + 13), k: 0, t: T0, pistas: 0, errores: 0, pistaVista: false, fin: false};
+      reloj = setInterval(() => { if (!G || G.fin) return; G.t--; const el = document.getElementById("er-reloj"); if (el) { el.textContent = mmss(G.t); el.style.color = G.t < 120 ? "#C62828" : ""; } if (G.t <= 0) final(false); }, 1000);
+      C.evento("juegos/escape-room/inicio", "Escape room: inicio"); pintar();
+    };
+  }
+  function pintar(msg = "") {
+    const s = G.salas[G.k];
+    app.innerHTML = `<div class="kpi-grid"><div class="kpi"><div class="kpi-l">Tiempo</div><div class="kpi-n" id="er-reloj">${mmss(G.t)}</div></div>
+      <div class="kpi"><div class="kpi-l">Palabra de salida</div><div class="kpi-n" style="letter-spacing:.3em">${PALABRA.split("").map((l, i) => i < G.k ? l : "_").join("")}</div></div>
+      <div class="kpi"><div class="kpi-l">Partida</div><div class="kpi-n" style="font-size:1.3rem">n.º ${G.sem}</div><div class="kpi-s">${G.eq ? C.esc(G.eq) : "Compartid este código para jugar con los mismos enigmas"}</div></div></div>
+      <div class="sim-progreso">${G.salas.map((_, i) => `<span class="${i < G.k ? "hecho" : i === G.k ? "actual" : ""}"></span>`).join("")}</div>
+      <div class="sim-evento"><div class="se-t">${s.i} ${s.n}</div><p style="margin:.4rem 0">${s.t}</p><p style="font-size:1.1rem"><b>${s.q}</b></p>
+        <div class="sim-botones"><input id="er-r" inputmode="decimal" autocomplete="off" placeholder="Respuesta" style="font-size:1.2rem;width:170px;padding:.35rem .6rem;border:2px solid #E3D3DA;border-radius:10px"> ${s.u}
+          <button class="sim-btn" id="er-ok">Probar la cerradura</button><button class="sim-btn sec" id="er-pista" ${G.pistaVista ? "disabled" : ""}>💡 Pista (−60 s)</button></div>
+        <div id="er-msg">${msg}${G.pistaVista ? `<p class="nota">💡 ${s.p}</p>` : ""}</div></div>`;
+    const inp = document.getElementById("er-r"); inp.focus();
+    const probar = () => {
+      const v = parseFloat(inp.value.replace(/\s/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", "."));
+      if (!Number.isFinite(v)) return;
+      if (Math.abs(v - s.r) <= s.tol + 1e-9) { G.k++; G.pistaVista = false; G.k >= G.salas.length ? final(true) : pintar(`<p class="sube"><b>🔓 ¡Cerradura abierta! Letra conseguida: ${PALABRA[G.k - 1]}</b></p>`); }
+      else { G.errores++; G.t -= 20; pintar(`<p class="baja"><b>✘ La cerradura no cede (−20 s).</b> Revisad el cálculo${Math.abs(v - s.r) / Math.abs(s.r) < 0.05 ? ": estáis muy cerca, cuidado con el redondeo" : ""}.</p>`); }
+    };
+    document.getElementById("er-ok").onclick = probar; inp.onkeydown = e => { if (e.key === "Enter") probar(); };
+    document.getElementById("er-pista").onclick = () => { G.pistas++; G.t -= 60; G.pistaVista = true; pintar(); };
+  }
+  function final(ok) {
+    G.fin = true; clearInterval(reloj);
+    const usado = T0 - Math.max(0, G.t), nota = ok ? Math.round(40 + 60 * Math.max(0, G.t) / T0) : Math.round(8 * G.k);
+    const rc = ok ? C.record("escape-room", nota) : {nuevo: false, record: null};
+    app.innerHTML = `<div class="calc-result"><div class="sim-nota">${ok ? "🔓 " + PALABRA : "⏰ Tiempo agotado"}</div>
+      <div class="calc-big">${ok ? `¡${G.eq ? C.esc(G.eq) + ", habéis" : "Has"} salido en ${mmss(usado)}!` : `Os habéis quedado en la sala ${G.k + 1}. Los datos siguen custodiados…`}</div>
+      <div class="calc-small">Puntuación: <b>${nota}/100</b> · pistas: ${G.pistas} · errores: ${G.errores} · partida n.º ${G.sem}. ${rc.nuevo ? "🏅 ¡Vuestro mejor resultado!" : rc.record != null ? `Récord en este dispositivo: ${rc.record}.` : ""}</div></div>
+      <details ${ok ? "" : "open"}><summary>Soluciones de esta partida</summary><ol>${G.salas.map(s => `<li><b>${s.n}</b>: ${s.s} = <b>${C.num(s.r, s.dec)} ${s.u}</b><br><small>${s.p}</small></li>`).join("")}</ol></details>
+      <p>La palabra que abre la puerta es <b>${PALABRA}</b>: sin datos no hay economía. Seguid practicando con la <a href="calculadora.html">calculadora de inflación</a>, el <a href="empleo.html">mercado laboral</a>, la <a href="desigualdad-calc.html">calculadora de desigualdad</a> y el <a href="hipoteca.html">simulador de préstamos</a>.</p>
+      <div class="sim-botones"><button class="sim-btn" id="er-otra">🔄 Nueva partida</button></div>`;
+    document.getElementById("er-otra").onclick = inicio;
+    C.evento("juegos/escape-room/" + (ok ? "salida" : "tiempo"), "Escape room: fin");
+  }
+  inicio();
+})();
+</script>
+```
+
+## Cómo usarlo en clase
+
+- **Por equipos de tres o cuatro**, con un solo dispositivo por equipo. Proyecta el **código de partida** para que todos resuelvan los mismos enigmas; gana el equipo que salga antes.
+- **Como cierre de curso**: las cinco salas repasan tasas acumuladas, tasa de paro, magnitudes reales y nominales, medidas de desigualdad y capitalización compuesta.
+- **Después del juego**: cada equipo explica una sala y busca el dato real equivalente en CCEEscopio.

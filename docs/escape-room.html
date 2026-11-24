@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>🔐 Escape room económico – CCEEscopio D+I</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/brand/cceescopio_icono.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7d136f95b1a2612d37e8e9c2a7f736ab.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<script src="js/ccee-sim.js"></script>
+
+
+<meta property="og:title" content="🔐 Escape room económico – CCEEscopio D+I">
+<meta property="og:description" content="Cinco salas, cinco enigmas y quince minutos para salir">
+<meta property="og:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo_di.png">
+<meta property="og:site_name" content="CCEEscopio D+I">
+<meta property="og:image:height" content="480">
+<meta property="og:image:width" content="2399">
+<meta name="twitter:title" content="🔐 Escape room económico – CCEEscopio D+I">
+<meta name="twitter:description" content="Cinco salas, cinco enigmas y quince minutos para salir">
+<meta name="twitter:image" content="https://jfmunozrosas.github.io/cceescopio/images/brand/cceescopio_logo_di.png">
+<meta name="twitter:image-height" content="480">
+<meta name="twitter:image-width" content="2399">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-xl " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/brand/cceescopio_navbar_di.png" alt="Logo de CCEEscopio D+I" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-indicadores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Indicadores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-indicadores">    
+        <li class="dropdown-header">Por temas</li>
+        <li>
+    <a class="dropdown-item" href="./precios.html">
+ <span class="dropdown-text">Precios e inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empleo.html">
+ <span class="dropdown-text">Mercado laboral</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./actividad.html">
+ <span class="dropdown-text">Actividad económica y coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresa.html">
+ <span class="dropdown-text">Empresa, innovación y digitalización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./turismo.html">
+ <span class="dropdown-text">Turismo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./publico.html">
+ <span class="dropdown-text">Sector público y mercados financieros</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desigualdad.html">
+ <span class="dropdown-text">Desigualdad, pobreza y condiciones de vida</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sostenibilidad.html">
+ <span class="dropdown-text">Energía y sostenibilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./poblacion.html">
+ <span class="dropdown-text">Población, educación y salud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./internacional.html">
+ <span class="dropdown-text">Economía internacional y sector exterior</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Por territorios</li>
+        <li>
+    <a class="dropdown-item" href="./andalucia.html">
+ <span class="dropdown-text">Andalucía y las regiones españolas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./turismo-andalucia.html">
+ <span class="dropdown-text">Turismo en Andalucía</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./comparador.html">
+ <span class="dropdown-text">Comparador de comunidades autónomas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ficha.html">
+ <span class="dropdown-text">Ficha de país o región</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Paneles temáticos</li>
+        <li>
+    <a class="dropdown-item" href="./precios-productos.html">
+ <span class="dropdown-text">Precios de productos: gasolina, luz y cesta de la compra</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./consumo.html">
+ <span class="dropdown-text">Consumo y confianza</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./empresas.html">
+ <span class="dropdown-text">Demografía empresarial</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./piramides.html">
+ <span class="dropdown-text">Pirámides de población</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./indicadores.html">
+ <span class="dropdown-text">🔎 Buscador de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./glosario.html">
+ <span class="dropdown-text">Glosario de indicadores</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-actualidad" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Actualidad</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-actualidad">    
+        <li class="dropdown-header">Al día</li>
+        <li>
+    <a class="dropdown-item" href="./index.html#hoy">
+ <span class="dropdown-text">Hoy en la economía: noticias del día</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./noticias.html">
+ <span class="dropdown-text">Noticias e indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bolsa.html">
+ <span class="dropdown-text">Bolsa al día</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./mercados.html">
+ <span class="dropdown-text">Mercados al día: euríbor, deuda y divisas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./calendario.html">
+ <span class="dropdown-text">Datos recientes y calendario</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Análisis de la coyuntura</li>
+        <li>
+    <a class="dropdown-item" href="./boletin.html">
+ <span class="dropdown-text">Boletín de coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./coyuntura.html">
+ <span class="dropdown-text">Mapa de calor de coyuntura</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ciclo.html">
+ <span class="dropdown-text">Ciclo económico y semáforo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./descomposiciones.html">
+ <span class="dropdown-text">¿Qué explica cada indicador?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./extremos.html">
+ <span class="dropdown-text">Datos extremos e inusuales</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-herramientas" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Herramientas</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-herramientas">    
+        <li>
+    <a class="dropdown-item" href="./calculadoras.html">
+ <span class="dropdown-text">🧮 Todas las herramientas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Métodos Cuantitativos y Econometría</li>
+        <li>
+    <a class="dropdown-item" href="./numeros-indice.html">
+ <span class="dropdown-text">Laboratorio de números índice</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./estadistica.html">
+ <span class="dropdown-text">Análisis cuantitativo de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./relaciona.html">
+ <span class="dropdown-text">Relaciona dos indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./regresion.html">
+ <span class="dropdown-text">Regresión lineal con análisis de supuestos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./desfases.html">
+ <span class="dropdown-text">¿Qué indicador se adelanta? (desfases)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prevision.html">
+ <span class="dropdown-text">Previsión sencilla</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./convergencia.html">
+ <span class="dropdown-text">Convergencia sigma y beta</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Precios, dinero y finanzas</li>
+        <li>
+    <a class="dropdown-item" href="./calculadora.html">
+ <span class="dropdown-text">Calculadora de inflación</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./conversor.html">
+ <span class="dropdown-text">Conversor de unidades económicas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./hipoteca.html">
+ <span class="dropdown-text">Simulador de hipotecas y préstamos</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Desigualdad y política económica</li>
+        <li>
+    <a class="dropdown-item" href="./desigualdad-calc.html">
+ <span class="dropdown-text">Calculadora de desigualdad (Gini, Lorenz, Theil)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./politica-fiscal.html">
+ <span class="dropdown-text">Simulador de política fiscal</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-docencia" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Docencia</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-docencia">    
+        <li>
+    <a class="dropdown-item" href="./docencia.html">
+ <span class="dropdown-text">Cómo usar CCEEscopio en clase</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./rutas.html">
+ <span class="dropdown-text">🧭 Rutas de aprendizaje</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Por titulaciones y asignaturas</li>
+        <li>
+    <a class="dropdown-item" href="./docencia/gade.html">
+ <span class="dropdown-text">GADE · también GADE + Derecho y GADE + Ingenierías</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/geco.html">
+ <span class="dropdown-text">GECO · Economía (también bilingüe)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gfico.html">
+ <span class="dropdown-text">GFICO · Finanzas y Contabilidad</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gmim.html">
+ <span class="dropdown-text">GMIM · Marketing e Investigación de Mercados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/gtur.html">
+ <span class="dropdown-text">GTUR · Turismo (también TITUR)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./docencia/posgrado.html">
+ <span class="dropdown-text">Másteres y doctorado</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Para estudiar</li>
+        <li>
+    <a class="dropdown-item" href="./ejercicios.html">
+ <span class="dropdown-text">Ejercicios autocorregibles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./detecta-engano.html">
+ <span class="dropdown-text">Detecta el engaño: gráficos que mienten</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./informe-coyuntura.html">
+ <span class="dropdown-text">Plantilla de informe de coyuntura</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Para dar clase</li>
+        <li>
+    <a class="dropdown-item" href="./examen.html">
+ <span class="dropdown-text">Generador de exámenes, fichas y preguntas para PRADO</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./presentacion.html">
+ <span class="dropdown-text">Modo presentación</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-juegos-y-simuladores" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Juegos y simuladores</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-juegos-y-simuladores">    
+        <li>
+    <a class="dropdown-item" href="./juegos.html">
+ <span class="dropdown-text">🎮 Todos los juegos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./simuladores.html">
+ <span class="dropdown-text">🧪 Todos los simuladores</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Simuladores con datos reales</li>
+        <li>
+    <a class="dropdown-item" href="./sim-banco-central.html">
+ <span class="dropdown-text">Gobernador del Banco Central</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sim-cartera.html">
+ <span class="dropdown-text">Gestiona una cartera</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sim-fin-de-mes.html">
+ <span class="dropdown-text">Llega a fin de mes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./sim-turismo.html">
+ <span class="dropdown-text">Gestiona tu destino turístico</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Retos para pensar</li>
+        <li>
+    <a class="dropdown-item" href="./escape-room.html">
+ <span class="dropdown-text">Escape room económico</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./dato-imposible.html">
+ <span class="dropdown-text">El dato imposible</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./correlacion.html">
+ <span class="dropdown-text">¿Correlación o causalidad?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./prediccion.html">
+ <span class="dropdown-text">Predice el próximo dato</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">En clase, con código QR y ranking en directo</li>
+        <li>
+    <a class="dropdown-item" href="./concurso.html">
+ <span class="dropdown-text">Concurso de preguntas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./concurso-precios.html">
+ <span class="dropdown-text">¿Cuánto costaba?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./memoria.html">
+ <span class="dropdown-text">Memoria de datos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ordena.html">
+ <span class="dropdown-text">Ordena la malla</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./quien.html">
+ <span class="dropdown-text">¿Quién es quién?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./bingo.html">
+ <span class="dropdown-text">Bingo de indicadores</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./ppt.html">
+ <span class="dropdown-text">Piedra, papel o tijera</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-investigación" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Investigación</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-investigación">    
+        <li class="dropdown-header">TFG, TFM y tesis</li>
+        <li>
+    <a class="dropdown-item" href="./ideas-tfg.html">
+ <span class="dropdown-text">Ideas para tu TFG o TFM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./graficos.html">
+ <span class="dropdown-text">Generador de gráficos con cita de la fuente</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./datos.html">
+ <span class="dropdown-text">Datos y fuentes: descarga y reutilización</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./biblioteca.html">
+ <span class="dropdown-text">Bases de datos de la Biblioteca y fuentes abiertas</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">La Facultad</li>
+        <li>
+    <a class="dropdown-item" href="./rankings.html">
+ <span class="dropdown-text">La Facultad en los ranking</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-más" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">🧭 Más</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-más">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">Inicio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./recursos.html">
+ <span class="dropdown-text">🧭 Todos los recursos (buscador)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./novedades.html">
+ <span class="dropdown-text">Novedades</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="./uso.html">
+ <span class="dropdown-text">Uso de CCEEscopio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./encuesta.html">
+ <span class="dropdown-text">Encuesta de satisfacción</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./contacto.html">
+ <span class="dropdown-text">Contacto</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">🔐 Escape room económico</h1>
+<p class="subtitle lead">Cinco salas, cinco enigmas y quince minutos para salir</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de modificación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">24 de noviembre de 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Estáis encerrados en el <strong>archivo de datos de la Facultad</strong>. Para salir hay que resolver cinco enigmas: <strong>inflación, empleo, PIB, desigualdad y finanzas</strong>. Cada sala resuelta da una letra de la palabra que abre la puerta. Tenéis <strong>15 minutos</strong>; cada pista cuesta 60 segundos y cada error, 20.</p>
+<p><strong>Para:</strong> actividad final de un tema o de un curso, individual o por equipos (todas las titulaciones). <strong>Duración:</strong> 15 minutos. <strong>Para que toda la clase tenga los mismos enigmas</strong>, escribid el mismo código de partida.</p>
+<div id="er-app"></div>
+<script>
+(function () {
+  const C = window.CCEE, app = document.getElementById("er-app");
+  const T0 = 15 * 60, PALABRA = "DATOS";
+  let G = null, reloj = null;
+  function salas(sem) {
+    const az = C.azar(sem), el = a => a[Math.floor(az() * a.length)], ent = (a, b) => a + Math.floor(az() * (b - a + 1));
+    const cesta = el([80, 100, 120, 150, 200]);
+    const oc = ent(180, 260), pa = ent(18, 45), inac = ent(120, 200);
+    const nom = el([5.2, 5.8, 6.2, 6.6, 7.1]), def = el([2.4, 2.9, 3.4, 3.8]);
+    const rentas = Array.from({length: 10}, (_, i) => Math.round((8 + i * 4.5 + az() * 5) * (i >= 8 ? 1.5 + az() : 1))).sort((a, b) => a - b);
+    const cap = el([1000, 2000, 5000]), tipo = el([3, 4, 5]), anos = el([5, 8, 10]);
+    return [
+      {i: "🛒", n: "Sala 1 · El archivo de precios", t: `En un cajón encontráis un tique de 2021: una cesta de la compra de <b>${cesta} €</b>. Una nota dice que la inflación media anual fue del <b>8,4 %</b> en 2022, del <b>3,5 %</b> en 2023 y del <b>2,8 %</b> en 2024 (tasas medias del IPC en España, redondeadas).`,
+       q: "¿Cuánto costaría esa misma cesta en 2024? (euros, sin decimales)", r: cesta * 1.084 * 1.035 * 1.028, tol: 1, dec: 0, u: "€",
+       p: "Las tasas no se suman: se multiplica por (1 + tasa) de cada año.", s: `${cesta} × 1,084 × 1,035 × 1,028`},
+      {i: "👥", n: "Sala 2 · La oficina de empleo", t: `Un informe describe una comarca con <b>${oc + pa + inac} mil</b> personas de 16 o más años: <b>${oc} mil</b> trabajan, <b>${pa} mil</b> buscan empleo y el resto ni trabaja ni busca.`,
+       q: "¿Cuál es la tasa de paro? (en %, con un decimal)", r: 100 * pa / (oc + pa), tol: 0.15, dec: 1, u: "%",
+       p: "El denominador es la población activa (ocupados más parados), no toda la población.", s: `${pa} / (${oc} + ${pa}) × 100`},
+      {i: "📈", n: "Sala 3 · La sala de cuentas nacionales", t: `En la pizarra pone: «El PIB nominal ha crecido un <b>${C.num(nom, 1)} %</b> y los precios (deflactor del PIB), un <b>${C.num(def, 1)} %</b>».`,
+       q: "¿Cuánto ha crecido el PIB real? (en %, con un decimal)", r: 100 * ((1 + nom / 100) / (1 + def / 100) - 1), tol: 0.15, dec: 1, u: "%",
+       p: "Divide (1 + crecimiento nominal) entre (1 + variación de los precios). Restar las dos tasas da una buena aproximación.", s: `(1 + ${C.num(nom / 100, 3)}) / (1 + ${C.num(def / 100, 3)}) − 1`},
+      {i: "⚖️", n: "Sala 4 · El despacho de la desigualdad", t: `Sobre la mesa hay una lista con la renta anual de diez hogares, en miles de euros: <b>${rentas.join(" · ")}</b>.`,
+       q: "Calculad la ratio S80/S20: la renta total del 20 % más rico dividida entre la del 20 % más pobre (un decimal)", r: (rentas[8] + rentas[9]) / (rentas[0] + rentas[1]), tol: 0.06, dec: 1, u: "",
+       p: "Con diez hogares, el 20 % son dos: sumad las dos rentas más altas y divididlas entre la suma de las dos más bajas.", s: `(${rentas[8]} + ${rentas[9]}) / (${rentas[0]} + ${rentas[1]})`},
+      {i: "💶", n: "Sala 5 · La caja fuerte", t: `La última puerta tiene una caja fuerte con una inscripción: «Se depositaron <b>${C.num(cap, 0)} €</b> al <b>${tipo} %</b> anual de interés compuesto durante <b>${anos} años</b>».`,
+       q: "¿Cuánto dinero hay ahora en la caja? (euros, sin decimales)", r: cap * Math.pow(1 + tipo / 100, anos), tol: 2, dec: 0, u: "€",
+       p: "Capital final = capital inicial × (1 + tipo)^años. Los intereses también generan intereses.", s: `${C.num(cap, 0)} × (1 + ${C.num(tipo / 100, 2)})^${anos}`},
+    ];
+  }
+  const mmss = s => `${String(Math.floor(Math.max(0, s) / 60)).padStart(2, "0")}:${String(Math.max(0, s) % 60).padStart(2, "0")}`;
+  function inicio() {
+    clearInterval(reloj);
+    app.innerHTML = `<div class="sim-panel"><label class="np-campo" style="display:block;margin:.3rem 0"><b>Nombre del equipo</b> (opcional)<br><input id="er-eq" maxlength="30" placeholder="p. ej., Las Keynesianas" style="width:100%;max-width:340px;padding:.35rem .6rem;border:1px solid #ccc;border-radius:8px"></label>
+      <label style="display:block;margin:.3rem 0"><b>Código de partida</b> (opcional: el mismo número da los mismos enigmas)<br><input id="er-cod" inputmode="numeric" maxlength="6" placeholder="p. ej., 2026" style="width:160px;padding:.35rem .6rem;border:1px solid #ccc;border-radius:8px"></label>
+      <div class="sim-botones"><button class="sim-btn" id="er-go">🔓 Empezar: 15:00</button></div></div>`;
+    const par = new URLSearchParams(location.search).get("codigo"); if (par) document.getElementById("er-cod").value = par.replace(/\D/g, "").slice(0, 6);
+    document.getElementById("er-go").onclick = () => {
+      const cod = parseInt(document.getElementById("er-cod").value, 10);
+      const sem = Number.isFinite(cod) ? cod : Math.floor(Math.random() * 900000) + 1000;
+      G = {eq: document.getElementById("er-eq").value.trim(), sem, salas: salas(sem * 7919 + 13), k: 0, t: T0, pistas: 0, errores: 0, pistaVista: false, fin: false};
+      reloj = setInterval(() => { if (!G || G.fin) return; G.t--; const el = document.getElementById("er-reloj"); if (el) { el.textContent = mmss(G.t); el.style.color = G.t < 120 ? "#C62828" : ""; } if (G.t <= 0) final(false); }, 1000);
+      C.evento("juegos/escape-room/inicio", "Escape room: inicio"); pintar();
+    };
+  }
+  function pintar(msg = "") {
+    const s = G.salas[G.k];
+    app.innerHTML = `<div class="kpi-grid"><div class="kpi"><div class="kpi-l">Tiempo</div><div class="kpi-n" id="er-reloj">${mmss(G.t)}</div></div>
+      <div class="kpi"><div class="kpi-l">Palabra de salida</div><div class="kpi-n" style="letter-spacing:.3em">${PALABRA.split("").map((l, i) => i < G.k ? l : "_").join("")}</div></div>
+      <div class="kpi"><div class="kpi-l">Partida</div><div class="kpi-n" style="font-size:1.3rem">n.º ${G.sem}</div><div class="kpi-s">${G.eq ? C.esc(G.eq) : "Compartid este código para jugar con los mismos enigmas"}</div></div></div>
+      <div class="sim-progreso">${G.salas.map((_, i) => `<span class="${i < G.k ? "hecho" : i === G.k ? "actual" : ""}"></span>`).join("")}</div>
+      <div class="sim-evento"><div class="se-t">${s.i} ${s.n}</div><p style="margin:.4rem 0">${s.t}</p><p style="font-size:1.1rem"><b>${s.q}</b></p>
+        <div class="sim-botones"><input id="er-r" inputmode="decimal" autocomplete="off" placeholder="Respuesta" style="font-size:1.2rem;width:170px;padding:.35rem .6rem;border:2px solid #E3D3DA;border-radius:10px"> ${s.u}
+          <button class="sim-btn" id="er-ok">Probar la cerradura</button><button class="sim-btn sec" id="er-pista" ${G.pistaVista ? "disabled" : ""}>💡 Pista (−60 s)</button></div>
+        <div id="er-msg">${msg}${G.pistaVista ? `<p class="nota">💡 ${s.p}</p>` : ""}</div></div>`;
+    const inp = document.getElementById("er-r"); inp.focus();
+    const probar = () => {
+      const v = parseFloat(inp.value.replace(/\s/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", "."));
+      if (!Number.isFinite(v)) return;
+      if (Math.abs(v - s.r) <= s.tol + 1e-9) { G.k++; G.pistaVista = false; G.k >= G.salas.length ? final(true) : pintar(`<p class="sube"><b>🔓 ¡Cerradura abierta! Letra conseguida: ${PALABRA[G.k - 1]}</b></p>`); }
+      else { G.errores++; G.t -= 20; pintar(`<p class="baja"><b>✘ La cerradura no cede (−20 s).</b> Revisad el cálculo${Math.abs(v - s.r) / Math.abs(s.r) < 0.05 ? ": estáis muy cerca, cuidado con el redondeo" : ""}.</p>`); }
+    };
+    document.getElementById("er-ok").onclick = probar; inp.onkeydown = e => { if (e.key === "Enter") probar(); };
+    document.getElementById("er-pista").onclick = () => { G.pistas++; G.t -= 60; G.pistaVista = true; pintar(); };
+  }
+  function final(ok) {
+    G.fin = true; clearInterval(reloj);
+    const usado = T0 - Math.max(0, G.t), nota = ok ? Math.round(40 + 60 * Math.max(0, G.t) / T0) : Math.round(8 * G.k);
+    const rc = ok ? C.record("escape-room", nota) : {nuevo: false, record: null};
+    app.innerHTML = `<div class="calc-result"><div class="sim-nota">${ok ? "🔓 " + PALABRA : "⏰ Tiempo agotado"}</div>
+      <div class="calc-big">${ok ? `¡${G.eq ? C.esc(G.eq) + ", habéis" : "Has"} salido en ${mmss(usado)}!` : `Os habéis quedado en la sala ${G.k + 1}. Los datos siguen custodiados…`}</div>
+      <div class="calc-small">Puntuación: <b>${nota}/100</b> · pistas: ${G.pistas} · errores: ${G.errores} · partida n.º ${G.sem}. ${rc.nuevo ? "🏅 ¡Vuestro mejor resultado!" : rc.record != null ? `Récord en este dispositivo: ${rc.record}.` : ""}</div></div>
+      <details ${ok ? "" : "open"}><summary>Soluciones de esta partida</summary><ol>${G.salas.map(s => `<li><b>${s.n}</b>: ${s.s} = <b>${C.num(s.r, s.dec)} ${s.u}</b><br><small>${s.p}</small></li>`).join("")}</ol></details>
+      <p>La palabra que abre la puerta es <b>${PALABRA}</b>: sin datos no hay economía. Seguid practicando con la <a href="calculadora.html">calculadora de inflación</a>, el <a href="empleo.html">mercado laboral</a>, la <a href="desigualdad-calc.html">calculadora de desigualdad</a> y el <a href="hipoteca.html">simulador de préstamos</a>.</p>
+      <div class="sim-botones"><button class="sim-btn" id="er-otra">🔄 Nueva partida</button></div>`;
+    document.getElementById("er-otra").onclick = inicio;
+    C.evento("juegos/escape-room/" + (ok ? "salida" : "tiempo"), "Escape room: fin");
+  }
+  inicio();
+})();
+</script>
+<section id="cómo-usarlo-en-clase" class="level2">
+<h2 class="anchored" data-anchor-id="cómo-usarlo-en-clase">Cómo usarlo en clase</h2>
+<ul>
+<li><strong>Por equipos de tres o cuatro</strong>, con un solo dispositivo por equipo. Proyecta el <strong>código de partida</strong> para que todos resuelvan los mismos enigmas; gana el equipo que salga antes.</li>
+<li><strong>Como cierre de curso</strong>: las cinco salas repasan tasas acumuladas, tasa de paro, magnitudes reales y nominales, medidas de desigualdad y capitalización compuesta.</li>
+<li><strong>Después del juego</strong>: cada equipo explica una sala y busca el dato real equivalente en CCEEscopio.</li>
+</ul>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<!--
+  Contador de visitas y de uso (GoatCounter, gratuito y sin cookies).
+  1. Crea el sitio en https://www.goatcounter.com con el código cceescopio.
+  2. En Settings, activa "Allow adding visitor counts on your website".
+  Si el código no está disponible, cámbialo en GC_CODE y en data-goatcounter.
+
+  Además de las visitas a cada página, se registran estos eventos de uso
+  (en el panel de GoatCounter aparecen marcados como "event"):
+    uso/<página>            primera vez que se cambia un control (indicador, territorio, año...) en una visita
+    indicador/<id>          cada indicador consultado en los paneles
+    enlace-directo/<id>     visitas que llegan con un enlace directo a un indicador (?i=)
+    descarga/<página>       descargas de datos en CSV
+    mapa/<página>           uso del mapa interactivo (pasar el ratón por él)
+    video/reproducir, video/completo
+    salida/<dominio>        clics en enlaces a otras webs (INE, Eurostat...)
+    encuesta/...            respuestas de la encuesta de satisfacción
+-->
+<script data-goatcounter="https://cceescopio.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<script>
+(function () {
+  const GC_CODE = "cceescopio";
+  const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const offset = (document.querySelector('meta[name="quarto:offset"]') || {}).content || "./";
+
+  // ---------- Contador de visitas en el pie ----------
+  function show(n) {
+    const box = document.querySelector(".nav-footer-left") || document.querySelector("footer");
+    if (!box || document.getElementById("visit-counter")) return;
+    const s = document.createElement("span");
+    s.id = "visit-counter";
+    s.className = "visit-counter";
+    s.innerHTML = ` · <span class="vc-num">${n}</span> visitas`;
+    box.appendChild(s);
+  }
+  function showAll(n) {
+    show(n);
+    document.querySelectorAll(".visitas-ccee").forEach(el => {
+      const num = el.querySelector(".vc-num"); if (num) num.textContent = n;
+      el.hidden = false;
+    });
+  }
+  if (!local) {
+    fetch(`https://${GC_CODE}.goatcounter.com/counter/TOTAL.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.count) showAll(String(d.count).replace(/\s/g, ".")); })
+      .catch(() => {});
+  }
+
+  // ---------- Eventos de uso ----------
+  const pagina = (() => {
+    const p = location.pathname.replace(/\/$/, "/index.html").split("/").slice(-2);
+    const f = p[1].replace(/\.html$/, "") || "index";
+    return p[0] === "docencia" ? `docencia-${f}` : f;
+  })();
+  const slug = s => s.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
+                     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+  const cola = [], hechos = new Set();
+  function enviar(path, title) {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title: title || path, event: true});
+    else cola.push([path, title]);
+  }
+  const espera = setInterval(() => {
+    if (window.goatcounter && window.goatcounter.count) { clearInterval(espera); cola.splice(0).forEach(a => enviar(...a)); }
+  }, 500);
+  setTimeout(() => clearInterval(espera), 20000);
+  // Una sola vez por visita a la página (salvo que se pida lo contrario)
+  window.cceeEvento = function (path, title, repetir) {
+    if (local) { console.log("[CCEEscopio evento]", path); return; }
+    if (!repetir && hechos.has(path)) return;
+    hechos.add(path); enviar(path, title);
+  };
+
+  const ini = new URLSearchParams(location.search).get("i");
+  if (ini) cceeEvento(`enlace-directo/${ini}`, `Enlace directo: ${ini}`);
+
+  // Controles de los paneles (selectores, años, cantidades...)
+  document.addEventListener("change", ev => {
+    const el = ev.target;
+    if (!el.closest || !el.closest("form, .cell-output, .observablehq")) return;
+    if (el.closest("#encuesta-ccee")) return;
+    cceeEvento(`uso/${pagina}`, `Uso de controles: ${pagina}`);
+    const form = el.closest("form");
+    const etiqueta = form && form.querySelector("label") ? form.querySelector("label").textContent.trim() : "";
+    if (etiqueta === "Indicador" && el.tagName === "SELECT" && el.selectedOptions[0]) {
+      const id = slug(el.selectedOptions[0].textContent);
+      cceeEvento(`indicador/${id}`, el.selectedOptions[0].textContent);
+    }
+  }, true);
+
+  // Descargas y enlaces externos
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest && ev.target.closest("a");
+    if (!a) return;
+    if (a.hasAttribute("download") || /\.csv(\?|$)/i.test(a.getAttribute("href") || "")) {
+      cceeEvento(`descarga/${pagina}`, `Descarga de datos: ${pagina}`, true);
+      return;
+    }
+    try {
+      const u = new URL(a.href, location.href);
+      if (/^https?:$/.test(u.protocol) && u.hostname !== location.hostname)
+        cceeEvento(`salida/${u.hostname.replace(/^www\./, "")}`, `Enlace externo: ${u.hostname}`, true);
+    } catch (e) {}
+  }, true);
+
+  // Mapa interactivo
+  document.addEventListener("pointerover", ev => {
+    if (ev.target.closest && ev.target.closest(".mapa-ccee")) cceeEvento(`mapa/${pagina}`, `Uso del mapa: ${pagina}`);
+  }, {passive: true});
+
+  // Vídeo de presentación
+  document.addEventListener("play", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/reproducir", "Vídeo: reproducción"); }, true);
+  document.addEventListener("ended", ev => { if (ev.target.tagName === "VIDEO") cceeEvento("video/completo", "Vídeo: visto completo"); }, true);
+
+  // ---------- Botón flotante de la encuesta de satisfacción ----------
+  function botonEncuesta() {
+    if (pagina === "encuesta" || pagina === "uso") return;
+    const b = document.createElement("a");
+    b.href = offset + "encuesta.html";
+    b.className = "btn-encuesta";
+    b.innerHTML = "⭐ ¿Nos valoras?";
+    b.title = "Encuesta de satisfacción (menos de un minuto)";
+    b.addEventListener("click", () => cceeEvento(`encuesta/boton/${pagina}`, "Clic en el botón de la encuesta"));
+    document.body.appendChild(b);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", botonEncuesta);
+  else botonEncuesta();
+})();
+</script>
+<!-- Botones para guardar cualquier gráfico de CCEEscopio en PNG (alta resolución) o SVG, con leyenda y fuente -->
+<style>
+.ccee-guardar { display: flex; justify-content: flex-end; gap: .4rem; margin: .1rem 0 .8rem; font-size: .78rem; }
+.ccee-guardar button { background: #fff; border: 1px solid #D9CDD3; color: #A6195E; border-radius: 999px; padding: .12rem .65rem; cursor: pointer; }
+.ccee-guardar button:hover { background: #A6195E; color: #fff; }
+@media print { .ccee-guardar { display: none; } }
+</style>
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  // La nota indica Eurostat salvo en las páginas donde se trabaja con datos propios (hay un cuadro para pegarlos)
+  const fuenteTexto = () => "Elaborado con CCEEscopio (Facultad de Ciencias Económicas y Empresariales, Universidad de Granada)" + (document.body.textContent.includes("Eurostat") && !document.querySelector("textarea") ? ". Datos: Eurostat." : ".");
+  const esPlot = (el) => [...el.classList].some(c => /^plot-[0-9a-f]+(-figure)?$/.test(c));
+  const nombre = () => (document.title.split("–")[0].split("|")[0].trim() || "grafico").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^\w]+/g, "_").replace(/^_|_$/g, "").toLowerCase().slice(0, 50);
+  // Une en un solo SVG el gráfico, su leyenda (aunque sea HTML) y la fuente
+  function componer(el) {
+    const principal = el.tagName.toLowerCase() === "svg" ? el : [...el.querySelectorAll(":scope > svg")].filter(s => !/-ramp$/.test(s.getAttribute("class") || "")).pop();
+    if (!principal) return null;
+    const ancho = Math.round(principal.getBoundingClientRect().width || +principal.getAttribute("width") || 640);
+    const alto = Math.round(principal.getBoundingClientRect().height || +principal.getAttribute("height") || 400);
+    const out = document.createElementNS(NS, "svg");
+    out.setAttribute("xmlns", NS);
+    const fuente = "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
+    let y = 8;
+    // Título y subtítulo de la figura de Plot, si los tiene
+    for (const h of el.tagName.toLowerCase() === "figure" ? el.querySelectorAll(":scope > h2, :scope > h3") : []) {
+      const t = document.createElementNS(NS, "text"); t.textContent = h.textContent; t.setAttribute("x", 4); t.setAttribute("y", y + 16);
+      t.setAttribute("style", `${fuente}; font-size: ${h.tagName === "H2" ? 17 : 13}px; font-weight: ${h.tagName === "H2" ? 700 : 400}; fill: #222`); out.append(t); y += 24;
+    }
+    // Leyendas de color (muestras HTML de Plot) convertidas a SVG
+    const muestras = el.tagName.toLowerCase() === "figure" ? [...el.querySelectorAll("span[class*='-swatch']")] : [];
+    if (muestras.length) {
+      let x = 4; y += 6;
+      for (const m of muestras) {
+        const s = m.querySelector("svg"), color = s?.getAttribute("fill") || s?.querySelector("rect,circle,path")?.getAttribute("fill") || s?.querySelector("rect,circle,path")?.getAttribute("stroke") || "#888";
+        const texto = m.textContent.trim(), w = 22 + texto.length * 6.6;
+        if (x + w > ancho && x > 4) { x = 4; y += 20; }
+        const r = document.createElementNS(NS, "rect"); r.setAttribute("x", x); r.setAttribute("y", y); r.setAttribute("width", 12); r.setAttribute("height", 12); r.setAttribute("fill", color);
+        const t = document.createElementNS(NS, "text"); t.textContent = texto; t.setAttribute("x", x + 17); t.setAttribute("y", y + 10.5); t.setAttribute("style", `${fuente}; font-size: 11.5px; fill: #333`);
+        out.append(r, t); x += w + 12;
+      }
+      y += 22;
+    }
+    // Leyendas en rampa (escalas continuas)
+    for (const rampa of el.tagName.toLowerCase() === "figure" ? el.querySelectorAll(":scope > svg[class$='-ramp'], :scope > div > svg[class$='-ramp']") : []) {
+      const c = rampa.cloneNode(true); c.setAttribute("x", 0); c.setAttribute("y", y); out.append(c); y += +(rampa.getAttribute("height") || 50) + 4;
+    }
+    const g = principal.cloneNode(true);
+    g.querySelectorAll("[aria-label='tip']").forEach(n => n.remove());
+    g.setAttribute("x", 0); g.setAttribute("y", y); g.setAttribute("width", ancho); g.setAttribute("height", alto);
+    out.append(g); y += alto + 8;
+    const pie = document.createElementNS(NS, "text"); pie.textContent = fuenteTexto(); pie.setAttribute("x", 4); pie.setAttribute("y", y + 10);
+    pie.setAttribute("style", `${fuente}; font-size: 10px; fill: #777`); out.append(pie); y += 18;
+    out.setAttribute("width", ancho); out.setAttribute("height", y); out.setAttribute("viewBox", `0 0 ${ancho} ${y}`);
+    // fondo blanco
+    const fondo = document.createElementNS(NS, "rect"); fondo.setAttribute("width", "100%"); fondo.setAttribute("height", "100%"); fondo.setAttribute("fill", "#fff"); out.prepend(fondo);
+    return {svg: new XMLSerializer().serializeToString(out), ancho, alto: y};
+  }
+  function descargar(blob, fichero) {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fichero; document.body.append(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+  function guardar(el, formato) {
+    const c = componer(el); if (!c) return;
+    const base = nombre();
+    if (formato === "svg") descargar(new Blob([c.svg], {type: "image/svg+xml"}), `${base}.svg`);
+    else {
+      const escala = 3, img = new Image();
+      img.onload = () => {
+        const cv = document.createElement("canvas"); cv.width = c.ancho * escala; cv.height = c.alto * escala;
+        const ctx = cv.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height); ctx.drawImage(img, 0, 0, cv.width, cv.height);
+        cv.toBlob(b => descargar(b, `${base}.png`), "image/png");
+      };
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(c.svg);
+    }
+    window.cceeEvento && window.cceeEvento(`descarga/grafico-${formato}`, `Gráfico guardado (${formato})`, true);
+  }
+  function procesar(raiz) {
+    for (const el of raiz.querySelectorAll("figure, svg")) {
+      if (el.dataset.cceeGuardar || !esPlot(el)) continue;
+      if (el.tagName.toLowerCase() === "svg" && el.closest("figure") && esPlot(el.closest("figure"))) continue;
+      if (/-ramp$/.test(el.getAttribute("class") || "") || el.closest("[class*='-swatch']")) continue;
+      const r = el.getBoundingClientRect(); if (r.width && r.width < 200) continue;
+      el.dataset.cceeGuardar = "1";
+      const barra = document.createElement("div"); barra.className = "ccee-guardar";
+      barra.innerHTML = `<button type="button" title="Imagen en alta resolución para documentos y presentaciones">⬇ PNG</button><button type="button" title="Imagen vectorial, editable y sin pérdida de calidad">⬇ SVG</button>`;
+      const [png, svg] = barra.querySelectorAll("button");
+      png.onclick = () => guardar(el, "png"); svg.onclick = () => guardar(el, "svg");
+      // Si el gráfico está dentro de un mapa con información emergente, la barra va detrás del contenedor
+      const ancla = el.closest(".mapa-ccee") ?? el;
+      ancla.after(barra);
+    }
+  }
+  const obs = new MutationObserver(muts => { for (const m of muts) for (const n of m.addedNodes) if (n.nodeType === 1) procesar(n.parentElement || n); });
+  document.addEventListener("DOMContentLoaded", () => { procesar(document.body); obs.observe(document.body, {childList: true, subtree: true}); });
+})();
+</script>
+<!--
+  Botón de idioma (EN / ES) en el menú de todas las páginas.
+  Al pulsar EN se carga el traductor de Google y se traduce TODO el contenido de la página en la que se está,
+  incluidos los gráficos, los juegos y los datos que se cargan después. La elección se recuerda al cambiar de página
+  (cookie «googtrans», solo en este sitio). El script de Google no se carga mientras la web se ve en español.
+  Si el traductor no se puede cargar, se abre la página en translate.google.com en una pestaña nueva.
+-->
+<div id="ccee-gt" style="display:none"></div>
+<style>
+  .goog-te-banner-frame, iframe.skiptranslate, .VIpgJd-ZVi9od-ORHb-OEVmcd, #goog-gt-tt, .goog-te-balloon-frame, .VIpgJd-yAWNEb-L7lbkb { display: none !important; }
+  body { top: 0 !important; position: static !important; }
+  .goog-text-highlight, .VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q { background: none !important; box-shadow: none !important; }
+  #ccee-idioma { font-weight: 700; border: 1.5px solid #B5175F; border-radius: 999px; padding: .15rem .7rem !important; margin: .25rem .3rem; color: #B5175F !important; white-space: nowrap; }
+  #ccee-idioma:hover { background: #B5175F; color: #fff !important; }
+  .ccee-aviso-idioma { background: #FFF3E0; border-bottom: 1px solid #F0D9B5; color: #5a4520; font-size: .85rem; padding: .3rem 1rem; text-align: center; }
+  .ccee-aviso-idioma a { color: #B5175F; font-weight: 700; }
+</style>
+<script>
+(function () {
+  const enIngles = () => /(?:^|;\s*)googtrans=\/es\/en/.test(document.cookie);
+  function cookie(valor) {
+    const fin = valor ? "" : "; expires=Thu, 01 Jan 1970 00:00:00 GMT", h = location.hostname;
+    ["", "; domain=" + h, "; domain=." + h, "; domain=." + h.split(".").slice(-2).join(".")].forEach(d => { document.cookie = "googtrans=" + (valor || "") + fin + "; path=/" + d; });
+  }
+  function externo() {  // alternativa si el traductor no carga
+    cookie(""); window.open("https://translate.google.com/translate?sl=es&tl=en&u=" + encodeURIComponent(location.href.split("#")[0]), "_blank", "noopener");
+  }
+  function cargar() {
+    let listo = false;
+    window.googleTranslateElementInit = function () {
+      listo = true;
+      new google.translate.TranslateElement({pageLanguage: "es", includedLanguages: "en", autoDisplay: false}, "ccee-gt");
+    };
+    const s = document.createElement("script");
+    s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    s.onerror = externo; document.head.appendChild(s);
+    setTimeout(() => { if (!listo) externo(); }, 8000);
+  }
+  function boton() {
+    const lista = document.querySelector(".navbar .navbar-nav.ms-auto") || document.querySelector(".navbar .navbar-nav");
+    if (!lista || document.getElementById("ccee-idioma")) return;
+    const li = document.createElement("li"); li.className = "nav-item notranslate"; li.setAttribute("translate", "no");
+    const ing = enIngles();
+    li.innerHTML = `<a class="nav-link" id="ccee-idioma" href="#" role="button" lang="${ing ? "es" : "en"}" title="${ing ? "Volver a la versión en español" : "English version (automatic translation)"}">🌐 ${ing ? "ES" : "EN"}</a>`;
+    lista.appendChild(li);
+    li.querySelector("a").addEventListener("click", (e) => {
+      e.preventDefault();
+      try { window.cceeEvento && window.cceeEvento("idioma/" + (ing ? "es" : "en"), "Cambio de idioma", true); } catch (err) {}
+      cookie(ing ? "" : "/es/en"); location.reload();
+    });
+    if (ing) {
+      const av = document.createElement("div"); av.className = "ccee-aviso-idioma notranslate"; av.setAttribute("translate", "no");
+      av.innerHTML = `🌐 English version · automatic translation by Google Translate. The original is in Spanish. <a href="#" id="ccee-volver">Volver al español</a>`;
+      const cab = document.getElementById("quarto-header"); (cab && cab.parentNode) ? cab.parentNode.insertBefore(av, cab.nextSibling) : document.body.prepend(av);
+      av.querySelector("a").addEventListener("click", (e) => { e.preventDefault(); cookie(""); location.reload(); });
+    }
+  }
+  document.querySelectorAll(".navbar-brand, .navbar-brand img").forEach(el => el.classList.add("notranslate"));
+  boton();
+  if (enIngles()) cargar();
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jfmunozrosas\.github\.io\/cceescopio");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>CCEEscopio D+I · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · <a href="mailto:investiga_ccee@ugr.es">investiga_ccee@ugr.es</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="images/logos_ugr_fccee.jpg" alt="Universidad de Granada y Facultad de Ciencias Económicas y Empresariales" height="38"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -7,6 +7,12 @@ Para cada asignatura del **Grado en Turismo** se proponen los indicadores de CCE
 
 No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.
 
+::: {.callout-note}
+## También para Turismo + Traducción e Interpretación (TITUR)
+
+Esta página sirve igualmente para el [Doble Grado en Traducción e Interpretación y en Turismo (TITUR)](https://fccee.ugr.es/docencia/grados/graduadoa-traduccion-e-interpretacion-turismo), en sus modalidades de alemán, francés e inglés: las asignaturas de Turismo son las de este grado; el curso en el que se imparte cada una figura en la guía del doble grado.
+:::
+
 ## Primer curso {#curso-1}
 
 ### Estadística Aplicada al Sector Turístico {#estadistica-aplicada-al-sector-turistico}

@@ -10,12 +10,26 @@ include-in-header:
 ::: {.hero}
 ![](images/brand/cceescopio_logo_di.png){.hero-logo fig-alt="CCEEscopio D+I. Observando la economía y la empresa"}
 
-**CCEEscopio D+I** (Docencia + Investigación) es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar **99 indicadores** de la economía y la empresa (precios, empleo, actividad, empresa e innovación, turismo, sector público y mercados financieros, desigualdad y pobreza, sostenibilidad, población y economía internacional) para España, Andalucía y los países de la Unión Europea.
+**CCEEscopio D+I** (Docencia + Investigación) es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar **99 indicadores** de la economía y la empresa (precios, empleo, actividad, empresa e innovación, turismo, sector público y mercados financieros, desigualdad y pobreza, sostenibilidad, población y economía internacional) para España, Andalucía y los países de la Unión Europea, junto con la **actualidad** de cada día, **herramientas** de análisis, **simuladores** y **juegos** para todas las titulaciones de la Facultad.
 
 <p class="tagline">Observatorio de indicadores económicos y empresariales al servicio de la **Docencia** y la **Investigación**</p>
 
 <p class="visitas-ccee" hidden>👁️ <span class="vc-num"></span> visitas a CCEEscopio</p>
 :::
+
+## ¿Qué quieres hacer? {#que-quieres-hacer}
+
+```{=html}
+<div class="intent">
+  <a class="intent-card" href="recursos.html?tipo=datos"><span class="ic">📊</span><span class="it">Consultar datos</span><span class="id">99 indicadores de Eurostat por temas y territorios, con gráficos, mapas y descarga en CSV.</span><span class="il">Precios · empleo · PIB · turismo · Andalucía…</span></a>
+  <a class="intent-card" href="recursos.html?tipo=actualidad"><span class="ic">📰</span><span class="it">Seguir la actualidad</span><span class="id">Las noticias del día, la bolsa, los mercados y el análisis de la coyuntura.</span><span class="il">Hoy en la economía · bolsa · boletín · calendario</span></a>
+  <a class="intent-card" href="recursos.html?tipo=herramienta"><span class="ic">🧮</span><span class="it">Calcular y analizar</span><span class="id">Calculadoras y laboratorios con las series de CCEEscopio o con tus propios datos.</span><span class="il">Números índice · regresión · inflación · hipotecas</span></a>
+  <a class="intent-card" href="recursos.html?tipo=docencia"><span class="ic">🎓</span><span class="it">Aprender y enseñar</span><span class="id">Indicadores y ejemplos para cada asignatura, rutas de aprendizaje, ejercicios y exámenes.</span><span class="il">Todas las titulaciones · rutas · PRADO</span></a>
+  <a class="intent-card" href="recursos.html?tipo=juego"><span class="ic">🎮</span><span class="it">Jugar y simular</span><span class="id">Simuladores con datos reales, retos y juegos para clase con código QR.</span><span class="il">Banco central · escape room · concursos</span></a>
+  <a class="intent-card" href="recursos.html?tipo=investigacion"><span class="ic">🔬</span><span class="it">Investigar</span><span class="id">Ideas para TFG y TFM, gráficos con cita, datos reutilizables y la Facultad en los ranking.</span><span class="il">TFG · TFM · tesis · rankings</span></a>
+</div>
+<p class="nota">¿Buscas algo concreto? En <a href="recursos.html"><b>🧭 Todos los recursos</b></a> puedes filtrar por tipo, titulación y público, o buscar por palabras.</p>
+```
 
 ## Hoy en la economía {#hoy}
 
@@ -72,7 +86,7 @@ include-in-header:
 </div>
 ```
 
-## ¿Qué encontrarás?
+## Indicadores por temas {#temas}
 
 ::: {.cards}
 [<span class="icon">🛒</span><span class="ct">Precios e inflación</span><span class="cd">IPCA general, alimentos, energía y servicios; precios de la vivienda.</span>](precios.qmd){.card-ccee}
@@ -100,21 +114,9 @@ include-in-header:
 [<span class="icon">🏆</span><span class="ct">La Facultad en los ranking</span><span class="cd">La UGR en Economía, Empresa, Finanzas y Turismo.</span>](rankings.qmd){.card-ccee}
 :::
 
-## Herramientas
+## Simuladores y retos {#simuladores}
 
-::: {.cards}
-[<span class="icon">🧮</span><span class="ct">Calculadora de inflación</span><span class="cd">¿Cuánto valen hoy los euros de otro año?</span>](calculadora.qmd){.card-ccee}
-
-[<span class="icon">🪪</span><span class="ct">Ficha de país o región</span><span class="cd">Los indicadores clave de un territorio de un vistazo.</span>](ficha.qmd){.card-ccee}
-
-[<span class="icon">🔗</span><span class="ct">Relaciona dos indicadores</span><span class="cd">Curva de Phillips, ley de Okun y otras relaciones entre países.</span>](relaciona.qmd){.card-ccee}
-
-[<span class="icon">🔎</span><span class="ct">Buscador de indicadores</span><span class="cd">Los 99 indicadores de CCEEscopio en una tabla.</span>](indicadores.qmd){.card-ccee}
-:::
-
-## Simuladores con datos reales {#simuladores}
-
-Toma decisiones y observa sus consecuencias. Cada simulador parte de los **últimos datos publicados** y enlaza con los indicadores de CCEEscopio. [Ver todos los simuladores](simuladores.qmd).
+Toma decisiones y observa sus consecuencias. Cada simulador parte de los **últimos datos publicados** y enlaza con los indicadores de CCEEscopio. [Ver todos los simuladores](simuladores.qmd) y [todos los juegos](juegos.qmd).
 
 ::: {.cards}
 [<span class="icon">🏦</span><span class="ct">Gobernador del Banco Central</span><span class="cd">Fija los tipos de interés durante ocho trimestres y controla la inflación sin provocar una recesión.</span>](sim-banco-central.qmd){.card-ccee}
@@ -124,32 +126,31 @@ Toma decisiones y observa sus consecuencias. Cada simulador parte de los **últi
 [<span class="icon">💶</span><span class="ct">Llega a fin de mes</span><span class="cd">Gestiona el presupuesto de un hogar durante un año con la inflación real de cada tipo de gasto.</span>](sim-fin-de-mes.qmd){.card-ccee}
 
 [<span class="icon">🏖️</span><span class="ct">Gestiona tu destino turístico</span><span class="cd">Precios, plazas, promoción y tasa turística: rentabilidad, empleo, vivienda y sostenibilidad.</span>](sim-turismo.qmd){.card-ccee}
+
+[<span class="icon">🔐</span><span class="ct">Escape room económico</span><span class="cd">Cinco salas, cinco enigmas y quince minutos para salir. Individual o por equipos.</span>](escape-room.qmd){.card-ccee}
+
+[<span class="icon">🚫</span><span class="ct">El dato imposible</span><span class="cd">¿Puede ser cierto ese titular? Caza errores de porcentajes, unidades y denominadores.</span>](dato-imposible.qmd){.card-ccee}
+
+[<span class="icon">🔀</span><span class="ct">¿Correlación o causalidad?</span><span class="cd">Variables de confusión, causalidad inversa y simples casualidades.</span>](correlacion.qmd){.card-ccee}
+
+[<span class="icon">📰</span><span class="ct">Crea tu noticia</span><span class="cd">Bajo cada gráfica: escribe el titular y compáralo con el del Periódico CCEEscopio.</span>](precios.qmd){.card-ccee}
 :::
 
-## Para cada asignatura de la Facultad
+## Para tu titulación {#titulaciones}
 
-En [**Docencia**](docencia.qmd) encontrarás, **por grados (GADE, GECO, GFICO, GMIM y GTUR) y asignaturas**, los indicadores recomendados y ejemplos de uso en clase.
+Indicadores recomendados y ejemplos de uso **para cada asignatura** de todas las titulaciones de la Facultad. Los dobles grados comparten las asignaturas de su grado.
 
-## Una herramienta para la docencia y la investigación
-
-::: {.uses}
-::: {.use-box}
-### Docencia
-
-- Datos reales y actualizados para las clases de **Economía, Empresa, Métodos Cuantitativos, Econometría, Finanzas y Turismo**, con indicadores y ejemplos [por grados y asignaturas](docencia.qmd).
-- Gráficos interactivos, calculadoras y un [laboratorio de números índice](numeros-indice.qmd) para explicar conceptos.
-- [Juegos para clase](juegos.qmd) con código QR y ranking en directo, [ejercicios autocorregibles](ejercicios.qmd) y un [generador de exámenes](examen.qmd).
-:::
-
-::: {.use-box}
-### Investigación
-
-- [Ideas para TFG y TFM](ideas-tfg.qmd) con pregunta, hipótesis, datos y método, y un [generador de gráficos](graficos.qmd) que da la cita de la fuente.
-- **Descarga de los datos en CSV** y de los gráficos en PNG o SVG, con su fuente y unidad, para artículos, tesis y proyectos.
-- Análisis avanzados: [mapa de calor de coyuntura](coyuntura.qmd), [desigualdad con Gini y Theil](desigualdad-calc.qmd), [convergencia](convergencia.qmd) y [regresión](regresion.qmd).
-- [La Facultad en los ranking](rankings.qmd) y [datos y fuentes](datos.qmd) (INE, Banco de España, IECA, Banco Mundial).
-:::
-:::
+```{=html}
+<div class="tit-chips">
+  <a href="docencia/gade.html">GADE <small>· también GADE + Derecho y GADE + Ingenierías</small></a>
+  <a href="docencia/geco.html">GECO <small>· también bilingüe</small></a>
+  <a href="docencia/gfico.html">GFICO</a>
+  <a href="docencia/gmim.html">GMIM</a>
+  <a href="docencia/gtur.html">GTUR <small>· también TITUR</small></a>
+  <a href="docencia/posgrado.html">Másteres y doctorado</a>
+  <a href="rutas.html">🧭 Rutas de aprendizaje</a>
+</div>
+```
 
 ## Datos siempre actualizados
 
@@ -157,36 +158,18 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · [Todos los recursos](recursos.qmd) y menú reordenado** <span class="badge-nuevo">nuevo</span>: el menú se organiza ahora por objetivos (Indicadores, Actualidad, Herramientas, Docencia, Juegos y simuladores e Investigación), sin opciones repetidas, y una página reúne todos los recursos con filtros por tipo, titulación y público.
+- **Nuevo · Todas las titulaciones** <span class="badge-nuevo">nuevo</span>: [Docencia](docencia.qmd#titulaciones) incluye ya los dobles grados (GADE + Derecho, GADE + Ingenierías y Turismo + Traducción e Interpretación), el Grado en Economía bilingüe y los [másteres y el doctorado](docencia/posgrado.qmd).
+- **Nuevo · [Rutas de aprendizaje](rutas.qmd)** <span class="badge-nuevo">nuevo</span>: ocho recorridos guiados que encadenan datos, herramientas, simuladores y retos.
+- **Nuevo · Tres retos para pensar** <span class="badge-nuevo">nuevo</span>: [Escape room económico](escape-room.qmd), [El dato imposible](dato-imposible.qmd) y [¿Correlación o causalidad?](correlacion.qmd).
+- **Nuevo · Crea tu noticia** <span class="badge-nuevo">nuevo</span>: bajo cada gráfica, el estudiantado escribe un titular y lo compara con el del Periódico CCEEscopio.
+- **Nuevo · English** <span class="badge-nuevo">nuevo</span>: el botón **EN** del menú muestra todo CCEEscopio en inglés (traducción automática).
+- **Nuevo · Vídeo de presentación** <span class="badge-nuevo">nuevo</span>: un vídeo nuevo resume CCEEscopio en un minuto.
 - **Nuevo · [Hoy en la economía](#hoy)** <span class="badge-nuevo">nuevo</span>: cada mañana, antes de las 9:00, la portada muestra las noticias económicas y empresariales más destacadas del día en España, Europa y el mundo, con los indicadores de CCEEscopio para comprobarlas, y las últimas cotizaciones de las bolsas.
 - **Nuevo · [Bolsa al día](bolsa.qmd)** <span class="badge-nuevo">nuevo</span>: el IBEX 35, el Euro Stoxx 50, Wall Street, Asia, el petróleo, el oro y las grandes empresas del IBEX, actualizados tres veces al día, con gráficos comparados en base 100, rentabilidades, volatilidad y retos que los relacionan con los indicadores económicos.
 - **Nuevo · [Simuladores](simuladores.qmd)** <span class="badge-nuevo">nuevo</span>: [Gobernador del Banco Central](sim-banco-central.qmd), [Gestiona una cartera](sim-cartera.qmd), [Llega a fin de mes](sim-fin-de-mes.qmd) y [Gestiona tu destino turístico](sim-turismo.qmd), con datos reales de Eurostat y de las bolsas.
 
-- **Nuevo · [Piedra, papel o tijera](ppt.qmd)** <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. El profesorado elige cuántas preguntas hay que superar; cada acierto da una partida contra la aplicación (si ganas, pasas de pregunta; si empatas, vuelves a jugar; si pierdes, contestas otra pregunta). Gana quien antes las supere todas.
-- **Nuevo · [Detecta el engaño](detecta-engano.qmd)** <span class="badge-nuevo">nuevo</span>: seis pares de gráficos con datos reales de Eurostat, uno honesto y otro engañoso. Descubre cuál engaña y qué truco usa: ejes cortados, fechas a medida, euros sin deflactar, bases de índice interesadas…
-- **Nuevo · [Plantilla de informe de coyuntura](informe-coyuntura.qmd)** <span class="badge-nuevo">nuevo</span>: genera en un clic el esqueleto de un informe con los últimos datos del país que elijas, descárgalo en Word y evalúalo con la rúbrica incluida.
-- **Actualizado · [La Facultad en los ranking](rankings.qmd)**: añadida la edición 2024 del Ranking de Shanghái por materias y completadas las series con la web oficial de ShanghaiRanking.
-- **Nuevo · Tres juegos más para clase con código QR** <span class="badge-nuevo">nuevo</span>: [Bingo de indicadores](bingo.qmd) (tacha los países que cumplen cada condición), [Ordena la malla](ordena.qmd) (de mayor a menor) y [¿Quién es quién?](quien.qmd) (adivina el país por sus indicadores).
-- **Nuevo · [Mapa de calor de coyuntura](coyuntura.qmd)** <span class="badge-nuevo">nuevo</span>: todos los países de la UE (o las comunidades autónomas) y sus principales indicadores de un vistazo, coloreados según su posición relativa.
-- **Nuevo · [Laboratorio de números índice](numeros-indice.qmd)** <span class="badge-nuevo">nuevo</span>: cambio de base, tasas de variación, enlace de series, deflactación y los índices de Laspeyres, Paasche y Fisher, con datos reales y ejercicios autocorregibles.
-- **Nuevo · [Ideas para tu TFG o TFM](ideas-tfg.qmd)** <span class="badge-nuevo">nuevo</span>: un generador de temas de investigación con pregunta, hipótesis, datos, método y estructura, para todas las titulaciones de la Facultad.
-- **Rankings en gráficos**: la posición de la UGR en los rankings por disciplinas, ahora también [en gráficos](rankings.qmd#en-graficos).
-- **Nuevo · [Memoria de datos](memoria.qmd)** <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. Durante unos segundos se proyecta una malla 3 × 3 con el dato de un indicador en nueve países o comunidades autónomas; después se ocultan y, desde el móvil, cada acierto descubre una casilla y cada fallo obliga a empezar de nuevo. Gana quien antes desbloquee las nueve.
-- **Nuevo · [Precios de productos](precios-productos.qmd)** <span class="badge-nuevo">nuevo</span>: la gasolina y el gasóleo cada semana desde 2005, con la parte que son impuestos y comparados con el IPC (también en euros de hoy); el precio de la luz y el gas de los hogares; y cuánto costaban el pan, la leche, el aceite o el café en cualquier fecha.
-- **Nuevo · Concurso [«¿Cuánto costaba?»](concurso-precios.qmd)** <span class="badge-nuevo">nuevo</span>: los estudiantes ven un producto con su precio actual y, desde el móvil, adivinan cuánto costaba en una fecha del pasado. Gana quien más se acerque.
-- **Nuevo · Mapas animados** <span class="badge-nuevo">nuevo</span>: en todos los paneles temáticos, el mapa se puede animar para ver cómo cambia cada indicador a lo largo del tiempo, con la misma escala de colores en todos los periodos. Puedes pararlo en cualquier momento o seguir eligiendo un periodo concreto.
-- **Nuevo · [Concurso en clase](concurso.qmd)** <span class="badge-nuevo">nuevo</span>: los estudiantes escanean un QR, responden preguntas con datos reales desde el móvil y el ranking aparece en directo en la pantalla.
-- **Nuevo · Guarda cualquier gráfico** <span class="badge-nuevo">nuevo</span>: todos los gráficos tienen botones para descargarlos en PNG de alta resolución o en SVG, con su leyenda y la fuente, listos para un trabajo, un TFG o un TFM.
-- **Nuevo · [Calculadoras](calculadoras.qmd)** <span class="badge-nuevo">nuevo</span>: un menú con todas las calculadoras y dos nuevas, la [regresión con análisis de supuestos](regresion.qmd) y el [análisis cuantitativo de datos](estadistica.qmd), que funcionan con las series de CCEEscopio o con tus propios datos.
-- **Nuevo · [Pirámides de población](piramides.qmd)** <span class="badge-nuevo">nuevo</span>: de los países europeos, las comunidades autónomas y las provincias, con animación desde el año 2000.
-- **Nuevo · [¿Qué explica cada indicador?](descomposiciones.qmd)** <span class="badge-nuevo">nuevo</span>: descompón la inflación (alimentos, energía, vivienda, transporte, servicios…), el crecimiento del PIB, la cuenta corriente, la población y el turismo, y descubre qué componentes explican cada subida.
-- **Nuevo · [Noticias e indicadores](noticias.qmd)** <span class="badge-nuevo">nuevo</span>: noticias económicas de los últimos días con el reto de comprobarlas con los indicadores de CCEEscopio.
-- **Nuevo · 🎮 [Juegos con datos](juegos.qmd)** <span class="badge-nuevo">nuevo</span>: el dato del día, ¿más alto o más bajo?, adivina el país, ¿qué pasó aquí?, ordena los países y un **modo aula** para competir en clase. Y además, [predice el próximo dato](prediccion.qmd).
-- **Nuevo · Para el profesorado** <span class="badge-nuevo">nuevo</span>: [generador de exámenes y fichas de práctica](examen.qmd) con versiones, soluciones y exportación a PRADO, [exámenes de Técnicas Cuantitativas III](examen-tc3.qmd) con soluciones, y [modo presentación](presentacion.qmd) para proyectar en clase.
-- **Nuevo · Análisis** <span class="badge-nuevo">nuevo</span>: [datos extremos e inusuales](extremos.qmd), [ciclo económico y semáforo de coyuntura](ciclo.qmd), [convergencia σ y β](convergencia.qmd), [qué indicador se adelanta](desfases.qmd), [previsión sencilla](prevision.qmd), [calculadora de desigualdad](desigualdad-calc.qmd) y [simulador de política fiscal](politica-fiscal.qmd).
-- **Para estudiar y enseñar**: [ejercicios autocorregibles](ejercicios.qmd) con los últimos datos, [generador de gráficos para el TFG](graficos.qmd) con la cita en APA y [glosario de indicadores](glosario.qmd).
-- **Herramientas**: [simulador de hipotecas y préstamos](hipoteca.qmd) con el euríbor real, [conversor de unidades](conversor.qmd) y [comparador de comunidades autónomas](comparador.qmd).
-- **Paneles**: [mercados al día](mercados.qmd), [turismo en Andalucía](turismo-andalucia.qmd), [demografía empresarial](empresas.qmd) y [consumo y confianza](consumo.qmd).
-- **Al día**: [boletín de coyuntura](boletin.qmd), [datos recientes y calendario](calendario.qmd) y [bases de datos de la Biblioteca](biblioteca.qmd).
+Consulta [**todas las novedades**](novedades.qmd).
 
 ## Tu opinión cuenta
 

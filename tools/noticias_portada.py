@@ -50,6 +50,10 @@ ESPANA = (r"\b(espana|espanol\w*|ibex|ibex 35|moncloa|sanchez|hacienda|banco de 
           r"andaluc\w*|madrid|cataluna|barcelona|valencia\w*|sevilla|malaga|granada|bilbao|cnmv|cnmc|inditex|iberdrola|santander|"
           r"bbva|caixabank|telefonica|repsol|sabadell|mercadona|el corte ingles|ferrovial|acs|naturgy|endesa|aena|iag|indra)\b")
 
+# Titulares que no son información económica (sorteos, horóscopos, programación, sucesos…): se descartan
+EXCLUIR = (r"\b(bonoloto|primitiva|euromill\w*|loteria\w*|sorteo\w*|cupon\w*|quiniela\w*|horoscopo\w*|tarot|santoral|"
+           r"numeros? premiados?|comprobar (el |los )?(resultado|numero|decimo)\w*|resultados? de hoy|aemet|receta\w*)\b")
+
 # Titulares sobre los mercados: se enlazan con la página «Bolsa al día»
 BOLSA = r"\b(bolsas?|ibex|wall street|nasdaq|dow jones|s&p|dax|cac|stoxx|nikkei|cotiza\w*|acciones|parque|brent|oro|bitcoin)\b"
 
@@ -108,6 +112,8 @@ def main(salida, horas=24, por_bloque=5, fuentes=FUENTES, descargar=descargar, a
             continue
         for k, it in enumerate(lst):
             if not it["t"] or not it["ts"] or it["ts"] < ahora - horas * 3600 or it["ts"] > ahora + 3600:
+                continue
+            if re.search(EXCLUIR, sin_tildes(it["t"])):
                 continue
             items.append({**it, "sug": sug, "portada": portada, "pos": k, "pal": palabras(it["t"])})
         time.sleep(1)

@@ -1,0 +1,62 @@
+<!--
+  Botón de idioma (EN / ES) en el menú de todas las páginas.
+  Al pulsar EN se carga el traductor de Google y se traduce TODO el contenido de la página en la que se está,
+  incluidos los gráficos, los juegos y los datos que se cargan después. La elección se recuerda al cambiar de página
+  (cookie «googtrans», solo en este sitio). El script de Google no se carga mientras la web se ve en español.
+  Si el traductor no se puede cargar, se abre la página en translate.google.com en una pestaña nueva.
+-->
+<div id="ccee-gt" style="display:none"></div>
+<style>
+  .goog-te-banner-frame, iframe.skiptranslate, .VIpgJd-ZVi9od-ORHb-OEVmcd, #goog-gt-tt, .goog-te-balloon-frame, .VIpgJd-yAWNEb-L7lbkb { display: none !important; }
+  body { top: 0 !important; position: static !important; }
+  .goog-text-highlight, .VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q { background: none !important; box-shadow: none !important; }
+  #ccee-idioma { font-weight: 700; border: 1.5px solid #B5175F; border-radius: 999px; padding: .15rem .7rem !important; margin: .25rem .3rem; color: #B5175F !important; white-space: nowrap; }
+  #ccee-idioma:hover { background: #B5175F; color: #fff !important; }
+  .ccee-aviso-idioma { background: #FFF3E0; border-bottom: 1px solid #F0D9B5; color: #5a4520; font-size: .85rem; padding: .3rem 1rem; text-align: center; }
+  .ccee-aviso-idioma a { color: #B5175F; font-weight: 700; }
+</style>
+<script>
+(function () {
+  const enIngles = () => /(?:^|;\s*)googtrans=\/es\/en/.test(document.cookie);
+  function cookie(valor) {
+    const fin = valor ? "" : "; expires=Thu, 01 Jan 1970 00:00:00 GMT", h = location.hostname;
+    ["", "; domain=" + h, "; domain=." + h, "; domain=." + h.split(".").slice(-2).join(".")].forEach(d => { document.cookie = "googtrans=" + (valor || "") + fin + "; path=/" + d; });
+  }
+  function externo() {  // alternativa si el traductor no carga
+    cookie(""); window.open("https://translate.google.com/translate?sl=es&tl=en&u=" + encodeURIComponent(location.href.split("#")[0]), "_blank", "noopener");
+  }
+  function cargar() {
+    let listo = false;
+    window.googleTranslateElementInit = function () {
+      listo = true;
+      new google.translate.TranslateElement({pageLanguage: "es", includedLanguages: "en", autoDisplay: false}, "ccee-gt");
+    };
+    const s = document.createElement("script");
+    s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    s.onerror = externo; document.head.appendChild(s);
+    setTimeout(() => { if (!listo) externo(); }, 8000);
+  }
+  function boton() {
+    const lista = document.querySelector(".navbar .navbar-nav.ms-auto") || document.querySelector(".navbar .navbar-nav");
+    if (!lista || document.getElementById("ccee-idioma")) return;
+    const li = document.createElement("li"); li.className = "nav-item notranslate"; li.setAttribute("translate", "no");
+    const ing = enIngles();
+    li.innerHTML = `<a class="nav-link" id="ccee-idioma" href="#" role="button" lang="${ing ? "es" : "en"}" title="${ing ? "Volver a la versión en español" : "English version (automatic translation)"}">🌐 ${ing ? "ES" : "EN"}</a>`;
+    lista.appendChild(li);
+    li.querySelector("a").addEventListener("click", (e) => {
+      e.preventDefault();
+      try { window.cceeEvento && window.cceeEvento("idioma/" + (ing ? "es" : "en"), "Cambio de idioma", true); } catch (err) {}
+      cookie(ing ? "" : "/es/en"); location.reload();
+    });
+    if (ing) {
+      const av = document.createElement("div"); av.className = "ccee-aviso-idioma notranslate"; av.setAttribute("translate", "no");
+      av.innerHTML = `🌐 English version · automatic translation by Google Translate. The original is in Spanish. <a href="#" id="ccee-volver">Volver al español</a>`;
+      const cab = document.getElementById("quarto-header"); (cab && cab.parentNode) ? cab.parentNode.insertBefore(av, cab.nextSibling) : document.body.prepend(av);
+      av.querySelector("a").addEventListener("click", (e) => { e.preventDefault(); cookie(""); location.reload(); });
+    }
+  }
+  document.querySelectorAll(".navbar-brand, .navbar-brand img").forEach(el => el.classList.add("notranslate"));
+  boton();
+  if (enIngles()) cargar();
+})();
+</script>

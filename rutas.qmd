@@ -1,0 +1,114 @@
+---
+title: "🧭 Rutas de aprendizaje"
+subtitle: "Recorridos guiados que encadenan datos, herramientas, simuladores y retos"
+toc: true
+---
+
+Cada ruta es una secuencia de **cinco a siete pasos** que empieza mirando los datos y termina con una simulación o un reto. Sirven para una sesión de prácticas, para repasar un tema o para descubrir CCEEscopio con orden. Bajo el título de cada ruta se indican las titulaciones para las que encaja mejor y su duración aproximada.
+
+::: {.ruta}
+## 1. Inflación y poder adquisitivo
+
+[Todas las titulaciones · 60-90 minutos]{.ruta-meta}
+
+1. **Mira los datos**: la [inflación general y por componentes](precios.qmd) en España y la UE.
+2. **Entiende de dónde viene**: [¿qué explica la inflación?](descomposiciones.qmd) (alimentos, energía, servicios…).
+3. **Baja a lo concreto**: [precios de la gasolina, la luz y la cesta de la compra](precios-productos.qmd).
+4. **Calcula**: actualiza un salario o un alquiler con la [calculadora de inflación](calculadora.qmd).
+5. **Simula**: [Llega a fin de mes](sim-fin-de-mes.qmd) y descubre tu inflación personal.
+6. **Reto final**: bajo la gráfica del IPCA, [crea tu noticia](precios.qmd) y compárala con la del Periódico CCEEscopio.
+:::
+
+::: {.ruta}
+## 2. Política monetaria y mercados financieros
+
+[GECO · GFICO · GADE · posgrado · 90 minutos]{.ruta-meta}
+
+1. **Mira los datos**: [euríbor, deuda pública y prima de riesgo](mercados.qmd).
+2. **Sigue la bolsa**: [Bolsa al día](bolsa.qmd), con rentabilidades y volatilidad.
+3. **Calcula**: cómo cambia la cuota con el euríbor en el [simulador de hipotecas](hipoteca.qmd).
+4. **Simula**: [Gobernador del Banco Central](sim-banco-central.qmd), primero desde hoy y después en 2022-2023.
+5. **Invierte**: [Gestiona una cartera](sim-cartera.qmd) en un periodo secreto.
+6. **Reto final**: ¿[correlación o causalidad](correlacion.qmd) entre tipos de interés e inflación?
+:::
+
+::: {.ruta}
+## 3. Métodos Cuantitativos: de los datos al modelo
+
+[Todas las titulaciones · dos sesiones]{.ruta-meta}
+
+1. **Números índice y tasas**: [laboratorio de números índice](numeros-indice.qmd).
+2. **Describe**: [análisis cuantitativo de datos](estadistica.qmd) con una serie de CCEEscopio.
+3. **Relaciona**: [dos indicadores entre países](relaciona.qmd) (curva de Phillips, ley de Okun).
+4. **No te precipites**: [¿correlación o causalidad?](correlacion.qmd)
+5. **Modeliza**: [regresión lineal con análisis de supuestos](regresion.qmd).
+6. **Predice**: [previsión sencilla](prevision.qmd) y [predice el próximo dato](prediccion.qmd).
+7. **Reto final**: [El dato imposible](dato-imposible.qmd) y [Detecta el engaño](detecta-engano.qmd).
+:::
+
+::: {.ruta}
+## 4. Coyuntura económica: del dato al informe
+
+[GECO · GADE · posgrado · dos sesiones]{.ruta-meta}
+
+1. **¿Qué se ha publicado?**: [datos recientes y calendario](calendario.qmd).
+2. **Visión de conjunto**: [mapa de calor de coyuntura](coyuntura.qmd) y [ciclo económico](ciclo.qmd).
+3. **Profundiza**: [actividad](actividad.qmd), [empleo](empleo.qmd) y [sector exterior](internacional.qmd).
+4. **Contrasta con la prensa**: [Hoy en la economía](index.qmd#hoy) y [noticias e indicadores](noticias.qmd).
+5. **Redacta**: [plantilla de informe de coyuntura](informe-coyuntura.qmd), con rúbrica.
+6. **Reto final**: [Escape room económico](escape-room.qmd) por equipos.
+:::
+
+::: {.ruta}
+## 5. Turismo: demanda, estacionalidad y sostenibilidad
+
+[GTUR · TITUR · GADE · GMIM · 90 minutos]{.ruta-meta}
+
+1. **Mira los datos**: [viajeros, pernoctaciones y ocupación](turismo.qmd).
+2. **Baja al territorio**: [turismo en Andalucía](turismo-andalucia.qmd) por provincias.
+3. **Descompón**: [residentes y extranjeros](descomposiciones.qmd) en la evolución del turismo.
+4. **Predice**: la estacionalidad con la [previsión sencilla](prevision.qmd).
+5. **Simula**: [Gestiona tu destino turístico](sim-turismo.qmd).
+6. **Reto final**: debate con el [precio de la vivienda](precios.qmd) y el [empleo regional](andalucia.qmd): ¿cuánto turismo puede asumir una ciudad?
+:::
+
+::: {.ruta}
+## 6. Empresa, consumo y mercado
+
+[GADE · GADE + Derecho · GADE + Ingenierías · GMIM · 60-90 minutos]{.ruta-meta}
+
+1. **El entorno**: [empresa, innovación y digitalización](empresa.qmd) y [demografía empresarial](empresas.qmd).
+2. **El consumidor**: [consumo y confianza](consumo.qmd).
+3. **Los precios**: [precios de productos](precios-productos.qmd) y el concurso [¿Cuánto costaba?](concurso-precios.qmd)
+4. **Compara territorios**: [ficha de país o región](ficha.qmd) y [comparador de comunidades](comparador.qmd).
+5. **Simula**: [Gestiona tu destino turístico](sim-turismo.qmd) (precio, promoción y capacidad) o [Gestiona una cartera](sim-cartera.qmd).
+6. **Reto final**: [concurso de preguntas](concurso.qmd) con código QR.
+:::
+
+::: {.ruta}
+## 7. Desigualdad, pobreza y sector público
+
+[GECO · GADE + Derecho · posgrado · 90 minutos]{.ruta-meta}
+
+1. **Mira los datos**: [desigualdad, pobreza y condiciones de vida](desigualdad.qmd).
+2. **Mide**: Gini, Lorenz y Theil con la [calculadora de desigualdad](desigualdad-calc.qmd).
+3. **¿Convergen los territorios?**: [convergencia sigma y beta](convergencia.qmd).
+4. **Las cuentas públicas**: [deuda y déficit](publico.qmd).
+5. **Simula**: [política fiscal](politica-fiscal.qmd) y sostenibilidad de la deuda.
+6. **Reto final**: [relaciona](relaciona.qmd) gasto social y pobreza y discute si la relación es causal.
+:::
+
+::: {.ruta}
+## 8. Tu TFG o TFM, paso a paso
+
+[Último curso, másteres y doctorado]{.ruta-meta}
+
+1. **Elige tema**: [ideas para tu TFG o TFM](ideas-tfg.qmd).
+2. **Localiza los datos**: [buscador de indicadores](indicadores.qmd), [datos y fuentes](datos.qmd) y [bases de datos de la Biblioteca](biblioteca.qmd).
+3. **Explora**: [análisis cuantitativo de datos](estadistica.qmd) y [datos extremos](extremos.qmd).
+4. **Analiza**: [regresión](regresion.qmd), [desfases](desfases.qmd) o [convergencia](convergencia.qmd).
+5. **Presenta**: [generador de gráficos con cita de la fuente](graficos.qmd).
+6. **Revisa**: que ninguna cifra sea un [dato imposible](dato-imposible.qmd) ni ningún gráfico [engañe](detecta-engano.qmd).
+:::
+
+<p class="source">¿Propones otra ruta para tu asignatura? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>

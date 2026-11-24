@@ -1,0 +1,90 @@
+---
+title: "🔀 ¿Correlación o causalidad?"
+subtitle: "Dos variables se mueven juntas. ¿Una causa la otra?"
+toc: false
+include-in-header:
+  - text: |
+      <script src="js/ccee-sim.js"></script>
+---
+
+Que dos variables estén correlacionadas **no demuestra** que una cause la otra. En cada caso verás un gráfico y una conclusión que alguien ha sacado de él. Decide qué explicación es la más razonable: una **causalidad plausible**, una **variable de confusión**, una **causalidad inversa** o una **casualidad o sesgo de selección**.
+
+**Para:** Métodos Cuantitativos, Econometría, Investigación de Mercados, Economía y TFG (todas las titulaciones). **Duración:** 8-10 minutos. **Relacionado:** [Relaciona dos indicadores](relaciona.qmd) (con datos reales), [regresión](regresion.qmd) y [¿qué indicador se adelanta?](desfases.qmd).
+
+```{=html}
+<div id="cc-app"></div>
+<p class="nota">Los gráficos usan <b>datos ilustrativos</b>, generados para reproducir relaciones conocidas. Para trabajar con datos reales, usa <a href="relaciona.html">Relaciona dos indicadores</a>.</p>
+<script>
+(function () {
+  const C = window.CCEE, app = document.getElementById("cc-app");
+  const OPC = [["causal", "➡️ Causalidad plausible", "Hay un mecanismo claro y la dirección es la que se afirma"],
+               ["confusion", "🔺 Variable de confusión", "Una tercera variable mueve a las dos"],
+               ["inversa", "↩️ Causalidad inversa", "La causa es en realidad el efecto"],
+               ["azar", "🎲 Casualidad o sesgo de selección", "Tendencias comunes, coincidencia o muestra no comparable"]];
+  // x, y: ejes · r: correlación del gráfico · d: conclusión que se afirma · s: respuesta · e: explicación
+  const CASOS = [
+    {x: "Helados vendidos (miles al mes)", y: "Ahogamientos al mes", r: 0.85, d: "«Vender helados provoca ahogamientos: habría que limitar su venta en la playa.»", s: "confusion", e: "La temperatura mueve a las dos: en verano se venden más helados y más gente se baña. Si se comparan meses con la misma temperatura, la relación desaparece."},
+    {x: "Tipo de interés oficial (%)", y: "Inflación (%)", r: 0.8, d: "«Los países con tipos de interés más altos tienen más inflación: subir los tipos dispara los precios.»", s: "inversa", e: "Es al revés: los bancos centrales suben los tipos porque la inflación es alta. Compruébalo en el simulador Gobernador del Banco Central."},
+    {x: "Consumo de chocolate (kg por habitante)", y: "Premios Nobel por 10 millones de habitantes", r: 0.75, d: "«Comer chocolate hace a un país más brillante en ciencia.»", s: "confusion", e: "La renta per cápita explica las dos: los países ricos consumen más chocolate y gastan más en investigación y universidades."},
+    {x: "Gasto en publicidad (miles de €)", y: "Ventas (miles de €)", r: 0.9, d: "«Cada euro en publicidad genera diez de ventas: dupliquemos el presupuesto.»", s: "inversa", e: "Muchas empresas fijan su presupuesto de publicidad como un porcentaje de las ventas: venden más y por eso gastan más. Para medir el efecto de la publicidad hace falta un experimento o una variación que no dependa de las ventas."},
+    {x: "Crecimiento del PIB (%)", y: "Variación de la tasa de paro (puntos)", r: -0.8, d: "«Cuando la economía crece más, el paro baja (ley de Okun).»", s: "causal", e: "Hay un mecanismo claro: para producir más, las empresas contratan. La relación se observa en casi todos los países y periodos, aunque su intensidad varía (en España es especialmente fuerte)."},
+    {x: "Productividad (valor añadido por empleado)", y: "Exportaciones (% de las ventas)", r: 0.7, d: "«Exportar hace a las empresas más productivas: subvencionemos a todas para que exporten.»", s: "azar", e: "Sesgo de selección: las empresas que ya eran más productivas son las que consiguen exportar (autoselección). Comparar exportadoras y no exportadoras no mide el efecto de exportar."},
+    {x: "Bomberos enviados", y: "Daños del incendio (miles de €)", r: 0.85, d: "«Cuantos más bomberos acuden, mayores son los daños: mejor enviar menos.»", s: "confusion", e: "El tamaño del incendio determina las dos cosas: a los incendios grandes se envían más bomberos y causan más daños."},
+    {x: "Precio del barril de Brent (dólares)", y: "Precio de la gasolina (céntimos por litro)", r: 0.9, d: "«Cuando sube el petróleo, sube la gasolina.»", s: "causal", e: "El petróleo es el principal coste variable de la gasolina y el orden temporal es claro: primero se mueve el Brent y después el surtidor. Compáralo en Bolsa al día y en Precios de productos."},
+    {x: "Consumo de margarina (kg por habitante)", y: "Tasa de divorcios (por 1.000 habitantes)", r: 0.9, d: "«La margarina rompe matrimonios.»", s: "azar", e: "Correlación espuria: dos series que caen en los mismos años por motivos distintos. Con series temporales que tienen tendencia es fácil encontrar correlaciones altas sin ninguna relación; por eso se analizan las variaciones y no los niveles."},
+    {x: "Policías por 1.000 habitantes", y: "Delitos por 1.000 habitantes", r: 0.7, d: "«Las ciudades con más policías tienen más delitos: la policía genera delincuencia.»", s: "inversa", e: "Las ciudades con más delincuencia contratan más policías. La dirección de la causalidad es la contraria de la que se afirma."},
+    {x: "Horas de tutoría a las que asiste", y: "Nota final", r: -0.6, d: "«Quienes van a más tutorías sacan peores notas: las tutorías perjudican.»", s: "inversa", e: "Va a tutorías quien tiene más dificultades con la asignatura. Para saber si ayudan, habría que comparar a estudiantes con el mismo nivel de partida."},
+    {x: "Número de cigüeñas en el municipio", y: "Nacimientos al año", r: 0.75, d: "«A los niños los trae la cigüeña.»", s: "confusion", e: "El tamaño y el carácter rural del municipio: donde hay más superficie y más edificios antiguos hay más cigüeñas, y donde hay más población hay más nacimientos."},
+  ];
+  function dispersion(c, semilla) {
+    const az = C.azar(semilla), n = 32, pts = [];
+    for (let i = 0; i < n; i++) { const a = az.normal(), b = az.normal(); pts.push([a, c.r * a + Math.sqrt(1 - c.r * c.r) * b]); }
+    const W = 460, H = 300, m = 44, sx = v => m + (v + 3) / 6 * (W - m - 12), sy = v => H - m - (v + 3) / 6 * (H - m - 12);
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px" role="img" aria-label="Diagrama de dispersión">
+      <rect x="${m}" y="12" width="${W - m - 12}" height="${H - m - 12}" fill="#FAF7F4" stroke="#E6DEDA"/>
+      <line x1="${sx(-2.6)}" y1="${sy(-2.6 * c.r)}" x2="${sx(2.6)}" y2="${sy(2.6 * c.r)}" stroke="#F29200" stroke-width="2" stroke-dasharray="6,4"/>
+      ${pts.map(p => `<circle cx="${sx(Math.max(-2.9, Math.min(2.9, p[0]))).toFixed(1)}" cy="${sy(Math.max(-2.9, Math.min(2.9, p[1]))).toFixed(1)}" r="5" fill="#B5175F" fill-opacity=".75"/>`).join("")}
+      <text x="${(W + m) / 2}" y="${H - 10}" text-anchor="middle" font-size="13" fill="#444">${c.x}</text>
+      <text transform="translate(15,${(H - m) / 2 + 6}) rotate(-90)" text-anchor="middle" font-size="13" fill="#444">${c.y}</text>
+      <text x="${W - 18}" y="30" text-anchor="end" font-size="13" font-weight="700" fill="#B5175F">r = ${C.num(c.r, 2)}</text></svg>`;
+  }
+  let G;
+  function nueva() { G = {casos: [...CASOS].sort(() => Math.random() - 0.5).slice(0, 7), k: 0, ok: 0, hist: [], sem: Math.floor(Math.random() * 1e6)}; pintar(); C.evento("juegos/correlacion/inicio", "¿Correlación o causalidad?: inicio"); }
+  function pintar() {
+    const c = G.casos[G.k];
+    app.innerHTML = `<div class="sim-progreso">${G.casos.map((_, i) => `<span class="${i < G.k ? "hecho" : i === G.k ? "actual" : ""}"></span>`).join("")}</div>
+      <p class="nota">Caso ${G.k + 1} de ${G.casos.length} · ${G.ok} aciertos</p>
+      <div class="uses"><div>${dispersion(c, G.sem + G.k)}</div>
+      <div><div class="sim-evento"><div class="se-t">Alguien concluye:</div><div style="font-size:1.12rem">${c.d}</div></div>
+      <p><b>¿Qué explicación es la más razonable?</b></p>
+      <div class="sim-opciones" style="grid-template-columns:1fr">${OPC.map(o => `<button class="sim-opcion" data-o="${o[0]}"><b>${o[1]}</b><small>${o[2]}</small></button>`).join("")}</div></div></div><div id="cc-res"></div>`;
+    app.querySelectorAll("[data-o]").forEach(b => b.onclick = () => {
+      const bien = b.dataset.o === c.s; if (bien) G.ok++;
+      app.querySelectorAll("[data-o]").forEach(x => { x.disabled = true; if (x.dataset.o === c.s) x.style.borderColor = "#2E7D32"; else if (x === b) x.style.borderColor = "#C62828"; });
+      G.hist.push({d: c.d, bien, e: c.e, s: OPC.find(o => o[0] === c.s)[1]});
+      document.getElementById("cc-res").innerHTML = `<div class="calc-result"><div class="calc-small"><b class="${bien ? "sube" : "baja"}">${bien ? "✔ Correcto." : "✘ La explicación más razonable es: " + OPC.find(o => o[0] === c.s)[1] + "."}</b> ${c.e}</div></div>
+        <div class="sim-botones"><button class="sim-btn" id="cc-sig">${G.k + 1 < G.casos.length ? "Siguiente caso ▶" : "Ver el resultado"}</button></div>`;
+      document.getElementById("cc-sig").onclick = () => { G.k++; G.k < G.casos.length ? pintar() : fin(); };
+    });
+  }
+  function fin() {
+    const nota = Math.round(100 * G.ok / G.casos.length), rc = C.record("correlacion", nota);
+    app.innerHTML = `<div class="calc-result"><div class="sim-nota">${G.ok} de ${G.casos.length}</div>
+      <div class="calc-big">${nota >= 85 ? "¡Pensamiento causal de primera!" : nota >= 55 ? "Buen criterio: sigue desconfiando de las correlaciones" : "Recuerda: correlación no implica causalidad"}</div>
+      <div class="calc-small">${rc.nuevo ? "🏅 ¡Tu mejor resultado!" : rc.record != null ? `Tu récord: ${rc.record} %.` : ""} Antes de aceptar una relación causal, pregúntate: ¿hay un mecanismo?, ¿qué ocurre primero?, ¿hay una tercera variable?, ¿la muestra es comparable?</div></div>
+      <details open><summary>Repaso de los casos</summary><ul>${G.hist.map(h => `<li>${h.bien ? "✔" : "✘"} ${h.d}<br><small><b>${h.s}.</b> ${h.e}</small></li>`).join("")}</ul></details>
+      <div class="sim-botones"><button class="sim-btn" id="cc-otra">🔄 Otros siete casos</button><a class="sim-btn sec" style="text-decoration:none" href="relaciona.html">🔗 Probar con datos reales</a></div>`;
+    document.getElementById("cc-otra").onclick = nueva;
+    C.evento("juegos/correlacion/fin", "¿Correlación o causalidad?: fin");
+  }
+  nueva();
+})();
+</script>
+```
+
+## Cuatro preguntas antes de hablar de causalidad
+
+1. **¿Hay un mecanismo?** Una explicación económica de por qué una variable movería a la otra.
+2. **¿Qué ocurre primero?** La causa debe preceder al efecto (prueba con [¿qué indicador se adelanta?](desfases.qmd)).
+3. **¿Hay una tercera variable?** La renta, el tamaño, la temperatura o el paso del tiempo suelen estar detrás.
+4. **¿La muestra es comparable?** Si los grupos se han formado solos (empresas que exportan, estudiantes que van a tutorías), no lo es.

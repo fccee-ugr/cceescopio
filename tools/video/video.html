@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>CCEEscopio D+I · vídeo de presentación</title>
+<!-- Vídeo de presentación de CCEEscopio. Toda la animación es una función del tiempo: render(t), con t en segundos.
+     Se graba fotograma a fotograma con tools/video/render.py (Chrome sin interfaz + ffmpeg). Para verlo en el navegador: abre este fichero y pulsa la barra espaciadora. -->
+<style>
+:root { --mg: #B5175F; --mgl: #F0479A; --or: #F29200; --bg: #10050B; --tx: #F6F1F3; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--tx); font-family: "Inter Display", "Inter", sans-serif; }
+canvas, #stage, .sc, #vig { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+.sc { display: none; will-change: transform, opacity; }
+#vig { background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); pointer-events: none; }
+.abs { position: absolute; }
+.kick { font-size: 30px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: var(--or); }
+.h { font-size: 80px; font-weight: 900; line-height: 1.04; letter-spacing: -.02em; }
+.h em { font-style: normal; background: linear-gradient(90deg, var(--mgl), var(--or)); -webkit-background-clip: text; color: transparent; }
+.sub { font-size: 38px; font-weight: 500; color: #D9CBD2; }
+.w { display: inline-block; overflow: hidden; vertical-align: bottom; padding: .12em .04em .22em; margin: -.12em -.04em -.22em; } .w > i { display: inline-block; font-style: normal; will-change: transform; }
+.glass { background: linear-gradient(160deg, rgba(255,255,255,.13), rgba(255,255,255,.04)); border: 1.5px solid rgba(255,255,255,.2); border-radius: 28px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+.chip { display: inline-block; font-size: 30px; font-weight: 700; padding: 12px 28px; border-radius: 999px; background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.28); white-space: nowrap; }
+.up { color: #4ADE80; } .dn { color: #FB7185; }
+/* 0 y 8: logo */
+#icon { position: absolute; left: 0; top: 0; width: 200px; height: 200px; transform-origin: 0 0; display: none; filter: drop-shadow(0 0 40px rgba(240,71,154,.45)); }
+#flash { position: absolute; width: 1400px; height: 1400px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.9), rgba(240,71,154,.45) 25%, rgba(242,146,0,.15) 45%, rgba(0,0,0,0) 65%); display: none; }
+.lock { position: absolute; left: 0; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 44px; }
+.lock .sp { width: 300px; height: 300px; flex: none; }
+.wm { font-size: 150px; font-weight: 900; letter-spacing: -.03em; white-space: nowrap; line-height: 1.1; }
+.wm span { -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 300% 100%; }
+.wm .a { background-image: linear-gradient(100deg, var(--mgl) 42%, #fff 50%, var(--mgl) 58%); } .wm .b { font-weight: 600; background-image: linear-gradient(100deg, #fff 42%, #FFD9A0 50%, #fff 58%); } .wm .c { background-image: linear-gradient(100deg, var(--or) 42%, #fff 50%, var(--or) 58%); }
+.tag { position: absolute; left: 0; width: 1920px; text-align: center; }
+/* 1: indicadores */
+#wallp { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; perspective: 1500px; }
+#wall { position: absolute; left: 960px; top: 560px; width: 0; height: 0; transform-style: preserve-3d; }
+.wc { position: absolute; width: 330px; height: 190px; padding: 20px 22px; border-radius: 22px; background: linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.05)); border: 1.5px solid rgba(255,255,255,.22); }
+.wc b { display: block; font-size: 25px; font-weight: 700; line-height: 1.15; height: 60px; } .wc small { font-size: 18px; color: #F6B6D3; font-weight: 600; } .wc svg { position: absolute; left: 20px; bottom: 16px; }
+#scrim { position: absolute; left: 110px; top: 60px; width: 1700px; height: 960px; background: radial-gradient(ellipse at center, rgba(16,5,11,.96) 34%, rgba(16,5,11,0) 70%); }
+#n99 { display: inline-block; padding: 0 30px; font-size: 330px; font-weight: 900; line-height: .9; letter-spacing: -.05em; background: linear-gradient(120deg, var(--mgl), var(--or)); -webkit-background-clip: text; color: transparent; }
+/* 2: hoy */
+.col { position: absolute; top: 330px; width: 400px; height: 500px; padding: 26px 28px; } .col h3 { font-size: 40px; font-weight: 800; margin-bottom: 14px; }
+.row { display: flex; gap: 16px; align-items: flex-start; margin: 20px 0; } .row .nb { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--mg); font-size: 22px; font-weight: 800; text-align: center; line-height: 40px; }
+.bar { height: 15px; border-radius: 8px; background: rgba(255,255,255,.85); margin: 3px 0 9px; } .bar.s { background: rgba(255,255,255,.4); } .pill { display: inline-block; font-size: 17px; font-weight: 700; background: rgba(240,71,154,.28); color: #FFD3E7; border-radius: 999px; padding: 2px 12px; }
+#tick { position: absolute; left: 0; top: 905px; width: 1920px; height: 92px; background: rgba(255,255,255,.07); border-top: 1.5px solid rgba(255,255,255,.18); border-bottom: 1.5px solid rgba(255,255,255,.18); overflow: hidden; }
+#tickin { position: absolute; top: 0; left: 0; white-space: nowrap; font-size: 38px; font-weight: 700; line-height: 90px; } #tickin span { margin-right: 70px; } #tickin b { font-weight: 900; margin: 0 14px; font-variant-numeric: tabular-nums; }
+/* 3: bolsa */
+.tile { position: absolute; width: 290px; height: 168px; padding: 18px 20px; transform-origin: 50% 0; } .tile b { font-size: 24px; font-weight: 700; display: block; } .tile { white-space: nowrap; } .tile .v { font-size: 36px; font-weight: 900; font-variant-numeric: tabular-nums; } .tile .p { font-size: 21px; font-weight: 800; }
+/* 4: simuladores */
+#carp { position: absolute; left: 0; top: 250px; width: 1920px; height: 760px; perspective: 2100px; } #car { position: absolute; left: 960px; top: 380px; transform-style: preserve-3d; }
+.cd { position: absolute; left: -270px; top: -330px; width: 540px; height: 660px; padding: 30px 34px; backface-visibility: hidden; background: linear-gradient(160deg, #3a1630, #1d0a17); border: 2px solid rgba(255,255,255,.25); border-radius: 34px; box-shadow: 0 40px 90px rgba(0,0,0,.6); }
+.cd .em { font-size: 104px; line-height: 1.15; font-family: "Noto Color Emoji"; } .cd h3 { font-size: 44px; font-weight: 900; line-height: 1.08; margin: 6px 0 8px; } .cd p { font-size: 26px; color: #E3D3DB; font-weight: 500; height: 70px; }
+/* 5: noticia */
+#paper { position: absolute; left: 610px; top: 215px; width: 1180px; height: 760px; background: #FFFDF6; color: #1b1b1b; padding: 34px 52px; box-shadow: 0 50px 120px rgba(0,0,0,.7); font-family: "Lora", "GFS Baskerville", serif; }
+#paper .meta { display: flex; justify-content: space-between; font: 600 17px "Inter"; letter-spacing: .06em; text-transform: uppercase; color: #555; border-bottom: 1.5px solid #1b1b1b; padding-bottom: 8px; }
+#paper .mast { text-align: center; font-size: 82px; font-weight: 700; border-bottom: 5px double #1b1b1b; padding: 4px 0 10px; } #paper .sec { font: 800 19px "Inter"; letter-spacing: .1em; color: var(--mg); text-transform: uppercase; margin-top: 20px; }
+#paper .hl { font-size: 68px; font-weight: 700; line-height: 1.08; margin: 8px 0 20px; } #paper .tu { border: 2px dashed #B9AE96; border-radius: 12px; padding: 18px 24px; font: 600 20px "Inter"; color: #777; }
+#paper .tu div { font: 700 40px "Lora", serif; color: #1b1b1b; min-height: 54px; margin-top: 4px; } .ck { display: inline-block; font: 700 22px "Inter"; color: #2E7D32; margin: 16px 20px 0 0; }
+#stamp { position: absolute; right: 60px; bottom: 50px; width: 250px; height: 250px; border-radius: 50%; border: 9px solid var(--mg); color: var(--mg); text-align: center; font: 900 80px "Inter Display"; line-height: 1; padding-top: 60px; background: rgba(255,253,246,.9); } #stamp small { display: block; font-size: 24px; letter-spacing: .05em; margin-top: 6px; }
+/* 6: juegos */
+#phone { position: absolute; left: 150px; top: 300px; width: 360px; height: 660px; border-radius: 52px; background: #0b0508; border: 5px solid #6b5562; box-shadow: 0 40px 100px rgba(0,0,0,.6); padding: 44px 30px; text-align: center; }
+#qr { width: 290px; height: 290px; background: #fff; border-radius: 18px; margin: 30px auto 26px; padding: 15px; } #rank { position: absolute; left: 640px; top: 300px; width: 1130px; height: 510px; padding: 30px 40px; }
+.rk { position: absolute; left: 40px; width: 1050px; height: 70px; } .rk .nm { position: absolute; left: 0; width: 330px; font-size: 31px; font-weight: 700; line-height: 70px; white-space: nowrap; } .rk .bx { position: absolute; left: 340px; top: 9px; height: 52px; border-radius: 12px; } .rk .pt { position: absolute; top: 0; font-size: 34px; font-weight: 900; line-height: 70px; font-variant-numeric: tabular-nums; }
+/* 7: titulaciones */
+.orb { position: absolute; left: 0; top: 0; font-size: 36px; font-weight: 800; padding: 16px 34px; border-radius: 999px; white-space: nowrap; border: 2px solid rgba(255,255,255,.35); will-change: transform; }
+/* 8: cierre */
+#url { position: absolute; left: 0; width: 1920px; top: 640px; text-align: center; } #url span { display: inline-block; font-size: 50px; font-weight: 800; padding: 20px 54px; border-radius: 999px; background: linear-gradient(90deg, var(--mg), var(--or)); box-shadow: 0 20px 60px rgba(181,23,95,.5); }
+#plate { position: absolute; left: 560px; top: 810px; width: 800px; height: 170px; background: #fff; border-radius: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 60px rgba(0,0,0,.5); } #plate img { height: 124px; }
+</style></head><body>
+<canvas id="bg" width="1920" height="1080"></canvas>
+<div id="stage"></div>
+<div id="flash"></div>
+<svg id="icon" viewBox="0 0 200 200"><line x1="128" y1="128" x2="178" y2="178" stroke="#B5175F" stroke-width="22" stroke-linecap="round"/><circle cx="86" cy="86" r="66" fill="#fff" stroke="#F29200" stroke-width="16"/>
+<rect x="50" y="98" width="15" height="28" rx="3" fill="#B5175F"/><rect x="72" y="82" width="15" height="44" rx="3" fill="#B5175F"/><rect x="94" y="66" width="15" height="60" rx="3" fill="#B5175F"/><rect x="116" y="74" width="15" height="52" rx="3" fill="#B5175F" opacity=".55"/>
+<polyline points="50,86 72,70 94,54 124,48" fill="none" stroke="#F29200" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="124" cy="48" r="7" fill="#F29200"/></svg>
+<canvas id="fx" width="1920" height="1080"></canvas>
+<div id="vig"></div>
+<script src="datos.js"></script>
+<script>
+"use strict";
+const W = 1920, H = 1080, $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), seg = (t, a, b) => clamp((t - a) / (b - a)), lerp = (a, b, p) => a + (b - a) * p;
+const eio = x => { x = clamp(x); return x * x * (3 - 2 * x); }, eo = x => 1 - Math.pow(1 - clamp(x), 3), eback = x => { x = clamp(x); const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+function rng(s) { return () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+const es = (v, d = 0) => v.toLocaleString("es-ES", {minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: "always"});
+const pct = v => (v > 0 ? "+" : "") + es(v, 2) + " %";
+
+/* ---------- escenas y tiempos ---------- */
+const ESC = [["logo", 7.4], ["ind", 6.6], ["hoy", 7.2], ["bolsa", 7.8], ["sim", 8.6], ["news", 6.8], ["juegos", 7.2], ["tit", 6.6], ["fin", 8.2]];
+let acc = 0; const T0 = {}; ESC.forEach(e => { T0[e[0]] = acc; acc += e[1]; }); const DUR = acc, X = 0.35;
+const stage = $("#stage"), EL = {};
+ESC.forEach(([id]) => { const d = document.createElement("div"); d.className = "sc"; d.id = "s-" + id; stage.appendChild(d); EL[id] = d; });
+function rvInit(root) { $$(".rv", root).forEach(el => { el.innerHTML = el.innerHTML.split(/(<em>.*?<\/em>|\s+)/).filter(x => x && x.trim()).map(x => x.startsWith("<em>") ? x.slice(4, -5).split(/\s+/).map(y => `<span class="w"><i><em>${y}</em></i></span>`).join(" ") : `<span class="w"><i>${x}</i></span>`).join(" "); }); }
+function rv(el, p) { const ws = el._w || (el._w = $$(".w > i", el)), n = ws.length; ws.forEach((w, k) => { const q = eo(clamp(p * (1 + 0.6) - 0.6 * k / n)); w.style.transform = `translateY(${(1 - q) * 115}%)`; }); }
+const show = (el, o, tr = "") => { el.style.opacity = o; el.style.transform = tr; };
+const lockHTML = `<div class="lock" style="top:270px"><div class="sp"></div><div class="wm"><span class="a">CCEE</span><span class="b">scopio</span> <span class="c">D+I</span></div></div>`;
+
+/* ---------- fondo: partículas de datos ---------- */
+const bg = $("#bg").getContext("2d"), fx = $("#fx").getContext("2d");
+const COL = ["#F29200", "#F0479A", "#B5175F", "#FFE2F0"], SPR = COL.map(c => { const k = document.createElement("canvas"); k.width = k.height = 64; const g = k.getContext("2d"), r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, c); r.addColorStop(.25, c + "cc"); r.addColorStop(1, c + "00"); g.fillStyle = r; g.fillRect(0, 0, 64, 64); return k; });
+const R = rng(20261124), P = [];
+function addT(n, col, f) { for (let i = 0; i < n; i++) { const [x, y] = f(); P.push({tx: x, ty: y, c: col}); } }
+addT(430, 0, () => { const a = R() * 6.2832, r = 58 + R() * 16; return [86 + r * Math.cos(a), 86 + r * Math.sin(a)]; });                              // lente
+addT(170, 2, () => { const u = R(), o = (R() - .5) * 20; return [128 + 50 * u + o * .7, 128 + 50 * u - o * .7]; });                                // mango
+[[50, 98, 28], [72, 82, 44], [94, 66, 60], [116, 74, 52]].forEach((b, k) => addT(70 + b[2], k === 3 ? 3 : 1, () => [b[0] + R() * 15, b[1] + R() * b[2]])); // barras
+const PL = [[50, 86], [72, 70], [94, 54], [124, 48]]; addT(120, 0, () => { const k = Math.floor(R() * 3), u = R(); return [lerp(PL[k][0], PL[k + 1][0], u) + (R() - .5) * 5, lerp(PL[k][1], PL[k + 1][1], u) + (R() - .5) * 5]; });
+addT(45, 0, () => { const a = R() * 6.2832, r = Math.sqrt(R()) * 7; return [124 + r * Math.cos(a), 48 + r * Math.sin(a)]; });
+for (let i = 0; i < 330; i++) P.push({c: Math.floor(R() * 3)});                                                                                      // ambiente
+P.forEach(p => { p.hx = (R() - .5) * 3400; p.hy = (R() - .5) * 2000; p.hz = R() * 1700 - 500; p.s = 5 + R() * 9; p.d = R(); p.ph = R() * 6.28; });
+const L = {x: 700, y: 250, s: 2.6};      // posición y escala del icono (lo fijan las escenas 0 y 8)
+let PM = 0, PA = 1, AMB = 0.5;           // convergencia hacia el logo, opacidad de las partículas del logo y del ambiente
+function fondo(t) {
+  bg.globalCompositeOperation = "source-over"; bg.fillStyle = "#10050B"; bg.fillRect(0, 0, W, H);
+  [[520 + 260 * Math.sin(t * .11), 380 + 160 * Math.cos(t * .09), 900, "181,23,95", .34], [1450 + 220 * Math.cos(t * .08), 760 + 140 * Math.sin(t * .13), 820, "242,146,0", .2]].forEach(g => {
+    const r = bg.createRadialGradient(g[0], g[1], 0, g[0], g[1], g[2]); r.addColorStop(0, `rgba(${g[3]},${g[4]})`); r.addColorStop(1, `rgba(${g[3]},0)`); bg.fillStyle = r; bg.fillRect(0, 0, W, H); });
+  bg.globalCompositeOperation = "lighter";
+  const ca = Math.cos(t * .05), sa = Math.sin(t * .05), f = 1000;
+  for (const p of P) {
+    const x = p.hx * ca - p.hz * sa, z = p.hx * sa + p.hz * ca + 700, y = p.hy + 40 * Math.sin(t * .4 + p.ph);
+    if (z < -f + 80) continue;
+    const k = f / (f + z); let sx = W / 2 + x * k, sy = H / 2 + y * k, sz = p.s * k * 2.2, al = AMB * clamp(k) * (0.6 + 0.4 * Math.sin(t * 1.3 + p.ph));
+    if (p.tx !== undefined) {
+      const m = eio(clamp(PM * 1.5 - p.d * 0.5));
+      sx = lerp(sx, L.x + p.tx * L.s, m) + (1 - m) * m * 260 * Math.sin(p.ph * 3); sy = lerp(sy, L.y + p.ty * L.s, m) + (1 - m) * m * 260 * Math.cos(p.ph * 3);
+      sz = lerp(sz, 7 + L.s * 2.2, m); al = lerp(al, PA, m);
+    }
+    if (al <= 0.01 || sx < -40 || sx > W + 40 || sy < -40 || sy > H + 40) continue;
+    bg.globalAlpha = Math.min(1, al); bg.drawImage(SPR[p.c], sx - sz, sy - sz, sz * 2, sz * 2);
+  }
+  bg.globalAlpha = 1;
+}
+const icon = $("#icon"), flash = $("#flash");
+function ponIcono(o) { icon.style.display = o > 0 ? "block" : "none"; icon.style.opacity = o; icon.style.transform = `translate(${L.x}px,${L.y}px) scale(${L.s})`; }
+function ponFlash(o, cx, cy) { flash.style.display = o > 0.01 ? "block" : "none"; flash.style.opacity = o; flash.style.left = (cx - 700) + "px"; flash.style.top = (cy - 700) + "px"; }
+let LOCK = null;
+function medirLock(root) { const r = $(".sp", root).getBoundingClientRect(); return {x: r.left, y: r.top, s: 1.5}; }
+function logoAnim(root, t, t0) {     // ensamblaje del logo: común a la apertura y al cierre
+  const big = {x: 960 - 286, y: 420 - 286 + 30, s: 2.86}, mv = eio(seg(t, t0 + 2.0, t0 + 3.0));
+  L.x = lerp(big.x, LOCK.x, mv); L.y = lerp(big.y, LOCK.y, mv); L.s = lerp(big.s, LOCK.s, mv);
+  PM = seg(t, t0, t0 + 1.9); const cr = seg(t, t0 + 1.7, t0 + 2.2); PA = 1 - cr * 0.96; ponIcono(cr);
+  const fl = seg(t, t0 + 1.6, t0 + 1.95) * (1 - seg(t, t0 + 1.95, t0 + 2.9)); ponFlash(fl * 0.85, L.x + 100 * L.s, L.y + 100 * L.s);
+  const wm = $(".wm", root), p = eo(seg(t, t0 + 2.5, t0 + 3.5)); wm.style.clipPath = `inset(-20% ${100 - 100 * p}% -20% 0)`; wm.style.transform = `translateX(${(1 - p) * -70}px)`;
+  const sw = seg(t, t0 + 3.3, t0 + 4.3); $$("span", wm).forEach(s => s.style.backgroundPosition = `${100 - 100 * sw}% 0`);
+}
+
+/* ---------- 0. Apertura ---------- */
+EL.logo.innerHTML = `<div class="abs h rv" id="l-q" style="left:0;top:420px;width:1920px;padding:0 200px;text-align:center;font-size:96px">Cada día, la economía genera <em>millones de datos</em></div>${lockHTML}
+  <div class="tag sub" id="l-t1" style="top:625px;font-size:56px;font-weight:700;color:#FFC56B">Observando la economía y la empresa</div>
+  <div class="tag sub" id="l-t2" style="top:730px">Docencia + Investigación · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada</div>`;
+const S = {};
+S.logo = t => {
+  AMB = 0.75; const q = $("#l-q"); rv(q, seg(t, 0.25, 1.3)); q.style.opacity = 1 - seg(t, 2.1, 2.6);
+  logoAnim(EL.logo, t, 2.2);
+  show($("#l-t1"), eo(seg(t, 5.2, 5.8)), `translateY(${(1 - eo(seg(t, 5.2, 5.8))) * 30}px)`); show($("#l-t2"), eo(seg(t, 5.6, 6.2)));
+};
+
+/* ---------- 1. 99 indicadores ---------- */
+const IND = ["Inflación (IPCA)", "Tasa de paro", "PIB: crecimiento", "Pernoctaciones en hoteles", "Deuda pública", "Euríbor a 3 meses", "Índice de Gini", "Energías renovables", "Población", "Exportaciones", "Paro juvenil", "Precio de la vivienda", "I+D sobre el PIB", "Confianza del consumidor",
+  "Empresas que usan IA", "Riesgo de pobreza", "Producción industrial", "Bono a 10 años", "Comercio electrónico", "Esperanza de vida", "Tasa de empleo", "Precio de la electricidad", "Cuenta corriente", "Emisiones de CO₂", "Salario mínimo", "Turistas internacionales", "Nuevas empresas", "PIB por habitante"];
+{ const r = rng(77); let h = ""; IND.forEach((n, i) => { const cx = i % 7, cy = Math.floor(i / 7); let v = 50, d = ""; for (let k = 0; k <= 24; k++) { v = clamp(v + (r() - .46) * 22, 8, 92); d += `${k ? "L" : "M"}${(k * 12).toFixed(0)},${(78 - v * .7).toFixed(1)}`; }
+  h += `<div class="wc" style="left:${(cx - 3.5) * 366}px;top:${(cy - 2) * 226}px"><b>${n}</b><small>${["Mensual", "Trimestral", "Anual"][i % 3]} · Eurostat</small><svg width="288" height="80"><path d="${d}" fill="none" stroke="${i % 2 ? "#F29200" : "#F0479A"}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1"/></svg></div>`; });
+  EL.ind.innerHTML = `<div id="wallp"><div id="wall">${h}</div></div><div id="scrim"></div>
+  <div class="abs" style="left:0;top:215px;width:1920px;text-align:center"><div id="n99">0</div><div class="h rv" id="i-h" style="margin-top:6px">indicadores <em>en directo</em></div>
+  <div id="i-ch" style="margin-top:34px">${["España", "Andalucía", "Comunidades autónomas", "27 países de la UE"].map(c => `<span class="chip" style="margin:0 9px">${c}</span>`).join("")}</div>
+  <div class="sub" id="i-s" style="margin-top:30px">Datos oficiales de Eurostat · gráficos, mapas y descarga en CSV</div></div>`; }
+S.ind = t => {
+  AMB = 0.3; $("#wall").style.transform = `rotateX(54deg) rotateZ(-20deg) translate3d(${-t * 46}px,${-t * 34 + 80}px,0)`;
+  $$(".wc").forEach((c, i) => { const p = eo(seg(t, 0.1 + (i % 7) * 0.07 + Math.floor(i / 7) * 0.1, 0.9 + (i % 7) * 0.07 + Math.floor(i / 7) * 0.1)); c.style.opacity = p; c.style.transform = `translateZ(${(1 - p) * 500}px)`; $("path", c).style.strokeDashoffset = 1 - eio(seg(t, 0.6 + i * 0.07, 2.4 + i * 0.07)); });
+  $("#scrim").style.opacity = seg(t, 0.5, 1.3); const n = $("#n99"); n.textContent = Math.round(99 * eo(seg(t, 0.8, 2.4))); show(n, seg(t, 0.7, 1.1), `scale(${0.8 + 0.2 * eback(seg(t, 0.7, 1.5))})`);
+  rv($("#i-h"), seg(t, 1.5, 2.4)); $$("#i-ch .chip").forEach((c, i) => show(c, eo(seg(t, 2.6 + i * 0.18, 3.1 + i * 0.18)), `translateY(${(1 - eo(seg(t, 2.6 + i * 0.18, 3.1 + i * 0.18))) * 26}px)`)); show($("#i-s"), eo(seg(t, 3.6, 4.2)));
+};
+
+/* ---------- 2. Hoy en la economía ---------- */
+{ const pills = ["📊 Inflación", "📊 Tasa de paro", "📈 Bolsa al día", "📊 PIB", "📊 Euríbor", "📊 Turismo", "📊 Deuda pública", "📊 Exportaciones", "📊 Vivienda"]; const r = rng(5);
+  const col = (x, f, n, k) => `<div class="col glass" style="left:${x}px"><h3><span style="font-family:'Noto Color Emoji'">${f}</span> ${n}</h3>${[0, 1, 2, 3].map(j => `<div class="row"><span class="nb">${j + 1}</span><div style="flex:1"><div class="bar" style="width:${70 + r() * 30}%"></div><div class="bar s" style="width:${40 + r() * 45}%"></div>${j < 3 ? `<span class="pill">${pills[(k * 3 + j) % 9]}</span>` : ""}</div></div>`).join("")}</div>`;
+  const tk = DATA.res.filter(x => !/vix/.test(x.id)).slice(0, 17).map(x => `<span>${x.n}<b>${es(x.v, x.v < 1000 ? 2 : 0)}</b><i class="${x.d1 >= 0 ? "up" : "dn"}" style="font-style:normal">${x.d1 >= 0 ? "▲" : "▼"} ${pct(x.d1)}</i></span>`).join("");
+  EL.hoy.innerHTML = `<div class="abs" style="left:110px;top:90px"><div class="kick">Hoy en la economía</div><div class="h rv" id="h-h" style="margin-top:10px">Las noticias del día, <em>antes de las 9:00</em></div></div>
+  <svg class="abs" id="h-ck" style="left:130px;top:380px" width="380" height="380" viewBox="-110 -110 220 220"><circle r="100" fill="rgba(255,255,255,.08)" stroke="#F0479A" stroke-width="6"/>${Array.from({length: 12}, (_, i) => `<line x1="0" y1="-88" x2="0" y2="-${i % 3 ? 80 : 74}" stroke="#fff" stroke-width="${i % 3 ? 2.5 : 5}" transform="rotate(${i * 30})"/>`).join("")}
+  <line id="h-hh" x1="0" y1="8" x2="0" y2="-50" stroke="#F29200" stroke-width="9" stroke-linecap="round"/><line id="h-mm" x1="0" y1="10" x2="0" y2="-76" stroke="#fff" stroke-width="6" stroke-linecap="round"/><circle r="8" fill="#F29200"/></svg>
+  <div class="abs" id="h-9" style="left:130px;top:775px;width:380px;text-align:center;font-size:80px;font-weight:900;color:#FFC56B">9:00</div>
+  ${col(600, "🇪🇸", "España", 0)}${col(1030, "🇪🇺", "Europa", 1)}${col(1460, "🌍", "Mundo", 2)}
+  <div id="tick"><div id="tickin">${tk}${tk}${tk}</div></div>`; }
+S.hoy = t => {
+  AMB = 0.3; rv($("#h-h"), seg(t, 0.3, 1.3)); const m = eio(seg(t, 0.6, 2.6)); show($("#h-ck"), eo(seg(t, 0.3, 0.9)), `scale(${0.7 + 0.3 * eback(seg(t, 0.3, 1.1))})`);
+  $("#h-mm").setAttribute("transform", `rotate(${360 * m})`); $("#h-hh").setAttribute("transform", `rotate(${240 + 30 * m})`); show($("#h-9"), seg(t, 2.5, 2.8), `scale(${0.6 + 0.4 * eback(seg(t, 2.5, 3.1))})`);
+  $$(".col", EL.hoy).forEach((c, k) => { const p = eo(seg(t, 0.9 + k * 0.3, 1.7 + k * 0.3)); show(c, p, `translateY(${(1 - p) * 90}px)`);
+    $$(".row", c).forEach((r, j) => { const q = eo(seg(t, 1.6 + k * 0.3 + j * 0.28, 2.2 + k * 0.3 + j * 0.28)); show(r, q, `translateX(${(1 - q) * 70}px)`); }); });
+  show($("#tick"), eo(seg(t, 2.8, 3.4)), `translateY(${(1 - eo(seg(t, 2.8, 3.4))) * 60}px)`); $("#tickin").style.transform = `translateX(${-(t * 190) % ($("#tickin").scrollWidth / 3)}px)`;
+};
+
+/* ---------- 3. Bolsa al día (datos reales del IBEX 35) ---------- */
+const CH = {x: 110, y: 340, w: 1120, h: 520}; let IBP = [];
+{ const d = DATA.ibex.d, c = DATA.ibex.c, lo = Math.min(...c) * 0.92, hi = Math.max(...c) * 1.04, d0 = d[0], d1 = d[d.length - 1];
+  IBP = c.map((v, i) => [CH.x + (d[i] - d0) / (d1 - d0) * CH.w, CH.y + CH.h - (v - lo) / (hi - lo) * CH.h, v, new Date(d[i] * 864e5).getUTCFullYear()]);
+  let ejes = ""; for (let v = Math.ceil(lo / 2500) * 2500; v <= hi; v += 2500) { const y = CH.y + CH.h - (v - lo) / (hi - lo) * CH.h; ejes += `<line x1="${CH.x}" x2="${CH.x + CH.w}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,.13)" stroke-width="2"/><text x="${CH.x - 14}" y="${y + 8}" text-anchor="end" font-size="22" fill="#B9A9B1">${es(v)}</text>`; }
+  let anos = ""; const y0 = new Date(d0 * 864e5).getUTCFullYear(); for (let a = y0 + 1; a <= 2026; a += 1) { const x = CH.x + (Date.UTC(a, 0, 1) / 864e5 - d0) / (d1 - d0) * CH.w; anos += `<text x="${x}" y="${CH.y + CH.h + 36}" text-anchor="middle" font-size="22" fill="#B9A9B1">${a}</text>`; }
+  const ti = ["sp500", "eurostoxx50", "nikkei", "brent", "oro", "bitcoin"].map(id => DATA.res.find(r => r.id === id)).filter(Boolean);
+  const sp = (a, col) => { const mn = Math.min(...a), mx = Math.max(...a); return `<svg width="250" height="44" style="display:block;margin-top:2px"><polyline fill="none" stroke="${col}" stroke-width="3.5" stroke-linejoin="round" points="${a.map((v, i) => `${(i / (a.length - 1) * 248 + 1).toFixed(1)},${(41 - (v - mn) / (mx - mn || 1) * 38).toFixed(1)}`).join(" ")}"/></svg>`; };
+  EL.bolsa.innerHTML = `<div class="abs" style="left:110px;top:80px"><div class="kick">Bolsa al día</div><div class="h rv" id="b-h" style="margin-top:10px">Los mercados, <em>tres veces al día</em></div></div>
+  <svg class="abs" width="1920" height="1080"><defs><linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#F0479A"/><stop offset="1" stop-color="#F29200"/></linearGradient><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0479A" stop-opacity=".42"/><stop offset="1" stop-color="#F0479A" stop-opacity="0"/></linearGradient>
+  <radialGradient id="gh"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#F29200" stop-opacity=".9"/><stop offset="1" stop-color="#F29200" stop-opacity="0"/></radialGradient></defs>
+  <g id="b-ax">${ejes}${anos}</g><path id="b-ar" fill="url(#ga)"/><path id="b-ln" fill="none" stroke="url(#gl)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle id="b-hd" r="34" fill="url(#gh)"/></svg>
+  <div class="abs glass" id="b-lb" style="left:${CH.x + 30}px;top:${CH.y + 14}px;padding:16px 26px;border-radius:20px"><div style="font-size:26px;font-weight:700;color:#FFC56B">IBEX 35 · <span id="b-an"></span></div><div id="b-vl" style="font-size:76px;font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums">0</div><div id="b-a1" class="up" style="font-size:28px;font-weight:800"></div></div>
+  ${ti.map((r, i) => `<div class="tile glass" style="left:${1300 + (i % 2) * 310}px;top:${340 + Math.floor(i / 2) * 188}px"><b>${r.n}</b><span class="v">${es(r.v, r.v < 1000 ? 2 : 0)}</span> <span class="p ${r.d1 >= 0 ? "up" : "dn"}">${r.d1 >= 0 ? "▲" : "▼"} ${pct(r.d1)}</span>${sp(r.sp, r.sp.at(-1) >= r.sp[0] ? "#4ADE80" : "#FB7185")}</div>`).join("")}
+  <div class="abs sub" id="b-ft" style="left:110px;top:935px;font-size:32px">Cotizaciones reales al cierre del ${DATA.fecha} · índices, petróleo, oro y empresas del IBEX 35</div>`; }
+S.bolsa = t => {
+  AMB = 0.25; rv($("#b-h"), seg(t, 0.3, 1.3)); $("#b-ax").style.opacity = seg(t, 0.5, 1.1);
+  const p = eio(seg(t, 0.9, 4.6)), n = Math.max(2, Math.round(p * (IBP.length - 1)) + 1), pts = IBP.slice(0, n), u = pts[n - 1];
+  const d = pts.map((q, i) => `${i ? "L" : "M"}${q[0].toFixed(1)},${q[1].toFixed(1)}`).join("");
+  $("#b-ln").setAttribute("d", d); $("#b-ar").setAttribute("d", `${d}L${u[0].toFixed(1)},${CH.y + CH.h}L${CH.x},${CH.y + CH.h}Z`);
+  const hd = $("#b-hd"); hd.setAttribute("cx", u[0]); hd.setAttribute("cy", u[1]); hd.setAttribute("r", 30 + 8 * Math.sin(t * 6)); const o = seg(t, 0.8, 1.1); hd.style.opacity = o; $("#b-ln").style.opacity = o; $("#b-ar").style.opacity = o;
+  show($("#b-lb"), eo(seg(t, 0.9, 1.4))); $("#b-vl").textContent = es(u[2]); $("#b-an").textContent = u[3]; const a1 = DATA.res[0].a1; $("#b-a1").textContent = p > 0.995 ? `${a1 >= 0 ? "▲" : "▼"} ${pct(a1)} en un año` : "";
+  $$(".tile", EL.bolsa).forEach((e, i) => { const q = eo(seg(t, 3.3 + i * 0.22, 4.0 + i * 0.22)); show(e, q, `perspective(900px) rotateX(${(1 - q) * -80}deg)`); }); show($("#b-ft"), eo(seg(t, 4.8, 5.4)));
+};
+
+/* ---------- 4. Simuladores ---------- */
+const SIM = [["🏦", "Gobernador del Banco Central", "Fija los tipos de interés y doma la inflación sin provocar una recesión"], ["💼", "Gestiona una cartera", "100.000 € en un periodo secreto de la historia de la bolsa"],
+  ["💶", "Llega a fin de mes", "Un hogar, doce meses y la inflación real de cada gasto"], ["🏖️", "Gestiona tu destino turístico", "Empleo, vivienda, residentes y sostenibilidad"]];
+EL.sim.innerHTML = `<div class="abs" style="left:0;top:70px;width:1920px;text-align:center"><div class="kick">Simuladores con datos reales</div><div class="h rv" id="m-h" style="margin-top:8px">Decide. Equivócate. <em>Aprende.</em></div></div>
+  <div id="carp"><div id="car">${SIM.map((s, i) => `<div class="cd" style="transform:rotateY(${i * 50}deg) translateZ(760px);border-top:10px solid ${i % 2 ? "#F29200" : "#F0479A"}"><div class="em">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p><svg class="vz" width="472" height="250" viewBox="0 0 472 250"></svg></div>`).join("")}</div></div>`;
+function viz(i, p) {
+  const g = []; const tx = (x, y, s, c = "#fff", a = "start", w = 700, f = 22) => `<text x="${x}" y="${y}" font-size="${f}" font-weight="${w}" fill="${c}" text-anchor="${a}">${s}</text>`;
+  if (i === 0) { const tp = 0.5 + 3.5 * eio(seg(p, 0.1, 0.7)); g.push(`<rect x="0" y="14" width="330" height="12" rx="6" fill="rgba(255,255,255,.18)"/><rect x="0" y="14" width="${330 * tp / 5}" height="12" rx="6" fill="#F0479A"/><circle cx="${330 * tp / 5}" cy="20" r="16" fill="#fff"/>${tx(472, 30, es(tp, 2) + " %", "#F0479A", "end", 900, 34)}`);
+    g.push(`<line x1="0" x2="472" y1="205" y2="205" stroke="#4ADE80" stroke-width="3" stroke-dasharray="8 6"/>${tx(472, 236, "Objetivo: 2 %", "#4ADE80", "end")}`); let d = "";
+    for (let k = 0; k <= 8; k++) { const inf = 2 + 6.5 * Math.exp(-k * 0.42 * eio(seg(p, 0.15, 0.9)) * 1.2), x = k * 59, y = 245 - inf * 20; d += `${k ? "L" : "M"}${x},${y.toFixed(1)}`; g.push(`<circle cx="${x}" cy="${y.toFixed(1)}" r="7" fill="#F29200"/>`); } g.push(`<path d="${d}" fill="none" stroke="#F29200" stroke-width="5"/>${tx(0, 78, "Inflación", "#F29200")}`); }
+  if (i === 1) [["IBEX 35", 20, "#F0479A"], ["S&P 500", 30, "#F29200"], ["Oro", 10, "#E8C547"], ["Depósito", 40, "#4ADE80"]].forEach((a, k) => { const q = eo(seg(p, 0.1 + k * 0.12, 0.6 + k * 0.12));
+    g.push(`${tx(0, 44 + k * 58, a[0])}<rect x="130" y="24" width="270" height="28" rx="8" fill="rgba(255,255,255,.14)" transform="translate(0,${k * 58})"/><rect x="130" y="${24 + k * 58}" width="${270 * a[1] / 40 * q}" height="28" rx="8" fill="${a[2]}"/>${tx(472, 46 + k * 58, Math.round(a[1] * q) + " %", "#fff", "end", 900, 26)}`); });
+  if (i === 2) { const r = rng(9); let s = 0; for (let k = 0; k < 12; k++) { s += (r() - 0.4) * 60; const q = eo(seg(p, 0.08 + k * 0.05, 0.4 + k * 0.05)), hh = Math.abs(s) * q; g.push(`<rect x="${k * 39 + 4}" y="${s >= 0 ? 130 - hh : 130}" width="29" height="${hh}" rx="5" fill="${s >= 0 ? "#4ADE80" : "#FB7185"}"/>`); }
+    g.push(`<line x1="0" x2="472" y1="130" y2="130" stroke="#fff" stroke-width="2"/>${tx(0, 240, "Ahorro mes a mes", "#E3D3DB")}${tx(472, 240, "ene → dic", "#E3D3DB", "end")}`); }
+  if (i === 3) [["Empleo", .82, "#F0479A"], ["Residentes", .64, "#F29200"], ["Sostenib.", .71, "#4ADE80"], ["Vivienda", .5, "#7DD3FC"]].forEach((a, k) => { const q = a[1] * eo(seg(p, 0.1 + k * 0.1, 0.75 + k * 0.1)), cx = 59 + k * 118, c = 2 * Math.PI * 44;
+    g.push(`<circle cx="${cx}" cy="95" r="44" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="13"/><circle cx="${cx}" cy="95" r="44" fill="none" stroke="${a[2]}" stroke-width="13" stroke-linecap="round" stroke-dasharray="${c * q} ${c}" transform="rotate(-90 ${cx} 95)"/>${tx(cx, 105, Math.round(q * 100), "#fff", "middle", 900, 30)}${tx(cx, 185, a[0], "#E3D3DB", "middle", 700, 21)}`); });
+  return g.join("");
+}
+S.sim = t => {
+  AMB = 0.3; rv($("#m-h"), seg(t, 0.25, 1.5)); let ang = 0; const st = 1.0, hold = 1.85; for (let k = 1; k < 4; k++) ang += eio(seg(t, st + k * hold - 0.45, st + k * hold + 0.45)) * 50;
+  const inn = eo(seg(t, 0.4, 1.4)); $("#car").style.transform = `translateZ(${-760 - (1 - inn) * 900}px) rotateY(${-ang - (1 - inn) * 110}deg)`; $("#carp").style.opacity = seg(t, 0.4, 0.9);
+  $$(".vz", EL.sim).forEach((v, i) => { v.innerHTML = viz(i, seg(t, st + i * hold - 0.3, st + i * hold + 1.5)); });
+};
+
+/* ---------- 5. Crea tu noticia ---------- */
+const TIT = "«Los precios dan un respiro a las familias»";
+EL.news.innerHTML = `<div class="abs" style="left:100px;top:300px;width:470px"><div class="kick">Crea tu noticia</div><div class="h rv" id="n-h" style="margin-top:14px;font-size:70px">Bajo cada gráfica, <em>tu titular</em> frente al nuestro</div><div class="sub" id="n-s" style="margin-top:34px;font-size:32px">El Periódico CCEEscopio publica el suyo con los últimos datos… y puntúa el parecido</div></div>
+  <div id="paper"><div class="meta"><span>Edición digital</span><span>Facultad de CC. Económicas y Empresariales · UGR</span></div><div class="mast">El Periódico CCEEscopio</div><div class="sec">Precios e inflación · Redacta tu titular</div>
+  <div class="hl">¿Qué titular escribirías tú?</div><div class="tu">TU TITULAR<div id="n-t"></div></div>
+  <div id="n-ck">${["Tema", "Territorio", "Dirección", "Cifra", "Periodo", "Contexto"].map(c => `<span class="ck">✔ ${c}</span>`).join("")}</div><div id="stamp">92<small>/100 PUNTOS</small></div></div>`;
+S.news = t => {
+  AMB = 0.3; rv($("#n-h"), seg(t, 0.3, 1.5)); show($("#n-s"), eo(seg(t, 1.6, 2.2))); const e = eo(seg(t, 0.35, 1.75));
+  show($("#paper"), seg(t, 0.35, 0.6), `rotate(${(1 - e) * 1260 - 2.5 * e}deg) scale(${0.03 + 0.97 * e})`);
+  const k = Math.round(TIT.length * seg(t, 2.1, 3.9)); $("#n-t").innerHTML = TIT.slice(0, k) + (k < TIT.length && Math.floor(t * 4) % 2 ? "▍" : "");
+  $$(".ck", EL.news).forEach((c, i) => show(c, seg(t, 4.0 + i * 0.13, 4.15 + i * 0.13), `scale(${0.5 + 0.5 * eback(seg(t, 4.0 + i * 0.13, 4.4 + i * 0.13))})`));
+  const s = seg(t, 4.9, 5.25); show($("#stamp"), s, `rotate(-14deg) scale(${3 - 2 * eo(s)})`);
+};
+
+/* ---------- 6. Juegos en clase ---------- */
+const EQ = [["Las Keynesianas", "#F0479A", 62, 11], ["Team Pareto", "#F29200", 70, 5.8], ["Los Gini", "#4ADE80", 48, 14], ["Laspeyres F. C.", "#7DD3FC", 66, 4.5], ["Grupo 3", "#E8C547", 55, 9.2]];
+{ const r = rng(42), n = 25, m = []; for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) { const fz = (a, b) => x >= a && x < a + 7 && y >= b && y < b + 7, f = fz(0, 0) || fz(n - 7, 0) || fz(0, n - 7); let on = r() > .5;
+    if (f) { const lx = x >= n - 7 ? x - (n - 7) : x, ly = y >= n - 7 ? y - (n - 7) : y; on = lx === 0 || lx === 6 || ly === 0 || ly === 6 || (lx >= 2 && lx <= 4 && ly >= 2 && ly <= 4); }
+    if ((x === 7 && y < 8) || (y === 7 && x < 8) || (x === n - 8 && y < 8) || (y === 7 && x > n - 9) || (x === 7 && y > n - 9) || (y === n - 8 && x < 8)) on = false;
+    if (on) m.push(`<rect x="${x}" y="${y}" width="1.02" height="1.02"/>`); }
+  EL.juegos.innerHTML = `<div class="abs" style="left:110px;top:80px"><div class="kick">Juegos y retos</div><div class="h rv" id="j-h" style="margin-top:10px">La clase entera, <em>jugando con datos</em></div></div>
+  <div id="phone"><div style="font-size:30px;font-weight:800">Concurso en clase</div><div id="qr"><svg viewBox="0 0 ${n} ${n}" width="260" height="260" fill="#10050B">${m.join("")}</svg></div><div style="font-size:34px;font-weight:900;color:#FFC56B">Escanea y juega</div><div style="font-size:24px;color:#D9CBD2;margin-top:12px">Desde el móvil, sin instalar nada</div></div>
+  <div id="rank" class="glass"><div style="font-size:34px;font-weight:800">🏆 Ranking en directo</div>${EQ.map((e, i) => `<div class="rk"><span class="nm">${e[0]}</span><span class="bx" style="background:linear-gradient(90deg,${e[1]}99,${e[1]})"></span><span class="pt">0</span></div>`).join("")}</div>
+  <div class="abs" id="j-ch" style="left:640px;top:850px;width:1180px">${["🔐 Escape room", "🚫 El dato imposible", "🔀 ¿Correlación o causalidad?", "🎱 Bingo de indicadores", "🧠 Memoria de datos"].map(c => `<span class="chip" style="margin:0 12px 14px 0;font-size:27px">${c}</span>`).join("")}</div>`; }
+const CONF = (() => { const r = rng(314); return Array.from({length: 190}, () => ({x: 960 + (r() - .5) * 500, vx: (r() - .5) * 1500, vy: -900 - r() * 900, c: ["#F0479A", "#F29200", "#4ADE80", "#7DD3FC", "#fff"][Math.floor(r() * 5)], w: 10 + r() * 14, sp: 4 + r() * 8, ph: r() * 6})); })();
+S.juegos = t => {
+  AMB = 0.3; rv($("#j-h"), seg(t, 0.3, 1.3)); const pp = eo(seg(t, 0.5, 1.3)); show($("#phone"), pp, `translateY(${(1 - pp) * 120}px) rotate(${-4 * pp}deg)`); show($("#rank"), eo(seg(t, 0.9, 1.6)), `translateX(${(1 - eo(seg(t, 0.9, 1.6))) * 100}px)`);
+  const g = eio(seg(t, 1.6, 5.4)) * 5.4, v = EQ.map(e => e[2] * seg(t, 1.2, 1.8) + e[3] * g * (1 + 0.1 * Math.sin(g * 1.3 + e[2])) * 6), mx = Math.max(...v, 1);
+  $$(".rk", EL.juegos).forEach((el, i) => { let rk = 0; v.forEach((o, j) => { if (j !== i) rk += 1 / (1 + Math.exp(-(o - v[i]) / (0.012 * mx))); }); el.style.top = (95 + rk * 80) + "px"; const w = 500 * v[i] / mx * (0.2 + 0.8 * seg(t, 1.2, 1.9));
+    $(".bx", el).style.width = w + "px"; const pt = $(".pt", el); pt.style.left = (354 + w) + "px"; pt.textContent = es(Math.round(v[i] * 10)); el.style.opacity = seg(t, 1.1 + i * 0.08, 1.5 + i * 0.08); });
+  $$("#j-ch .chip").forEach((c, i) => show(c, eo(seg(t, 3.4 + i * 0.16, 3.9 + i * 0.16)), `translateY(${(1 - eo(seg(t, 3.4 + i * 0.16, 3.9 + i * 0.16))) * 30}px)`));
+  const ct = t - 5.2; if (ct > 0) CONF.forEach(c => { const x = c.x + 200 + c.vx * ct * 0.7, y = 620 + c.vy * ct + 1300 * ct * ct; if (y > H + 30) return; fx.save(); fx.translate(x, y); fx.rotate(c.ph + ct * c.sp); fx.fillStyle = c.c; fx.globalAlpha = clamp(2.2 - ct); fx.fillRect(-c.w / 2, -c.w / 4, c.w, c.w / 2); fx.restore(); });
+};
+
+/* ---------- 7. Todas las titulaciones ---------- */
+const TITS = ["GADE", "GECO", "GFICO", "GMIM", "GTUR", "GADE + Derecho", "GADE + Ingenierías", "Turismo + Traducción", "Másteres", "Doctorado"];
+EL.tit.innerHTML = `${TITS.map((x, i) => `<div class="orb" style="background:${i % 2 ? "rgba(242,146,0,.9)" : "rgba(181,23,95,.92)"}">${x}</div>`).join("")}
+  <div class="abs" id="t-c" style="left:360px;top:330px;width:1200px;text-align:center"><div class="kick">Docencia + Investigación</div><div class="h rv" id="t-h" style="margin-top:12px;font-size:92px">Para <em>toda la Facultad</em></div>
+  <div class="sub" id="t-s" style="margin-top:26px">Indicadores y ejemplos para cada asignatura · rutas de aprendizaje<br>TFG y TFM · rankings · <span style="color:#FFC56B;font-weight:800">🌐 también en inglés</span></div></div>`;
+S.tit = t => {
+  AMB = 0.45; rv($("#t-h"), seg(t, 0.4, 1.5)); show($("#t-c .kick"), seg(t, 0.3, 0.8)); show($("#t-s"), eo(seg(t, 1.8, 2.5)));
+  $$(".orb", EL.tit).forEach((o, i) => { const a = i / TITS.length * 6.2832 + t * 0.34 + 0.4, inn = eo(seg(t, 0.2 + i * 0.09, 1.2 + i * 0.09)), dp = Math.sin(a), sc = (0.82 + 0.26 * (dp + 1) / 2) * (0.4 + 0.6 * inn);
+    const x = 960 + Math.cos(a) * 760 * (1.5 - 0.5 * inn), y = 540 + dp * 400 * (1.5 - 0.5 * inn); o.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%) scale(${sc})`; o.style.opacity = inn * (0.72 + 0.28 * (dp + 1) / 2); o.style.zIndex = dp > 0 ? 3 : 1; });
+};
+
+/* ---------- 8. Cierre ---------- */
+EL.fin.innerHTML = `${lockHTML}<div class="tag sub" id="f-t" style="top:540px;font-size:50px;font-weight:700;color:#FFC56B">Observando la economía y la empresa</div>
+  <div id="url"><span>fccee-ugr.github.io/cceescopio</span></div><div id="plate"><img src="../../images/logos_ugr_fccee.jpg" alt=""></div>`;
+$(".lock", EL.fin).style.top = "190px";
+S.fin = t => {
+  AMB = 0.7; logoAnim(EL.fin, t, 0.3); show($("#f-t"), eo(seg(t, 3.5, 4.1)), `translateY(${(1 - eo(seg(t, 3.5, 4.1))) * 26}px)`);
+  const u = seg(t, 4.1, 4.4); show($("#url"), u, `scale(${0.7 + 0.3 * eback(seg(t, 4.1, 4.8))})`); const p = eo(seg(t, 4.8, 5.5)); show($("#plate"), p, `translateY(${(1 - p) * 50}px)`);
+};
+
+/* ---------- bucle ---------- */
+ESC.forEach(([id]) => rvInit(EL[id]));
+const LOCKS = {};
+function render(t) {
+  t = clamp(t, 0, DUR - 0.001); PM = 0; PA = 1; AMB = 0.4; let logo = false; fx.clearRect(0, 0, W, H);
+  for (const [id, dur] of ESC) {
+    const lt = t - T0[id], el = EL[id], vis = lt > -X && lt < dur + X;
+    el.style.display = vis ? "block" : "none"; if (!vis) continue;
+    if (id === "logo" || id === "fin") { if (!LOCKS[id]) LOCKS[id] = medirLock(el); }
+    const a = id === "logo" ? 1 : seg(lt, -X, X), b = id === "fin" ? 1 : 1 - seg(lt, dur - X, dur + X), o = Math.min(a, b);
+    el.style.opacity = o; el.style.transform = `scale(${a < 1 ? 1.07 - 0.07 * eo(a) : 1 - 0.05 * (1 - b)})`; el.style.zIndex = a < 1 ? 2 : 1;
+    if (id === "logo" || id === "fin") { LOCK = LOCKS[id]; S[id](Math.max(0, lt)); logo = true; icon.style.opacity = +icon.style.opacity * o; if (id === "logo" && b < 1) { PA *= b; PM *= eio(b); } }
+    else S[id](clamp(lt, 0, dur));
+  }
+  if (!logo) { ponIcono(0); ponFlash(0, 0, 0); }
+  fondo(t);
+}
+window.render = render; window.DUR = DUR;
+document.fonts.ready.then(() => { render(0); window.LISTO = true; });
+let play = null; addEventListener("keydown", e => { if (e.code !== "Space") return; if (play) { cancelAnimationFrame(play); play = null; return; } const t0 = performance.now(); const f = () => { render(((performance.now() - t0) / 1000) % DUR); play = requestAnimationFrame(f); }; f(); });
+</script></body></html>

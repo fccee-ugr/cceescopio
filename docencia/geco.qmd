@@ -7,6 +7,12 @@ Para cada asignatura del **Grado en Economía** se proponen los indicadores de C
 
 No se incluyen las asignaturas de idiomas, prácticas externas y Trabajo Fin de Grado. Las asignaturas optativas se marcan como *(optativa)*.
 
+::: {.callout-note}
+## También para el Grado en Economía (Bilingüe)
+
+El [Grado en Economía (Bilingüe)](https://fccee.ugr.es/docencia/grados/grado-economia-bilingue) sigue este mismo plan de estudios, con parte de la docencia en inglés: todos los indicadores y ejemplos de esta página sirven también para él. El botón **EN** del menú muestra CCEEscopio en inglés.
+:::
+
 ## Primer curso {#curso-1}
 
 ### Economía Política {#economia-politica}

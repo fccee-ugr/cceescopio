@@ -1,36 +1,29 @@
-# CCEEscopio D+I · Novedades (23-11-2026)
+# CCEEscopio D+I · Reorganización, titulaciones, inglés, recursos nuevos y vídeo (24-11-2026)
 
-Este paquete contiene los ficheros **nuevos y modificados** del repositorio `fccee-ugr/cceescopio`, con las mismas rutas.
-Descomprímelo **en la raíz del repositorio** (sobrescribe los existentes), haz *commit* y *push* a `main`.
-La carpeta `docs/` ya está generada con Quarto 1.7.32, así que no hace falta volver a renderizar.
+Descomprime el paquete **en la raíz del repositorio** (sobrescribe), haz *commit* y *push* a `main`.
+La carpeta `docs/` ya está generada con Quarto 1.7.32: no hace falta renderizar.
 
-## Qué incluye
+## Qué cambia
 
-| Novedad | Ficheros |
+| Cambio | Ficheros principales |
 |---|---|
-| **Hoy en la economía** (portada): noticias del día de España, Europa y el mundo, seleccionadas cada mañana antes de las 9:00, y las cotizaciones de las bolsas | `index.qmd`, `tools/noticias_portada.py`, `.github/workflows/portada.yml` |
-| **Bolsa al día**: 25 índices, materias primas y empresas del IBEX 35, tres veces cada día hábil | `bolsa.qmd`, `tools/bolsa.py`, `.github/workflows/bolsa.yml` |
-| **Simuladores**: Gobernador del Banco Central, Gestiona una cartera, Llega a fin de mes y Gestiona tu destino turístico, más un catálogo con filtro por grados | `simuladores.qmd`, `sim-*.qmd`, `js/sim-bc.js`, `js/sim-turismo.js`, `js/ccee-sim.js` |
-| **Vídeo de inicio renovado** (2 min 15 s): con las tres novedades y la misma música | `media/cceescopio_video.mp4`, `media/cceescopio_video_portada.jpg`, `tools/make_video.py` |
-| Menú, estilos y enlaces | `_quarto.yml` (menú «Juegos y simuladores», «Bolsa al día» en Indicadores y Herramientas, `js/*` en recursos), `styles.scss`, `calculadoras.qmd`, `juegos.qmd` |
+| **Menú reordenado** en seis secciones sin opciones repetidas (Indicadores, Actualidad, Herramientas, Docencia, Juegos y simuladores, Investigación) más el menú «🧭 Más» | `_quarto.yml`, `styles.scss` |
+| **Portada por objetivos** («¿Qué quieres hacer?»), titulaciones y novedades resumidas | `index.qmd`, `novedades.qmd` |
+| **Todos los recursos**: buscador con filtros por tipo, titulación y público | `recursos.qmd` |
+| **Todas las titulaciones**: dobles grados, Economía bilingüe, másteres y doctorado | `tools/grados.py`, `tools/make_docencia.py`, `docencia.qmd`, `docencia/*.qmd`, `_titulaciones.md`, `_grados_cards.md` |
+| **Recursos nuevos**: rutas de aprendizaje, escape room económico, El dato imposible, ¿Correlación o causalidad? | `rutas.qmd`, `escape-room.qmd`, `dato-imposible.qmd`, `correlacion.qmd`, `juegos.qmd` |
+| **Botón EN / ES** en todas las páginas (traducción automática de Google) | `_idioma.html` |
+| **Vídeo nuevo** (66 s, 1080p) y su código | `media/cceescopio_video.mp4`, `media/cceescopio_video_portada.jpg`, `tools/video/` |
+| Noticias del día: se descartan sorteos, horóscopos y similares | `tools/noticias_portada.py` |
 
-## Después de subirlo (una sola vez)
+## Después de subirlo
 
-1. En GitHub: **Settings → Actions → General → Workflow permissions → Read and write permissions** (ya debería estar, porque lo usan las noticias).
-2. En **Actions**, lanza a mano (**Run workflow**) las dos acciones nuevas para que haya datos desde el primer momento:
-   - «Bolsa de CCEEscopio» → crea la rama `bolsa` (`bolsa.json` y `bolsa-resumen.json`).
-   - «Noticias del día (portada)» → crea la rama `portada` (`portada.json`).
-3. A partir de ahí se actualizan solas: la bolsa a las 7:12 (de lunes a sábado), 17:52 y 22:33 (de lunes a viernes; horas de Madrid en invierno, una más en verano), y las noticias cada mañana hacia las 8:25 (con guarda para el cambio de hora: nunca después de las 9:59 ni dos veces el mismo día).
+- No hay que hacer nada más: las acciones de GitHub siguen igual. La de las noticias de portada se ejecuta sola al subir el cambio.
+- Se puede borrar el CSS antiguo que quede en `docs/site_libs/bootstrap/` (solo se usa el `bootstrap-….min.css` más reciente).
+- **Botón EN**: pruébalo en la web publicada. Usa el traductor de Google en la propia página y recuerda la elección al navegar. Si Google no responde, abre la página en translate.google.com.
+- **Vídeo**: para regenerarlo con cotizaciones nuevas, `python tools/video/render.py datos bolsa.json` y `python tools/video/render.py todo` (necesita Playwright, Chrome, ffmpeg y las fuentes Inter y Lora).
 
-Igual que las noticias actuales, los datos viven en ramas propias y la web los lee de `raw.githubusercontent.com`: **no hace falta volver a generar la web** para que se actualicen.
+## Para añadir una titulación o un recurso
 
-## Avisos
-
-- **Fuente de la bolsa**: Yahoo Finance (API pública de gráficos, sin clave). Si algún día bloquea una descarga, se conservan los datos anteriores de ese valor y la tarjeta lo indica. Los datos se muestran con fines docentes y la página lo advierte.
-- **Noticias**: Google Noticias (portadas de Economía y búsquedas por temas de las últimas 24 horas). Se eligen las noticias que publican más medios, se clasifican en España, Europa y el mundo, y se enlazan con los indicadores de CCEEscopio con las mismas reglas que «Noticias e indicadores».
-- **Simuladores**: descargan de Eurostat en el navegador los datos de partida (inflación, paro y euríbor de la zona euro; inflación de España por grupos de gasto; pernoctaciones en Andalucía). Si Eurostat no responde, usan valores de referencia y lo dicen en pantalla. Cada página explica su modelo y sus supuestos.
-- **Vídeo**: para regenerarlo, `python tools/make_video.py render 0 1 … 14` y unir las escenas con `ffmpeg -f concat`. La música es la del vídeo anterior, alargada.
-
-## Probado
-
-Las cuatro simulaciones se han jugado completas en Chrome (escritorio y móvil). Las páginas de bolsa y portada se han probado con datos simulados, porque desde el entorno de trabajo no había acceso a Yahoo, Google Noticias ni Eurostat: **la primera ejecución real de las acciones de GitHub es la prueba que falta**.
+- Titulaciones: `tools/grados.py` (diccionarios `COMPARTEN`, `NOTA` y `POSGRADO`) y después `python3 tools/make_pages.py && python3 tools/make_docencia.py`.
+- Recursos del buscador: la lista `R` de `recursos.qmd` (una línea por recurso).

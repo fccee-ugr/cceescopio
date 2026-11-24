@@ -1,0 +1,91 @@
+---
+title: "🚫 El dato imposible"
+subtitle: "¿Puede ser cierto ese titular? Caza los errores de porcentajes, unidades y denominadores"
+toc: false
+include-in-header:
+  - text: |
+      <script src="js/ccee-sim.js"></script>
+---
+
+Cada día se publican titulares con cifras **imposibles o mal expresadas**: caídas de más del 100 %, puntos porcentuales confundidos con porcentajes, millones que deberían ser billones… En cada partida verás **ocho afirmaciones**. Decide si cada una **puede ser correcta** o si es **imposible o está mal expresada** y, en ese caso, qué falla.
+
+**Para:** Métodos Cuantitativos, Economía, Contabilidad, Marketing y Turismo (todas las titulaciones). **Duración:** 5-8 minutos. **Relacionado:** [Detecta el engaño](detecta-engano.qmd) (gráficos que mienten), [laboratorio de números índice](numeros-indice.qmd) y [conversor de unidades](conversor.qmd).
+
+```{=html}
+<div id="di-app"></div>
+<script>
+(function () {
+  const C = window.CCEE, app = document.getElementById("di-app");
+  const CAT = ["Porcentajes y puntos porcentuales", "Unidades y órdenes de magnitud", "Denominador equivocado", "Nominal frente a real", "Nivel frente a tasa de variación", "Bases, sumas y medias"];
+  // t: afirmación · ok: ¿puede ser correcta? · c: qué falla (índice de CAT) · x: explicación
+  const ITEMS = [
+    {t: "«El paro registrado se hunde: baja un 120 % en un año»", ok: false, c: 0, x: "Una magnitud positiva no puede bajar más de un 100 % (eso sería quedarse en cero). Suele ocurrir al confundir «se reduce a menos de la mitad» con una caída mayor del 100 %."},
+    {t: "«La tasa de paro pasa del 12 % al 11 %: el paro cae un 1 %»", ok: false, c: 0, x: "Baja 1 punto porcentual, que equivale a una caída del 8,3 % (1/12). Las diferencias entre porcentajes se expresan en puntos porcentuales."},
+    {t: "«La inflación baja del 3 % al 2 %: por fin bajan los precios»", ok: false, c: 4, x: "Los precios siguen subiendo, pero más despacio (desinflación). Para que bajen, la tasa de inflación tiene que ser negativa (deflación)."},
+    {t: "«El PIB de España ronda los 1,6 millones de euros al año»", ok: false, c: 1, x: "Ronda los 1,6 billones de euros (millones de millones). 1,6 millones es lo que facturan unas pocas tiendas. Ojo también con el billion inglés, que son mil millones."},
+    {t: "«Un producto sube un 50 % y después baja un 50 %: vuelve a costar lo mismo»", ok: false, c: 5, x: "Queda un 25 % por debajo: 100 → 150 → 75. Cada porcentaje se aplica sobre una base distinta."},
+    {t: "«Los salarios suben un 3 % con una inflación del 5 %: los trabajadores ganan poder adquisitivo»", ok: false, c: 3, x: "Lo pierden: el salario real cae alrededor de un 1,9 % (1,03/1,05 − 1). Hay que descontar la inflación para pasar de nominal a real."},
+    {t: "«La tasa de paro es del 11 %: 11 de cada 100 habitantes están en paro»", ok: false, c: 2, x: "La tasa de paro se calcula sobre la población activa (ocupados más parados), no sobre toda la población. Sobre el total de habitantes sería aproximadamente la mitad."},
+    {t: "«Con una inflación del 10 % durante dos años seguidos, los precios suben un 21 %»", ok: true, x: "Correcto: las tasas se acumulan multiplicando, 1,10 × 1,10 = 1,21."},
+    {t: "«El 70 % de los turistas son extranjeros y el 45 %, nacionales»", ok: false, c: 5, x: "Las dos categorías son excluyentes y lo abarcan todo, así que deben sumar 100 %."},
+    {t: "«El índice de precios pasa de 120 a 126: los precios suben un 6 %»", ok: false, c: 0, x: "Sube 6 puntos de índice, que son un 5 % (126/120 − 1). Solo coincide cuando el índice parte de 100."},
+    {t: "«El PIB crece un 0,5 % en el trimestre, un ritmo anualizado de alrededor del 2 %»", ok: true, x: "Correcto: 1,005⁴ − 1 = 2,02 %. Es la forma habitual de publicar el PIB en Estados Unidos."},
+    {t: "«La deuda pública baja del 110 % al 105 % del PIB: el Estado debe menos euros»", ok: false, c: 2, x: "No necesariamente: la ratio puede bajar porque crece el PIB nominal (el denominador) aunque la deuda en euros siga aumentando."},
+    {t: "«Las exportaciones crecen un 200 %: se han duplicado»", ok: false, c: 0, x: "Se han triplicado: crecer un 200 % es sumar dos veces el valor inicial. Duplicarse es crecer un 100 %."},
+    {t: "«Dos regiones tienen tasas de paro del 20 % y del 10 %: la tasa conjunta es del 15 %»", ok: false, c: 5, x: "Solo si las dos tienen la misma población activa. La tasa conjunta es una media ponderada por la población activa de cada región."},
+    {t: "«El salario medio es de 2.300 € y el mediano, de 1.900 €: más de la mitad de los trabajadores cobra menos que la media»", ok: true, x: "Correcto: es lo habitual en distribuciones asimétricas a la derecha, como los salarios o la renta. Unos pocos salarios muy altos tiran de la media."},
+    {t: "«El IVA sube del 21 % al 23 %: un producto de 121 € pasa a costar 123 €»", ok: true, x: "Correcto: el precio sin IVA es 100 €; con el 23 % cuesta 123 €."},
+    {t: "«Los precios acumulan una subida del 20 % en cinco años: exactamente un 4 % cada año»", ok: false, c: 5, x: "La tasa media anual es del 3,7 % (1,20^(1/5) − 1): la media de tasas de variación es geométrica, no aritmética."},
+    {t: "«El paro juvenil es del 25 %: uno de cada cuatro jóvenes está en paro»", ok: false, c: 2, x: "Uno de cada cuatro jóvenes activos. Muchos jóvenes estudian y no buscan empleo, así que no cuentan en el denominador."},
+    {t: "«Una hipoteca al 3 % con una inflación del 3 % tiene un tipo de interés real cercano a cero»", ok: true, x: "Correcto: tipo real ≈ tipo nominal − inflación (exactamente, 1,03/1,03 − 1 = 0)."},
+    {t: "«El gasto en I+D pasa del 1,4 % al 1,5 % del PIB: aumenta un 0,1 %»", ok: false, c: 0, x: "Aumenta 0,1 puntos porcentuales, que es un 7 % más de esfuerzo en I+D respecto al PIB."},
+    {t: "«Las pernoctaciones caen un 30 % en invierno respecto al verano: el turismo está en crisis»", ok: false, c: 4, x: "Es estacionalidad: hay que comparar con el mismo periodo del año anterior (tasa interanual) o usar datos desestacionalizados."},
+    {t: "«La renta per cápita crece un 2 % aunque el PIB solo crece un 1 %»", ok: true, x: "Puede ser correcto: ocurre si la población disminuye alrededor de un 1 %."},
+  ];
+  let G;
+  function nueva() { G = {items: [...ITEMS].sort(() => Math.random() - 0.5).slice(0, 8), k: 0, pts: 0, hist: []}; pintar(); C.evento("juegos/dato-imposible/inicio", "El dato imposible: inicio"); }
+  function pintar() {
+    const it = G.items[G.k];
+    app.innerHTML = `<div class="sim-progreso">${G.items.map((_, i) => `<span class="${i < G.k ? "hecho" : i === G.k ? "actual" : ""}"></span>`).join("")}</div>
+      <p class="nota">Afirmación ${G.k + 1} de ${G.items.length} · ${G.pts} puntos</p>
+      <div class="sim-evento" style="font-size:1.25rem;font-weight:700">${it.t}</div>
+      <div class="sim-opciones"><button class="sim-opcion" data-v="1"><b>✅ Puede ser correcta</b><small>Las cifras cuadran</small></button>
+      <button class="sim-opcion" data-v="0"><b>🚫 Imposible o mal expresada</b><small>Hay un error en la cifra o en cómo se cuenta</small></button></div><div id="di-res"></div>`;
+    app.querySelectorAll("[data-v]").forEach(b => b.onclick = () => veredicto(b.dataset.v === "1"));
+  }
+  function veredicto(dice) {
+    const it = G.items[G.k], bien = dice === it.ok;
+    if (bien) G.pts += 10;
+    app.querySelectorAll("[data-v]").forEach(b => b.disabled = true);
+    const res = document.getElementById("di-res");
+    if (bien && !it.ok) {
+      res.innerHTML = `<p><b class="sube">✔ Bien visto (+10).</b> ¿Qué es lo que falla? (+5)</p><div class="chips-sel">${CAT.map((c, i) => `<button class="chip-sel" data-c="${i}">${c}</button>`).join("")}</div>`;
+      res.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { const ok = +b.dataset.c === it.c; if (ok) G.pts += 5; explica(ok ? `<b class="sube">✔ Exacto (+5).</b>` : `<b class="baja">✘ Era «${CAT[it.c]}».</b>`, bien); });
+    } else explica(bien ? `<b class="sube">✔ Correcto (+10).</b>` : `<b class="baja">✘ No: ${it.ok ? "la afirmación puede ser correcta" : "la afirmación es imposible o está mal expresada"}.</b>`, bien);
+  }
+  function explica(cab, bien) {
+    const it = G.items[G.k]; G.hist.push({t: it.t, bien, x: it.x});
+    document.getElementById("di-res").innerHTML = `<div class="calc-result"><div class="calc-small">${cab} ${it.x}</div></div>
+      <div class="sim-botones"><button class="sim-btn" id="di-sig">${G.k + 1 < G.items.length ? "Siguiente ▶" : "Ver el resultado"}</button></div>`;
+    document.getElementById("di-sig").onclick = () => { G.k++; G.k < G.items.length ? pintar() : fin(); };
+  }
+  function fin() {
+    const max = G.items.reduce((s, it) => s + (it.ok ? 10 : 15), 0), nota = Math.round(100 * G.pts / max), rc = C.record("dato-imposible", nota);
+    app.innerHTML = `<div class="calc-result"><div class="sim-nota">${nota} / 100</div>
+      <div class="calc-big">${nota >= 85 ? "¡Ojo de auditora de datos!" : nota >= 60 ? "Buen olfato para las cifras" : "Las cifras te la han colado alguna vez"}</div>
+      <div class="calc-small">${G.hist.filter(h => h.bien).length} de ${G.hist.length} veredictos correctos. ${rc.nuevo ? "🏅 ¡Tu mejor resultado!" : rc.record != null ? `Tu récord: ${rc.record}.` : ""}</div></div>
+      <details open><summary>Repaso</summary><ul>${G.hist.map(h => `<li>${h.bien ? "✔" : "✘"} ${h.t}<br><small>${h.x}</small></li>`).join("")}</ul></details>
+      <div class="sim-botones"><button class="sim-btn" id="di-otra">🔄 Otras ocho afirmaciones</button><a class="sim-btn sec" style="text-decoration:none" href="detecta-engano.html">🕵️ Detecta el engaño</a></div>`;
+    document.getElementById("di-otra").onclick = nueva;
+    C.evento("juegos/dato-imposible/fin", "El dato imposible: fin");
+  }
+  nueva();
+})();
+</script>
+```
+
+## En clase
+
+- **Por parejas**: cada pareja juega una partida y explica al resto la afirmación que más le ha costado.
+- **Caza del titular**: pide al estudiantado que busque en la prensa de la semana (o en [Hoy en la economía](index.qmd#hoy)) un titular con una cifra mal expresada y lo corrija.
+- **Con datos reales**: comprueba cada regla en los indicadores, por ejemplo la diferencia entre puntos y porcentaje en la [tasa de paro](empleo.qmd) o entre nivel y tasa en la [inflación](precios.qmd).

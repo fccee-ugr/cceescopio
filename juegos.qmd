@@ -12,6 +12,18 @@ Todos los juegos de CCEEscopio D+I usan datos oficiales de Eurostat que se carga
 En los [simuladores](simuladores.qmd) tomas decisiones durante varias rondas con datos reales: [Gobernador del Banco Central](sim-banco-central.qmd), [Gestiona una cartera](sim-cartera.qmd), [Llega a fin de mes](sim-fin-de-mes.qmd) y [Gestiona tu destino turístico](sim-turismo.qmd).
 :::
 
+## 🧠 Retos para pensar {#retos}
+
+::: {.cards}
+[<span class="icon">🔐</span><span class="ct">Escape room económico</span><span class="cd">Cinco salas, cinco enigmas y quince minutos para salir. Individual o por equipos, con código de partida para toda la clase.</span>](escape-room.qmd){.card-ccee}
+
+[<span class="icon">🚫</span><span class="ct">El dato imposible</span><span class="cd">¿Puede ser cierto ese titular? Caza errores de porcentajes, unidades y denominadores.</span>](dato-imposible.qmd){.card-ccee}
+
+[<span class="icon">🔀</span><span class="ct">¿Correlación o causalidad?</span><span class="cd">Variables de confusión, causalidad inversa y simples casualidades.</span>](correlacion.qmd){.card-ccee}
+
+[<span class="icon">📰</span><span class="ct">Crea tu noticia</span><span class="cd">Bajo la gráfica de cada indicador: escribe el titular y compáralo con el del Periódico CCEEscopio.</span>](precios.qmd){.card-ccee}
+:::
+
 ## 🏫 Juegos para clase con código QR {#qr}
 
 ::: {.cards}

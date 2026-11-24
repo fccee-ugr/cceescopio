@@ -23,11 +23,12 @@ website:
     logo: images/brand/cceescopio_navbar_di.png
     logo-alt: "Logo de CCEEscopio D+I"
     title: false
+    collapse-below: xl
     left:
-      - href: index.qmd
-        text: Inicio
+      # 1. DATOS: los indicadores, por temas y por territorios
       - text: Indicadores
         menu:
+          - text: "Por temas"
           - href: precios.qmd
             text: "Precios e inflación"
           - href: empleo.qmd
@@ -49,76 +50,73 @@ website:
           - href: internacional.qmd
             text: "Economía internacional y sector exterior"
           - text: "---"
-          - href: indicadores.qmd
-            text: "🔎 Buscador de indicadores"
+          - text: "Por territorios"
           - href: andalucia.qmd
             text: "Andalucía y las regiones españolas"
-          - text: "---"
-          - text: "Paneles temáticos"
           - href: turismo-andalucia.qmd
             text: "Turismo en Andalucía"
-          - href: empresas.qmd
-            text: "Demografía empresarial"
-          - href: consumo.qmd
-            text: "Consumo y confianza"
-          - href: mercados.qmd
-            text: "Mercados al día"
-          - href: bolsa.qmd
-            text: "Bolsa al día: índices y empresas del IBEX"
-          - href: piramides.qmd
-            text: "Pirámides de población"
-          - href: precios-productos.qmd
-            text: "Precios de productos: gasolina, luz y cesta de la compra"
-          - text: "---"
-          - text: "Análisis"
-          - href: coyuntura.qmd
-            text: "Mapa de calor de coyuntura"
-          - href: descomposiciones.qmd
-            text: "¿Qué explica cada indicador? (descomposiciones)"
-          - href: extremos.qmd
-            text: "Datos extremos e inusuales"
-          - href: ciclo.qmd
-            text: "Ciclo económico y semáforo de coyuntura"
-      - text: Herramientas
-        menu:
-          - href: ficha.qmd
-            text: "Ficha de país o región"
           - href: comparador.qmd
             text: "Comparador de comunidades autónomas"
-          - href: indicadores.qmd
-            text: "Buscador de indicadores"
+          - href: ficha.qmd
+            text: "Ficha de país o región"
           - text: "---"
-          - href: boletin.qmd
-            text: "Boletín de coyuntura"
-          - href: calendario.qmd
-            text: "Datos recientes y calendario"
+          - text: "Paneles temáticos"
+          - href: precios-productos.qmd
+            text: "Precios de productos: gasolina, luz y cesta de la compra"
+          - href: consumo.qmd
+            text: "Consumo y confianza"
+          - href: empresas.qmd
+            text: "Demografía empresarial"
+          - href: piramides.qmd
+            text: "Pirámides de población"
+          - text: "---"
+          - href: indicadores.qmd
+            text: "🔎 Buscador de indicadores"
+          - href: glosario.qmd
+            text: "Glosario de indicadores"
+      # 2. ACTUALIDAD: lo que cambia cada día y el análisis de la coyuntura
+      - text: Actualidad
+        menu:
+          - text: "Al día"
+          - href: index.qmd#hoy
+            text: "Hoy en la economía: noticias del día"
           - href: noticias.qmd
             text: "Noticias e indicadores"
           - href: bolsa.qmd
             text: "Bolsa al día"
+          - href: mercados.qmd
+            text: "Mercados al día: euríbor, deuda y divisas"
+          - href: calendario.qmd
+            text: "Datos recientes y calendario"
           - text: "---"
-          - href: datos.qmd
-            text: "Datos y fuentes"
-          - href: glosario.qmd
-            text: "Glosario de indicadores"
-      - text: "Calculadoras"
+          - text: "Análisis de la coyuntura"
+          - href: boletin.qmd
+            text: "Boletín de coyuntura"
+          - href: coyuntura.qmd
+            text: "Mapa de calor de coyuntura"
+          - href: ciclo.qmd
+            text: "Ciclo económico y semáforo"
+          - href: descomposiciones.qmd
+            text: "¿Qué explica cada indicador?"
+          - href: extremos.qmd
+            text: "Datos extremos e inusuales"
+      # 3. HERRAMIENTAS: calcular y analizar
+      - text: Herramientas
         menu:
           - href: calculadoras.qmd
-            text: "🧮 Todas las calculadoras"
+            text: "🧮 Todas las herramientas"
           - text: "---"
-          - text: "Métodos Cuantitativos y econometría"
+          - text: "Métodos Cuantitativos y Econometría"
           - href: numeros-indice.qmd
             text: "Laboratorio de números índice"
-          - href: regresion.qmd
-            text: "Regresión lineal con análisis de supuestos"
           - href: estadistica.qmd
             text: "Análisis cuantitativo de datos"
-          - href: desfases.qmd
-            text: "¿Qué indicador se adelanta? (desfases)"
           - href: relaciona.qmd
             text: "Relaciona dos indicadores"
-          - text: "---"
-          - text: "Series temporales y previsión"
+          - href: regresion.qmd
+            text: "Regresión lineal con análisis de supuestos"
+          - href: desfases.qmd
+            text: "¿Qué indicador se adelanta? (desfases)"
           - href: prevision.qmd
             text: "Previsión sencilla"
           - href: convergencia.qmd
@@ -127,64 +125,56 @@ website:
           - text: "Precios, dinero y finanzas"
           - href: calculadora.qmd
             text: "Calculadora de inflación"
-          - href: precios-productos.qmd#cuanto-costaba
-            text: "¿Cuánto costaba? Precios de productos en el pasado"
           - href: conversor.qmd
             text: "Conversor de unidades económicas"
           - href: hipoteca.qmd
             text: "Simulador de hipotecas y préstamos"
           - text: "---"
-          - text: "Desigualdad, política económica y población"
+          - text: "Desigualdad y política económica"
           - href: desigualdad-calc.qmd
             text: "Calculadora de desigualdad (Gini, Lorenz, Theil)"
           - href: politica-fiscal.qmd
             text: "Simulador de política fiscal"
-          - href: piramides.qmd
-            text: "Pirámides de población"
-      - text: "Docencia"
+      # 4. DOCENCIA: titulaciones, materiales para estudiar y para dar clase
+      - text: Docencia
         menu:
           - href: docencia.qmd
-            text: "Cómo usar CCEEscopio en docencia e investigación"
+            text: "Cómo usar CCEEscopio en clase"
+          - href: rutas.qmd
+            text: "🧭 Rutas de aprendizaje"
           - text: "---"
-          - text: "Por grados y asignaturas"
+          - text: "Por titulaciones y asignaturas"
           - href: docencia/gade.qmd
-            text: "GADE · Administración y Dirección de Empresas"
+            text: "GADE · también GADE + Derecho y GADE + Ingenierías"
           - href: docencia/geco.qmd
-            text: "GECO · Economía"
+            text: "GECO · Economía (también bilingüe)"
           - href: docencia/gfico.qmd
             text: "GFICO · Finanzas y Contabilidad"
           - href: docencia/gmim.qmd
             text: "GMIM · Marketing e Investigación de Mercados"
           - href: docencia/gtur.qmd
-            text: "GTUR · Turismo"
+            text: "GTUR · Turismo (también TITUR)"
+          - href: docencia/posgrado.qmd
+            text: "Másteres y doctorado"
           - text: "---"
-          - text: "Para el estudiantado"
+          - text: "Para estudiar"
           - href: ejercicios.qmd
             text: "Ejercicios autocorregibles"
-          - href: informe-coyuntura.qmd
-            text: "Plantilla de informe de coyuntura"
           - href: detecta-engano.qmd
             text: "Detecta el engaño: gráficos que mienten"
-          - href: numeros-indice.qmd
-            text: "Laboratorio de números índice"
-          - href: calculadoras.qmd
-            text: "Calculadoras"
+          - href: informe-coyuntura.qmd
+            text: "Plantilla de informe de coyuntura"
           - text: "---"
-          - text: "Para el profesorado"
+          - text: "Para dar clase"
           - href: examen.qmd
             text: "Generador de exámenes, fichas y preguntas para PRADO"
-          - href: noticias.qmd
-            text: "Noticias e indicadores (retos para clase)"
           - href: presentacion.qmd
             text: "Modo presentación"
-          - href: juegos.qmd
-            text: "🎮 Juegos para clase"
-          - href: simuladores.qmd
-            text: "🧪 Simuladores con datos reales"
+      # 5. JUEGOS Y SIMULADORES
       - text: "Juegos y simuladores"
         menu:
           - href: juegos.qmd
-            text: "Todos los juegos"
+            text: "🎮 Todos los juegos"
           - href: simuladores.qmd
             text: "🧪 Todos los simuladores"
           - text: "---"
@@ -198,13 +188,23 @@ website:
           - href: sim-turismo.qmd
             text: "Gestiona tu destino turístico"
           - text: "---"
+          - text: "Retos para pensar"
+          - href: escape-room.qmd
+            text: "Escape room económico"
+          - href: dato-imposible.qmd
+            text: "El dato imposible"
+          - href: correlacion.qmd
+            text: "¿Correlación o causalidad?"
+          - href: prediccion.qmd
+            text: "Predice el próximo dato"
+          - text: "---"
           - text: "En clase, con código QR y ranking en directo"
           - href: concurso.qmd
             text: "Concurso de preguntas"
           - href: concurso-precios.qmd
             text: "¿Cuánto costaba?"
           - href: memoria.qmd
-            text: "Memoria de datos (malla 3 × 3)"
+            text: "Memoria de datos"
           - href: ordena.qmd
             text: "Ordena la malla"
           - href: quien.qmd
@@ -213,22 +213,7 @@ website:
             text: "Bingo de indicadores"
           - href: ppt.qmd
             text: "Piedra, papel o tijera"
-          - href: juegos.qmd#aula
-            text: "Modo aula: competición con código de sala"
-          - text: "---"
-          - text: "Para jugar a tu ritmo"
-          - href: juegos.qmd#dato-del-dia
-            text: "El dato del día"
-          - href: juegos.qmd#mas-alto
-            text: "¿Más alto o más bajo?"
-          - href: juegos.qmd#adivina-pais
-            text: "Adivina el país"
-          - href: juegos.qmd#que-paso
-            text: "¿Qué pasó aquí?"
-          - href: juegos.qmd#ordena
-            text: "Ordena de mayor a menor"
-          - href: prediccion.qmd
-            text: "Predice el próximo dato"
+      # 6. INVESTIGACIÓN
       - text: "Investigación"
         menu:
           - text: "TFG, TFM y tesis"
@@ -236,31 +221,36 @@ website:
             text: "Ideas para tu TFG o TFM"
           - href: graficos.qmd
             text: "Generador de gráficos con cita de la fuente"
-          - href: biblioteca.qmd
-            text: "Bases de datos de la Biblioteca y fuentes abiertas"
           - href: datos.qmd
             text: "Datos y fuentes: descarga y reutilización"
+          - href: biblioteca.qmd
+            text: "Bases de datos de la Biblioteca y fuentes abiertas"
           - text: "---"
-          - text: "Análisis avanzado"
-          - href: coyuntura.qmd
-            text: "Mapa de calor de coyuntura"
-          - href: desigualdad-calc.qmd
-            text: "Desigualdad: Gini, Lorenz y Theil con inferencia"
-          - href: convergencia.qmd
-            text: "Convergencia sigma y beta"
-          - href: regresion.qmd
-            text: "Regresión con análisis de supuestos"
-          - text: "---"
-          - text: "La Facultad en los ranking"
+          - text: "La Facultad"
           - href: rankings.qmd
-            text: "Posición y evolución en los rankings por disciplinas"
-      - href: contacto.qmd
-        text: "Contacto"
+            text: "La Facultad en los ranking"
+    right:
+      # 7. MÁS: el buscador de todos los recursos y la información del sitio
+      - text: "🧭 Más"
+        menu:
+          - href: index.qmd
+            text: "Inicio"
+          - href: recursos.qmd
+            text: "🧭 Todos los recursos (buscador)"
+          - href: novedades.qmd
+            text: "Novedades"
+          - text: "---"
+          - href: uso.qmd
+            text: "Uso de CCEEscopio"
+          - href: encuesta.qmd
+            text: "Encuesta de satisfacción"
+          - href: contacto.qmd
+            text: "Contacto"
   page-footer:
     left: "CCEEscopio D+I · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es)"
     right: "![](images/logos_ugr_fccee.jpg){height=38 fig-alt='Universidad de Granada y Facultad de Ciencias Económicas y Empresariales'}"
 
-date-modified: "2026-11-23"
+date-modified: "2026-11-24"
 
 format:
   html:
@@ -274,3 +264,4 @@ format:
     include-after-body:
       - _goatcounter.html
       - _guardar.html
+      - _idioma.html

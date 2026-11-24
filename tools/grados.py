@@ -1,4 +1,4 @@
-"""Planes de estudio de los cinco grados de la Facultad (curso 2026/2027), según https://fccee.ugr.es/docencia/grados.
+"""Planes de estudio de los grados de la Facultad (curso 2026/2027), según https://fccee.ugr.es/docencia/grados.
 Asignaturas separadas por ";"; el asterisco indica optativa. Para cada asignatura, tools/make_docencia.py busca en
 tools/asignaturas.py la ficha (indicadores y ejemplo de uso) de la materia correspondiente."""
 GR = {
@@ -28,3 +28,48 @@ GR = {
  3: "Información Contable para la Gestión de Empresas Turísticas; Marketing de Productos Turísticos; Política Económica del Turismo; Tecnología Informática para la Empresa; Dirección Estratégica de Empresas Turísticas; Gestión Financiera; Organización Internacional del Turismo; Planificación y Gestión Territorial para el Turismo Sostenible; Turismo Sostenible y Medio Ambiente",
  4: "Creación de Empresas; Economía del Transporte; Fiscalidad de las Empresas del Sector del Turismo*; Geografía Turística de Andalucía*; Historia Económica y Social del Turismo*; Planificación y Valoración de Empresas*; Sociología del Turismo y del Ocio*; Marketing Hotelero y de Restauración*; Relaciones de Trabajo y Contratación Laboral*; Sistemas de Información Basados en Internet*"}),
 }
+
+
+# Resto de titulaciones de grado de la Facultad (https://fccee.ugr.es/docencia/grados, consultada el 24-11-2026).
+# Comparten las asignaturas del grado indicado, de modo que usan la misma página de Docencia.
+# (sigla del grado, etiqueta corta, nombre oficial, URL)
+COMPARTEN = {
+"GADE": [
+ ("GADE + Derecho", "Doble Grado en Administración y Dirección de Empresas y en Derecho", "https://fccee.ugr.es/docencia/grados/graduadoa-administracion-y-direccion-empresas-derecho"),
+ ("GADE + Edificación", "Doble Grado en Edificación y en Administración y Dirección de Empresas", "https://fccee.ugr.es/docencia/grados/graduadoa-edificacion-administ-y-direcc-empresas"),
+ ("GADE + Ingeniería Civil", "Doble Grado en Ingeniería Civil y en Administración y Dirección de Empresas", "https://fccee.ugr.es/docencia/grados/grado-ingenieria-civil-y-administracion-y-dreccion-empresas"),
+ ("GADE + Ingeniería Informática", "Doble Grado en Ingeniería Informática y en Administración y Dirección de Empresas", "https://fccee.ugr.es/docencia/grados/graduadoa-inga-informatica-administ-y-direcc-empresas"),
+],
+"GECO": [("GECO bilingüe", "Grado en Economía (Bilingüe)", "https://fccee.ugr.es/docencia/grados/grado-economia-bilingue")],
+"GTUR": [("TITUR", "Doble Grado en Traducción e Interpretación y en Turismo", "https://fccee.ugr.es/docencia/grados/graduadoa-traduccion-e-interpretacion-turismo")],
+}
+# Texto de la nota que aparece al principio de la página de cada grado
+NOTA = {
+"GADE": ("También para GADE + Derecho y GADE + Ingenierías",
+  "Esta página sirve igualmente para los **dobles grados con ADE**: [GADE + Derecho]({0}) y **GADE + Ingenierías** ([Edificación]({1}), [Ingeniería Civil]({2}) e [Ingeniería Informática]({3})). "
+  "En ellos se cursan las mismas asignaturas de ADE que aparecen aquí, repartidas en cinco cursos, salvo algunas que se reconocen por asignaturas equivalentes de la otra titulación "
+  "(por ejemplo, Matemáticas o Técnicas Cuantitativas I en las ingenierías): el curso en el que se imparte cada una figura en la guía de cada doble grado."),
+"GECO": ("También para el Grado en Economía (Bilingüe)",
+  "El [Grado en Economía (Bilingüe)]({0}) sigue este mismo plan de estudios, con parte de la docencia en inglés: todos los indicadores y ejemplos de esta página sirven también para él. "
+  "El botón **EN** del menú muestra CCEEscopio en inglés."),
+"GTUR": ("También para Turismo + Traducción e Interpretación (TITUR)",
+  "Esta página sirve igualmente para el [Doble Grado en Traducción e Interpretación y en Turismo (TITUR)]({0}), en sus modalidades de alemán, francés e inglés: "
+  "las asignaturas de Turismo son las de este grado; el curso en el que se imparte cada una figura en la guía del doble grado."),
+}
+# Másteres universitarios y doctorado (https://fccee.ugr.es/docencia/posgrados, consultada el 24-11-2026): nombre, URL y recursos de CCEEscopio recomendados
+POSGRADO = [
+ ("Máster Universitario en Auditoría", "https://fccee.ugr.es/docencia/posgrados/master-universitario-auditoria-1",
+  ["empresas.qmd|Demografía empresarial", "publico.qmd|Sector público y mercados financieros", "mercados.qmd|Mercados al día", "hipoteca.qmd|Simulador de préstamos", "dato-imposible.qmd|El dato imposible"]),
+ ("Máster Universitario en Economía / Economics", "https://fccee.ugr.es/docencia/posgrados/master-universitario-economia-economics",
+  ["convergencia.qmd|Convergencia sigma y beta", "desfases.qmd|¿Qué indicador se adelanta?", "regresion.qmd|Regresión con análisis de supuestos", "desigualdad-calc.qmd|Desigualdad: Gini, Lorenz y Theil", "politica-fiscal.qmd|Simulador de política fiscal", "sim-banco-central.qmd|Gobernador del Banco Central"]),
+ ("Máster Universitario en Economía y Organización de Empresas", "https://fccee.ugr.es/docencia/posgrados/master-universitario-economia-y-organizacion-empresas",
+  ["empresa.qmd|Empresa, innovación y digitalización", "empresas.qmd|Demografía empresarial", "regresion.qmd|Regresión", "ideas-tfg.qmd|Ideas para tu TFM", "graficos.qmd|Generador de gráficos con cita"]),
+ ("Máster Universitario en Gestión y Tecnologías de Procesos de Negocio", "https://fccee.ugr.es/docencia/posgrados/master-universitario-gestion-y-tecnologias-procesos-negocio",
+  ["empresa.qmd|Digitalización e inteligencia artificial en las empresas", "estadistica.qmd|Análisis cuantitativo de datos", "prevision.qmd|Previsión sencilla", "datos.qmd|Datos y fuentes (API y descarga)"]),
+ ("Máster Universitario en Marketing y Comportamiento del Consumidor", "https://fccee.ugr.es/docencia/posgrados/master-universitario-marketing-y-comportamiento-del-consumidor",
+  ["consumo.qmd|Consumo y confianza", "precios-productos.qmd|Precios de productos", "estadistica.qmd|Análisis cuantitativo de datos", "correlacion.qmd|¿Correlación o causalidad?", "sim-turismo.qmd|Gestiona tu destino turístico"]),
+ ("Máster Universitario en Técnicas Cuantitativas en Gestión Empresarial", "https://fccee.ugr.es/docencia/posgrados/master-universitario-tecnicas-cuantitativas-gestion-empresarial",
+  ["estadistica.qmd|Análisis cuantitativo de datos", "regresion.qmd|Regresión con análisis de supuestos", "prevision.qmd|Previsión sencilla", "numeros-indice.qmd|Laboratorio de números índice", "desigualdad-calc.qmd|Desigualdad con inferencia", "sim-cartera.qmd|Gestiona una cartera"]),
+ ("Programa de Doctorado en Ciencias Económicas y Empresariales", "https://fccee.ugr.es/docencia/posgrados/doctorado",
+  ["datos.qmd|Datos y fuentes: descarga y reutilización", "biblioteca.qmd|Bases de datos de la Biblioteca", "graficos.qmd|Generador de gráficos con cita", "desigualdad-calc.qmd|Desigualdad con inferencia", "rankings.qmd|La Facultad en los ranking"]),
+]
