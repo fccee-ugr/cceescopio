@@ -232,6 +232,9 @@ def page(key, c):
     return f"""---
 title: "{c['titulo']}"
 subtitle: "{c['subtitulo']}"
+include-in-header:
+  - text: |
+      <script src="js/ccee-noticia.js"></script>
 ---
 
 {c['intro']}

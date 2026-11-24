@@ -1,6 +1,9 @@
 ---
 title: "Mercado laboral"
 subtitle: "Paro, empleo y diferencias por edad y sexo"
+include-in-header:
+  - text: |
+      <script src="js/ccee-noticia.js"></script>
 ---
 
 El mercado laboral es uno de los ámbitos en los que la economía española presenta mayores diferencias con Europa, especialmente en el **paro juvenil**. Los datos proceden de la Encuesta de Población Activa armonizada (Eurostat), comparable entre países.
@@ -371,6 +374,16 @@ datos.ok ? (terr.length ? Plot.plot({
   ]
 }) : html`<p class="pending">Elige al menos un territorio.</p>`)
 : html`<div class="callout callout-warning"><p><b>No se han podido cargar los datos de Eurostat</b> (${datos.error}). Inténtalo de nuevo más tarde o consulta la tabla directamente en <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank">Eurostat</a>.</p></div>`
+```
+
+```{ojs}
+//| echo: false
+// «Crea tu noticia»: el estudiante escribe un titular sobre la gráfica y el Periódico CCEEscopio publica el suyo
+(datos.ok && terr.length && window.CCEENoticia) ? window.CCEENoticia.panel({
+  tema: ind.nombre, unidad: ind.unidad, fuente: datos.rows[0]?.fuente, seccion: document.title.split("–")[0].trim(),
+  preferidos: ind.regional ? ["Andalucía", "España"] : ["España"],
+  series: terr.map(t => ({nombre: t, puntos: sel.filter(r => r.territorio === t).map(r => ({periodo: r.periodo, fecha: r.fecha, valor: r.valor}))}))
+}) : html``
 ```
 
 ## Mapa

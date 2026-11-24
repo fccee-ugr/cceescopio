@@ -505,3 +505,37 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
   .cat-meta { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .6rem; font-size: .75rem;
     span { background: #F6EEF2; color: $ccee-magenta; border-radius: 999px; padding: .05rem .5rem; font-weight: 700; }
     span.dur { background: #FFF3E0; color: #9A5B00; } span.ind { background: #EEF3FA; color: #2C5C9A; } } }
+
+/* =====================================================================
+   Crea tu noticia (Periódico CCEEscopio)
+   ===================================================================== */
+.noticia-wrap { margin: .4rem 0 1rem; }
+.noticia-btn { background: #fff; color: $ccee-magenta; border: 2px solid $ccee-magenta; border-radius: 999px; padding: .3rem 1rem; font-weight: 700; cursor: pointer;
+  &:hover, &.on { background: $ccee-magenta; color: #fff; } }
+.noticia { margin-top: .6rem; background: #FFFDF8; border: 1px solid #D8D2C4; box-shadow: 0 4px 16px rgba(0,0,0,.08); padding: 1rem 1.3rem 1.1rem; font-family: Georgia, "Times New Roman", serif; color: #1d1d1d; max-width: 860px;
+  .np-cab { text-align: center; border-bottom: 3px double #1d1d1d; padding-bottom: .4rem; margin-bottom: .6rem; }
+  .np-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .3rem; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: #555; border-bottom: 1px solid #1d1d1d; padding-bottom: .25rem; }
+  .np-nombre { font-family: "Old English Text MT", "UnifrakturMaguntia", Georgia, serif; font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 700; line-height: 1.1; margin-top: .35rem; }
+  .np-lema { font-style: italic; font-size: .85rem; color: $ccee-magenta; }
+  .np-seccion { font-family: system-ui, sans-serif; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: $ccee-magenta; border-top: 2px solid $ccee-magenta; display: inline-block; padding-top: .15rem; margin-bottom: .3rem; }
+  .np-titular { font-family: Georgia, serif; font-size: clamp(1.4rem, 3.4vw, 2.05rem); font-weight: 700; line-height: 1.15; margin: .2rem 0 .5rem; border: 0; color: #111; }
+  .np-entradilla { font-size: 1.02rem; line-height: 1.45; color: #333; margin-bottom: .3rem; }
+  .np-firma { font-family: system-ui, sans-serif; font-size: .75rem; color: #777; margin-bottom: .8rem; }
+  .np-inst { font-size: .98rem; }
+  .np-campo { display: block; font-family: system-ui, sans-serif; font-size: .85rem; font-weight: 600; margin: .45rem 0; color: #333;
+    input, select, textarea { display: block; width: 100%; margin-top: .2rem; font: inherit; font-weight: 400; border: 1px solid #C9C1B0; border-radius: 6px; padding: .35rem .5rem; background: #fff; }
+    textarea { font-family: Georgia, serif; font-size: 1.15rem; font-weight: 700; } }
+  .np-botones { display: flex; flex-wrap: wrap; gap: .5rem; margin: .7rem 0 .3rem; font-family: system-ui, sans-serif;
+    button { border-radius: 999px; padding: .4rem 1.1rem; font-weight: 700; cursor: pointer; border: 2px solid $ccee-magenta; background: $ccee-magenta; color: #fff; }
+    button + button { background: #fff; color: $ccee-magenta; } }
+  .np-tuyo { background: #fff; border: 1px dashed #B9AE96; border-radius: 8px; padding: .6rem .9rem; font-family: system-ui, sans-serif; }
+  .np-tuyo-l { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #777; font-weight: 700; }
+  .np-tuyo-t { font-family: Georgia, serif; font-size: 1.15rem; font-weight: 700; margin: .15rem 0 .4rem; }
+  .np-punt { display: flex; align-items: baseline; gap: .35rem; font-weight: 700; color: #444; }
+  .np-num { font-size: 2.1rem; font-weight: 900; color: $ccee-magenta; }
+  .np-elem { list-style: none; padding: 0; margin: .3rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .1rem 1rem; font-size: .86rem;
+    li.ok { color: #2E7D32; } li.no { color: #9A3B3B; } small { color: #777; } }
+  .np-rank { margin-top: .8rem; font-family: system-ui, sans-serif; background: #F6EEF2; border-radius: 8px; padding: .5rem .9rem; font-size: .9rem;
+    .np-rank-t { font-weight: 800; color: $ccee-magenta; } ol { margin: .3rem 0 0; padding-left: 1.3rem; } small { color: #555; } }
+  .np-nota { font-family: system-ui, sans-serif; font-size: .75rem; color: #777; margin: .4rem 0 0; }
+}

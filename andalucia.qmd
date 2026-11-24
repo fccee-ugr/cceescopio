@@ -1,6 +1,9 @@
 ---
 title: "Andalucía y las regiones españolas"
 subtitle: "Indicadores regionales para comparar Andalucía con el resto de comunidades autónomas y la UE"
+include-in-header:
+  - text: |
+      <script src="js/ccee-noticia.js"></script>
 ---
 
 Esta página reúne los indicadores con **detalle regional (NUTS 2)**. Por defecto se muestran Andalucía, España, Madrid, Cataluña y la Comunidad Valenciana; puedes añadir cualquier otra comunidad autónoma.
@@ -347,6 +350,16 @@ datos.ok ? (terr.length ? Plot.plot({
   ]
 }) : html`<p class="pending">Elige al menos un territorio.</p>`)
 : html`<div class="callout callout-warning"><p><b>No se han podido cargar los datos de Eurostat</b> (${datos.error}). Inténtalo de nuevo más tarde o consulta la tabla directamente en <a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.code}/default/table" target="_blank">Eurostat</a>.</p></div>`
+```
+
+```{ojs}
+//| echo: false
+// «Crea tu noticia»: el estudiante escribe un titular sobre la gráfica y el Periódico CCEEscopio publica el suyo
+(datos.ok && terr.length && window.CCEENoticia) ? window.CCEENoticia.panel({
+  tema: ind.nombre, unidad: ind.unidad, fuente: datos.rows[0]?.fuente, seccion: document.title.split("–")[0].trim(),
+  preferidos: ind.regional ? ["Andalucía", "España"] : ["España"],
+  series: terr.map(t => ({nombre: t, puntos: sel.filter(r => r.territorio === t).map(r => ({periodo: r.periodo, fecha: r.fecha, valor: r.valor}))}))
+}) : html``
 ```
 
 ## Mapa

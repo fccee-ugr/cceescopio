@@ -6,8 +6,10 @@ Lo ejecuta la acción de GitHub .github/workflows/bolsa.yml, que publica el resu
 También se puede ejecutar a mano:  python tools/bolsa.py --salida /tmp
 Solo usa la biblioteca estándar de Python.
 
-Fuente: Yahoo Finance (API de gráficos). Si un valor no se puede descargar, se conservan los datos de la
-ejecución anterior (--previas), de modo que la web nunca se queda sin datos.
+Fuente: Yahoo Finance. Se descarga con la librería yfinance (pip install yfinance), que gestiona las cookies que Yahoo
+exige y evita los bloqueos a las peticiones directas desde los servidores de GitHub; si no está instalada, se usa la API
+de gráficos directamente. Si un valor no se puede descargar, se conservan los datos de la ejecución anterior (--previas),
+de modo que la web nunca se queda sin datos.
 """
 import json, math, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timezone, timedelta
@@ -45,7 +47,52 @@ VALORES = [
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36 (CCEEscopio; Universidad de Granada)"}
 
 
+try:
+    import yfinance as yf
+except ImportError:
+    yf = None
+
+
+def descargar_yf(sym, rango, intervalo):
+    """Devuelve (fechas ISO, cierres, metadatos) con yfinance."""
+    error = None
+    for intento in range(3):
+        try:
+            t = yf.Ticker(sym)
+            h = t.history(period=rango, interval=intervalo, auto_adjust=False, actions=False)
+            if h is None or h.empty or "Close" not in h:
+                raise RuntimeError("sin datos")
+            h = h[h["Close"].notna()]
+            fechas, valores = [], []
+            for f, c in zip(h.index.strftime("%Y-%m-%d"), h["Close"].astype(float)):
+                if fechas and fechas[-1] == f:
+                    valores[-1] = c
+                else:
+                    fechas.append(f); valores.append(c)
+            meta = {}
+            try:
+                fi = t.fast_info
+                meta = {"currency": fi.get("currency") or "", "exchangeName": fi.get("exchange") or ""}
+            except Exception:
+                pass
+            return fechas, valores, meta
+        except Exception as e:
+            error = e
+            time.sleep(5 * (intento + 1))
+    raise RuntimeError(f"{sym}: {error}")
+
+
 def descargar(sym, rango, intervalo):
+    """Devuelve (fechas ISO, cierres, metadatos): primero con yfinance y, si falla o no está, con la API de gráficos."""
+    if yf is not None:
+        try:
+            return descargar_yf(sym, rango, intervalo)
+        except Exception as e:
+            print(f"  aviso: yfinance {e}; se prueba la API directa", file=sys.stderr)
+    return descargar_api(sym, rango, intervalo)
+
+
+def descargar_api(sym, rango, intervalo):
     """Devuelve (fechas ISO, cierres, metadatos) de la API de gráficos de Yahoo Finance."""
     q = urllib.parse.urlencode({"range": rango, "interval": intervalo, "includePrePost": "false", "events": "div,splits"})
     error = None
@@ -161,7 +208,10 @@ def main(salida, previas=None):
             if vid in ant:
                 series.append({**ant[vid], "antiguo": True})
     if not series:
-        sys.exit("No se ha podido descargar ninguna cotización.")
+        sys.exit("No se ha podido descargar ninguna cotización (Yahoo Finance no responde o bloquea las peticiones).")
+    if len(fallos) == len(VALORES):
+        # Ninguna descarga nueva: se mantienen los datos anteriores sin marcar la acción como fallida
+        print("::warning::No se ha podido actualizar ninguna cotización; se mantienen los datos anteriores.")
     ahora = int(time.time())
     completo = {"actualizado": ahora, "fuente": "Yahoo Finance", "series": series}
     json.dump(completo, open(salida / "bolsa.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))

@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-bdfe3d2d08c237835f7fa3a677371bd4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-fd1f6abaa445d382d80d96866524580e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,6 +71,7 @@ ul.task-list li input[type="checkbox"] {
 <style>html{ scroll-behavior: smooth; }</style>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="js/ccee-sim.js"></script>
+<script src="js/ccee-noticia.js"></script>
 
 
 <meta property="og:title" content="Bolsa al día – CCEEscopio D+I">
@@ -605,6 +606,7 @@ ul.task-list li input[type="checkbox"] {
   <div><b>Valores en el gráfico</b> <small class="nota">(pulsa en las tarjetas de arriba para añadir o quitar)</small>: <span class="chips-sel" id="bolsa-sel"></span></div>
   <label style="font-size:.9rem"><input type="checkbox" id="bolsa-base" checked=""> Comparar en base 100 (todas las series empiezan en 100 al inicio del periodo)</label>
   <div id="bolsa-graf" style="margin-top:.5rem"></div>
+  <div id="bolsa-noticia"></div>
   <div class="sim-botones"><button class="sim-btn sec" id="bolsa-csv">⬇️ Descargar los datos del gráfico (CSV)</button></div>
 </div>
 <div id="bolsa-lectura" class="calc-result" hidden=""></div>
@@ -717,6 +719,13 @@ Glosario rápido de bolsa
     ultimas = series;
     C.lineas($("bolsa-graf"), series, {alto: 360, refs: base ? [{y: 100, texto: "Valor al inicio del periodo = 100", color: "#999"}] : [],
       yEtiqueta: base ? "Base 100 al inicio del periodo" : "Cotización", yFormato: v => C.num(v, base ? 0 : (Math.abs(v) < 10 ? 2 : 0))});
+    // «Crea tu noticia» sobre el gráfico (sobre el primer valor seleccionado, o el que elija el estudiante)
+    const VENT = {"1m": "en el último mes", "3m": "en los últimos tres meses", "6m": "en los últimos seis meses", "ytd": "en lo que va de año",
+                  "1a": "en el último año", "5a": "en los últimos cinco años", "10a": "en la última década"};
+    $("bolsa-noticia").innerHTML = "";
+    if (series.length && window.CCEENoticia) $("bolsa-noticia").appendChild(window.CCEENoticia.panel({
+      tema: "Bolsa", unidad: "Puntos", modo: "nivel", ventana: VENT[periodo], fuente: datos.fuente, seccion: "Mercados",
+      series: series.map(s => ({nombre: s.nombre, puntos: s.puntos.map(q => ({periodo: q.x.toISOString().slice(0, 10), fecha: q.x, valor: q.v}))}))}));
     // lectura del gráfico
     if (series.length) {
       const res = series.map(s => ({n: s.nombre, r: 100 * (s.puntos.at(-1).v / s.puntos[0].v - 1)})).sort((a, b) => b.r - a.r);
