@@ -468,7 +468,7 @@ datos.ok ? html`<div class="descargas">
   ${DOM.download(() => csv(sel), `cceescopio_${ind.code}_seleccion.csv`, "⬇ Descargar selección (CSV)")}
   ${DOM.download(() => csv(datos.rows), `cceescopio_${ind.code}_completo.csv`, "⬇ Descargar todos los territorios (CSV)")}
 </div>
-<p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de CCEEscopio, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
+<p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de Muñoz, Álvarez (2026), CCEEscopio D+I, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
 ```
 
 ## Ideas para la docencia y la investigación
@@ -476,5 +476,7 @@ datos.ok ? html`<div class="descargas">
 - Economía mundial e internacional: grado de apertura y desequilibrios exteriores en la UE.
 - Comercio exterior y marketing internacional: dinamismo exportador de España frente a sus socios.
 - Integración económica: convergencia del PIB per cápita y de los precios en la UE.
+
+<p class="source">⚠️ Las ideas para TFG y TFM son solo propuestas orientativas, que no tienen por qué funcionar: consulta con tu tutor o tutora de TFG o TFM para confirmar su viabilidad.</p>
 
 <p class="source">¿Echas en falta algún indicador? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>

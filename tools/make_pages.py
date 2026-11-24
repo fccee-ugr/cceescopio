@@ -254,6 +254,8 @@ indicadores = {js}
 
 {doc}
 
+<p class="source">⚠️ Las ideas para TFG y TFM son solo propuestas orientativas, que no tienen por qué funcionar: consulta con tu tutor o tutora de TFG o TFM para confirmar su viabilidad.</p>
+
 <p class="source">¿Echas en falta algún indicador? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>
 """
 

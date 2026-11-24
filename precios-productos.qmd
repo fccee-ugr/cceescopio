@@ -619,7 +619,7 @@ carb ? html`<div class="descargas">
   ${DOM.download(() => csv(paisesCarb.flatMap(p => ["g95", "die"].flatMap(pr => ["con", "sin"].flatMap(im => PRECIOS.semanal(carb, p, `${pr}_${im}`).map(d => ({territorio: PRECIOS.nombreP(p), codigo: p, carburante: pr === "g95" ? "Gasolina 95" : "Gasóleo", impuestos: im === "con" ? "con impuestos" : "sin impuestos", semana: d.periodo, euros_litro: d.valor})))))), "cceescopio_carburantes.csv", "⬇ Precios semanales de los carburantes (CSV)")}
   ${seriesP ? DOM.download(() => csv([catIPC.total, ...productosIPC.map(p => p.code)].flatMap(c => (seriesP.get(c) ?? []).map(d => ({territorio: nombresGeo[geoP] ?? geoP, producto: c === catIPC.total ? "IPC general" : productosIPC.find(p => p.code === c).nombre, codigo_ecoicop: c, mes: d.periodo, indice: d.valor})))), `cceescopio_ipc_productos_${geoP}.csv`, "⬇ Índices de precios por producto (CSV)") : ""}
 </div>
-<p class="source">Carburantes: Comisión Europea, Weekly Oil Bulletin (actualizado: ${carb.actualizado}). Índices de precios y energía: Eurostat. Reutilización libre citando la fuente, a través de CCEEscopio, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
+<p class="source">Carburantes: Comisión Europea, Weekly Oil Bulletin (actualizado: ${carb.actualizado}). Índices de precios y energía: Eurostat. Reutilización libre citando la fuente, a través de Muñoz, Álvarez (2026), CCEEscopio D+I, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
 ```
 
 ::: {.callout-tip appearance="simple"}

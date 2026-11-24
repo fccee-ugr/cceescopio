@@ -114,7 +114,7 @@ viewof generarI = Inputs.button("📝 Generar la plantilla", {{value: 0, reduce:
         (h ? ` (hace un año, ${{fmt(h.valor)}}: ${{dif}})` : "") + (ue ? `; UE-27: ${{fmt(ue.valor)}}` : "") + `. Fuente: ${{u.fuente}}.`;
     }};
     const titulo = `Informe de coyuntura: ${{nombreT}}`;
-    const meta = `Autoría: ${{autorI || "[nombre o grupo]"}} · Datos consultados el ${{hoy}} · Fuente principal: Eurostat, a través de CCEEscopio D+I (Facultad de Ciencias Económicas y Empresariales, Universidad de Granada).`;
+    const meta = `Autoría: ${{autorI || "[nombre o grupo]"}} · Datos consultados el ${{hoy}} · Fuente principal: Eurostat, a través de Muñoz, Álvarez (2026), CCEEscopio D+I (Facultad de Ciencias Económicas y Empresariales, Universidad de Granada).`;
     const secs = seccionesI.map((s, k) => ({{n: k + 1, t: s.t, guia: s.guia, datos: s.ids.map(id => dato(especI.find(e => e.id === id)))}}));
     // Markdown
     let md = `# ${{titulo}}\\n\\n${{meta}}\\n\\n`;
@@ -123,14 +123,14 @@ viewof generarI = Inputs.button("📝 Generar la plantilla", {{value: 0, reduce:
       if (s.datos.length) md += `**Datos clave** (compruébalos y elige los que vayas a usar):\\n\\n${{s.datos.map(x => `- ${{x}}`).join("\\n")}}\\n\\n`;
       md += `[Escribe aquí tu análisis${{s.datos.length ? ". Incluye al menos un gráfico con título, unidad y fuente" : ""}}.]\\n\\n`;
     }}
-    md += `## Fuentes\\n\\n- Eurostat, a través de CCEEscopio D+I, observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Consultado el ${{hoy}}.\\n- [Añade otras fuentes: Banco de España, INE, IECA…]\\n\\n## Autoevaluación con la rúbrica\\n\\n| Criterio | Puntos | Mi valoración |\\n|---|---|---|\\n${{rubricaI.map(r => `| ${{r[0]}} | ${{String(r[1]).replace(".", ",")}} | |`).join("\\n")}}\\n| **Total** | **10** | |\\n`;
+    md += `## Fuentes\\n\\n- Eurostat, a través de Muñoz, Álvarez (2026). CCEEscopio D+I: observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Consultado el ${{hoy}}.\\n- [Añade otras fuentes: Banco de España, INE, IECA…]\\n\\n## Autoevaluación con la rúbrica\\n\\n| Criterio | Puntos | Mi valoración |\\n|---|---|---|\\n${{rubricaI.map(r => `| ${{r[0]}} | ${{String(r[1]).replace(".", ",")}} | |`).join("\\n")}}\\n| **Total** | **10** | |\\n`;
     // HTML para Word
     const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
     const htmlDoc = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${{esc(titulo)}}</title>
 <style>body{{font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.4}}h1{{color:#B5175F;font-size:20pt}}h2{{color:#B5175F;font-size:14pt;margin-top:18pt}}.guia{{background:#F6EEF2;padding:6pt;font-style:italic}}.hueco{{color:#888}}table{{border-collapse:collapse}}td,th{{border:1px solid #999;padding:4pt;font-size:9.5pt;vertical-align:top}}th{{background:#F6EEF2}}</style></head><body>
 <h1>${{esc(titulo)}}</h1><p>${{esc(meta)}}</p>
 ${{secs.map(s => `<h2>${{s.n}}. ${{esc(s.t)}}</h2><p class="guia"><b>Qué responder:</b> ${{esc(s.guia)}}</p>${{s.datos.length ? `<p><b>Datos clave</b> (compruébalos y elige los que vayas a usar):</p><ul>${{s.datos.map(x => `<li>${{esc(x)}}</li>`).join("")}}</ul>` : ""}}<p class="hueco">[Escribe aquí tu análisis${{s.datos.length ? ". Incluye al menos un gráfico con título, unidad y fuente" : ""}}.]</p>`).join("\\n")}}
-<h2>Fuentes</h2><ul><li>Eurostat, a través de CCEEscopio D+I, observatorio de indicadores económicos y empresariales de la Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Consultado el ${{hoy}}.</li><li class="hueco">[Añade otras fuentes: Banco de España, INE, IECA…]</li></ul>
+<h2>Fuentes</h2><ul><li>Eurostat, a través de Muñoz, Álvarez (2026). CCEEscopio D+I: observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Consultado el ${{hoy}}.</li><li class="hueco">[Añade otras fuentes: Banco de España, INE, IECA…]</li></ul>
 <h2>Rúbrica de evaluación</h2><table><tr><th>Criterio</th><th>Puntos</th><th>Excelente (100 %)</th><th>Adecuado (70 %)</th><th>Mejorable (40 %)</th><th>Insuficiente (0 %)</th><th>Mi valoración</th></tr>
 ${{rubricaI.map(r => `<tr><td><b>${{esc(r[0])}}</b></td><td>${{String(r[1]).replace(".", ",")}}</td>${{r.slice(2).map(x => `<td>${{esc(x)}}</td>`).join("")}}<td></td></tr>`).join("")}}
 <tr><td><b>Total</b></td><td><b>10</b></td><td></td><td></td><td></td><td></td><td></td></tr></table></body></html>`;

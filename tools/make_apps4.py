@@ -307,7 +307,7 @@ toc: true
 toc-depth: 2
 ---
 
-Elige una **variable dependiente (Y)** y hasta **cuatro variables explicativas (X)**, de los indicadores de CCEEscopio o de tus propios datos. La calculadora estima el modelo $Y = \beta_0 + \beta_1 X_1 + \dots + \beta_k X_k + u$, interpreta los coeficientes y contrasta los supuestos básicos: **linealidad, normalidad, homocedasticidad, ausencia de autocorrelación y de multicolinealidad**.
+Elige una **variable dependiente (Y)** y hasta **cuatro variables explicativas (X)**, de los indicadores de CCEEscopio o de tus propios datos. Primero indica el **tipo de datos**: **series temporales** (una misma unidad observada a lo largo del tiempo: España, 2005-2025) o **corte transversal** (muchas unidades en un mismo momento: los países de la UE o las comunidades autónomas en un año). Con series temporales también puedes hacer la **regresión respecto al tiempo** (tendencia lineal), sola o junto con otras variables. La calculadora estima el modelo $Y = \beta_0 + \beta_1 X_1 + \dots + \beta_k X_k + u$, interpreta los coeficientes y contrasta los supuestos básicos: **linealidad, normalidad, homocedasticidad, ausencia de autocorrelación y de multicolinealidad**.
 
 __HELPERS__
 
@@ -317,45 +317,81 @@ __ENTRADA__
 
 ```{ojs}
 //| echo: false
-viewof yW = fuenteR === "web" ? Inputs.select(new Map(especW.map(s => [`${s.nombre} (${s.frecuencia})`, s])), {label: "Variable dependiente (Y)", value: especW.find(s => s.id === "tasa-de-paro"), width: 520}) : Object.assign(html`<span></span>`, {value: null})
-viewof xW = fuenteR === "web" ? Inputs.select(new Map(especW.map(s => [`${s.nombre} (${s.frecuencia})`, s])), {label: "Variables explicativas (X) · Ctrl o ⌘ para varias", multiple: true, size: 8, value: [especW.find(s => s.id === "pib-crecimiento-interanual-trimestral")].filter(Boolean), width: 520}) : Object.assign(html`<span></span>`, {value: []})
-viewof geoW = fuenteR === "web" ? Inputs.select(territoriosW, {label: "Territorio", value: "España"}) : Object.assign(html`<span></span>`, {value: null})
-viewof transfW = fuenteR === "web" ? Inputs.select(TRANSF, {label: "Transformación de las series", value: "nivel"}) : Object.assign(html`<span></span>`, {value: "nivel"})
-viewof desdeW = fuenteR === "web" ? Inputs.range([2000, new Date().getFullYear() - 2], {label: "Desde el año", value: 2005, step: 1}) : Object.assign(html`<span></span>`, {value: 1900})
+viewof tipoR = Inputs.radio(new Map([["Series temporales (una unidad a lo largo del tiempo)", "temporal"], ["Corte transversal (varias unidades en un mismo año)", "transversal"]]), {label: "Tipo de datos", value: "temporal"})
+viewof modR = tipoR === "temporal" ? Inputs.radio(new Map([["Y en función de X", "x"], ["Y en función del tiempo (tendencia lineal)", "tiempo"], ["Y en función de X y del tiempo", "ambos"]]), {label: "Modelo", value: "x"}) : Object.assign(html`<span></span>`, {value: "x"})
+```
+
+```{ojs}
+//| echo: false
+usaX = tipoR === "transversal" || modR !== "tiempo"
+usaT = tipoR === "temporal" && modR !== "x"
+CCAA = geosRegiones.filter(g => /^ES\d\d$/.test(g))
+PAISES_UE = geosPaises.filter(g => !/^(EU|EA)/.test(g))
+// Corte transversal: valor de cada indicador en un año (media anual si el dato es mensual o trimestral) para cada territorio
+corteTransversal = async (series, anio, ambito) => {
+  const datos = await Promise.all(series.map(s => cargar({...s.spec, desde: anio - 1})));
+  const geos = ambito === "ccaa" ? CCAA : PAISES_UE, avisos = [];
+  const cols = series.map((s, i) => {
+    const d = datos[i];
+    if (!d.ok) { avisos.push(`${s.nombre}: no se han podido cargar los datos.`); return new Map(); }
+    if (ambito === "ccaa" && !s.spec.regional) avisos.push(`${s.nombre}: este indicador no tiene datos por comunidades autónomas.`);
+    const filas = d.rows.filter(r => r.fecha.getFullYear() === anio && geos.includes(r.codigo_territorio));
+    if (!filas.length) avisos.push(`${s.nombre}: no hay datos de ${anio}.`);
+    return new Map(d3.rollup(filas, v => d3.mean(v, r => r.valor), r => r.territorio));
+  });
+  const terrs = [...new Set(cols.flatMap(c => [...c.keys()]))].filter(t => cols.every(c => c.has(t))).sort((a, b) => a.localeCompare(b, "es"));
+  const filas = terrs.map(t => ({etq: t, ...Object.fromEntries(series.map((s, i) => [s.nombre, cols[i].get(t)]))}));
+  return {filas, numericas: series.map(s => s.nombre), etiqueta: "Territorio", freq: null, avisos, fuente: [...new Set(datos.filter(d => d.ok).map(d => d.code))].join(", ")};
+}
+```
+
+```{ojs}
+//| echo: false
+listaW = tipoR === "transversal" ? especW.filter(s => ambitoW === "ccaa" ? s.regional : !s.sinGeo) : especW
+viewof yW = fuenteR === "web" ? Inputs.select(new Map(listaW.map(s => [`${s.nombre} (${s.frecuencia})`, s])), {label: "Variable dependiente (Y)", value: listaW.find(s => s.id === "tasa-de-paro") ?? listaW[0], width: 520}) : Object.assign(html`<span></span>`, {value: null})
+viewof xW = fuenteR === "web" && usaX ? Inputs.select(new Map(listaW.map(s => [`${s.nombre} (${s.frecuencia})`, s])), {label: "Variables explicativas (X) · Ctrl o ⌘ para varias", multiple: true, size: 8, value: [listaW.find(s => s.id === "pib-crecimiento-interanual-trimestral") ?? listaW.find(s => s.id !== "tasa-de-paro")].filter(Boolean), width: 520}) : Object.assign(html`<span></span>`, {value: []})
+viewof geoW = fuenteR === "web" && tipoR === "temporal" ? Inputs.select(territoriosW, {label: "Territorio", value: "España"}) : Object.assign(html`<span></span>`, {value: null})
+viewof transfW = fuenteR === "web" && tipoR === "temporal" ? Inputs.select(TRANSF, {label: "Transformación de las series", value: "nivel"}) : Object.assign(html`<span></span>`, {value: "nivel"})
+viewof desdeW = fuenteR === "web" && tipoR === "temporal" ? Inputs.range([2000, new Date().getFullYear() - 2], {label: "Desde el año", value: 2005, step: 1}) : Object.assign(html`<span></span>`, {value: 1900})
+viewof ambitoW = fuenteR === "web" && tipoR === "transversal" ? Inputs.radio(new Map([["Países de la UE", "paises"], ["Comunidades autónomas", "ccaa"]]), {label: "Unidades (observaciones)", value: "paises"}) : Object.assign(html`<span></span>`, {value: "paises"})
+viewof anioW = fuenteR === "web" && tipoR === "transversal" ? Inputs.range([2005, new Date().getFullYear() - 1], {label: "Año", value: new Date().getFullYear() - 2, step: 1}) : Object.assign(html`<span></span>`, {value: null})
 ```
 
 ```{ojs}
 //| echo: false
 tablaR = {
   if (fuenteR === "web") {
-    if (!yW || !xW.length) return {error: "Elige la variable dependiente y al menos una variable explicativa."};
-    const xs = xW.filter(s => s.id !== yW.id).slice(0, 4);
+    if (!yW || (usaX && !xW.length)) return {error: "Elige la variable dependiente y al menos una variable explicativa."};
+    const xs = usaX ? xW.filter(s => s.id !== yW.id).slice(0, 4) : [];
+    if (tipoR === "transversal") {
+      const c = await corteTransversal([yW, ...xs].map(s => ({spec: s, nombre: s.nombre})), anioW, ambitoW);
+      return {...c, y: yW.nombre, xs: xs.map(s => s.nombre), temporal: false};
+    }
     const r = await alinearSeries([yW, ...xs].map(s => ({spec: s, nombre: s.nombre, territorio: geoW})), transfW);
     r.filas = r.filas.filter(f => !f.fecha || f.fecha.getFullYear() >= desdeW);
     return {...r, y: yW.nombre, xs: xs.map(s => s.nombre), temporal: true};
   }
   const t = prepararTabla(ficheroR ? await leerFichero(ficheroR) : parsearTexto(textoR));
-  if (!t || t.numericas.length < 2) return {error: "Necesito al menos dos columnas numéricas (una para Y y otra para X)."};
-  return {...t, temporal: !!t.etiqueta && /año|ano|fecha|periodo|year|mes|trim/i.test(t.etiqueta)};
+  if (!t || t.numericas.length < (usaX ? 2 : 1)) return {error: usaX ? "Necesito al menos dos columnas numéricas (una para Y y otra para X)." : "Necesito al menos una columna numérica para Y."};
+  return {...t, temporal: tipoR === "temporal"};
 }
 ```
 
 ```{ojs}
 //| echo: false
 viewof yP = fuenteR === "propios" && tablaR?.numericas ? Inputs.select(tablaR.numericas, {label: "Variable dependiente (Y)", value: tablaR.numericas[0]}) : Object.assign(html`<span></span>`, {value: null})
-viewof xP = fuenteR === "propios" && tablaR?.numericas ? Inputs.checkbox(tablaR.numericas.filter(c => c !== yP), {label: "Variables explicativas (X)", value: tablaR.numericas.filter(c => c !== yP).slice(0, 1)}) : Object.assign(html`<span></span>`, {value: []})
-viewof tendR = Inputs.toggle({label: "Añadir una tendencia temporal (t = 1, 2, 3…)", value: false})
+viewof xP = fuenteR === "propios" && usaX && tablaR?.numericas ? Inputs.checkbox(tablaR.numericas.filter(c => c !== yP), {label: "Variables explicativas (X)", value: tablaR.numericas.filter(c => c !== yP).slice(0, 1)}) : Object.assign(html`<span></span>`, {value: []})
 ```
 
 ```{ojs}
 //| echo: false
 modeloR = {
   if (!tablaR || tablaR.error) return {error: tablaR?.error ?? ""};
-  const yN = fuenteR === "web" ? tablaR.y : yP, xN = [...(fuenteR === "web" ? tablaR.xs : xP).slice(0, 4)];
-  if (!yN || !xN.length) return {error: "Elige al menos una variable explicativa."};
+  const yN = fuenteR === "web" ? tablaR.y : yP, xN = usaX ? [...(fuenteR === "web" ? tablaR.xs : xP).slice(0, 4)] : [];
+  if (!yN || (usaX && !xN.length)) return {error: "Elige al menos una variable explicativa."};
   const filas = tablaR.filas.filter(f => [yN, ...xN].every(c => Number.isFinite(f[c])));
-  const nombresX = tendR ? [...xN, "Tendencia (t)"] : xN;
-  const y = filas.map(f => f[yN]), X = filas.map((f, i) => [...xN.map(c => f[c]), ...(tendR ? [i + 1] : [])]);
+  const nombresX = usaT ? [...xN, "Tiempo (t)"] : xN;
+  const y = filas.map(f => f[yN]), X = filas.map((f, i) => [...xN.map(c => f[c]), ...(usaT ? [i + 1] : [])]);
   if (filas.length < nombresX.length + 4) return {error: `Hay solo ${filas.length} observaciones completas: son pocas para estimar el modelo.`};
   const m = EST.mco(y, X);
   if (!m) return {error: "No se puede estimar el modelo: alguna variable es combinación lineal de las demás (multicolinealidad perfecta)."};
@@ -373,8 +409,10 @@ modeloR = {
   window.cceeEvento && window.cceeEvento("calculadoras/regresion", "Regresión", true);
   const eq = `${yN} = ${f4(m.b[0])} ${m.b.slice(1).map((b, i) => `${b < 0 ? "−" : "+"} ${f4(Math.abs(b))} · ${nombresX[i]}`).join(" ")}`;
   const sig = (p) => p < 0.01 ? "***" : p < 0.05 ? "**" : p < 0.1 ? "*" : "";
+  const per = ({Mensual: "mes", Trimestral: "trimestre", Semestral: "semestre", Anual: "año"})[tablaR.freq] ?? "periodo";
   const interp = m.b.slice(1).map((b, i) => {
     const p = m.p[i + 1];
+    if (nombresX[i] === "Tiempo (t)") return html`<li><b>Tiempo (t)</b>: en cada ${per}, ${yN} ${b >= 0 ? "aumenta" : "disminuye"} en promedio ${f4(Math.abs(b))} unidades${nombresX.length > 1 ? ", manteniendo constante el resto" : ""} (tendencia lineal). ${p < 0.05 ? html`La tendencia es <b>estadísticamente significativa</b> al 5 % (p = ${fp(p)}).` : html`La tendencia <b>no es significativa</b> al 5 % (p = ${fp(p)}).`}</li>`;
     return html`<li><b>${nombresX[i]}</b>: si aumenta en una unidad, ${yN} ${b >= 0 ? "aumenta" : "disminuye"} en promedio ${f4(Math.abs(b))} unidades, manteniendo constante el resto. ${p < 0.05 ? html`El efecto es <b>estadísticamente significativo</b> al 5 % (p = ${fp(p)}).` : html`El efecto <b>no es significativo</b> al 5 % (p = ${fp(p)}).`}</li>`;
   });
   return html`${tablaR.avisos?.length ? html`<p class="pending">${tablaR.avisos.join(" ")}</p>` : ""}
@@ -386,7 +424,7 @@ modeloR = {
       <div class="kpi"><div class="kpi-l">R²</div><div class="kpi-n">${locES.format(",.3f")(m.r2)}</div><div class="kpi-s">el modelo explica el ${locES.format(",.1f")(100 * m.r2)} % de la variabilidad de Y</div></div>
       <div class="kpi"><div class="kpi-l">R² ajustado</div><div class="kpi-n">${locES.format(",.3f")(m.r2a)}</div></div>
       <div class="kpi"><div class="kpi-l">F de significación conjunta</div><div class="kpi-n">${f4(m.F)}</div><div class="kpi-s">p = ${fp(m.pFv)} ${m.pFv < 0.05 ? "· el modelo es significativo" : "· el modelo no es significativo"}</div></div>
-      <div class="kpi"><div class="kpi-l">Observaciones</div><div class="kpi-n">${m.n}</div><div class="kpi-s">${tablaR.freq ? `datos ${tablaR.freq.toLowerCase()}es` : ""} ${filas.length ? `· ${filas[0].etq} a ${filas.at(-1).etq}` : ""}</div></div>
+      <div class="kpi"><div class="kpi-l">Observaciones</div><div class="kpi-n">${m.n}</div><div class="kpi-s">${tablaR.temporal ? `series temporales${tablaR.freq ? ` (datos ${tablaR.freq.toLowerCase()}es)` : ""} ${filas.length ? `· ${filas[0].etq} a ${filas.at(-1).etq}` : ""}` : `corte transversal${fuenteR === "web" ? ` · ${ambitoW === "ccaa" ? "comunidades autónomas" : "países de la UE"} en ${anioW}` : ""}`}</div></div>
       <div class="kpi"><div class="kpi-l">Error típico de la regresión</div><div class="kpi-n">${f4(Math.sqrt(m.s2))}</div></div>
       <div class="kpi"><div class="kpi-l">AIC · BIC</div><div class="kpi-n" style="font-size:1.2rem">${locES.format(",.1f")(m.aic)} · ${locES.format(",.1f")(m.bic)}</div></div></div>
     <h3>Interpretación</h3><ul>${interp}</ul>`;
@@ -406,7 +444,7 @@ modeloR = {
   const qq = ordenados.map((e, i) => ({teo: EST.normInv((i + 0.5) / ordenados.length) * sd, e}));
   const ejeT = tablaR.temporal && d[0].fecha ? {x: "fecha"} : {x: "i"};
   const graf1 = nombresX.length === 1
-    ? Plot.plot({height: 300, marginLeft: 55, x: {label: nombresX[0], grid: true}, y: {label: yN, grid: true}, marks: [Plot.dot(d, {x: "x", y: "y", fill: "#2C6FBB", r: 3.5, title: r => `${r.etq}: (${f4(r.x)}, ${f4(r.y)})`}), Plot.line(d.slice().sort((a, b) => a.x - b.x), {x: "x", y: "yh", stroke: "#A6195E", strokeWidth: 2.5})]})
+    ? Plot.plot({height: 300, marginLeft: 55, x: {label: nombresX[0] === "Tiempo (t)" ? "Tiempo (t = 1, 2, 3…)" : nombresX[0], grid: true}, y: {label: yN, grid: true}, marks: [Plot.dot(d, {x: "x", y: "y", fill: "#2C6FBB", r: 3.5, title: r => `${r.etq}: (${f4(r.x)}, ${f4(r.y)})`}), Plot.line(d.slice().sort((a, b) => a.x - b.x), {x: "x", y: "yh", stroke: "#A6195E", strokeWidth: 2.5})]})
     : Plot.plot({height: 300, marginLeft: 55, x: {label: `${yN} estimado`, grid: true}, y: {label: `${yN} observado`, grid: true}, marks: [Plot.line([[d3.min(d, r => r.yh), d3.min(d, r => r.yh)], [d3.max(d, r => r.yh), d3.max(d, r => r.yh)]], {stroke: "#999", strokeDasharray: "4,3"}), Plot.dot(d, {x: "yh", y: "y", fill: "#2C6FBB", r: 3.5, title: r => r.etq})]});
   return html`<div class="graf-2">
     <div><h4>${nombresX.length === 1 ? "Nube de puntos y recta de regresión" : "Observado frente a estimado"}</h4>${graf1}</div>
@@ -438,7 +476,7 @@ modeloR = {
     ${fila(s.linealidad, "la forma funcional lineal es correcta", "Se acepta la linealidad", "Posible error de especificación", "Prueba a transformar las variables (logaritmos, tasas de variación) o a añadir variables omitidas.")}
     ${fila(s.normalidad, "los residuos siguen una distribución normal", "Se acepta la normalidad", "Los residuos no son normales", `Asimetría ${f4(s.normalidad.asimetria)}, curtosis ${f4(s.normalidad.curtosis)}. Con muestras grandes, los contrastes t y F siguen siendo aproximadamente válidos; revisa si hay datos atípicos.`)}
     ${fila(s.homocedasticidad, "la varianza de los residuos es constante", "Se acepta la homocedasticidad", "Hay heterocedasticidad", "Los coeficientes siguen siendo insesgados, pero los errores típicos no son fiables: usa errores típicos robustos o transforma las variables.")}
-    ${fila(s.autocorrelacion, "los residuos no están autocorrelacionados", "No hay autocorrelación", "Hay autocorrelación", `Durbin-Watson = ${f4(dw)} (cerca de 2: sin autocorrelación; cerca de 0: positiva; cerca de 4: negativa). Es habitual en series temporales en niveles: prueba con tasas de variación o diferencias.`)}
+    ${tablaR.temporal ? fila(s.autocorrelacion, "los residuos no están autocorrelacionados", "No hay autocorrelación", "Hay autocorrelación", `Durbin-Watson = ${f4(dw)} (cerca de 2: sin autocorrelación; cerca de 0: positiva; cerca de 4: negativa). Es habitual en series temporales en niveles: prueba con tasas de variación o diferencias.`) : html`<tr><td><b>Ausencia de autocorrelación</b></td><td colspan="4"><small>En datos de corte transversal el orden de las observaciones es arbitrario, por lo que no se contrasta la autocorrelación.</small></td></tr>`}
     ${vifs ? html`<tr><td><b>Ausencia de multicolinealidad (VIF)</b><br><small>Regla: VIF > 10 indica multicolinealidad grave</small></td><td colspan="2">${vifs.map(d => html`${d.x}: <b>${f4(d.v)}</b><br>`)}</td>
       <td class="${vifMax <= 10 ? "sup-ok" : "sup-mal"}">${vifMax <= 5 ? "✅ Sin problemas" : vifMax <= 10 ? "✅ Moderada" : "⚠️ Multicolinealidad alta"}</td><td><small>Con multicolinealidad alta, los coeficientes son imprecisos: valora eliminar alguna variable explicativa muy correlacionada con las demás.</small></td></tr>` : html`<tr><td><b>Ausencia de multicolinealidad</b></td><td colspan="4"><small>Con una sola variable explicativa no hay multicolinealidad.</small></td></tr>`}
   </table>

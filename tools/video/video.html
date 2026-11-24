@@ -59,6 +59,14 @@ canvas, #stage, .sc, #vig { position: absolute; left: 0; top: 0; width: 1920px; 
 .rk { position: absolute; left: 40px; width: 1050px; height: 70px; } .rk .nm { position: absolute; left: 0; width: 330px; font-size: 31px; font-weight: 700; line-height: 70px; white-space: nowrap; } .rk .bx { position: absolute; left: 340px; top: 9px; height: 52px; border-radius: 12px; } .rk .pt { position: absolute; top: 0; font-size: 34px; font-weight: 900; line-height: 70px; font-variant-numeric: tabular-nums; }
 /* 7: titulaciones */
 .orb { position: absolute; left: 0; top: 0; font-size: 36px; font-weight: 800; padding: 16px 34px; border-radius: 999px; white-space: nowrap; border: 2px solid rgba(255,255,255,.35); will-change: transform; }
+/* 1b: gráficos animados */
+#g-bars { position: absolute; left: 1270px; top: 300px; width: 540px; height: 590px; padding: 26px 30px; }
+.gb { position: absolute; left: 30px; width: 480px; height: 56px; } .gb .nm { position: absolute; left: 0; width: 150px; font-size: 25px; font-weight: 700; line-height: 56px; white-space: nowrap; }
+.gb .bx { position: absolute; left: 158px; top: 8px; height: 40px; border-radius: 10px; }
+/* 7b: docencia e investigación */
+.ej { position: absolute; width: 540px; height: 250px; padding: 26px 30px; }
+.ej .em { font-family: "Noto Color Emoji"; font-size: 60px; line-height: 1; } .ej h3 { font-size: 33px; font-weight: 800; line-height: 1.12; margin: 14px 0 8px; } .ej p { font-size: 24px; color: #E3D3DB; font-weight: 500; line-height: 1.3; }
+.ej .glow { position: absolute; left: 0; top: 0; right: 0; bottom: 0; border-radius: 28px; pointer-events: none; }
 /* 8: cierre */
 #url { position: absolute; left: 0; width: 1920px; top: 640px; text-align: center; } #url span { display: inline-block; font-size: 50px; font-weight: 800; padding: 20px 54px; border-radius: 999px; background: linear-gradient(90deg, var(--mg), var(--or)); box-shadow: 0 20px 60px rgba(181,23,95,.5); }
 #plate { position: absolute; left: 560px; top: 810px; width: 800px; height: 170px; background: #fff; border-radius: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 60px rgba(0,0,0,.5); } #plate img { height: 124px; }
@@ -82,7 +90,7 @@ const es = (v, d = 0) => v.toLocaleString("es-ES", {minimumFractionDigits: d, ma
 const pct = v => (v > 0 ? "+" : "") + es(v, 2) + " %";
 
 /* ---------- escenas y tiempos ---------- */
-const ESC = [["logo", 7.4], ["ind", 6.6], ["hoy", 7.2], ["bolsa", 7.8], ["sim", 8.6], ["news", 6.8], ["juegos", 7.2], ["tit", 6.6], ["fin", 8.2]];
+const ESC = [["logo", 8.8], ["ind", 6.0], ["graf", 7.6], ["hoy", 7.2], ["bolsa", 7.8], ["sim", 8.6], ["news", 6.8], ["juegos", 7.2], ["doc", 7.6], ["inv", 7.6], ["tit", 6.2], ["fin", 8.2]];
 let acc = 0; const T0 = {}; ESC.forEach(e => { T0[e[0]] = acc; acc += e[1]; }); const DUR = acc, X = 0.35;
 const stage = $("#stage"), EL = {};
 ESC.forEach(([id]) => { const d = document.createElement("div"); d.className = "sc"; d.id = "s-" + id; stage.appendChild(d); EL[id] = d; });
@@ -140,14 +148,16 @@ function logoAnim(root, t, t0) {     // ensamblaje del logo: común a la apertur
 }
 
 /* ---------- 0. Apertura ---------- */
-EL.logo.innerHTML = `<div class="abs h rv" id="l-q" style="left:0;top:420px;width:1920px;padding:0 200px;text-align:center;font-size:96px">Cada día, la economía genera <em>millones de datos</em></div>${lockHTML}
+EL.logo.innerHTML = `<div class="abs h rv" id="l-q" style="left:0;top:250px;width:1920px;padding:0 200px;text-align:center;font-size:96px">Cada día, la economía genera <em>millones de datos</em></div>
+  <div class="abs h rv" id="l-q2" style="left:0;top:540px;width:1920px;padding:0 200px;text-align:center;font-size:84px">y ahora están <em>al alcance de tu mano</em></div>${lockHTML}
   <div class="tag sub" id="l-t1" style="top:625px;font-size:56px;font-weight:700;color:#FFC56B">Observando la economía y la empresa</div>
   <div class="tag sub" id="l-t2" style="top:730px">Docencia + Investigación · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada</div>`;
 const S = {};
 S.logo = t => {
-  AMB = 0.75; const q = $("#l-q"); rv(q, seg(t, 0.25, 1.3)); q.style.opacity = 1 - seg(t, 2.1, 2.6);
-  logoAnim(EL.logo, t, 2.2);
-  show($("#l-t1"), eo(seg(t, 5.2, 5.8)), `translateY(${(1 - eo(seg(t, 5.2, 5.8))) * 30}px)`); show($("#l-t2"), eo(seg(t, 5.6, 6.2)));
+  AMB = 0.75; const q = $("#l-q"), q2 = $("#l-q2"); rv(q, seg(t, 0.25, 1.3)); rv(q2, seg(t, 1.6, 2.6)); const fo = 1 - seg(t, 3.5, 4.0);
+  q.style.opacity = fo; q2.style.opacity = fo; q2.style.transform = `scale(${1 + 0.04 * eback(seg(t, 2.4, 3.0)) - 0.04})`;
+  logoAnim(EL.logo, t, 3.6);
+  show($("#l-t1"), eo(seg(t, 6.6, 7.2)), `translateY(${(1 - eo(seg(t, 6.6, 7.2))) * 30}px)`); show($("#l-t2"), eo(seg(t, 7.0, 7.6)));
 };
 
 /* ---------- 1. 99 indicadores ---------- */
@@ -158,12 +168,42 @@ const IND = ["Inflación (IPCA)", "Tasa de paro", "PIB: crecimiento", "Pernoctac
   EL.ind.innerHTML = `<div id="wallp"><div id="wall">${h}</div></div><div id="scrim"></div>
   <div class="abs" style="left:0;top:215px;width:1920px;text-align:center"><div id="n99">0</div><div class="h rv" id="i-h" style="margin-top:6px">indicadores <em>en directo</em></div>
   <div id="i-ch" style="margin-top:34px">${["España", "Andalucía", "Comunidades autónomas", "27 países de la UE"].map(c => `<span class="chip" style="margin:0 9px">${c}</span>`).join("")}</div>
-  <div class="sub" id="i-s" style="margin-top:30px">Datos oficiales de Eurostat · gráficos, mapas y descarga en CSV</div></div>`; }
+  <div class="sub" id="i-s" style="margin-top:30px">Datos oficiales de Eurostat · gráficos y mapas animados · descarga en CSV</div></div>`; }
 S.ind = t => {
   AMB = 0.3; $("#wall").style.transform = `rotateX(54deg) rotateZ(-20deg) translate3d(${-t * 46}px,${-t * 34 + 80}px,0)`;
   $$(".wc").forEach((c, i) => { const p = eo(seg(t, 0.1 + (i % 7) * 0.07 + Math.floor(i / 7) * 0.1, 0.9 + (i % 7) * 0.07 + Math.floor(i / 7) * 0.1)); c.style.opacity = p; c.style.transform = `translateZ(${(1 - p) * 500}px)`; $("path", c).style.strokeDashoffset = 1 - eio(seg(t, 0.6 + i * 0.07, 2.4 + i * 0.07)); });
   $("#scrim").style.opacity = seg(t, 0.5, 1.3); const n = $("#n99"); n.textContent = Math.round(99 * eo(seg(t, 0.8, 2.4))); show(n, seg(t, 0.7, 1.1), `scale(${0.8 + 0.2 * eback(seg(t, 0.7, 1.5))})`);
   rv($("#i-h"), seg(t, 1.5, 2.4)); $$("#i-ch .chip").forEach((c, i) => show(c, eo(seg(t, 2.6 + i * 0.18, 3.1 + i * 0.18)), `translateY(${(1 - eo(seg(t, 2.6 + i * 0.18, 3.1 + i * 0.18))) * 26}px)`)); show($("#i-s"), eo(seg(t, 3.6, 4.2)));
+};
+
+/* ---------- 1b. Gráficos animados (formas ilustrativas, no son datos) ---------- */
+const GC = {x: 170, y: 330, w: 980, h: 500}, GY0 = 2008, GY1 = 2025, GCOL = ["#F0479A", "#F29200", "#E6DDE2"], GNOM = ["España", "Andalucía", "UE-27"];
+const forma = (u, k) => { const base = [0.42, 0.62, 0.22][k], amp = [0.40, 0.42, 0.12][k], bump = Math.exp(-(((u - 0.30) / 0.22) ** 2)); return clamp(base + amp * bump - 0.10 * u + 0.02 * Math.sin(9 * u + k), 0.03, 1.2); };
+const GP = (u, k) => [GC.x + u * GC.w, GC.y + GC.h - (0.04 + 0.78 * forma(u, k)) * GC.h];
+const BAR = [["España", "#F0479A", 0.55, 0.9], ["Andalucía", "#F29200", 0.62, 1.3], ["Alemania", "#7DD3FC", 0.40, 2.1], ["Francia", "#4ADE80", 0.47, 0.4], ["Italia", "#E8C547", 0.50, 2.8], ["Portugal", "#C4B5FD", 0.45, 1.8]];
+const barV = (u, k) => clamp(BAR[k][2] + 0.22 * Math.sin(u * 5.2 + BAR[k][3]) * (0.6 + 0.4 * Math.cos(u * 2.3 + k)), 0.08, 1);
+{ let ejes = ""; for (let g = 0; g <= 4; g++) { const y = GC.y + GC.h - g * GC.h / 4; ejes += `<line x1="${GC.x}" x2="${GC.x + GC.w}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,${g ? .12 : .4})" stroke-width="2"/>`; }
+  for (let a = GY0; a <= GY1; a += 3) { const x = GC.x + (a - GY0) / (GY1 - GY0) * GC.w; ejes += `<text x="${x}" y="${GC.y + GC.h + 38}" text-anchor="middle" font-size="24" fill="#B9A9B1">${a}</text>`; }
+  EL.graf.innerHTML = `<div class="abs" style="left:110px;top:80px"><div class="kick">Indicadores en directo</div><div class="h rv" id="g-h" style="margin-top:10px">Y ahora, con <em>gráficos animados</em></div></div>
+  <div class="abs" id="g-ch" style="left:${GC.x}px;top:255px">${GNOM.map((n, k) => `<span class="chip" style="margin-right:14px;font-size:25px;padding:8px 22px;border-color:${GCOL[k]}"><span style="color:${GCOL[k]}">●</span> ${n}</span>`).join("")}</div>
+  <svg class="abs" width="1920" height="1080"><g id="g-ax">${ejes}</g>${GNOM.map((n, k) => `<path id="g-l${k}" fill="none" stroke="${GCOL[k]}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle id="g-d${k}" r="12" fill="${GCOL[k]}" stroke="#10050B" stroke-width="4"/><text id="g-t${k}" font-size="27" font-weight="800" fill="${GCOL[k]}">${n}</text>`).join("")}</svg>
+  <div id="g-bars" class="glass"><div style="font-size:30px;font-weight:800">Ranking animado</div><div style="font-size:22px;color:#D9CBD2;margin-top:2px;width:300px">Los territorios se reordenan año a año</div>
+  <div id="g-yr" style="position:absolute;right:30px;top:22px;font-size:54px;font-weight:900;color:#FFC56B;font-variant-numeric:tabular-nums">2008</div>
+  ${BAR.map(b => `<div class="gb"><span class="nm">${b[0]}</span><span class="bx" style="background:linear-gradient(90deg,${b[1]}88,${b[1]})"></span></div>`).join("")}</div>
+  <div class="abs sub" id="g-ft" style="left:110px;top:960px;font-size:30px">Las líneas se dibujan solas y los mapas y rankings cambian año a año · <span style="color:#B9A9B1">formas ilustrativas</span></div>`; }
+S.graf = t => {
+  AMB = 0.25; rv($("#g-h"), seg(t, 0.3, 1.3)); $("#g-ax").style.opacity = seg(t, 0.5, 1.1);
+  $$("#g-ch .chip").forEach((c, i) => show(c, eo(seg(t, 0.8 + i * 0.15, 1.3 + i * 0.15)), `translateY(${(1 - eo(seg(t, 0.8 + i * 0.15, 1.3 + i * 0.15))) * 20}px)`));
+  const p = eio(seg(t, 1.2, 5.6)), n = 160, m = Math.max(1, Math.round(n * p));
+  for (let k = 0; k < 3; k++) { let d = ""; for (let i = 0; i <= m; i++) { const [x, y] = GP(i / n, k); d += `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`; }
+    const o = seg(t, 1.1, 1.4), [hx, hy] = GP(m / n, k); $("#g-l" + k).setAttribute("d", d); $("#g-l" + k).style.opacity = o;
+    const dd = $("#g-d" + k); dd.setAttribute("cx", hx); dd.setAttribute("cy", hy); dd.style.opacity = o; const tt = $("#g-t" + k); tt.setAttribute("x", hx + 20); tt.setAttribute("y", hy + 9); tt.style.opacity = o; }
+  const ano = Math.round(GY0 + p * (GY1 - GY0)); 
+  const pb = eo(seg(t, 1.0, 1.8)); show($("#g-bars"), pb, `translateX(${(1 - pb) * 120}px)`); $("#g-yr").textContent = ano;
+  const v = BAR.map((b, k) => barV(p, k)), mx = Math.max(...v);
+  $$(".gb", EL.graf).forEach((el, i) => { let rk = 0; v.forEach((o, j) => { if (j !== i) rk += 1 / (1 + Math.exp(-(o - v[i]) / 0.012)); }); el.style.top = (120 + rk * 72) + "px";
+    $(".bx", el).style.width = (320 * v[i] / mx * (0.15 + 0.85 * seg(t, 1.4, 2.0))) + "px"; el.style.opacity = seg(t, 1.3 + i * 0.07, 1.7 + i * 0.07); });
+  show($("#g-ft"), eo(seg(t, 3.0, 3.6)));
 };
 
 /* ---------- 2. Hoy en la economía ---------- */
@@ -266,6 +306,21 @@ S.juegos = t => {
   $$("#j-ch .chip").forEach((c, i) => show(c, eo(seg(t, 3.4 + i * 0.16, 3.9 + i * 0.16)), `translateY(${(1 - eo(seg(t, 3.4 + i * 0.16, 3.9 + i * 0.16))) * 30}px)`));
   const ct = t - 5.2; if (ct > 0) CONF.forEach(c => { const x = c.x + 200 + c.vx * ct * 0.7, y = 620 + c.vy * ct + 1300 * ct * ct; if (y > H + 30) return; fx.save(); fx.translate(x, y); fx.rotate(c.ph + ct * c.sp); fx.fillStyle = c.c; fx.globalAlpha = clamp(2.2 - ct); fx.fillRect(-c.w / 2, -c.w / 4, c.w, c.w / 2); fx.restore(); });
 };
+
+/* ---------- 7b. Docencia e Investigación: ejemplos ---------- */
+const DOC = [["📚", "Cada asignatura, con sus indicadores", "Ejemplos de uso para las asignaturas de los cinco grados"], ["✍️", "Ejercicios autocorregibles", "Siempre con los últimos datos publicados"], ["🧪", "Generador de exámenes", "Varias versiones, soluciones y exportación a PRADO"], ["📰", "Informe de coyuntura", "Plantilla y rúbrica para trabajos en grupo"], ["🎮", "Juegos y simuladores", "Concursos en el aula y retos con datos reales"], ["🗺️", "Rutas de aprendizaje", "Itinerarios guiados paso a paso"]], INV = [["💭", "Ideas para TFG y TFM", "Pregunta, hipótesis, datos, método y estructura"], ["📈", "Regresión con análisis de supuestos", "Series temporales, corte transversal o tendencia"], ["🖼️", "Gráficos con la cita de la fuente", "Listos para el trabajo, con la referencia en APA"], ["💾", "Datos reutilizables", "CSV y código en R y Python para análisis reproducibles"], ["⚖️", "Calculadoras con inferencia", "Desigualdad, convergencia, correlación y más"], ["🏆", "La Facultad en los ranking", "La UGR por disciplinas"]];
+function ejemplos(el, kick, h, L, col) {
+  el.innerHTML = `<div class="abs" style="left:110px;top:80px"><div class="kick">${kick}</div><div class="h rv" style="margin-top:10px">${h}</div></div>
+  ${L.map((e, i) => `<div class="ej glass" style="left:${110 + (i % 3) * 580}px;top:${330 + Math.floor(i / 3) * 290}px;border-top:8px solid ${i % 2 ? "#F29200" : "#F0479A"}"><div class="em">${e[0]}</div><h3>${e[1]}</h3><p>${e[2]}</p><div class="glow"></div></div>`).join("")}`;
+}
+ejemplos(EL.doc, "Docencia", "Clases con <em>datos de hoy</em>", DOC);
+ejemplos(EL.inv, "Investigación", "Del dato al <em>TFG, el TFM y la tesis</em>", INV);
+function ejAnim(el, t) {
+  AMB = 0.3; rv($(".rv", el), seg(t, 0.3, 1.3));
+  $$(".ej", el).forEach((c, i) => { const a = 0.9 + i * 0.32, q = seg(t, a, a + 0.6); show(c, eo(q), `translateY(${(1 - eo(q)) * 80}px) scale(${0.85 + 0.15 * eback(q)})`);
+    const g = seg(t, 3.4 + i * 0.25, 4.2 + i * 0.25); $(".glow", c).style.background = `linear-gradient(110deg, rgba(255,255,255,0) ${-40 + 180 * g}%, rgba(255,255,255,.16) ${-20 + 180 * g}%, rgba(255,255,255,0) ${0 + 180 * g}%)`; });
+}
+S.doc = t => ejAnim(EL.doc, t); S.inv = t => ejAnim(EL.inv, t);
 
 /* ---------- 7. Todas las titulaciones ---------- */
 const TITS = ["GADE", "GECO", "GFICO", "GMIM", "GTUR", "GADE + Derecho", "GADE + Ingenierías", "Turismo + Traducción", "Másteres", "Doctorado"];

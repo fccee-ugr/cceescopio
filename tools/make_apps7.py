@@ -1098,7 +1098,11 @@ subtitle: "Generador de temas de investigación con datos de CCEEscopio: pregunt
 toc: false
 ---
 
-Elige tu titulación, el nivel y, si quieres, un área o una palabra clave. El generador combina **temas**, **ámbitos territoriales**, **periodos** y **métodos** para proponer ideas de trabajo que se pueden hacer con datos públicos, la mayoría disponibles en CCEEscopio. Cada idea es un **punto de partida**: coméntala con tu tutor o tutora antes de empezar.
+Elige tu titulación, el nivel y, si quieres, un área o una palabra clave. El generador combina **temas**, **ámbitos territoriales**, **periodos** y **métodos** para proponer ideas de trabajo que se pueden hacer con datos públicos, la mayoría disponibles en CCEEscopio. Cada idea es un **punto de partida**.
+
+::: {.callout-warning appearance="simple"}
+**Importante.** Estas líneas de investigación son solo **propuestas orientativas**, que no tienen por qué funcionar. Antes de empezar, consulta con tu **tutor o tutora de TFG o TFM** para confirmar su viabilidad.
+:::
 
 ```{ojs}
 //| echo: false

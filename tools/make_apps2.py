@@ -301,7 +301,7 @@ graficoG = {
   const anio = new Date().getFullYear();
   const url = `https://ec.europa.eu/eurostat/databrowser/view/${datosG.code}/default/table?lang=es`;
   const apa = `Eurostat. (${anio}). ${indG.nombre} [Conjunto de datos ${datosG.code}]. Oficina Estadística de la Unión Europea. Recuperado el ${hoyG} de ${url}`;
-  const apaWeb = `Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. (${anio}). CCEEscopio: observatorio de indicadores económicos y empresariales [Sitio web]. Recuperado el ${hoyG} de ${location.origin + location.pathname.replace(/[^/]*$/, "")}`;
+  const apaWeb = `Muñoz, Álvarez (2026). CCEEscopio D+I: observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación [Sitio web]. Facultad de Ciencias Económicas y Empresariales, Universidad de Granada. Recuperado el ${hoyG} de ${location.origin + location.pathname.replace(/[^/]*$/, "")}`;
   const caja = (t) => {
     const b = html`<button class="copiar">Copiar</button>`;
     b.onclick = async () => { try { await navigator.clipboard.writeText(t); b.textContent = "Copiado ✓"; } catch (e) { b.textContent = "Selecciona y copia"; } };
@@ -309,7 +309,7 @@ graficoG = {
   };
   return html`<h3>Cómo citarlo (APA 7.ª edición)</h3>
     <p><b>Fuente de los datos</b> (en la bibliografía):</p>${caja(apa)}
-    <p><b>Herramienta</b> (opcional):</p>${caja(apaWeb)}
+    <p><b>CCEEscopio</b> (la herramienta con la que has hecho el gráfico):</p>${caja(apaWeb)}
     <p class="source">Debajo del gráfico, en el trabajo, escribe: «Fuente: elaboración propia a partir de Eurostat (${datosG.code})».</p>`;
 }
 ```
@@ -454,7 +454,7 @@ CONCEPTOS = [
     ("IPC frente a IPCA", "El IPC es el índice nacional del INE; el IPCA es el índice armonizado de la UE, con la misma metodología en todos los países. En España las tasas suelen ser muy parecidas, pero no iguales.", "Actualizar un contrato de alquiler con el IPCA cuando la ley o el contrato hablan del IPC."),
     ("Inflación subyacente", "Variación de los precios sin los componentes más volátiles (energía y, según la definición, alimentos no elaborados). Indica la tendencia de fondo de la inflación.", "Pensar que una inflación general baja por el abaratamiento de la energía significa que los precios ya no presionan."),
     ("Tasa de paro, de actividad y de empleo", "Paro = parados / población activa. Actividad = activos / población en edad de trabajar. Empleo = ocupados / población en edad de trabajar. El paro puede bajar porque la gente deja de buscar empleo, no solo porque encuentre trabajo.", "Usar el paro registrado en las oficinas de empleo como si fuera la tasa de paro de la EPA."),
-    ("Índice de Gini", "Mide la desigualdad de la renta entre 0 (todos tienen lo mismo) y 100 (una persona lo tiene todo). Se calcula con la renta disponible equivalente de los hogares (EU-SILC).", "Interpretar diferencias pequeñas sin tener en cuenta el error de muestreo de la encuesta (véase el proyecto GiniUs)."),
+    ("Índice de Gini", "Mide la desigualdad de la renta entre 0 (todos tienen lo mismo) y 100 (una persona lo tiene todo). Se calcula con la renta disponible equivalente de los hogares (EU-SILC).", "Interpretar diferencias pequeñas sin tener en cuenta el error de muestreo de la encuesta."),
     ("Ratio S80/S20", "Cociente entre la renta del 20 % de la población con más ingresos y la del 20 % con menos. Un valor de 5 significa que el quintil superior recibe cinco veces más que el inferior.", "Confundirlo con un porcentaje."),
     ("Tasa AROPE", "Personas en riesgo de pobreza o exclusión social: en riesgo de pobreza (renta < 60 % de la mediana), con carencia material y social severa o en hogares con baja intensidad en el empleo. Una persona se cuenta una sola vez.", "Sumar las tres componentes, que se solapan."),
     ("Umbral y tasa de riesgo de pobreza", "El umbral es el 60 % de la renta mediana equivalente del país; la tasa es el porcentaje de personas por debajo. Es una medida relativa: si la renta de todos sube igual, la tasa no cambia.", "Leerla como pobreza absoluta o comparar umbrales entre países sin ajustar por precios."),

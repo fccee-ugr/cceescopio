@@ -476,7 +476,7 @@ datos.ok ? html`<div class="descargas">
   ${DOM.download(() => csv(sel), `cceescopio_${ind.code}_seleccion.csv`, "⬇ Descargar selección (CSV)")}
   ${DOM.download(() => csv(datos.rows), `cceescopio_${ind.code}_completo.csv`, "⬇ Descargar todos los territorios (CSV)")}
 </div>
-<p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de CCEEscopio, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
+<p class="source">Datos descargados en directo de Eurostat al abrir la página (último periodo: ${d3.max(datos.rows, d => d.periodo)}). Reutilización libre citando la fuente: Eurostat (${ind.code}), a través de Muñoz, Álvarez (2026), CCEEscopio D+I, Facultad de Ciencias Económicas y Empresariales, Universidad de Granada.</p>` : html``
 ```
 
 ::: {.callout-tip appearance="simple"}
@@ -488,5 +488,7 @@ datos.ok ? html`<div class="descargas">
 - Economía del turismo: estacionalidad de la demanda hotelera y efecto de la COVID-19.
 - Métodos Cuantitativos: descomposición de series en tendencia y estacionalidad.
 - TFG/TFM: peso del turismo internacional en Andalucía frente a otras comunidades.
+
+<p class="source">⚠️ Las ideas para TFG y TFM son solo propuestas orientativas, que no tienen por qué funcionar: consulta con tu tutor o tutora de TFG o TFM para confirmar su viabilidad.</p>
 
 <p class="source">¿Echas en falta algún indicador? Escríbenos a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).</p>
