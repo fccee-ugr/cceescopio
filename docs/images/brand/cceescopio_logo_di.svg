@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 440" width="2000" height="440"><g transform="translate(25,45) scale(1.65)">
+<line x1="128" y1="128" x2="178" y2="178" stroke="#B5175F" stroke-width="22" stroke-linecap="round"/>
+<circle cx="86" cy="86" r="66" fill="#fff" stroke="#F29200" stroke-width="16"/>
+<rect x="50" y="98" width="15" height="28" rx="3" fill="#B5175F"/>
+<rect x="72" y="82" width="15" height="44" rx="3" fill="#B5175F"/>
+<rect x="94" y="66" width="15" height="60" rx="3" fill="#B5175F"/>
+<rect x="116" y="74" width="15" height="52" rx="3" fill="#B5175F" opacity=".55"/>
+<polyline points="50,86 72,70 94,54 124,48" fill="none" stroke="#F29200" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="124" cy="48" r="7" fill="#F29200"/></g>
+<text x="398" y="232" font-family="Inter,'Source Sans 3','Segoe UI',Arial,sans-serif" font-size="190" font-weight="800" fill="#B5175F" letter-spacing="-2">CCEE<tspan fill="#3C3C3B" font-weight="600">scopio</tspan><tspan fill="#F29200" font-weight="800" dx="40">D+I</tspan></text>
+<text x="404" y="330" font-family="Inter,'Source Sans 3','Segoe UI',Arial,sans-serif" font-size="54" font-weight="600" fill="#F29200">Observatorio de indicadores económicos y empresariales</text>
+<text x="404" y="400" font-family="Inter,'Source Sans 3','Segoe UI',Arial,sans-serif" font-size="54" font-weight="600" fill="#F29200">al servicio de la Docencia y la Investigación</text></svg>

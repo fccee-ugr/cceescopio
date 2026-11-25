@@ -4,6 +4,8 @@ subtitle: "Todo lo que se ha ido incorporando a CCEEscopio, de lo más reciente 
 toc: false
 ---
 
+- **Nuevo · [Solicita un generador de exámenes para tu asignatura](docencia.qmd#solicita)** <span class="badge-nuevo">nuevo</span>: el profesorado puede pedir un generador de exámenes propio, como el de Técnicas Cuantitativas III, y un juego de CCEEscopio adaptado a su asignatura, con una plantilla de solicitud en Word.
+- **Nuevo · [Apuesta y acierta](apuestas.qmd)** <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. Todos empiezan con el mismo dinero y, en cada pregunta, apuestan 10, 20, 50 o 100 euros: si aciertan, ganan lo apostado; si fallan, lo pierden. Gana quien termine con más dinero.
 - **Nuevo · [Todos los recursos](recursos.qmd) y menú reordenado** <span class="badge-nuevo">nuevo</span>: el menú se organiza ahora por objetivos (Indicadores, Actualidad, Herramientas, Docencia, Juegos y simuladores e Investigación), sin opciones repetidas, y una página reúne todos los recursos con filtros por tipo, titulación y público.
 - **Nuevo · Todas las titulaciones** <span class="badge-nuevo">nuevo</span>: [Docencia](docencia.qmd#titulaciones) incluye ya los dobles grados (GADE + Derecho, GADE + Ingenierías y Turismo + Traducción e Interpretación), el Grado en Economía bilingüe y los [másteres y el doctorado](docencia/posgrado.qmd).
 - **Nuevo · [Rutas de aprendizaje](rutas.qmd)** <span class="badge-nuevo">nuevo</span>: ocho recorridos guiados que encadenan datos, herramientas, simuladores y retos.

@@ -72,16 +72,17 @@ page-layout: full
 
     ["docencia.html", "🎓", "Cómo usar CCEEscopio en clase", "Ideas de actividades y resumen por materias.", "docencia", TODOS, "p"],
     ["rutas.html", "🧭", "Rutas de aprendizaje", "Recorridos guiados: de los datos a la simulación y al reto final.", "docencia", TODOS, "ep"],
-    ["docencia/gade.html", "🎓", "GADE, GADE + Derecho y GADE + Ingenierías", "Indicadores y ejemplos de uso para cada asignatura de ADE.", "docencia", "GADE", "ep"],
-    ["docencia/geco.html", "🎓", "GECO (también bilingüe)", "Indicadores y ejemplos de uso para cada asignatura de Economía.", "docencia", "GECO", "ep"],
+    ["docencia/gade.html", "🎓", "GADE · GADE + Derecho · GADE + Ingenierías", "Indicadores y ejemplos de uso para cada asignatura de ADE.", "docencia", "GADE", "ep"],
+    ["docencia/geco.html", "🎓", "GECO · GECO Bilingüe", "Indicadores y ejemplos de uso para cada asignatura de Economía.", "docencia", "GECO", "ep"],
     ["docencia/gfico.html", "🎓", "GFICO", "Indicadores y ejemplos de uso para cada asignatura de Finanzas y Contabilidad.", "docencia", "GFICO", "ep"],
     ["docencia/gmim.html", "🎓", "GMIM", "Indicadores y ejemplos de uso para cada asignatura de Marketing e Investigación de Mercados.", "docencia", "GMIM", "ep"],
-    ["docencia/gtur.html", "🎓", "GTUR y TITUR", "Indicadores y ejemplos de uso para cada asignatura de Turismo.", "docencia", "GTUR", "ep"],
+    ["docencia/gtur.html", "🎓", "GTUR · TITUR", "Indicadores y ejemplos de uso para cada asignatura de Turismo.", "docencia", "GTUR", "ep"],
     ["docencia/posgrado.html", "🎓", "Másteres y doctorado", "Recursos recomendados para cada máster y para el doctorado.", "docencia", "POS", "epi"],
     ["ejercicios.html", "✏️", "Ejercicios autocorregibles", "Preguntas con los últimos datos, corregidas al momento.", "docencia", TODOS, "e"],
     ["detecta-engano.html", "🕵️", "Detecta el engaño", "Gráficos honestos frente a gráficos que mienten.", "docencia", TODOS, "ep"],
     ["informe-coyuntura.html", "📝", "Plantilla de informe de coyuntura", "El esqueleto de un informe con los últimos datos, en Word y con rúbrica.", "docencia", "GECO GADE POS", "ep"],
     ["examen.html", "🖨️", "Generador de exámenes y fichas", "Versiones aleatorias, soluciones y exportación a PRADO.", "docencia", TODOS, "p"],
+    ["docencia.html#solicita", "📝", "Solicita un generador de exámenes para tu asignatura", "Plantilla en Word para pedir un generador propio y un juego adaptado a tu asignatura.", "docencia", TODOS, "p"],
     ["presentacion.html", "🖥️", "Modo presentación", "Un indicador a pantalla completa para proyectar en clase.", "docencia", TODOS, "p"],
 
     ["simuladores.html", "🧪", "Todos los simuladores", "El índice de simuladores, con filtro por titulación.", "simulador", TODOS, "ep"],
@@ -103,6 +104,7 @@ page-layout: full
     ["quien.html", "❓", "¿Quién es quién?", "Adivina el país por sus indicadores (QR).", "juego", TODOS, "p"],
     ["bingo.html", "🎱", "Bingo de indicadores", "Tacha los países que cumplen cada condición (QR).", "juego", TODOS, "p"],
     ["ppt.html", "✊", "Piedra, papel o tijera", "Cada acierto da una partida contra la aplicación (QR).", "juego", TODOS, "p"],
+    ["apuestas.html", "💰", "Apuesta y acierta", "Apuesta 10, 20, 50 o 100 € en cada pregunta: gana quien termine con más dinero (QR).", "juego", TODOS, "p"],
 
     ["ideas-tfg.html", "💭", "Ideas para tu TFG o TFM", "Temas con pregunta, hipótesis, datos, método y estructura.", "investigacion", TODOS, "ei"],
     ["graficos.html", "🖼️", "Generador de gráficos con cita", "Gráficos listos para el trabajo, con la referencia en APA.", "investigacion", TODOS, "ei"],
@@ -111,7 +113,7 @@ page-layout: full
     ["rankings.html", "🏆", "La Facultad en los ranking", "La UGR en Economía, Empresa, Finanzas y Turismo.", "investigacion", TODOS, "pi"],
     ["uso.html", "👁️", "Uso de CCEEscopio", "Visitas y páginas más consultadas.", "investigacion", TODOS, "pi"],
   ];
-  const G = [["", "Todas"], ["GADE", "GADE y dobles grados"], ["GECO", "GECO"], ["GFICO", "GFICO"], ["GMIM", "GMIM"], ["GTUR", "GTUR y TITUR"], ["POS", "Másteres y doctorado"]];
+  const G = [["", "Todas"], ["GADE", "GADE · GADE + Derecho · GADE + Ingenierías"], ["GECO", "GECO · GECO Bilingüe"], ["GFICO", "GFICO"], ["GMIM", "GMIM"], ["GTUR", "GTUR · TITUR"], ["POS", "Másteres y doctorado"]];
   const P = [["", "Todos"], ["e", "Estudiantado"], ["p", "Profesorado"], ["i", "Investigación"]];
   const par = new URLSearchParams(location.search);
   const est = {tipo: T[par.get("tipo")] ? par.get("tipo") : "", grado: G.some(g => g[0] === par.get("grado")) ? par.get("grado") : "", pub: "", q: ""};

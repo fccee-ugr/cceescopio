@@ -337,6 +337,8 @@ Todos los juegos de CCEEscopio D+I usan datos oficiales de Eurostat que se carga
 
 [<span class="icon">✊</span><span class="ct">Piedra, papel o tijera</span><span class="cd">Cada acierto da una partida contra la aplicación: gana quien antes supere todas las preguntas.</span>](ppt.qmd){.card-ccee}
 
+[<span class="icon">💰</span><span class="ct">Apuesta y acierta</span><span class="cd">Todos empiezan con el mismo dinero y apuestan 10, 20, 50 o 100 € en cada pregunta: gana quien termine con más.</span>](apuestas.qmd){.card-ccee}
+
 [<span class="icon">🏫</span><span class="ct">Modo aula</span><span class="cd">Competición con código de sala, sin necesidad de código QR.</span>](#aula){.card-ccee}
 
 [<span class="icon">🔮</span><span class="ct">Predice el próximo dato</span><span class="cd">Apuesta por el próximo dato de un indicador y compáralo cuando se publique.</span>](prediccion.qmd){.card-ccee}

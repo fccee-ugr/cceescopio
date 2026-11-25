@@ -70,8 +70,8 @@ canvas, #stage, .sc, #vig { position: absolute; left: 0; top: 0; width: 1920px; 
 .ej .em { font-family: "Noto Color Emoji"; font-size: 60px; line-height: 1; } .ej h3 { font-size: 33px; font-weight: 800; line-height: 1.12; margin: 14px 0 8px; } .ej p { font-size: 24px; color: #E3D3DB; font-weight: 500; line-height: 1.3; }
 .ej .glow { position: absolute; left: 0; top: 0; right: 0; bottom: 0; border-radius: 28px; pointer-events: none; }
 /* 8: cierre */
-#url { position: absolute; left: 0; width: 1920px; top: 640px; text-align: center; } #url span { display: inline-block; font-size: 50px; font-weight: 800; padding: 20px 54px; border-radius: 999px; background: linear-gradient(90deg, var(--mg), var(--or)); box-shadow: 0 20px 60px rgba(181,23,95,.5); }
-#plate { position: absolute; left: 560px; top: 810px; width: 800px; height: 170px; background: #fff; border-radius: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 60px rgba(0,0,0,.5); } #plate img { height: 124px; }
+#url { position: absolute; left: 0; width: 1920px; top: 670px; text-align: center; } #url span { display: inline-block; font-size: 50px; font-weight: 800; padding: 20px 54px; border-radius: 999px; background: linear-gradient(90deg, var(--mg), var(--or)); box-shadow: 0 20px 60px rgba(181,23,95,.5); }
+#plate { position: absolute; left: 560px; top: 840px; width: 800px; height: 170px; background: #fff; border-radius: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 60px rgba(0,0,0,.5); } #plate img { height: 124px; }
 </style></head><body>
 <canvas id="bg" width="1920" height="1080"></canvas>
 <div id="stage"></div>
@@ -152,8 +152,8 @@ function logoAnim(root, t, t0) {     // ensamblaje del logo: común a la apertur
 /* ---------- 0. Apertura ---------- */
 EL.logo.innerHTML = `<div class="abs h rv" id="l-q" style="left:0;top:250px;width:1920px;padding:0 200px;text-align:center;font-size:96px">Cada día, la economía genera <em>millones de datos</em></div>
   <div class="abs h rv" id="l-q2" style="left:0;top:540px;width:1920px;padding:0 200px;text-align:center;font-size:84px">y ahora están <em>al alcance de tu mano</em></div>${lockHTML}
-  <div class="tag sub" id="l-t1" style="top:625px;font-size:56px;font-weight:700;color:#FFC56B">Observando la economía y la empresa</div>
-  <div class="tag sub" id="l-t2" style="top:730px">Docencia + Investigación · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada</div>`;
+  <div class="tag sub" id="l-t1" style="top:600px;font-size:48px;line-height:1.25;font-weight:700;color:#FFC56B">Observatorio de indicadores económicos y empresariales<br>al servicio de la Docencia y la Investigación</div>
+  <div class="tag sub" id="l-t2" style="top:770px">Docencia + Investigación · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada</div>`;
 const S = {};
 S.logo = t => {
   AMB = 0.75; const q = $("#l-q"), q2 = $("#l-q2"); rv(q, seg(t, 0.25, 1.3)); rv(q2, seg(t, 1.6, 2.6)); const fo = 1 - seg(t, 3.5, 4.0);
@@ -353,7 +353,7 @@ function ejAnim(el, t) {
 S.doc = t => ejAnim(EL.doc, t); S.inv = t => ejAnim(EL.inv, t);
 
 /* ---------- 7. Todas las titulaciones ---------- */
-const TITS = ["GADE", "GECO", "GFICO", "GMIM", "GTUR", "GADE + Derecho", "GADE + Ingenierías", "Turismo + Traducción", "Másteres", "Doctorado"];
+const TITS = ["GADE", "GADE + Derecho", "GADE + Ingenierías", "GECO", "GECO Bilingüe", "GFICO", "GMIM", "GTUR", "TITUR", "Másteres", "Doctorado"];
 EL.tit.innerHTML = `${TITS.map((x, i) => `<div class="orb" style="background:${i % 2 ? "rgba(242,146,0,.9)" : "rgba(181,23,95,.92)"}">${x}</div>`).join("")}
   <div class="abs" id="t-c" style="left:360px;top:330px;width:1200px;text-align:center"><div class="kick">Docencia + Investigación</div><div class="h rv" id="t-h" style="margin-top:12px;font-size:92px">Para <em>toda la Facultad</em></div>
   <div class="sub" id="t-s" style="margin-top:26px">Indicadores y ejemplos para cada asignatura · rutas de aprendizaje<br>TFG y TFM · rankings · <span style="color:#FFC56B;font-weight:800">🌐 también en inglés</span></div></div>`;
@@ -364,7 +364,7 @@ S.tit = t => {
 };
 
 /* ---------- 8. Cierre ---------- */
-EL.fin.innerHTML = `${lockHTML}<div class="tag sub" id="f-t" style="top:540px;font-size:50px;font-weight:700;color:#FFC56B">Observando la economía y la empresa</div>
+EL.fin.innerHTML = `${lockHTML}<div class="tag sub" id="f-t" style="top:490px;font-size:44px;line-height:1.25;font-weight:700;color:#FFC56B">Observatorio de indicadores económicos y empresariales<br>al servicio de la Docencia y la Investigación</div>
   <div id="url"><span>fccee-ugr.github.io/cceescopio</span></div><div id="plate"><img src="../../images/logos_ugr_fccee.jpg" alt=""></div>`;
 $(".lock", EL.fin).style.top = "190px";
 S.fin = t => {

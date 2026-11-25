@@ -8,11 +8,9 @@ include-in-header:
 ---
 
 ::: {.hero}
-![](images/brand/cceescopio_logo_di.png){.hero-logo fig-alt="CCEEscopio D+I. Observando la economía y la empresa"}
+![](images/brand/cceescopio_logo_di.png){.hero-logo fig-alt="CCEEscopio D+I. Observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación"}
 
 **CCEEscopio D+I** (Docencia + Investigación) es el **observatorio de indicadores económicos y empresariales** de la [Facultad de Ciencias Económicas y Empresariales](https://fccee.ugr.es/) de la Universidad de Granada. Reúne en un solo lugar **99 indicadores** de la economía y la empresa (precios, empleo, actividad, empresa e innovación, turismo, sector público y mercados financieros, desigualdad y pobreza, sostenibilidad, población y economía internacional) para España, Andalucía y los países de la Unión Europea, junto con la **actualidad** de cada día, **herramientas** de análisis, **simuladores** y **juegos** para todas las titulaciones de la Facultad.
-
-<p class="tagline">Observatorio de indicadores económicos y empresariales al servicio de la **Docencia** y la **Investigación**</p>
 
 <p class="visitas-ccee" hidden>👁️ <span class="vc-num"></span> visitas a CCEEscopio</p>
 :::
@@ -142,11 +140,11 @@ Indicadores recomendados y ejemplos de uso **para cada asignatura** de todas las
 
 ```{=html}
 <div class="tit-chips">
-  <a href="docencia/gade.html">GADE <small>· también GADE + Derecho y GADE + Ingenierías</small></a>
-  <a href="docencia/geco.html">GECO <small>· también bilingüe</small></a>
+  <a href="docencia/gade.html">GADE · GADE + Derecho · GADE + Ingenierías</a>
+  <a href="docencia/geco.html">GECO · GECO Bilingüe</a>
   <a href="docencia/gfico.html">GFICO</a>
   <a href="docencia/gmim.html">GMIM</a>
-  <a href="docencia/gtur.html">GTUR <small>· también TITUR</small></a>
+  <a href="docencia/gtur.html">GTUR · TITUR</a>
   <a href="docencia/posgrado.html">Másteres y doctorado</a>
   <a href="rutas.html">🧭 Rutas de aprendizaje</a>
 </div>
@@ -158,6 +156,8 @@ Los indicadores se **descargan en directo de la API de Eurostat** cada vez que s
 
 ## Novedades
 
+- **Nuevo · [Solicita un generador de exámenes para tu asignatura](docencia.qmd#solicita)** <span class="badge-nuevo">nuevo</span>: el profesorado puede pedir un generador de exámenes propio, como el de Técnicas Cuantitativas III, y un juego de CCEEscopio adaptado a su asignatura, con una plantilla de solicitud en Word.
+- **Nuevo · [Apuesta y acierta](apuestas.qmd)** <span class="badge-nuevo">nuevo</span>: juego para clase con código QR. Todos empiezan con el mismo dinero y, en cada pregunta, apuestan 10, 20, 50 o 100 euros: si aciertan, ganan lo apostado; si fallan, lo pierden. Gana quien termine con más dinero.
 - **Nuevo · [Tamaño muestral](tamano-muestral.qmd)** <span class="badge-nuevo">nuevo</span>: calcula cuántas observaciones necesita un estudio (encuestas, experimentos, TFG y TFM) según el escenario: error de muestreo al estimar una proporción o una media, o potencia al contrastar hipótesis.
 - **Nuevo · [Todos los recursos](recursos.qmd) y menú reordenado** <span class="badge-nuevo">nuevo</span>: el menú se organiza ahora por objetivos (Indicadores, Actualidad, Herramientas, Docencia, Juegos y simuladores e Investigación), sin opciones repetidas, y una página reúne todos los recursos con filtros por tipo, titulación y público.
 - **Nuevo · Todas las titulaciones** <span class="badge-nuevo">nuevo</span>: [Docencia](docencia.qmd#titulaciones) incluye ya los dobles grados (GADE + Derecho, GADE + Ingenierías y Turismo + Traducción e Interpretación), el Grado en Economía bilingüe y los [másteres y el doctorado](docencia/posgrado.qmd).

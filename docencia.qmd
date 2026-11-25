@@ -13,7 +13,7 @@ Hemos revisado los planes de estudio de **todas las titulaciones de la Facultad*
 
 ### Todas las titulaciones de la Facultad {#titulaciones}
 
-Los dobles grados comparten las asignaturas del grado correspondiente, así que usan la misma página: **GADE + Derecho** y **GADE + Ingenierías** (Edificación, Ingeniería Civil e Ingeniería Informática), la de GADE; **Turismo + Traducción e Interpretación (TITUR)**, la de GTUR; y el **Grado en Economía (Bilingüe)**, la de GECO.
+Los dobles grados comparten las asignaturas del grado correspondiente, así que usan la misma página: **GADE + Derecho** y **GADE + Ingenierías** (Edificación, Ingeniería Civil e Ingeniería Informática), la de GADE; **Turismo + Traducción e Interpretación (TITUR)**, la de GTUR; y el **Grado en Economía (Bilingüe)** (**GECO Bilingüe**), la de GECO.
 
 {{< include _titulaciones.md >}}
 
@@ -28,6 +28,19 @@ Los dobles grados comparten las asignaturas del grado correspondiente, así que 
 - [**Relaciona dos indicadores**](relaciona.qmd): diagrama de dispersión de los países de la UE (curva de Phillips, ley de Okun, gasto social y pobreza…).
 - [**Buscador de indicadores**](indicadores.qmd): todos los indicadores en una tabla.
 - **Enlace directo a un indicador**: debajo de cada gráfico, el enlace 🔗 abre la página con ese indicador ya seleccionado, para ponerlo en PRADO o en la guía docente.
+
+## Solicita un generador de exámenes y un juego para tu asignatura {#solicita}
+
+El profesorado de la Facultad puede pedir que CCEEscopio incorpore un **generador de exámenes propio de su asignatura**, como el de [Técnicas Cuantitativas III](examen-tc3.qmd): cada vez que se pulsa «Generar» se crea un examen distinto, en el formato de la asignatura, con su versión con soluciones y listo para descargar en Word y en PDF. Con la misma solicitud se puede pedir también uno de los [juegos de CCEEscopio](juegos.qmd) (Concurso de preguntas, Apuesta y acierta, Piedra, papel o tijera, Escape room…) adaptado a los contenidos de la asignatura.
+
+Cómo solicitarlo:
+
+1. Descarga y rellena la [**plantilla de solicitud (Word)**](media/solicitud_generador_examenes_CCEEscopio.docx).
+2. Indica cómo es el examen (temas, número de preguntas, puntuación, duración y material permitido), si quieres **solo los resultados** o las **soluciones completas** con el desarrollo y los comentarios, y el juego que prefieras.
+3. Adjunta una **batería de al menos 5 exámenes resueltos** de la asignatura, a ser posible en formato editable, junto con la guía docente y el formulario o las tablas del examen, si los hay. Para el juego, conviene añadir al menos 30 preguntas de tipo test o de verdadero o falso.
+4. Pide la **firma de la dirección de tu Departamento** y envía la solicitud a [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es).
+
+El generador y el juego se publican en abierto y se enlazan desde la página de la asignatura, de modo que los estudiantes también pueden usarlos para practicar.
 
 ## Resumen por materias
 

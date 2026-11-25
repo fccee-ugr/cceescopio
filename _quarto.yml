@@ -147,15 +147,15 @@ website:
           - text: "---"
           - text: "Por titulaciones y asignaturas"
           - href: docencia/gade.qmd
-            text: "GADE · también GADE + Derecho y GADE + Ingenierías"
+            text: "GADE · GADE + Derecho · GADE + Ingenierías"
           - href: docencia/geco.qmd
-            text: "GECO · Economía (también bilingüe)"
+            text: "GECO · GECO Bilingüe"
           - href: docencia/gfico.qmd
             text: "GFICO · Finanzas y Contabilidad"
           - href: docencia/gmim.qmd
             text: "GMIM · Marketing e Investigación de Mercados"
           - href: docencia/gtur.qmd
-            text: "GTUR · Turismo (también TITUR)"
+            text: "GTUR · TITUR"
           - href: docencia/posgrado.qmd
             text: "Másteres y doctorado"
           - text: "---"
@@ -170,6 +170,8 @@ website:
           - text: "Para dar clase"
           - href: examen.qmd
             text: "Generador de exámenes, fichas y preguntas para PRADO"
+          - href: docencia.qmd#solicita
+            text: "Solicita un generador de exámenes para tu asignatura"
           - href: presentacion.qmd
             text: "Modo presentación"
       # 5. JUEGOS Y SIMULADORES
@@ -215,6 +217,8 @@ website:
             text: "Bingo de indicadores"
           - href: ppt.qmd
             text: "Piedra, papel o tijera"
+          - href: apuestas.qmd
+            text: "Apuesta y acierta"
       # 6. INVESTIGACIÓN
       - text: "Investigación"
         menu:
@@ -252,7 +256,7 @@ website:
     left: "CCEEscopio D+I · Facultad de Ciencias Económicas y Empresariales · Universidad de Granada · Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · [investiga_ccee@ugr.es](mailto:investiga_ccee@ugr.es)"
     right: "![](images/logos_ugr_fccee.jpg){height=38 fig-alt='Universidad de Granada y Facultad de Ciencias Económicas y Empresariales'}"
 
-date-modified: "2026-11-24"
+date-modified: "2026-11-25"
 
 format:
   html:

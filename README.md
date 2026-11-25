@@ -1,6 +1,6 @@
 # CCEEscopio
 
-Observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación. Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada. *Observando la economía y la empresa.*
+Observatorio de indicadores económicos y empresariales al servicio de la Docencia y la Investigación. Facultad de Ciencias Económicas y Empresariales de la Universidad de Granada.
 
 Gestionado por el Vicedecanato de Investigación, Transferencia y Posgrado · investiga_ccee@ugr.es
 

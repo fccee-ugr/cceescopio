@@ -6,7 +6,7 @@
 | [Doble Grado en Ingeniería Civil y en Administración y Dirección de Empresas](https://fccee.ugr.es/docencia/grados/grado-ingenieria-civil-y-administracion-y-dreccion-empresas) | GADE + Ingeniería Civil | [Asignaturas de GADE](docencia/gade.qmd) (las mismas) |
 | [Doble Grado en Ingeniería Informática y en Administración y Dirección de Empresas](https://fccee.ugr.es/docencia/grados/graduadoa-inga-informatica-administ-y-direcc-empresas) | GADE + Ingeniería Informática | [Asignaturas de GADE](docencia/gade.qmd) (las mismas) |
 | [Grado en Economía](https://fccee.ugr.es/docencia/grados/graduadoa-economia) | **GECO** | [Asignaturas de GECO](docencia/geco.qmd) |
-| [Grado en Economía (Bilingüe)](https://fccee.ugr.es/docencia/grados/grado-economia-bilingue) | GECO bilingüe | [Asignaturas de GECO](docencia/geco.qmd) (las mismas) |
+| [Grado en Economía (Bilingüe)](https://fccee.ugr.es/docencia/grados/grado-economia-bilingue) | GECO Bilingüe | [Asignaturas de GECO](docencia/geco.qmd) (las mismas) |
 | [Grado en Finanzas y Contabilidad](https://fccee.ugr.es/docencia/grados/graduadoa-finanzas-y-contabilidad) | **GFICO** | [Asignaturas de GFICO](docencia/gfico.qmd) |
 | [Grado en Marketing e Investigación de Mercados](https://fccee.ugr.es/docencia/grados/graduadoa-marketing-e-investigacion-mercados) | **GMIM** | [Asignaturas de GMIM](docencia/gmim.qmd) |
 | [Grado en Turismo](https://fccee.ugr.es/docencia/grados/graduadoa-turismo) | **GTUR** | [Asignaturas de GTUR](docencia/gtur.qmd) |

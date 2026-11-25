@@ -1,6 +1,6 @@
 ---
-title: "Grado en Economía (GECO)"
-subtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"
+title: "GECO · GECO Bilingüe"
+subtitle: "Grado en Economía y Grado en Economía (Bilingüe): asignaturas e indicadores de CCEEscopio para usar en ellas"
 ---
 
 Para cada asignatura del **Grado en Economía** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. Plan de estudios y guías docentes: [web de la Facultad](https://fccee.ugr.es/docencia/grados/graduadoa-economia).

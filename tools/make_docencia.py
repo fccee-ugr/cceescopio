@@ -7,6 +7,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from asignaturas import DEPTS
 from grados import GR, COMPARTEN, NOTA, POSGRADO
 
+# Nombres de las titulaciones tal como se muestran en la web
+ETIQ = {"GADE": "GADE · GADE + Derecho · GADE + Ingenierías", "GECO": "GECO · GECO Bilingüe", "GTUR": "GTUR · TITUR"}
+SUBT = {"GADE": "Grado en Administración y Dirección de Empresas y dobles grados: asignaturas e indicadores de CCEEscopio para usar en ellas",
+        "GECO": "Grado en Economía y Grado en Economía (Bilingüe): asignaturas e indicadores de CCEEscopio para usar en ellas",
+        "GTUR": "Grado en Turismo y Doble Grado en Traducción e Interpretación y en Turismo: asignaturas e indicadores de CCEEscopio para usar en ellas"}
 cat = json.load(open("data/indicadores.json", encoding="utf-8"))
 porid = {}
 for x in sorted(cat, key=lambda x: x["pagina"] == "andalucia"):
@@ -54,7 +59,7 @@ CURSOS = {1: "Primer curso", 2: "Segundo curso", 3: "Tercer curso", 4: "Cuarto c
 os.makedirs("docencia", exist_ok=True)
 resumen, faltan = [], []
 for sig, (nombre, url, cursos) in GR.items():
-    out = [f'---\ntitle: "{nombre} ({sig})"\nsubtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"\n---\n',
+    out = [f'---\ntitle: "{ETIQ.get(sig, nombre + " (" + sig + ")")}"\nsubtitle: "{SUBT.get(sig, "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas")}"\n---\n',
            f"Para cada asignatura del **{nombre}** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. "
            f"Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. "
            f"Plan de estudios y guías docentes: [web de la Facultad]({url}).\n",
@@ -82,10 +87,10 @@ for sig, (nombre, url, cursos) in GR.items():
     open(f"docencia/{sig.lower()}.qmd", "w", encoding="utf-8").write("\n".join(out))
     resumen.append((sig, nombre, n))
 
-EXTRA_CARD = {"GADE": " También para <b>GADE + Derecho</b> y <b>GADE + Ingenierías</b>.", "GECO": " También para <b>GECO bilingüe</b>.",
-              "GTUR": " También para <b>Turismo + Traducción e Interpretación (TITUR)</b>."}
+EXTRA_CARD = {"GADE": " Las mismas asignaturas en los dobles grados.", "GECO": " Las mismas asignaturas en el grado bilingüe.",
+              "GTUR": " Las mismas asignaturas en el doble grado con Traducción e Interpretación."}
 open("_grados_cards.md", "w", encoding="utf-8").write("::: {.cards}\n" + "\n".join(
-    f'[<span class="icon">🎓</span><span class="ct">{sig}</span><span class="cd">{nombre}: {n} asignaturas con indicadores y ejemplos de uso.{EXTRA_CARD.get(sig, "")}</span>](docencia/{sig.lower()}.qmd){{.card-ccee}}\n'
+    f'[<span class="icon">🎓</span><span class="ct">{ETIQ.get(sig, sig)}</span><span class="cd">{nombre}: {n} asignaturas con indicadores y ejemplos de uso.{EXTRA_CARD.get(sig, "")}</span>](docencia/{sig.lower()}.qmd){{.card-ccee}}\n'
     for sig, nombre, n in resumen)
     + '\n[<span class="icon">🎓</span><span class="ct">Másteres y doctorado</span><span class="cd">Recursos de CCEEscopio para los másteres universitarios y el programa de doctorado de la Facultad.</span>](docencia/posgrado.qmd){.card-ccee}\n'
     + ":::\n")

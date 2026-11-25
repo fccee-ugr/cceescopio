@@ -1,6 +1,6 @@
 ---
-title: "Grado en Administración y Dirección de Empresas (GADE)"
-subtitle: "Asignaturas del grado e indicadores de CCEEscopio para usar en ellas"
+title: "GADE · GADE + Derecho · GADE + Ingenierías"
+subtitle: "Grado en Administración y Dirección de Empresas y dobles grados: asignaturas e indicadores de CCEEscopio para usar en ellas"
 ---
 
 Para cada asignatura del **Grado en Administración y Dirección de Empresas** se proponen los indicadores de CCEEscopio más útiles y un ejemplo de uso en clase. Cada indicador enlaza directamente con su gráfico y su mapa interactivos, desde los que se pueden comparar países y regiones y descargar los datos en CSV. Plan de estudios y guías docentes: [web de la Facultad](https://fccee.ugr.es/docencia/grados/graduadoa-administracion-y-direccion-empresas).

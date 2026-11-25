@@ -406,6 +406,16 @@ iframe.embed { width: 100%; height: 900px; border: 1px solid rgba($ccee-dark, .2
   &:disabled { opacity: .5; cursor: default; }
   &.elegida { opacity: 1; background: $ccee-magenta; small { color: #fff; } } }
 
+/* ---------- Apuesta y acierta ---------- */
+.apu-cab { display: flex; justify-content: space-between; align-items: center; gap: .6rem; flex-wrap: wrap; font-size: .9rem; color: #666; margin-bottom: .4rem; }
+.apu-saldo { font-size: 1.35rem; font-weight: 800; color: $ccee-magenta; }
+.apu-pide { font-weight: 700; color: $ccee-dark; margin: .6rem 0 .2rem; }
+.apu-botones { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; max-width: 520px; margin: .4rem auto 1.2rem; }
+.apu-boton { background: #fff; border: 2px solid $ccee-orange; border-radius: 14px; padding: .8rem .2rem; font-size: 1.3rem; font-weight: 800; color: $ccee-magenta; cursor: pointer;
+  &:hover:not(:disabled) { background: #FFF4E5; }
+  &:disabled { opacity: .35; cursor: default; } }
+.apu-dif { font-weight: 700; &.sube { color: #1a7f37; } &.baja { color: #b42318; } }
+
 /* ---------- Detecta el engaño ---------- */
 .engano-par { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: .6rem 0 1rem;
   figure { background: #fff; border: 1px solid #E6DEDA; border-radius: 12px; padding: .6rem .8rem; margin: 0; }

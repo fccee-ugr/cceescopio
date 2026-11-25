@@ -40,7 +40,7 @@ COMPARTEN = {
  ("GADE + Ingeniería Civil", "Doble Grado en Ingeniería Civil y en Administración y Dirección de Empresas", "https://fccee.ugr.es/docencia/grados/grado-ingenieria-civil-y-administracion-y-dreccion-empresas"),
  ("GADE + Ingeniería Informática", "Doble Grado en Ingeniería Informática y en Administración y Dirección de Empresas", "https://fccee.ugr.es/docencia/grados/graduadoa-inga-informatica-administ-y-direcc-empresas"),
 ],
-"GECO": [("GECO bilingüe", "Grado en Economía (Bilingüe)", "https://fccee.ugr.es/docencia/grados/grado-economia-bilingue")],
+"GECO": [("GECO Bilingüe", "Grado en Economía (Bilingüe)", "https://fccee.ugr.es/docencia/grados/grado-economia-bilingue")],
 "GTUR": [("TITUR", "Doble Grado en Traducción e Interpretación y en Turismo", "https://fccee.ugr.es/docencia/grados/graduadoa-traduccion-e-interpretacion-turismo")],
 }
 # Texto de la nota que aparece al principio de la página de cada grado
